@@ -35,9 +35,20 @@ const getVibe = (user) => {
 }
 
 const removeVibe = (user) => {
-    if (process.vibe == undefined) { process.chastity = {} }
+    if (process.vibe == undefined) { process.vibe = {} }
     delete process.vibe[user];
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`, JSON.stringify(process.vibe));
+}
+
+const getChastityKeys = (user) => {
+    if (process.chastity == undefined) { process.chastity = {} }
+    let keysheld = [];
+    Object.keys(process.chastity).forEach((k) => {
+        if (process.chastity[k].keyholder == user) {
+            keysheld.push(k)
+        }
+    })
+    return keysheld
 }
 
 const arousedtexts = [
@@ -92,3 +103,6 @@ exports.getVibe = getVibe
 exports.removeVibe = removeVibe
 
 exports.vibeText = vibeText;
+exports.getChastityKeys = getChastityKeys;
+
+console.log(getChastityKeys("125093095405518850"))

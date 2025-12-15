@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
-const { getChastity, getVibe } = require('./../functions/vibefunctions.js')
+const { getChastity, getVibe, getChastityKeys } = require('./../functions/vibefunctions.js')
 const { getCollar } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
@@ -62,6 +62,12 @@ module.exports = {
         }
         else {
             outtext = `${outtext}<:Armbinder:1073495590656286760> Heavy Bondage: Not currently worn.\n`
+        }
+        let keysheldchastity = getChastityKeys(inspectuser.id)
+        if (keysheldchastity.length > 0) {
+            keysheldchastity = keysheldchastity.map(k => `<@${k}>`)
+            let keysstring = keysheldchastity.join(", ");
+            outtext = `${outtext}\nCurrently holding chastity keys for: ${keysstring}`
         }
         interaction.reply({ content: outtext, flags: MessageFlags.Ephemeral })
     }
