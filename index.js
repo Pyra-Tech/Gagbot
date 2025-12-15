@@ -55,6 +55,12 @@ try {
 catch (err) { 
     console.log(err);
 }
+try {
+    process.optins = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/optinusers.txt`))
+}
+catch (err) { 
+    console.log(err);
+}
 
 // Grab all the command files from the commands directory
 const commands = [];
@@ -102,6 +108,14 @@ client.on('interactionCreate', async (interaction) => {
             interaction.reply({ content: `Please use these commands over in <#${process.env.CHANNELID}>.`, flags: discord.MessageFlags.Ephemeral })
             return;
         }
+
+        if (interaction.isMessageComponent()) {
+            // temporary solution while this is the only command using interactable message components
+            const cmd = require(path.join(commandsPath, "optins.js"));
+            cmd.handleInteraction(interaction);
+            return;
+        }
+
         if (commandFiles.includes(`${interaction.commandName}.js`)) {
             const cmd = require(path.join(commandsPath, `${interaction.commandName}.js`))
             cmd.execute(interaction);
