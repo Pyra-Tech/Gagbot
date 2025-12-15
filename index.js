@@ -63,9 +63,17 @@ catch (err) {
 }
 
 // Grab all the command files from the commands directory
-const commands = [];
+const commands = new Map();
+const componentHandlers = new Map();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const cmd = require(path.join(commandsPath, file));
+    commands.set(cmd.data.name, cmd);
+    cmd.componentHandlers?.forEach((handler) => {
+        componentHandlers.set(handler.key, handler);
+    });
+}
 
 var gagged = {}
 
@@ -110,15 +118,10 @@ client.on('interactionCreate', async (interaction) => {
         }
 
         if (interaction.isMessageComponent()) {
-            // temporary solution while this is the only command using interactable message components
-            const cmd = require(path.join(commandsPath, "optins.js"));
-            cmd.handleInteraction(interaction);
-            return;
-        }
-
-        if (commandFiles.includes(`${interaction.commandName}.js`)) {
-            const cmd = require(path.join(commandsPath, `${interaction.commandName}.js`))
-            cmd.execute(interaction);
+            const [key, ...args] = interaction.customId.split("-");
+            componentHandlers.get(key)?.handle(interaction, ...args);
+        } else {
+            commands.get(interaction.commandName)?.execute(interaction);
         }
     }
     catch (err) {
