@@ -11,10 +11,9 @@ module.exports = {
 		.addUserOption(opt =>
 			opt.setName('wearer')
 			.setDescription('Who to unlock...')
-            .setRequired(true)
 		),
     async execute(interaction) {
-		let chastitywearer = interaction.options.getUser('wearer')
+		let chastitywearer = interaction.options.getUser('wearer') ? interaction.options.getUser('wearer') : interaction.user
         if (getHeavy(interaction.user.id)) {
             if (getChastity(interaction.user.id)) {
                 interaction.reply(`${interaction.user} shifts in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, trying to squirm out of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} metal prison holds firmly to ${getPronouns(interaction.user.id, "possessiveDeterminer")} body!`)
@@ -30,7 +29,7 @@ module.exports = {
                 // User is NOT the keyholder for the target belt
                 if (interaction.user == chastitywearer) {
                     // Wearer is trying to unlock their own belt
-                    interaction.reply(`${interaction.user} runs ${getPronouns(interaction.user.id, "possessiveDeterminer")} fingers uselessly on the metal of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but can't unlock it without the key!`)
+                    interaction.reply(`${interaction.user} runs ${getPronouns(interaction.user.id, "possessiveDeterminer")} fingers uselessly on the metal of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but ${getPronouns(interaction.user.id, "subject")} can't unlock it without the key!`)
                 }
                 else {
                     // Trying to unlock someone else's belt 
@@ -52,8 +51,13 @@ module.exports = {
             }
         }
         else {
-            // Target is NOT wearing a belt
-            interaction.reply({ content: `${chastitywearer} isn't locked in a chastity belt!`, flags: MessageFlags.Ephemeral })
+            if (interaction.user == chastitywearer) {
+                interaction.reply({ content: `You aren't locked in a chastity belt!`, flags: MessageFlags.Ephemeral })
+            }
+            else {
+                // Target is NOT wearing a belt
+                interaction.reply({ content: `${chastitywearer} isn't locked in a chastity belt!`, flags: MessageFlags.Ephemeral })
+            }
         }
     }
 }

@@ -10,7 +10,6 @@ module.exports = {
         .addUserOption(opt =>
             opt.setName('user')
             .setDescription('The user to remove gag from (leave blank for yourself)')
-            //.setRequired(true)
         ),
     async execute(interaction) {
         let gaggeduser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
@@ -49,7 +48,12 @@ module.exports = {
             }
         }
         else {
-            interaction.reply({ content: `${gaggeduser} is not gagged!`, flags: MessageFlags.Ephemeral })
+            if (interaction.user != gaggeduser) {
+                interaction.reply({ content: `${gaggeduser} is not gagged!`, flags: MessageFlags.Ephemeral })
+            }
+            else {
+                interaction.reply({ content: `You are not gagged!`, flags: MessageFlags.Ephemeral })
+            }
         }
     }
 }

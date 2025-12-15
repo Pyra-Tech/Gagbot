@@ -22,8 +22,13 @@ module.exports = {
 			}
         }
 		else if (getMitten(mitteneduser)) {
-            deleteMitten(mitteneduser)
-            interaction.reply(`${interaction.user} takes off ${mitteneduser}'s mittens so they can take off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} gag!`)
+			if (mitteneduser != interaction.user) {
+				interaction.reply(`${interaction.user} takes off ${mitteneduser}'s mittens so ${getPronouns(mitteneduser.id, "subject")} can take off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} gag!`)
+				deleteMitten(mitteneduser)
+			}
+            else {
+				interaction.reply(`${interaction.user} tries to pull off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens, but the straps and locks hold them firmly on ${getPronouns(mitteneduser.id, "possessiveDeterminer")} wrists!`)
+			}
         }
 		else {
 			interaction.reply({ content: `${mitteneduser} is not wearing mittens!`, flags: MessageFlags.Ephemeral })

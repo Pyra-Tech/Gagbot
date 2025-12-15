@@ -7,15 +7,7 @@ const { getPronouns } = require('./../functions/pronounfunctions.js')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('mitten')
-		.setDescription('Put mittens on yourself, preventing /ungag on yourself and /gag on others')
-		/*.addStringOption(opt =>
-			opt.setName('timelength')
-			.setDescription('Human Readable Text (_days _ hours _ mins)')
-		)
-        .addBooleanOption(opt => 
-            opt.setName('infinite')
-            .setDescription("'Forget' a timelock - requires others to help you out")
-        )*/,
+		.setDescription('Put mittens on yourself, preventing /ungag on yourself and /gag on others'),
     async execute(interaction) {
         if (getHeavy(interaction.user.id)) {
             interaction.reply(`${interaction.user} nuzzles a pair of mittens, but can't put them on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}.`)

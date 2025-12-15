@@ -10,10 +10,9 @@ module.exports = {
         .addUserOption(opt =>
 			opt.setName('user')
 			.setDescription('Who to free from their predicament...')
-			.setRequired(true)
 		),
     async execute(interaction) {
-        let heavyuser = interaction.options.getUser('user')
+        let heavyuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
         if (getHeavy(interaction.user.id)) {
             if (interaction.user == heavyuser) {
                 interaction.reply(`${interaction.user} wiggles in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but obviously ${getPronouns(interaction.user.id, "subjectIs")} *very* helpless and can't get far with taking it off on ${getPronouns(interaction.user.id, "possessiveDeterminer")} own!`)
@@ -28,7 +27,12 @@ module.exports = {
                 removeHeavy(heavyuser.id)
             }
             else {
-                interaction.reply({ content: `${heavyuser} is not in any kind of heavy bondage!`, flags: MessageFlags.Ephemeral })
+                if (heavyuser == interaction.user) {
+                    interaction.reply({ content: `You aren't in any kind of heavy bondage!`, flags: MessageFlags.Ephemeral })
+                }
+                else {
+                    interaction.reply({ content: `${heavyuser} is not in any kind of heavy bondage!`, flags: MessageFlags.Ephemeral })
+                }
             }
         }
     }
