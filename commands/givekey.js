@@ -25,13 +25,13 @@ module.exports = {
         .setName("chastity")
         .setDescription("Give chastity key...")
         .addUserOption((opt) =>
+          opt.setName("user").setDescription("Keys for who?")
+        )
+        .addUserOption((opt) =>
           opt
             .setName("keyholder")
             .setDescription("Who should own them instead?")
             .setRequired(true)
-        )
-        .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(false)
         )
     )
     .addSubcommand((subcommand) =>
@@ -39,13 +39,13 @@ module.exports = {
         .setName("collar")
         .setDescription("Give collar key...")
         .addUserOption((opt) =>
+          opt.setName("user").setDescription("Keys for who?")
+        )
+        .addUserOption((opt) =>
           opt
             .setName("keyholder")
             .setDescription("Who should own them instead?")
             .setRequired(true)
-        )
-        .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(false)
         )
     ),
   async execute(interaction) {
