@@ -56,7 +56,9 @@ catch (err) {
     console.log(err);
 }
 try {
+    // PLEASE GOD READ THIS
     process.consented = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`))
+    console.log(process.consented)
 }
 catch (err) { 
     console.log(err);
