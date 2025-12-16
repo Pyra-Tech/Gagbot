@@ -47,13 +47,17 @@ const getCollarKeyholder = (user) => {
 }
 
 // transfer keys and returns whether the transfer was successful
-const transferCollarKey = (user, to) => {
+const transferCollarKey = (lockedUser, newKeyholder) => {
     if (process.collar == undefined) { process.collar = {} }
-    if (!process.collar[user]) { return false }
-    if (process.collar[user].keyholder == to) { return false }
-    process.collar[user].keyholder = to;
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
-    return true
+    if (process.collar[lockedUser]) {
+        if (process.collar[lockedUser].keyholder != newKeyholder) { 
+            process.collar[lockedUser].keyholder = newKeyholder;
+            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+            return true;
+        }
+    }
+
+    return false;
 }
 
 exports.assignCollar = assignCollar

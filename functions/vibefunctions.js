@@ -57,13 +57,17 @@ const getChastityKeyholder = (user) => {
 }
 
 // transfer keys and returns whether the transfer was successful
-const transferChastityKey = (user, to) => {
+const transferChastityKey = (lockedUser, newKeyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
-    if (!process.chastity[user]) { return false }
-    if (process.chastity[user].keyholder == to) { return false }
-    process.chastity[user].keyholder = to;
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
-    return true
+    if (process.chastity[lockedUser]) {
+        if (process.chastity[lockedUser].keyholder != newKeyholder) {
+            process.chastity[lockedUser].keyholder = newKeyholder;
+            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const arousedtexts = [
