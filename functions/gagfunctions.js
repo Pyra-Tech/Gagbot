@@ -249,9 +249,9 @@ const garbleMessage = async (msg) => {
                         rej(false);
                     });
                 }).then(() => {
-                    if (!(/\w|\d|\.|\,|\`|\:|\;/).test(outtext)) {
+                    if (!(/\w|\d|\.|\\|\,|\;|\:|\'|\"|\<|\>|\?/).test(outtext)) {
                         msg.channel.send(msg.content)
-                        outtext = `Something went wrong, please tell <@125093095405518850> and give her the *exact* message you said. Gagbot has sent the exact message that was detected.`
+                        outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                     }
                     messageSendImg(outtext, msg.member.displayAvatarURL(), msg.member.displayName, msg.id, spoiler).then(() => {
                         msg.delete().then(() => {
@@ -261,10 +261,11 @@ const garbleMessage = async (msg) => {
                 })
             }
             else {
-                if (!(/\w|\d|\.|\,|\`|\:|\;/).test(outtext)) {
+                if (!(/\w|\d|\.|\\|\,|\;|\:|\'|\"|\<|\>|\?/).test(outtext)) {
                     msg.channel.send(msg.content)
-                    outtext = `Something went wrong, please tell <@125093095405518850> and give her the *exact* message you said. Gagbot has sent the exact message that was detected.`
+                    outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                 }
+                if (outtext.length == 0) { outtext = "Something went wrong. Ping <@125093095405518850> and let her know!"}
                 let sentmessage = messageSend(outtext, msg.member.displayAvatarURL(), msg.member.displayName).then(() => {
                     msg.delete();
                 })
