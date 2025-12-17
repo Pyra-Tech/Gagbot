@@ -2,8 +2,29 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { arousedtexts, arousedtextshigh } = require('../vibes/aroused/aroused_texts.js')
-const { getArousal, getStutterChance } = require('./arousal');
 const { optins } = require('./optinfunctions');
+
+// the arousal under which calculations get reset to avoid long back-calculations
+const RESET_LIMT = 0.1;
+// the minimum arousal required for frustration to also impact speach
+const STUTTER_LIMIT = 1;
+// the arousal needed for an unbelted user to orgasm
+const ORGASM_LIMIT = 10;
+// the coefficient for how much arousal is lost on orgasm
+const RELEASE_STRENGTH = 16;
+// the rate of arousal decay without orgasms when unbelted
+const UNBELTED_DECAY = 0.05;
+// the maximum frustration that can be reached
+const MAX_FRUSTRATION = 100;
+// the rate frustration grows at while belted
+const FRUSTRATION_COEFFICIENT = 1.06;
+// the portion of maximum frustration where the growth rate reduces
+const FRUSTRATION_BREAKPOINT = 0.8;
+const FRUSTRATION_BREAKPOINT_TIME =
+  Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTRATION) /
+  Math.log(FRUSTRATION_COEFFICIENT);
+// the rate frustration reaches the maximum after the breakpoint
+const FRUSTRATION_MAX_COEFFICIENT = 7;
 
 const assignChastity = (user, keyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -143,59 +164,24 @@ const getFindableChastityKeys = (user) => {
     return findable;
 }
 
-const arousedtexts = [
-  "ah~", "mm~", "ahh~", "mmm~", "ooh!~",
-  "mmmf~", "aah! <3", "aaahh!~", "mmm!~ <3", "aahhhhh!~",
-  "oooohhff!!~", "aaahaahhh!~", "mmmff~  so good...", "oohf!~  t-thank youuu~  <3", "ahh mmf ahhh!!!~",
-  "mmff more... aahh!!~"
-]
-const arousedtextshigh = [
-  "MMMM~ <3", "OOOOHHHF~", "AAHHH!!~",
-  "AAH! YES!~", "MMMFF...  MORE PLEAASEEE!!~", "MMMFFF AAHH AAHHHH!!!~  <3"
-]
-
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
-const stutterText = (text, userid) => {
-    const stutterChance = getStutterChance(userid);
-    let outtext = `${text}`;
-    if (Math.random() < stutterChance) { // 2-20% to cause a stutter
-        let stuttertimes = Math.max(Math.floor(Math.random() * 3 * stutterChance), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
-        outtext = '';
-        for (let i = 0; i < stuttertimes; i++) {
-            outtext = `${outtext}${text.charAt(0)}-`
-        }
-        outtext = `${outtext}${text}`
-    }
-    if (Math.random() < stutterChance / 4) { // 0.5-5% to insert an arousal text
-        let arousedlist = arousedtexts;
-        if (stutterChance > 0.7) {
-            for (let i = 0; i < arousedtextshigh; i++) { // Remove the first 5 elements to give the high arousal texts higher chance to show up
-                arousedlist[i] = arousedtextshigh[i]
-            }
-        }
-        let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)]
-        outtext = `${outtext}${arousedtext}`
-    }
-    return outtext
-}
-
-function stutterText(text, intensity=5) {
+function stutterText(text, stutterChance) {
     function aux(text) {
         outtext = '';
         if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || 
             (text.charAt(0) == "\n") || 
             (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
 
-            if (Math.random() > (1.0 - (0.2 * intensity))) { // 2-20% to cause a stutter
-                let stuttertimes = Math.max(Math.floor(Math.random() * (0.3 * intensity)), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
+            if (Math.random() < stutterChance) { // 2-20% to cause a stutter
+                let stuttertimes = Math.max(Math.floor(Math.random() * 3 * stutterChance), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
                 for (let i = 0; i < stuttertimes; i++) {
                     outtext = `${outtext}${text.charAt(0)}-`
                 }
                 outtext = `${outtext}${text}`
             }
-            if (Math.random() > (1.0 - (0.05 * intensity))) { // 0.5-5% to insert an arousal text
+            if (Math.random() < stutterChance / 4) { // 0.5-5% to insert an arousal text
                 let arousedlist = arousedtexts;
-                if (intensity > 7) {
+                if (stutterChance > 0.7) {
                     for (let i = 0; i < arousedtextshigh; i++) { // Remove the first 5 elements to give the high arousal texts higher chance to show up
                         arousedlist[i] = arousedtextshigh[i]
                     }
@@ -216,6 +202,176 @@ function stutterText(text, intensity=5) {
     }
     return outtext
 }
+
+// return of 0 = never, 1+ = always
+function getStutterChance(user) {
+  let chance = getArousal(user);
+  if (chance < RESET_LIMT) chance = 0;
+  if (chance >= STUTTER_LIMIT) {
+    const chastity = getChastity(user);
+    if (chastity) {
+      const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
+      chance += calcFrustration(hoursBelted);
+    }
+  }
+  return chance / 100;
+}
+
+function getArousal(user) {
+  if (process.arousal == undefined) process.arousal = {};
+  const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
+  const now = Date.now();
+  let timeStep = 1;
+  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+    timeStep = (now - arousal.timestamp) / (60 * 1000);
+  }
+  while (timeStep > 1) {
+    const next = calcNextArousal(
+      arousal.prev,
+      arousal.prev2,
+      calcGrowthCoefficient(user),
+      calcDecayCoefficient(user),
+      1,
+      ORGASM_LIMIT,
+      RELEASE_STRENGTH,
+      true
+    );
+    arousal.prev2 = arousal.prev;
+    arousal.prev = next;
+
+    // abort loop early if arousal goes below the reset limit
+    if (next < RESET_LIMT) {
+      timeStep = 1;
+      break;
+    }
+
+    timeStep -= 1;
+  }
+  const next = calcNextArousal(
+    arousal.prev,
+    arousal.prev2,
+    calcGrowthCoefficient(user),
+    calcDecayCoefficient(user),
+    timeStep,
+    ORGASM_LIMIT,
+    RELEASE_STRENGTH,
+    true
+  );
+  arousal.prev2 = arousal.prev;
+  arousal.prev = next;
+  arousal.timestamp = now;
+  process.arousal[user] = arousal;
+  fs.writeFileSync(
+    `${process.GagbotSavedFileDirectory}/arousal.txt`,
+    JSON.stringify(process.arousal)
+  );
+  return next;
+}
+
+function addArousal(user, change) {
+  if (process.arousal == undefined) process.arousal = {};
+  const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
+  const now = Date.now();
+  let timeStep = 1;
+  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+    timeStep = (now - arousal.timestamp) / (60 * 1000);
+  }
+  // for large gaps, calculate it in steps
+  while (timeStep > 1) {
+    const next = calcNextArousal(
+      arousal.prev,
+      arousal.prev2,
+      calcGrowthCoefficient(user),
+      calcDecayCoefficient(user),
+      1,
+      ORGASM_LIMIT,
+      RELEASE_STRENGTH,
+      true
+    );
+    arousal.prev2 = arousal.prev;
+    arousal.prev = next;
+
+    // abort loop early if arousal goes below the reset limit
+    if (next < RESET_LIMT) {
+      timeStep = 1;
+      break;
+    }
+
+    timeStep -= 1;
+  }
+  const next =
+    calcNextArousal(
+      arousal.prev,
+      arousal.prev2,
+      calcGrowthCoefficient(user),
+      calcDecayCoefficient(user),
+      timeStep,
+      ORGASM_LIMIT,
+      RELEASE_STRENGTH,
+      true
+    ) + change;
+  arousal.prev2 = arousal.prev;
+  arousal.prev = next;
+  arousal.timestamp = now;
+  process.arousal[user] = arousal;
+  fs.writeFileSync(
+    `${process.GagbotSavedFileDirectory}/arousal.txt`,
+    JSON.stringify(process.arousal)
+  );
+  return next;
+}
+
+function calcNextArousal(
+  prev,
+  prev2,
+  growthCoefficient,
+  decayCoefficient,
+  timeStep,
+  orgasmLimit,
+  releaseStrength,
+  canOrgasm
+) {
+  const noDecay = prev + timeStep * growthCoefficient;
+  let next = noDecay - timeStep * decayCoefficient * (prev + prev2 / 2);
+  if (canOrgasm && prev >= (UNBELTED_DECAY * orgasmLimit) / decayCoefficient) {
+    next -=
+      (decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) /
+      UNBELTED_DECAY;
+  }
+  return next;
+}
+
+// modify when more things affect it
+function calcGrowthCoefficient(user) {
+    const vibes = getVibe(user);
+    if (!vibes) return 0;
+    return vibes.reduce((a, b) => a + b.intensity, 0) / 10;
+}
+
+// modify when more things affect it
+function calcDecayCoefficient(user) {
+  return getChastity(user) ? UNBELTED_DECAY / 5 : UNBELTED_DECAY;
+}
+
+// modify when more things affect it
+function calcFrustration(hoursBelted) {
+  if (hoursBelted <= FRUSTRATION_BREAKPOINT_TIME) {
+    return Math.pow(FRUSTRATION_COEFFICIENT, hoursBelted);
+  }
+
+  const unbounded =
+    MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT +
+    FRUSTRATION_MAX_COEFFICIENT *
+      Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
+
+  if (unbounded > MAX_FRUSTRATION) return MAX_FRUSTRATION;
+  return unbounded;
+}
+
+exports.getStutterChance = getStutterChance;
+exports.calcFrustration = calcFrustration;
+exports.getArousal = getArousal;
+exports.addArousal = addArousal;
 
 exports.assignChastity = assignChastity
 exports.getChastity = getChastity

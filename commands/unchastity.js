@@ -4,8 +4,8 @@ const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js');
-const { getFumbleChance } = require('../functions/arousal.js');
 const { optins } = require('../functions/optinfunctions.js');
+const { getFumbleChance } = require('../functions/keyfindingfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()

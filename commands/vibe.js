@@ -5,6 +5,7 @@ const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
 const fs = require('fs');
 const path = require('path');
+const { getFumbleChance } = require('../functions/keyfindingfunctions.js');
 
 const vibetypes = [];
 const commandsPath = path.join(__dirname, '..', 'vibes');

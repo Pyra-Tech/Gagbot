@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { garbleMessage } = require(`./functions/gagfunctions.js`);
-const { handleKeyFinding } = require('./functions/keyfinding.js');
+const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 
 dotenv.config()
 
@@ -39,8 +39,7 @@ try {
     process.chastity = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`))
     // handle belts locked before frustration was being tracked, can be removed once this has been ran once
     for (const key in process.chastity) {
-        const value = process.chastity[key];
-        if (!value.timestamp) value.timestamp = Date.now();
+        if (!process.chastity[key].timestamp) process.chastity[key].timestamp = Date.now();
     }
 }
 catch (err) { 

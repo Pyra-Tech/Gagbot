@@ -3,9 +3,9 @@ const { getChastity, getVibe, removeVibe, discardChastityKey } = require('./../f
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
-const { getFumbleChance } = require('../functions/arousal.js');
 const fs = require('fs');
 const path = require('path');
+const { getFumbleChance } = require('../functions/keyfindingfunctions.js');
 
 const vibetypes = [];
 const commandsPath = path.join(__dirname, '..', 'vibes');
