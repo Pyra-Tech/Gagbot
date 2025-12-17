@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { SlashCommandBuilder, MessageFlags, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder } = require('discord.js');
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 
 // Generates a consent button which the user will have to agree to. 
@@ -79,6 +79,59 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
     warningText = `${warningText}\nCollars may result in unintended situations such as someone holding your chastity key other than you, or you becoming unable to remove restraints because of heavy bondage. Use with caution!`
 
     restrictionWarningText.setContent(warningText)
+
+    const restrictionsInputmitten = new StringSelectMenuBuilder()
+        .setCustomId('mitten')
+        .setPlaceholder('Select Permission')
+        .setRequired(true)
+        .addOptions(
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Yes')
+                // Description of option
+                .setDescription('Allows the use of /mitten on you')
+                // Value returned to you in modal submission
+                .setValue('mitten_yes'),
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('No')
+                // Description of option
+                .setDescription('Disallows the use of /mitten on you')
+                // Value returned to you in modal submission
+                .setValue('mitten_no'),
+        )
+
+    const timelockamt = new TextInputBuilder()
+        .setCustomId('timelockinput')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g. 10 days 5h 24 mins')
+        .setRequired(true)
+
+    const restrictionsLabelmitten = new LabelBuilder()
+        .setLabel(`How long do you wish to be timelocked for?`)
+        .setDescription("In human readable format (e.g. 10 days 5h 24 mins)")
+        .setTextInputComponent(timelockamt)
+
+    const restrictionsLabelchastity = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to put you in chastity?`)
+        .setTextInputComponent(restrictionsInputchastity)
+
+    const restrictionsLabelheavy = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to put you in heavy bondage?`)
+        .setStringSelectMenuComponent(restrictionsInputheavy)
+
+    // Add labels to modal
+    modal.addTextDisplayComponents(restrictionWarningText)
+        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy); 
+
+    return modal;
+}
+
+const timelockChastityModal = (interaction, keyholder) => {
+    const modal = new ModalBuilder().setCustomId(`chastity_${keyholder.id}_${freeuse ? "f" : "t"}`).setTitle('Collar Permissions');
+
+    let restrictionWarningText = new TextDisplayBuilder()
+    let othertext = "others"
 
     const restrictionsInputmitten = new StringSelectMenuBuilder()
         .setCustomId('mitten')

@@ -48,7 +48,7 @@ const getVibe = (user) => {
     return process.vibe[user];
 }
 
-const removeVibe = (user, vibetype=null) => {
+const removeVibe = (user, vibetype) => {
     if (process.vibe == undefined) { process.vibe = {} }
     if (!vibetype) {
         delete process.vibe[user];
@@ -94,15 +94,16 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
 function stutterText(text, intensity=5) {
     function aux(text) {
         outtext = '';
-        if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || 
-            (text.charAt(0) == "\n") || 
-            (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
-
+        if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || (text.charAt(0) == "\n") || (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
+            let stuttered = false;
             if (Math.random() > (1.0 - (0.2 * intensity))) { // 2-20% to cause a stutter
                 let stuttertimes = Math.max(Math.floor(Math.random() * (0.3 * intensity)), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
                 for (let i = 0; i < stuttertimes; i++) {
                     outtext = `${outtext}${text.charAt(0)}-`
                 }
+                outtext = `${outtext}${text}`
+            }
+            else {
                 outtext = `${outtext}${text}`
             }
             if (Math.random() > (1.0 - (0.05 * intensity))) { // 0.5-5% to insert an arousal text
@@ -140,5 +141,3 @@ exports.stutterText = stutterText
 exports.getChastityKeys = getChastityKeys;
 exports.getChastityKeyholder = getChastityKeyholder;
 exports.transferChastityKey = transferChastityKey
-
-console.log(getChastityKeys("125093095405518850"))
