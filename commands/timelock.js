@@ -11,10 +11,12 @@ module.exports = {
         .setName("chastity")
         .setDescription("Lock a chastity belt...")
         .addUserOption((opt) => opt.setName("wearer").setDescription("Who wears the belt?").setRequired(false))
+        .addUserOption((opt) => opt.setName("keyholder").setDescription("If selflocked, who is your temporary keyholder?").setRequired(false))
     ),
   async execute(interaction) {
     const actiontotake = interaction.options.getSubcommand();
     const wearer = interaction.options.getUser("wearer") ?? interaction.user;
+    const tempKeyholder = interaction.options.getUser("wearer");
 
     switch (actiontotake) {
       case "chastity":
@@ -34,7 +36,7 @@ module.exports = {
           return;
         }
 
-        interaction.showModal(timelockChastityModal(interaction, wearer));
+        interaction.showModal(timelockChastityModal(interaction, wearer, tempKeyholder));
         break;
       default:
         interaction.reply({

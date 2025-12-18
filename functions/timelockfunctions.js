@@ -2,11 +2,12 @@ const { removeChastity } = require("./vibefunctions");
 const fs = require("fs");
 
 // returns whether the locking was successful
-function timelockChastity(client, wearer, unlockTime, access, keyholderAfter) {
+function timelockChastity(client, wearer, keyholder, unlockTime, access, keyholderAfter) {
   const now = Date.now();
   if (now >= unlockTime) return false;
   if (process.chastity == undefined) process.chastity = {};
   const chastity = process.chastity[wearer];
+  chastity.keyholder = keyholder;
   if (!chastity) return false;
   if (chastity.keyholder == wearer) {
     chastity.keyholder = null;

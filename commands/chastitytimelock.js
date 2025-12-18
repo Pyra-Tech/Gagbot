@@ -7,8 +7,10 @@ module.exports = {
   async modalexecute(interaction) {
     console.log(interaction);
 
-    const keyholder = interaction.user.id;
-    const wearer = interaction.customId.split("_")[1];
+    let keyholder = interaction.user.id;
+    const split = interaction.customId.split("_");
+    const wearer = split[1];
+    if (keyholder == wearer && split[2]) keyholder = split[2];
     const timeString = interaction.fields.getTextInputValue("timelockinput");
     let access;
     switch (interaction.fields.getStringSelectValues("accesswhilebound")[0]) {
@@ -55,7 +57,7 @@ module.exports = {
     {
       key: "cctl",
       async handle(interaction, wearer, keyholder, unlockTime, access, keyholderAfter) {
-        if (getChastityKeyholder(wearer) != keyholder) {
+        if (getChastityKeyholder(wearer) != wearer && getChastityKeyholder(wearer) != keyholder) {
           interaction.reply({
             content: "Keyholder has changed since start of timelocking",
             flags: MessageFlags.Ephemeral,
@@ -63,7 +65,7 @@ module.exports = {
           return;
         }
 
-        if (timelockChastity(interaction.client, wearer, Number(unlockTime), Number(access), Number(keyholderAfter))) {
+        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime), Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
           interaction.reply({
             content: "Timelock confirmed",
