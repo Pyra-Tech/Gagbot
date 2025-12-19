@@ -229,7 +229,9 @@ const garbleMessage = async (msg) => {
         if (modifiedmessage) { //Fake reply with a ping
             if (msg.type == "19") {
                 const replied = await msg.fetchReference();
-                outtext = `${replied.author.toString()}\n${outtext}`
+                const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
+                const first = replyauthorobject.first()
+                outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`
             }
             if (outtext.length > 1999) {
                 outtext = outtext.slice(0, 1999); // Seriously, STOP POSTING LONG MESSAGES
@@ -254,7 +256,7 @@ const garbleMessage = async (msg) => {
                         rej(false);
                     });
                 }).then(() => {
-                    if (!(/[^\u0000-\u0020]/).test(outtext)) {
+                    if ((!(/[^\u0000-\u0020]/).test(outtext)) && (outtext.length > 0)) {
                         msg.channel.send(msg.content)
                         outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                     }
