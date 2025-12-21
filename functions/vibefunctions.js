@@ -14,7 +14,7 @@ const ORGASM_LIMIT = 10;
 // the coefficient for how much arousal is lost on orgasm
 const RELEASE_STRENGTH = 16;
 // the rate of arousal decay without orgasms when unbelted
-const UNBELTED_DECAY = 0.05;
+const UNBELTED_DECAY = 0.2;
 // the maximum frustration that can be reached
 const MAX_FRUSTRATION = 100;
 // the rate frustration grows at while belted
@@ -351,7 +351,7 @@ function tryOrgasm(user) {
 function calcGrowthCoefficient(user) {
   const vibes = getVibe(user);
   if (!vibes) return 0;
-  return vibes.reduce((a, b) => a + b.intensity, 0) / 10;
+  return vibes.reduce((a, b) => a + b.intensity, 0);
 }
 
 // modify when more things affect it
