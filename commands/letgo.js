@@ -1,7 +1,8 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { their } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { tryOrgasm } = require("../functions/vibefunctions.js");
+const { tryOrgasm, getChastity } = require("../functions/vibefunctions.js");
+const { getHeavy } = require("../functions/heavyfunctions.js");
 
 module.exports = {
   data: new SlashCommandBuilder().setName("letgo").setDescription(`Try to get release`),
@@ -17,6 +18,17 @@ module.exports = {
       if (tryOrgasm(interaction.user.id)) {
         interaction.reply(`${interaction.user} is overwhelmed with pleasure and releases it in an earth-shattering orgasm!`);
       } else {
+        if (getChastity(interaction.user.id)) {
+          interaction.reply(`${interaction.user} tries to get over the edge but is denied by ${their(interaction.user.id)} steel prison!`);
+          return;
+        }
+
+        const heavy = getHeavy(interaction.user.id);
+        if (heavy) {
+          interaction.reply(`${interaction.user} tries to get over the edge but is denied by ${their(interaction.user.id)} ${heavy.type}!`);
+          return;
+        }
+
         interaction.reply(`${interaction.user} tries to get over the edge but is denied by ${their(interaction.user.id)} own body!`);
       }
     } catch (err) {
