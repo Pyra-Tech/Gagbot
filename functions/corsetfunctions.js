@@ -1,15 +1,7 @@
 const fs = require("fs");
 
-// max breath is calculated using \frac{BASE_MAX_BREATH}{\left\{x<TIGHT_BREAKPOINT:1,x\geTIGHT_BREAKPOINT:x^{TIGHT_MAX_BREATH_EXPONENT}\right\}x^{MAX_BREATH_EXPONENT}}-\left\{x\leEXTREME_BREAKPOINT:0,x>EXTREME_BREAKPOINT:EXTREME_MAX_BREATH_COEFFICIENTx^{EXTREME_MAX_BREATH_EXPONENT}\right\}
-// breath recovery is calculated using BASE_RECOVERY_COEFFICIENTmaxBreath^{BREATH_RECOVERY_EXPONENT}
+const MAX_BREATH_TABLE = [2000, 620, 500, 410, 330, 280, 240, 195, 160, 130, 105, 70, 40, 20, 10];
 
-const BASE_MAX_BREATH = 750;
-const MAX_BREATH_EXPONENT = 0.6;
-const TIGHT_BREAKPOINT = 7;
-const TIGHT_MAX_BREATH_EXPONENT = 0.2;
-const EXTREME_BREAKPOINT = 10;
-const EXTREME_MAX_BREATH_COEFFICIENT = 2.6;
-const EXTREME_MAX_BREATH_EXPONENT = 1.3;
 const BREATH_RECOVERY_EXPONENT = 1.1;
 const BREATH_RECOVERY_COEFFICIENT = 0.01;
 
@@ -114,11 +106,8 @@ function corsetLimitWords(user, text) {
 }
 
 function calcMaxBreath(tightness) {
-  let denom = Math.pow(tightness, MAX_BREATH_EXPONENT);
-  if (tightness >= TIGHT_BREAKPOINT) denom *= Math.pow(tightness, TIGHT_MAX_BREATH_EXPONENT);
-  let max = BASE_MAX_BREATH / denom;
-  if (tightness > EXTREME_BREAKPOINT) max -= EXTREME_MAX_BREATH_COEFFICIENT * Math.pow(tightness, EXTREME_MAX_BREATH_EXPONENT);
-  return max;
+  if ((tightness | 0) >= MAX_BREATH_TABLE.length) return 0;
+  return MAX_BREATH_TABLE[tightness | 0];
 }
 
 function calcBreathRecovery(maxBreath) {
