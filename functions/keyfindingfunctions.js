@@ -90,6 +90,7 @@ function getFumbleChance(keyholder, locked) {
   if (chastity) {
     const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
     chance += calcFrustration(hoursBelted);
+    chance += chastity.extraFrustration ?? 0;
   }
 
   // chance is increased if the keyholder is wearing mittens

@@ -1,6 +1,6 @@
 import { Snowflake } from "discord.js";
 
-export type Chastity = { keyholder?: Snowflake | "discarded"; timestamp?: number };
+export type Chastity = { keyholder?: Snowflake | "discarded"; timestamp?: number, extraFrustration?: number };
 export type Vibe = { vibetype: string; intensity: number };
 
 export function assignChastity(user: Snowflake, keyholder: Snowflake): void;

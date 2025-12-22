@@ -26,6 +26,8 @@ const FRUSTRATION_BREAKPOINT_TIME = Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTR
 const FRUSTRATION_MAX_COEFFICIENT = 7;
 // the minimum time between successful orgasms
 const ORGASM_COOLDOWN = 5 * 1000;
+// the frustration increase caused by failed orgasms
+const ORGASM_FRUSTRATION = 5;
 
 const assignChastity = (user, keyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -362,6 +364,14 @@ function tryOrgasm(user) {
     process.arousal[user].lastOrgasm = now;
     addArousal(user, -(decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) / UNBELTED_DECAY);
     return true;
+  }
+
+  // failing to orgasm is frustrating
+  const chastity = getChastity(user);
+  if (chastity) {
+    const extraFrustration = chastity.extraFrustration ?? 0;
+    chastity.extraFrustration = extraFrustration + ORGASM_FRUSTRATION;
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
   }
 
   return false;
