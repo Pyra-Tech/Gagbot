@@ -46,6 +46,7 @@ const heavytypes = [
     { name: "Binding Dress", value: "dress_binding", denialCoefficient: 4.5 },
     { name: "Hogtie", value: "rope_hogtie", denialCoefficient: 3 },
     { name: "Shrimp Tie", value: "rope_shrimp", denialCoefficient: 3 },
+    { name: "Blanket Burrito", value: "blanket_burrito", denialCoefficient: 2 },
 ];
 
 
