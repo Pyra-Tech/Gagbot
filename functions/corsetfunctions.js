@@ -59,10 +59,14 @@ function corsetLimitWords(user, text) {
         if (char == "!") corset.breath -= 5 * globalMultiplier;
       }
 
-      if (corset.breath < -corset.maxBreath && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
+      if (corset.breath < -2 * corset.maxBreath && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
 
       // add gasping sounds once at half of max breath
-      if (!silence && corset.breath < corset.maxBreath / 2 && Math.random() > (corset.breath + corset.maxBreath) / (corset.tightness * corset.maxBreath * 0.2)) {
+      if (
+        !silence &&
+        corset.breath < corset.maxBreath / 2 &&
+        Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -corset.maxBreath) + corset.maxBreath) / (corset.tightness * corset.maxBreath * 0.2))
+      ) {
         newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
       }
 
@@ -71,27 +75,18 @@ function corsetLimitWords(user, text) {
 
       // remove letters if out of breath
       if (!silence && corset.breath < 0) {
-        const toRemove = Math.floor((Math.random() * word.length * -corset.breath) / corset.maxBreath);
-        if (toRemove >= word.length) {
-          // shortcut if all silence
-          let newWord = "";
-          for (let i = 0; i < word.length; i++) newWord += silenceReplacers[Math.floor((1 - Math.random() * Math.random()) * silenceReplacers.length)];
-          word = newWord;
-        } else {
-          // inneffient for long words but shouldnt be a problem
-          const removeIdxs = [];
-          while (removeIdxs.length < toRemove) {
-            const idx = Math.floor(Math.random() * word.length);
-            if (!removeIdxs.includes(idx)) removeIdxs.push(idx);
-          }
-
-          let newWord = "";
-          for (const idx in word) {
-            if (removeIdxs.includes(idx)) newWord += silenceReplacers[Math.floor(Math.random() * silenceReplacers.length)];
-            else newWord += word[idx];
-          }
-          word = newWord;
+        const toRemove = (word.length * -corset.breath) / corset.maxBreath;
+        const removeIdxs = [];
+        for (let i = 0; i < toRemove; i++) {
+          removeIdxs.push(Math.floor(Math.random() * word.length));
         }
+
+        let newWord = "";
+        for (const idx in word) {
+          if (removeIdxs.includes(Number(idx))) newWord += silenceReplacers[Math.floor(Math.random() * silenceReplacers.length)];
+          else newWord += word[idx];
+        }
+        word = newWord;
       }
 
       if (!silence) newwordsinmessage.push(word);
