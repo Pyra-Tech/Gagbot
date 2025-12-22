@@ -40,7 +40,10 @@ function corsetLimitWords(user, text) {
   let globalMultiplier = text.match(/^\s*#+\s/) ? 2 : 1;
   const corset = calcBreath(user);
   // Tightlaced bottoms must only whisper
-  if (corset.tightness >= 7 && !text.match(/^\s*-#\s/)) globalMultiplier *= 2;
+  if (corset.tightness >= 7 && !text.match(/^\s*\-#\s/)) globalMultiplier *= 2;
+  // Bottoms cannot shout!
+  text = text.replace(/^\s*#+\s/, "");
+  text = text.replaceAll(/\n\s*#+\s/g, "\n");
   let silence = false;
   let wordsinmessage = text.split(" ");
   let newwordsinmessage = [];
@@ -71,7 +74,7 @@ function corsetLimitWords(user, text) {
       }
 
       // SILENCE BOTTOM
-      if (!silence && corset.tightness >= 5) word = word.replace(/\!+/, "");
+      if (!silence && corset.tightness >= 5) word = word.replaceAll("!", "");
 
       // remove letters if out of breath
       if (!silence && corset.breath < 0) {
@@ -96,11 +99,12 @@ function corsetLimitWords(user, text) {
   if (newwordsinmessage.length == 0) return "";
   let outtext = newwordsinmessage.join(" ");
   // Replace other instances of small speak so we only have one.
-  if (getCorset(user).tightness >= 7)
-    return outtext
-      .split("\n")
-      .map((line) => (line.length > 0 ? `-# ${line.replace("-#", "")}` : ""))
-      .join("\n");
+  if (corset.tightness >= 7) {
+    outtext = outtext.replace(/^\s*\-#\s/, "");
+    outtext = outtext.replaceAll(/\n\s*\-#\s/g, "\n");
+    outtext = outtext.replaceAll("\n", "\n-# ");
+    outtext = `-# ${outtext}`;
+  }
   return outtext;
 }
 
