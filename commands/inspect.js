@@ -46,9 +46,10 @@ module.exports = {
                 outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: Not currently worn.\n`
             }
             // Arousal status
-            outtext = `${outtext}Arousal: **${getArousalDescription(inspectuser.id)}**\n`
+            const arousal = getArousalDescription(inspectuser.id);
+            if (arousal) outtext = `${outtext}Arousal: **${getArousalDescription(inspectuser.id)}**\n`;
             const change = getArousalChangeDescription(inspectuser.id);
-            if (change) outtext = `${outtext}-# ...${change}\n`
+            if (change) outtext = `${outtext}-# ...${change}\n`;
             // Chastity status
             if (getChastity(inspectuser.id)) {
                 let isLocked = (getChastity(inspectuser.id)?.keyholder == interaction.user.id || (getChastity(inspectuser.id)?.access === 0 && inspectuser.id != interaction.user.id))

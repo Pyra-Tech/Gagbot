@@ -53,6 +53,14 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
+            // it has an optin now
+            if (!optins.getEnableVibes(vibeuser.id)) {
+                interaction.reply({
+                    content: `${vibeuser} has disabled vibes`,
+                    flags: MessageFlags.Ephemeral
+                })
+                return;
+            }
             if (getHeavy(interaction.user.id)) {
                 if (vibeuser == interaction.user) {
                     if (getChastity(vibeuser.id)) {

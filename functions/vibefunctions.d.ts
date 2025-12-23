@@ -37,7 +37,7 @@ export function getVibeEquivalent(user: Snowflake): number;
  * Returns a user-presentable string giving a vague indication of the arousal of the user.
  * @param user
  */
-export function getArousalDescription(user: Snowflake): string;
+export function getArousalDescription(user: Snowflake): string | null;
 
 /**
  * Returns a user-presentable string giving a vague indication of the direction the arousal of the user is going in.

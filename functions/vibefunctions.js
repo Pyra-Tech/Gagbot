@@ -54,6 +54,7 @@ const removeChastity = (user) => {
 }
 
 const assignVibe = (user, intensity, vibetype = "bullet vibe") => {
+    if (!optins.getEnableVibes(user)) return;
     if (process.vibe == undefined) { process.vibe = {} }
     // catch up with arousal before arousal-affecting restraints change
     getArousal(user);
@@ -225,19 +226,23 @@ function stutterText(text, intensity) {
 }
 
 function getVibeEquivalent(user) {
-  let chance = getArousal(user);
-  if (chance < RESET_LIMT) chance = 0;
-  if (chance >= STUTTER_LIMIT) {
+  if (!optins.getDynamicArousal(user)) return calcStaticVibeIntensity(user);
+
+  let intensity = getArousal(user);
+  if (intensity < RESET_LIMT) intensity = 0;
+  if (intensity >= STUTTER_LIMIT) {
     const chastity = getChastity(user);
     if (chastity) {
       const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
-      chance += (calcFrustration(hoursBelted) + chastity.extraFrustration) / 10;
+      intensity += (calcFrustration(hoursBelted) + chastity.extraFrustration) / 10;
     }
   }
-  return chance;
+  return intensity;
 }
 
 function getArousalDescription(user) {
+  if (!optins.getDynamicArousal(user)) return null;
+
   const arousal = getArousal(user);
   const denialCoefficient = calcDenialCoefficient(user);
   const orgasmLimit = ORGASM_LIMIT * denialCoefficient;
@@ -253,6 +258,8 @@ function getArousalDescription(user) {
 }
 
 function getArousalChangeDescription(user) {
+  if (!optins.getDynamicArousal(user)) return null;
+
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user];
   if (!arousal || !arousal.lastChange || !arousal.lastTimeStep) return null;
@@ -352,6 +359,9 @@ function calcNextArousal(prev, prev2, growthCoefficient, decayCoefficient, timeS
 
 // user attempts to orgasm, returns if it succeeds
 function tryOrgasm(user) {
+  // always succeed if user isnt using the system
+  if (!optins.getDynamicArousal(user)) return true;
+
   const now = Date.now();
   const arousal = getArousal(user);
   const decayCoefficient = calcDecayCoefficient(user);
@@ -382,6 +392,13 @@ function calcGrowthCoefficient(user) {
   const vibes = getVibe(user);
   if (!vibes) return 0;
   return vibes.reduce((a, b) => a + b.intensity, 0) * 0.4;
+}
+
+// modify when more things affect it
+function calcStaticVibeIntensity(user) {
+  const vibes = getVibe(user);
+  if (!vibes) return 0;
+  return vibes.reduce((a, b) => a + b.intensity, 0);
 }
 
 // modify when more things affect it

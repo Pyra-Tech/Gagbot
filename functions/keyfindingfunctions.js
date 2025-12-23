@@ -82,6 +82,7 @@ function getFumbleChance(keyholder, locked) {
   if (process.keyfumbling == undefined) {
     process.keyfumbling = {};
   }
+  if (!optins.getDynamicArousal(keyholder)) return 0;
   if (!optins.getKeyFumbling(keyholder)) return 0;
   if (keyholder != locked && !optins.getFumbleOthersKeys(keyholder)) return 0;
   if (keyholder != locked && !optins.getOthersKeyFumbling(locked)) return 0;
