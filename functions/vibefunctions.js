@@ -17,6 +17,10 @@ const RELEASE_STRENGTH = 16;
 const UNBELTED_DECAY = 0.2;
 // the maximum frustration that can be reached
 const MAX_FRUSTRATION = 100;
+// by how much arousal randomness is biased upwards
+const RANDOM_BIAS = 1;
+// by how much vibe intensity is scaled for the arousal model
+const VIBE_SCALING = 0.4 * 0.66
 // the rate frustration grows at while belted
 const FRUSTRATION_COEFFICIENT = 1.06;
 // the portion of maximum frustration where the growth rate reduces
@@ -370,7 +374,7 @@ function tryOrgasm(user) {
   const releaseStrength = RELEASE_STRENGTH;
   const canOrgasm = now - (process.arousal[user]?.lastOrgasm ?? 0) >= ORGASM_COOLDOWN;
 
-  if (canOrgasm && arousal * (1 + Math.random()) / 2 >= orgasmLimit * denialCoefficient) {
+  if (canOrgasm && arousal * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
     process.arousal[user].lastOrgasm = now;
     addArousal(user, -(decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) / UNBELTED_DECAY);
     return true;
@@ -391,7 +395,7 @@ function tryOrgasm(user) {
 function calcGrowthCoefficient(user) {
   const vibes = getVibe(user);
   if (!vibes) return 0;
-  return vibes.reduce((a, b) => a + b.intensity, 0) * 0.4;
+  return vibes.reduce((a, b) => a + b.intensity, 0) * VIBE_SCALING;
 }
 
 // modify when more things affect it

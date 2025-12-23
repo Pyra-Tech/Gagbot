@@ -36,7 +36,7 @@ module.exports = {
             opt.setName('intensity')
             .setDescription("How intensely to stimulate")
             .setMinValue(1)
-            .setMaxValue(30)
+            .setMaxValue(20)
         ),
     async execute(interaction) {
         try {
