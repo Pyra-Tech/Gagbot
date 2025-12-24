@@ -281,8 +281,6 @@ function getArousal(user) {
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
   const now = Date.now();
-  // skip calculating if last is recent
-  if (now - arousal.timestamp < 1000) return arousal.prev;
   let timeStep = 1;
   if (arousal.timestamp && arousal.prev < RESET_LIMT) {
     timeStep = (now - arousal.timestamp) / (60 * 1000);
@@ -315,35 +313,29 @@ function addArousal(user, change) {
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
   const now = Date.now();
-  // skip calculating if last is recent
-  let next = arousal.prev + change;
-  if (now - arousal.timestamp >= 1000) {
-    let timeStep = 1;
-    if (arousal.timestamp && arousal.prev < RESET_LIMT) {
-      timeStep = (now - arousal.timestamp) / (60 * 1000);
-    }
-    // for large gaps, calculate it in steps
-    while (timeStep > 1) {
-      const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
-      arousal.prev2 = arousal.prev;
-      arousal.prev = next;
-
-      // abort loop early if arousal goes below the reset limit
-      if (next < RESET_LIMT) {
-        timeStep = 1;
-        break;
-      }
-
-      timeStep -= 1;
-    }
-    next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep) + change;
-    arousal.lastChange = next - arousal.prev;
-    arousal.lastTimeStep = timeStep;
-    arousal.prev2 = arousal.prev;
-    arousal.timestamp = now;
-  } else {
-    arousal.lastChange += change;
+  let timeStep = 1;
+  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+    timeStep = (now - arousal.timestamp) / (60 * 1000);
   }
+  // for large gaps, calculate it in steps
+  while (timeStep > 1) {
+    const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
+    arousal.prev2 = arousal.prev;
+    arousal.prev = next;
+
+    // abort loop early if arousal goes below the reset limit
+    if (next < RESET_LIMT) {
+      timeStep = 1;
+      break;
+    }
+
+    timeStep -= 1;
+  }
+  const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep) + change;
+  arousal.lastChange = next - arousal.prev;
+  arousal.lastTimeStep = timeStep;
+  arousal.prev2 = arousal.prev;
+  arousal.timestamp = now;
   arousal.prev = next;
   process.arousal[user] = arousal;
   fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
