@@ -376,6 +376,12 @@ function tryOrgasm(user) {
     process.arousal[user].prev = 0;
     process.arousal[user].prev2 = 0;
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+    const chastity = getChastity(user);
+    if (chastity) {
+      chastity.extraFrustration = 0;
+      chastity.timestamp = (chastity.timestamp + now) / 2;
+      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    }
     return true;
   }
 
