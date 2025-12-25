@@ -35,46 +35,68 @@ module.exports = {
                 return;
             }
             let tightness = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
+            // Build data tree:
+            let data = {
+                textarray: "texts_corset",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: collareduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: tightness // corset tightness 
+                }
+            }
             if (getHeavy(interaction.user.id)) {
                 // In heavy bondage, fail
+                data.heavy = true
                 if (corsetuser == interaction.user) {
                     // Doing this to self
                     if (getChastity(corsetuser.id)) {
-                        interaction.reply(`${interaction.user} nudges a corset with ${getPronouns(interaction.user.id, "possessiveDeterminer")} knee, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} prevents ${getPronouns(interaction.user.id, "object")} from even trying to get the corset around ${getPronouns(corsetuser.id, "object")} waist, to say nothing of ${getPronouns(corsetuser.id, "possessiveDeterminer")} chastity belt in the way!`)
+                        data.chastity = true
+                        interaction.reply(getText(data))
                     }
                     else {
-                        interaction.reply(`${interaction.user} looks at a corset, but ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "is" : "are"} is still tightly bound in a ${getHeavy(interaction.user.id).type} and can't effectively hold the laces!`)
+                        data.nochastity = true
+                        interaction.reply(getText(data))
                     }
                 }
                 else {
                     // To others
                     if (getChastity(corsetuser.id)) {
-                        interaction.reply(`${interaction.user} brushes a corset with ${getPronouns(interaction.user.id, "possessiveDeterminer")} chin towards ${corsetuser} but ${getPronouns(interaction.user.id, "subject")} can't put it on ${getPronouns(corsetuser.id, "object")} because bound arms and unyielding steel chastity belts make it hard to manipulate corsets!`)
+                        data.chastity = true
+                        interaction.reply(getText(data))
                     }
                     else {
-                        interaction.reply(`${interaction.user} bumps into a corset with ${getPronouns(interaction.user.id, "possessiveDeterminer")} hip. Sadly, because hips don't have fingers, ${corsetuser} cannot be corseted! If only ${getPronouns(interaction.user.id, "subject")} wasn't in an unyielding ${getHeavy(interaction.user.id).type}, ${getPronouns(interaction.user.id, "subject")} might be able to bind ${getPronouns(corsetuser.id, "object")}`)
+                        data.nochastity = true
+                        interaction.reply(getText(data))
                     }
                 }
             }
             else if (getChastity(corsetuser.id)) {
+                data.chastity = true
                 // The target is in a chastity belt
                 if ((getChastity(corsetuser.id)?.keyholder == interaction.user.id || (getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id))) {
                     // User tries to modify the corset settings for someone in chastity that they do have the key for
+                    data.nokey = true
                     const fumbleResults = rollKeyFumbleN(interaction.user.id, corsetuser.id, 2);
                     if (fumbleResults[0]) {
                         // User fumbles with the key due to their arousal and frustration
+                        data.fumble = true
                         if (optins.getKeyDiscarding(corsetuser.id) && fumbleResults[1]) {
+                            data.discard = true
                             // if they fumble again they can lose the key
                             if (corsetuser == interaction.user) {
                                 // User tries to modify their own corset settings while in chastity
+                                data.self = true
                                 if (getCorset(corsetuser.id)) {
                                     // User already has a corset on
-                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to adjust the corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain just as out of breath as before!`);
+                                    data.corset = true
+                                    interaction.reply(getText(data));
                                     discardChastityKey(corsetuser.id);
                                 }
                                 else {
                                     // Putting ON a corset!
-                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to put on a corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain without one!`);
+                                    data.nocorset = true;
+                                    interaction.reply(getText(data));
                                     discardChastityKey(corsetuser.id);
                                 }
                             } else {
