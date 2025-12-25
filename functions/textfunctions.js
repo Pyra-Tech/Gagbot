@@ -301,13 +301,29 @@ const texts_gag = {
     }
 }
 
+// Thank goodness this one is tiny lol
+const texts_heavy = {
+    heavy: [
+        `USER_TAG writhes in USER_THEIR VAR_C1, trying to change USER_THEIR bondage, but may need some help!`
+    ],
+    noheavy: [
+        `USER_TAG slips into a VAR_C2, rendering USER_THEIR arms and hands completely useless!`
+    ]
+}
+
+const texts_letgo = {
+    
+}
+
 
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
     texts_collarequip: texts_collarequip,
     texts_corset: texts_corset,
-    texts_gag: texts_gag
+    texts_gag: texts_gag,
+    texts_heavy: texts_heavy,
+    texts_letgo: texts_letgo
 }
 
 
