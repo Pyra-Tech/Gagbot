@@ -590,6 +590,79 @@ const texts_uncorset = {
     }
 }
 
+const texts_ungag = {
+    heavy: {
+        self: {
+            gag: [
+                `USER_TAG chews on USER_THEIR gag, trying to spit it out because USER_THEY can't use USER_THEIR hands and arms!`
+            ],
+            // Ephemeral
+            nogag: [
+                `You're not gagged, but you wouldn't be able to remove it anyway!`
+            ]
+        },
+        other: {
+            gag: [
+                `USER_TAG bumps into TARGET_TAG, trying to use USER_THEIR useless arms to help TARGET_THEM out of TARGET_THEIR gag! It helped... maybe!`
+            ],
+            // Ephemeral
+            nogag: [
+                `TARGET_TAG is not gagged, but you wouldn't be able to remove it anyway!`
+            ]
+        }
+    },
+    noheavy: {
+        mitten: {
+            self: {
+                gag: [
+                    `USER_TAG paws at USER_THEIR gag, trying to get a good grasp on the straps, but to no avail!`,
+                    `USER_TAG tries to use both hands to get a grip on the buckle, but gets nowhere because of USER_THEIR mittens.`,
+                    `Brushing USER_THEIR cheek, USER_TAG paws at USER_THEIR gag cutely!`,
+                    `USER_TAG mews into USER_THEIR gag pitifully as USER_THEY can't grip the straps to take it out!`
+                ],
+                // Ephemeral
+                nogag: [
+                    `You're not gagged, but you wouldn't be able to remove it anyway!`
+                ]
+            },
+            other: {
+                gag: [
+                    `USER_TAG paws at TARGET_TAG's gag, trying to help TARGET_THEM take it off, but USER_THEY can't really do much.`
+                ],
+                // Ephemeral
+                nogag: [
+                    `TARGET_TAG is not gagged, but you wouldn't be able to remove it anyway!`
+                ]
+            }
+        },
+        nomitten: {
+            self: {
+                gag: [
+                    `USER_TAG has taken USER_THEIR gag out!`,
+                    `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR gag out!`,
+                    `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR gag!`,
+                    `USER_TAG takes USER_THEIR gag out, stretching USER_THEIR jaw slightly!`
+                ],
+                // Ephemeral
+                nogag: [
+                    `You aren't currently gagged right now!`
+                ]
+            },
+            other: {
+                gag: [
+                    `USER_TAG undoes the straps holding TARGET_TAG's gag on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`,
+                    `USER_TAG unclasps the buckle for TARGET_TAG's gag, then carefully pops it out.`,
+                    `USER_TAG carefully unbuckle's TARGET_TAG's gag, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`
+                ],
+                // Ephemeral
+                nogag: [
+                    `TARGET_TAG is not currently gagged right now!`
+                ]
+            }
+        }
+    }
+}
+
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
@@ -601,7 +674,8 @@ const textarrays = {
     texts_mitten: texts_mitten,
     texts_unchastity: texts_unchastity,
     texts_uncollar: texts_uncollar,
-    texts_uncorset: texts_uncorset
+    texts_uncorset: texts_uncorset,
+    texts_ungag: texts_ungag
 }
 
 

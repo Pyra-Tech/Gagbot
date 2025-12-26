@@ -25,7 +25,7 @@ module.exports = {
                 return;
             }
             let data = {
-                textarray: "texts_uncollar",
+                textarray: "texts_uncorset",
                 textdata: {
                     interactionuser: interaction.user,
                     targetuser: corsetuser,
