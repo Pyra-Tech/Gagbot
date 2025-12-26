@@ -663,6 +663,30 @@ const texts_ungag = {
     }
 }
 
+const texts_unheavy = {
+    heavy: {
+        self: [
+            `USER_TAG wiggles in USER_THEIR VAR_C1, but obviously USER_THEY USER_ISARE *very* helpless and can't get far with taking it off on USER_THEIR own!`
+        ],
+        other: [
+            `USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of USER_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`
+        ]
+    },
+    noheavy: {
+        heavyequipped: [
+            `USER_TAG helps TARGET_TAG out of TARGET_THEIR VAR_C2! TARGET_THEY_CAP stretchTHEY_S TARGET_THEIR arms and sighTARGET_S with gratitude!`
+        ],
+        noheavyequipped: {
+            self: [
+                `You aren't in any kind of heavy bondage!`
+            ],
+            other: [
+                `TARGET_TAG is not in any kind of heavy bondage!`
+            ]
+        }
+    }
+}
+
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
@@ -675,7 +699,8 @@ const textarrays = {
     texts_unchastity: texts_unchastity,
     texts_uncollar: texts_uncollar,
     texts_uncorset: texts_uncorset,
-    texts_ungag: texts_ungag
+    texts_ungag: texts_ungag,
+    texts_unheavy: texts_unheavy
 }
 
 
