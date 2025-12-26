@@ -131,9 +131,11 @@ const convertPronounsText = (text, data) => {
     // Additionally, to handle a followup is/are:
     outtext = outtext.replaceAll("USER_ISARE", (getPronouns(interactionuser.id, "subject") == "they") ? "are" : "is");
     // And wasn't/weren't
-    outtext = outtext.replaceAll("USER_WERENT", (getPronouns(targetuser.id, "subject") == "they") ? "weren't" : "wasn't");
+    outtext = outtext.replaceAll("USER_WERENT", (getPronouns(interactionuser.id, "subject") == "they") ? "weren't" : "wasn't");
     // And "s"
     outtext = outtext.replaceAll("USER_S", (getPronouns(interactionuser.id, "subject") == "they") ? "" : "s");
+    // And "try"
+    outtext = outtext.replaceAll("USER_TRY", (getPronouns(interactionuser.id, "subject") == "they") ? "try" : "tries");
 
     // Object - Him, Her, Them, etc.
     outtext = outtext.replaceAll("USER_THEM_CAP", getPronouns(interactionuser.id, "object", true));
@@ -174,6 +176,8 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("TARGET_WERENT", (getPronouns(targetuser.id, "subject") == "they") ? "weren't" : "wasn't");
     // And "s"
     outtext = outtext.replaceAll("TARGET_S", (getPronouns(targetuser.id, "subject") == "they") ? "" : "s");
+    // And "try"
+    outtext = outtext.replaceAll("TARGET_TRY", (getPronouns(targetuser.id, "subject") == "they") ? "try" : "tries");
 
     // Object - Him, Her, Them, etc.
     outtext = outtext.replaceAll("TARGET_THEM_CAP", getPronouns(targetuser.id, "object", true));

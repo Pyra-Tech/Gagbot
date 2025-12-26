@@ -23,33 +23,30 @@ module.exports = {
           interactionuser: interaction.user,
           targetuser: interaction.user, // Not needed, but required for function parsing anyway.
           c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-          c2: intensitytext, // gag tightness 
-          c3: gagname, // New gag being put on the wearer
-          c4: oldgagname // Old gag the wearer has on
         }
       }
 
-      // I'm restructuring this to follow consistency - sorry sam! 
-      if (getHeavy(interaction.user.id))
-
-
       if (tryOrgasm(interaction.user.id)) {
         // User was able to orgasm! 
-        interaction.reply(`${interaction.user} is overwhelmed with pleasure and releases it in an earth-shattering orgasm!`);
+        data.orgasm = true
+        interaction.reply(getText(data));
       } else {
         if (getChastity(interaction.user.id)) {
-          interaction.reply(`${interaction.user} tries to get over the edge but is denied by ${their(interaction.user.id)} steel prison!`);
+          data.chastity = true;
+          interaction.reply(getText(data));
           return;
         }
 
         const heavy = getHeavy(interaction.user.id);
         if (heavy) {
-          interaction.reply(`${interaction.user} tries to get over the edge but is denied by ${their(interaction.user.id)} ${heavy.type}!`);
+          data.heavy = true
+          interaction.reply(getText(data));
           return;
         }
 
         // cool off response, replace with something good
-        interaction.reply(`[TMP] cool off`);
+        data.free = true
+        interaction.reply(getText(data));
         setArousalCooldown(interaction.user.id);
       }
     } catch (err) {
