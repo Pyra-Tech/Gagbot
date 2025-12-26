@@ -908,6 +908,38 @@ const texts_vibe = {
                         fumble: {
                             discard: {
                                 single: [
+                                    `USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                ],
+                            },
+                            nodiscard: {
+                                single: [
+                                    `USER_TAG tries to put the key in USER_THEIR belt to adjust the VAR_C2, but the key slips! Thankfully, USER_THEY didn't lose it!`
+                                ],
+                            }
+                        },
+                        nofumble: {
+                            single: [
+                                `USER_TAG puts the key in USER_THEIR belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
+                            ],
+                        }
+                    },
+                    // No public access to self belt
+                    nokey: [
+                        `USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`
+                    ]
+                },
+                nochastity: {
+                    single: [
+                        `USER_TAG adjusts USER_THEIR VAR_C2 and sets it to VAR_C3! The toy buzzes gently!`
+                    ],
+                }
+            },
+            novibe: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: {
+                                single: [
                                     `USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
                                 ],
                             },
@@ -933,15 +965,46 @@ const texts_vibe = {
                         `USER_TAG carefully inserts a VAR_C2 set to VAR_C3! The toy buzzes gently!`
                     ],
                 }
-            },
-            novibe: {
-                single: [
-                    `NOT USED - I think`
-                ],
             }
         },
         other: {
             hasvibe: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: {
+                                single: [
+                                    `USER_TAG tries to put the key in TARGET_TAG's belt to change the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                ],
+                            },
+                            nodiscard: {
+                                single: [
+                                    `USER_TAG tries to put the key in TARGET_TAG's belt to adjust the buzzing VAR_C2, but the key slips! Thankfully, USER_THEY didn't lose it!`
+                                ],
+                            }
+                        },
+                        nofumble: {
+                            single: [
+                                `USER_TAG puts the key in TARGET_TAG's belt, unlocking it and adjusting the buzzing VAR_C2, setting it to VAR_C3 before closing it and locking TARGET_THEM back up.`
+                            ],
+                        }
+                    },
+                    public: {
+                        single: [
+                            `USER_TAG puts the public access key in TARGET_TAG's belt, unlocking it and adjusting the VAR_C2, setting it to VAR_C3 before closing it and locking TARGET_THEM back up.`
+                        ],
+                    },
+                    nokey: [
+                        `You do not have the key to TARGET_TAG's chastity belt.`
+                    ]
+                },
+                nochastity: {
+                    single: [
+                        `USER_TAG adjusts the VAR_C2 inside TARGET_TAG, setting it to VAR_C3. The toy's buzzing song continues TARGET_THEIR joy!`
+                    ],
+                }
+            },
+            novibe: {
                 chastity: {
                     key: {
                         fumble: {
@@ -976,11 +1039,6 @@ const texts_vibe = {
                         `USER_TAG carefully adds a VAR_C2 to TARGET_TAG, setting it to VAR_C3. The toy's buzzing song precludes TARGET_THEIR joy!`
                     ],
                 }
-            },
-            novibe: {
-                single: [
-                    `NOT USED... I think`
-                ],
             }
         }
     }
