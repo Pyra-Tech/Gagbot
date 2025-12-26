@@ -21,7 +21,7 @@ module.exports = {
                 textarray: "texts_uncollar",
                 textdata: {
                     interactionuser: interaction.user,
-                    targetuser: chastitywearer,
+                    targetuser: collaruser,
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
                 }
             }

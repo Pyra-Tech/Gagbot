@@ -493,6 +493,103 @@ const texts_uncollar = {
     }
 }
 
+const texts_uncorset = {
+    heavy: {
+        self: {
+            corset: {
+                chastity: [
+                    `Since USER_THEY don't have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR corset, but USER_THEIR chastity belt is in the way.`
+                ],
+                nochastity: [
+                    `USER_TAG wriggles in USER_THEIR VAR_C1, but without arms, USER_THEY can't easily undo the laces of USER_THEIR corset to take it off!`
+                ]
+            },
+            // Ephemeral
+            nocorset: [
+                `You aren't wearing a corset, but even if you were, you wouldn't be able to take it off!`
+            ]
+        },
+        other: {
+            corset: {
+                chastity: [
+                    `USER_TAG tugs against USER_THEIR VAR_C1, but USER_THEY can't really get a good grasp of TARGET_TAG's corset strings behind TARGET_THEIR chastity belt!`
+                ],
+                nochastity: [
+                    `Maybe in another time, USER_TAG might have been able to help TARGET_TAG out of TARGET_THEIR corset, but having no arms makes it hard.`
+                ]
+            },
+            // Ephemeral
+            nocorset: [
+                `TARGET_TAG isn't wearing a corset, but you wouldn't be able to remove it anyway!`
+            ]
+        }
+    },
+    noheavy: {
+        self: {
+            corset: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`
+                            ],
+                            nodiscard: [
+                                `USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR corset alone until they calm down!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG unlocks USER_THEIR chastity belt briefly, undoing the laces of the corset USER_THEY USER_ISARE wearing and pulling it off of USER_THEIR waist! USER_THEY_CAP then carefully lockUSER_S USER_THEMSELF back up!`
+                        ]
+                    },
+                    nokey: [
+                        `USER_TAG tugs at USER_THEIR chastity belt to try to remove USER_THEIR corset, but the locking mechanism holds firm!`
+                    ]
+                },
+                nochastity: [
+                    `USER_TAG carefully undoes the laces and USER_THEIR corset, unwrapping it from USER_THEIR waist. USER_THEY_CAP breathe a *huge* breath of relief!`
+                ]
+            },
+            // Ephemeral
+            nocorset: [
+                `You aren't wearing a corset!`
+            ]
+        },
+        other: {
+            corset: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness. Despite USER_THEIR best efforts, the key seems to have disappeared.`
+                            ],
+                            nodiscard: [
+                                `USER_TAG shakily tries to unlock TARGET_TAG's chastity belt to get at TARGET_THEIR corset, but the key keeps slipping. Fortunately, it wasn't lost, but USER_THEY need to calm down first!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG unlocks TARGET_TAG's chastity belt, then removes TARGET_THEIR corset! While TARGET_THEY are breathing fresh air again, USER_THEY lockUSER_S TARGET_THEM back in TARGET_THEIR chastity belt!`
+                        ]
+                    },
+                    public: [
+                        `USER_TAG uses the public access key to unlock TARGET_TAG's chastity belt, removing TARGET_THEIR corset, and then clicking the lock back shut!`
+                    ],
+                    // Ephemeral
+                    nokey: [
+                        `You don't have the key for TARGET_TAG's chastity belt!`
+                    ]
+                },
+                nochastity: [
+                    `USER_TAG carefully undoes the laces on TARGET_TAG's beautiful corset, loosening it until it finally falls off of TARGET_THEIR waist!`
+                ]
+            },
+            // Ephemeral
+            nocorset: [
+                `TARGET_TAG is not wearing a corset!`
+            ]
+        }
+    }
+}
+
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
@@ -503,7 +600,8 @@ const textarrays = {
     texts_letgo: texts_letgo,
     texts_mitten: texts_mitten,
     texts_unchastity: texts_unchastity,
-    texts_uncollar: texts_uncollar
+    texts_uncollar: texts_uncollar,
+    texts_uncorset: texts_uncorset
 }
 
 
