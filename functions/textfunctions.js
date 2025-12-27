@@ -294,7 +294,7 @@ const texts_gag = {
                     `USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
                 ],
                 nogag: [
-                    `USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY go to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`
+                    `USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`
                 ]
             }
         }
@@ -902,7 +902,7 @@ const texts_vibe = {
     },
     noheavy: {
         self: {
-            hasvibe: {
+            vibe: {
                 chastity: {
                     key: {
                         fumble: {
@@ -968,7 +968,7 @@ const texts_vibe = {
             }
         },
         other: {
-            hasvibe: {
+            vibe: {
                 chastity: {
                     key: {
                         fumble: {
@@ -1113,7 +1113,7 @@ const getText = (data) => {
             return outstring;
         }
         else {
-            return "There was an error generating this text. No error, but the destination was not an array of strings."
+            return "There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", ")
         }
     }
     catch (err) {

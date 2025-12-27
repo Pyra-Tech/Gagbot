@@ -167,10 +167,13 @@ module.exports = {
                         data.chastity = true
                         if (getCollarPerm(collareduser.id, "chastity")) {
                             if (getChastity(collareduser.id)) {
+                                // Cant equip it on them 
                                 data.alreadyworn = true
                                 interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                             }
                             else {
+                                // we can equip this on them
+                                data.allowed = true
                                 if (keyholderuser == interaction.user) {
                                     data.key_self = true
                                     interaction.reply(getText(data))

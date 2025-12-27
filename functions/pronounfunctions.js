@@ -129,6 +129,8 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("USER_ISARE", (getPronouns(interactionuser.id, "subject") == "they") ? "are" : "is");
     // And wasn't/weren't
     outtext = outtext.replaceAll("USER_WERENT", (getPronouns(interactionuser.id, "subject") == "they") ? "weren't" : "wasn't");
+    // And "es"
+    outtext = outtext.replaceAll("USER_ES", (getPronouns(interactionuser.id, "subject") == "they") ? "" : "es");
     // And "s"
     outtext = outtext.replaceAll("USER_S", (getPronouns(interactionuser.id, "subject") == "they") ? "" : "s");
     // And "try"
@@ -171,6 +173,8 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("TARGET_ISARE", (getPronouns(targetuser.id, "subject") == "they") ? "are" : "is");
     // And wasn't/weren't
     outtext = outtext.replaceAll("TARGET_WERENT", (getPronouns(targetuser.id, "subject") == "they") ? "weren't" : "wasn't");
+    // And "es"
+    outtext = outtext.replaceAll("TARGET_ES", (getPronouns(targetuser.id, "subject") == "they") ? "" : "es");
     // And "s"
     outtext = outtext.replaceAll("TARGET_S", (getPronouns(targetuser.id, "subject") == "they") ? "" : "s");
     // And "try"

@@ -135,6 +135,12 @@ module.exports = {
                                     interaction.reply(getText(data))
                                 }
                             }
+                            else {
+                                // did not fumble!
+                                data.nofumble = true
+                                interaction.reply(getText(data))
+                                removeChastity(chastitywearer.id)
+                            }
                         }
                         else {
                             // We don't have their chastity key
@@ -149,6 +155,7 @@ module.exports = {
                     }
                 }
             }
+            console.log(data)
         }
         catch (err) {
             console.log(err);
