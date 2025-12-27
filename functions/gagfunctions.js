@@ -269,7 +269,7 @@ const garbleMessage = async (threadId, msg) => {
         }
         else {
             let messagetexts = messageparts.map(m => m.text);
-            outtext = messagetexts.join(" ");
+            outtext = messagetexts.join("");
         }
 
         if (modifiedmessage) { //Fake reply with a ping
