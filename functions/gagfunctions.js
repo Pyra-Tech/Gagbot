@@ -224,7 +224,7 @@ const garbleMessage = async (threadId, msg) => {
                 messageparts.splice(toRemove[i], 1);
             }
             if (hadParts && messageparts.length == 0) {
-                msg.delete();
+                messageSend(threadId, "-# *Panting heavily*", msg.member.displayAvatarURL(), msg.member.displayName).then(() => msg.delete())
                 return;
             }
         }
