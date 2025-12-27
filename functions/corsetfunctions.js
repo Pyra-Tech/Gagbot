@@ -118,6 +118,7 @@ function calcBreath(user) {
   if (process.corset == undefined) process.corset = {};
   const corset = process.corset[user];
   if (!corset) return null;
+  if (corset.breath < -5 * corset.maxBreath) corset.breath = -5 * corset.maxBreath;
   const now = Date.now();
   const newBreath = corset.breath + corset.breathRecovery * ((now - corset.timestamp) / 1000);
   if (newBreath > corset.maxBreath) corset.breath = corset.maxBreath;
