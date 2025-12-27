@@ -24,24 +24,25 @@ module.exports = {
   async execute(interaction) {
     const type = interaction.options.getString("type") ?? 0;
 
-    interaction.reply(buildMessage(Number(type), 0));
+    interaction.reply(buildMessage(Number(type), 0, false));
   },
   componentHandlers: [
     {
       key: "list",
-      async handle(interaction, type, page) {
+      async handle(interaction, type, page, details) {
         page = Number(page);
+        details = Number(details) > 0;
 
         if (type == "select") type = interaction.values[0];
         else type = Number(type);
 
-        interaction.update(buildMessage(type, page));
+        interaction.update(buildMessage(type, page, details));
       },
     },
   ],
 };
 
-function buildMessage(type, page) {
+function buildMessage(type, page, details) {
   const typeArr = restraints[type];
   const maxPage = Math.ceil(typeArr[1].length / 10) - 1;
   if (page > maxPage) page = maxPage;
@@ -50,10 +51,18 @@ function buildMessage(type, page) {
   return {
     flags: MessageFlags.Ephemeral,
     embeds: [
-      {
-        title: typeArr[0],
-        fields: typeArr[1].slice(start, start + PAGE_SIZE),
-      },
+      details
+        ? {
+            title: typeArr[0],
+            fields: typeArr[1].slice(start, start + PAGE_SIZE),
+          }
+        : {
+            title: typeArr[0],
+            description: typeArr[1]
+              .slice(start, start + PAGE_SIZE)
+              .map((field) => `- ${field.name}`)
+              .join("\n"),
+          },
     ],
     components: [
       {
@@ -61,7 +70,7 @@ function buildMessage(type, page) {
         components: [
           {
             type: ComponentType.StringSelect,
-            custom_id: `list-select-${page}`,
+            custom_id: `list-select-${page}-${+details}`,
             options: restraintOptions,
             placeholder: "Change restraint type...",
           },
@@ -72,23 +81,29 @@ function buildMessage(type, page) {
         components: [
           {
             type: ComponentType.Button,
-            custom_id: `list-${type}-${page - 1}`,
+            custom_id: `list-${type}-${page - 1}-${+details}`,
             label: "← Prev",
             disabled: page == 0,
             style: ButtonStyle.Secondary,
           },
           {
             type: ComponentType.Button,
-            custom_id: `list-${type}-${page}`,
+            custom_id: `list-${type}-${page}-${+details}`,
             label: `Page ${page + 1} of ${maxPage + 1}`,
             disabled: true,
             style: ButtonStyle.Secondary,
           },
           {
             type: ComponentType.Button,
-            custom_id: `list-${type}-${page + 1}`,
+            custom_id: `list-${type}-${page + 1}-${+details}`,
             label: "Next →",
             disabled: page == maxPage,
+            style: ButtonStyle.Secondary,
+          },
+          {
+            type: ComponentType.Button,
+            custom_id: `list-${type}-${page}-${+!details}`,
+            label: details ? "Hide details" : "Show details",
             style: ButtonStyle.Secondary,
           },
         ],
