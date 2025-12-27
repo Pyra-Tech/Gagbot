@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const MAX_BREATH_TABLE = [2000, 310, 250, 205, 170, 140, 120, 100, 80, 65, 50, 35, 20, 10, 10, 10];
+const MAX_BREATH_TABLE = [2000, 155, 125, 102.5, 85, 70, 60, 50, 40, 32.5, 25, 17.5, 10, 5, 5, 5];
 const BREATH_RECOVERY_TABLE = [2000, 11.5, 9.5, 8, 6.5, 5, 4, 3.2, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.02];
 
 const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnn*", "*hnn*", "*hng*", "*uah*", "*uhh*"];
