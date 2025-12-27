@@ -46,6 +46,10 @@ function corsetLimitWords(user, text) {
   // Bottoms cannot shout!
   text = text.replace(/^\s*#+\s/, "");
   text = text.replaceAll(/\n\s*#+\s/g, "\n");
+  if (corset.tightness >= 7) {
+    text = text.replace(/^\s*\-#\s/, "");
+    text = text.replaceAll(/\n\s*\-#\s/g, "\n");
+  }
   let silence = false;
   let wordsinmessage = text.split(" ");
   let newwordsinmessage = [];
@@ -93,8 +97,6 @@ function corsetLimitWords(user, text) {
   let outtext = newwordsinmessage.join(" ");
   // Replace other instances of small speak so we only have one.
   if (corset.tightness >= 7) {
-    outtext = outtext.replace(/^\s*\-#\s/, "");
-    outtext = outtext.replaceAll(/\n\s*\-#\s/g, "\n");
     outtext = outtext.replaceAll(/\n\s*/g, "\n-# ");
     if (outtext.length > 0) outtext = `-# ${outtext}`;
   }
