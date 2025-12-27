@@ -65,15 +65,28 @@ const texts_collarequip = {
         collar: {
             key: {
                 mitten: {
-                    alreadyworn: [
-                        `TARGET_TAG is already wearing mittens!`
-                    ],
-                    allowed: [
-                        `USER_TAG grabs TARGET_TAG's hands, shoving a pair of mittens on, and putting a lock on the straps, sealing away TARGET_THEIR hands!`
-                    ],
-                    notallowed: [
-                        `TARGET_TAG's collar does not allow you to mitten TARGET_THEM!`
-                    ]
+                    namedmitten: {
+                        alreadyworn: [
+                            `TARGET_TAG's hands are already occupied by a pair of VAR_C3!`
+                        ],
+                        allowed: [
+                            `USER_TAG grabs TARGET_TAG's hands, shoving a set of VAR_C3 on them! TARGET_THEY_CAP won't be able to use TARGET_THEIR hands!`
+                        ],
+                        notallowed: [
+                            `TARGET_TAG's collar does not allow you to mitten TARGET_THEM!`
+                        ]
+                    },
+                    nonamedmitten: {
+                        alreadyworn: [
+                            `TARGET_TAG is already wearing mittens!`
+                        ],
+                        allowed: [
+                            `USER_TAG grabs TARGET_TAG's hands, shoving a pair of mittens on, and putting a lock on the straps, sealing away TARGET_THEIR hands!`
+                        ],
+                        notallowed: [
+                            `TARGET_TAG's collar does not allow you to mitten TARGET_THEM!`
+                        ]
+                    }
                 },
                 heavybondage: {
                     alreadyworn: [

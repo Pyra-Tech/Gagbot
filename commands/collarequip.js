@@ -2,7 +2,7 @@ const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
 const { getCollar, getCollarPerm } = require('./../functions/collarfunctions.js')
 const { getChastity, assignChastity } = require('./../functions/vibefunctions.js')
-const { assignMitten, getMitten } = require('./../functions/gagfunctions.js')
+const { getMittenName, assignMitten, getMitten, mittentypes } = require('./../functions/gagfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
 const { getText } = require("./../functions/textfunctions.js");
@@ -19,6 +19,11 @@ module.exports = {
                     .setDescription("To who?")
                     .setRequired(true)
                 )
+                .addStringOption(opt =>
+                    opt.setName('type')
+                    .setDescription("What flavor of helpless mittens to wear...")
+                    .setAutocomplete(true)
+                )
         )
         .addSubcommand(subcommand => 
             subcommand.setName('heavy')
@@ -31,13 +36,7 @@ module.exports = {
                 .addStringOption(opt =>
                     opt.setName('type')
                     .setDescription("Which Restraint?")
-                    //.addChoices(...commandsheavy)
-                    //.setRequired(true)
                     .setAutocomplete(true)
-                )
-                .addBooleanOption(opt => 
-                    opt.setName('list_all_restraints')
-                    .setDescription("Set to true to list all restraints. Does not bind the collar wearer if TRUE.")
                 )
         )
         .addSubcommand((subcommand) => 
@@ -55,25 +54,44 @@ module.exports = {
         ),
     async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
-		if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
-			let heaviestoreturn = [
-				{ name: "Latex Armbinder", value: "armbinder_latex" },
-				{ name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
-				{ name: "Wolfbinder", value: "armbinder_wolf" },
-				{ name: "Ancient Armbinder", value: "armbinder_ancient" },
-				{ name: "High Security Armbinder", value: "armbinder_secure" },
-				{ name: "Latex Boxbinder", value: "boxbinder_latex" },
-				{ name: "Comfy Straitjacket", value: "straitjacket_comfy" },
-				{ name: "Maid Straitjacket", value: "straitjacket_maid" },
-				{ name: "Doll Straitjacket", value: "straitjacket_doll" },
-				{ name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
-			]
-			await interaction.respond(heaviestoreturn)
-		}
-		else {
-			let heavies = process.heavytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
-			await interaction.respond(heavies)
-		}
+        const subc = interaction.options.getSubcommand();
+        // /collarequip heavy .......
+        if (subc == "heavy") {
+            if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
+                let heaviestoreturn = [
+                    { name: "Latex Armbinder", value: "armbinder_latex" },
+                    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
+                    { name: "Wolfbinder", value: "armbinder_wolf" },
+                    { name: "Ancient Armbinder", value: "armbinder_ancient" },
+                    { name: "High Security Armbinder", value: "armbinder_secure" },
+                    { name: "Latex Boxbinder", value: "boxbinder_latex" },
+                    { name: "Comfy Straitjacket", value: "straitjacket_comfy" },
+                    { name: "Maid Straitjacket", value: "straitjacket_maid" },
+                    { name: "Doll Straitjacket", value: "straitjacket_doll" },
+                    { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
+                ]
+                await interaction.respond(heaviestoreturn)
+            }
+            else {
+                let heavies = process.heavytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                await interaction.respond(heavies)
+            }
+        }
+        else if (subc == "mittens") {
+            if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
+                let mittenstoreturn = mittentypes.slice(0,10)
+                await interaction.respond(mittenstoreturn)
+            }
+            else {
+                try {
+                    let mittens = process.mittentypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                    await interaction.respond(mittens)
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+        }
 	},
     async execute(interaction) {
         try {
@@ -94,8 +112,19 @@ module.exports = {
             }
             let actiontotake = interaction.options.getSubcommand();
             let collareduser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
-            let heavybondagetype = interaction.options.getString('type') ? interaction.options.getString('type') : "armbinder_latex"
+            let bondagetype = interaction.options.getString('type')
             let keyholderuser = interaction.options.getUser('keyholder') ? interaction.options.getUser('keyholder') : interaction.user
+
+            let bondagetypenotchosen = false;
+            if (!bondagetype) {
+                bondagetypenotchosen = true;
+                if (actiontotake == "heavy") {
+                    bondagetype = "armbinder_latex"
+                }
+                else if (actiontotake == "mittens") {
+                    bondagetype = "mittens_latex"
+                }
+            }
 
             // Build data tree:
             let data = {
@@ -105,11 +134,23 @@ module.exports = {
                     targetuser: collareduser,
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type 
                     c2: getHeavy(collareduser.id)?.type,  // collar wearer's heavy bondage type
-                    c3: convertheavy(heavybondagetype), // New heavy bondage
+                    c3: "", // New heavy bondage
                     c4: `<@${getChastity(collareduser.id)?.keyholder}>`, // collar wearer's chastity keyholder
                     c5: keyholderuser // new chastity belt keyholder, if any
                 }
             }
+
+            if (actiontotake == "heavy") {
+                data.textdata.c3 = convertheavy(bondagetype)
+            }
+            else if (actiontotake == "mittens") {
+                data.textdata.c3 = getMittenName(interaction.user.id, bondagetype)
+            }
+
+            console.log(bondagetype)
+            console.log(!bondagetype)
+            console.log(bondagetypenotchosen)
+            console.log(!bondagetypenotchosen)
 
             if (getHeavy(interaction.user.id)) {
                 data.heavy = true
@@ -129,20 +170,41 @@ module.exports = {
                     data.key = true
                     if (actiontotake == "mittens") {
                         data.mitten = true
-                        if (getCollarPerm(collareduser.id, "mitten")) {
-                            if (getMitten(collareduser.id)) {
-                                data.alreadyworn = true
-                                interaction.reply({ content: `${collareduser} is already wearing mittens!`, flags: MessageFlags.Ephemeral })
+                        if (bondagetypenotchosen == false) {
+                            data.namedmitten = true
+                            if (getCollarPerm(collareduser.id, "mitten")) {
+                                if (getMitten(collareduser.id)) {
+                                    data.alreadyworn = true
+                                    interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                                }
+                                else {
+                                    data.allowed = true
+                                    interaction.reply(getText(data))
+                                    assignMitten(collareduser.id, bondagetype);
+                                }
                             }
                             else {
-                                data.allowed = true
-                                interaction.reply(`${interaction.user} grabs ${collareduser}'s hands, shoving a pair of mittens on, and putting a lock on the straps, sealing away ${getPronouns(collareduser.id, "possessiveDeterminer")} hands!`)
-                                assignMitten(collareduser.id);
+                                data.notallowed = true
+                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                             }
                         }
                         else {
-                            data.notallowed = true
-                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                            data.nonamedmitten = true;
+                            if (getCollarPerm(collareduser.id, "mitten")) {
+                                if (getMitten(collareduser.id)) {
+                                    data.alreadyworn = true
+                                    interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                                }
+                                else {
+                                    data.allowed = true
+                                    interaction.reply(getText(data))
+                                    assignMitten(collareduser.id);
+                                }
+                            }
+                            else {
+                                data.notallowed = true
+                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                            }
                         }
                     }
                     else if (actiontotake == "heavy") {
@@ -155,7 +217,7 @@ module.exports = {
                             else {
                                 data.allowed = true
                                 interaction.reply(getText(data))
-                                assignHeavy(collareduser.id, heavybondagetype)
+                                assignHeavy(collareduser.id, bondagetype)
                             }
                         }
                         else {
