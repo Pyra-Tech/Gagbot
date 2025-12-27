@@ -62,6 +62,8 @@ try {
     for (const key in process.chastity) {
         if (!process.chastity[key].timestamp) process.chastity[key].timestamp = Date.now();
         if (!process.chastity[key].extraFrustration) process.chastity[key].extraFrustration = 0;
+        // also return lost keys since keyfinding changed
+        if (process.chastity[key].oldKeyholder) process.chastity[key].keyholder = process.chastity[key].oldKeyholder;
     }
 }
 catch (err) { 
@@ -81,6 +83,10 @@ try {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify({}))
     }
     process.collar = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`))
+    // return lost keys since keyfinding changed
+    for (const key in process.collar) {
+        if (process.collar[key].oldKeyholder) process.collar[key].keyholder = process.collar[key].oldKeyholder;
+    }
 }
 catch (err) { 
     console.log(err);
@@ -150,10 +156,10 @@ catch (err) {
     console.log(err);
 }
 try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`, JSON.stringify({}))
+    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`)) {
+        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify([]))
     }
-    process.keyfumbling = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`))
+    process.discardedKeys = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`))
 }
 catch (err) { 
     console.log(err);
