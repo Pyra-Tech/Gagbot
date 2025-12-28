@@ -3,6 +3,7 @@ const path = require('path');
 const https = require('https');
 const { SlashCommandBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder } = require('discord.js');
 const { getPronouns } = require('./../functions/pronounfunctions.js')
+const { collartypes } = require('./collarfunctions.js');
 
 // Generates a consent button which the user will have to agree to. 
 const consentMessage = (interaction, user) => {
@@ -72,6 +73,10 @@ const collarPermModal = (interaction, keyholder, freeuse) => {
 This restraint is intended to allow **others** to use /chastity, /mittens and /heavy on you!`
     if (freeuse) { 
         warningText = `${warningText}\nYou have designated yourself as free use and will allow *everyone* to play with you.` 
+    }
+    else if (keyholder == interaction.user) {
+        warningText = `${warningText}\nYou have designated yourself as your own keyholder. These settings will only apply when giving keys using **/givekeys** to someone.` 
+        othertext = "keyholder"
     }
     else {
         warningText = `${warningText}\nYou have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you.` 
@@ -144,6 +149,31 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
                 .setValue('heavy_no'),
         )
 
+    let collaroptionssorted = collartypes // We need to make this alphabetical later but meh
+
+    let collarchoiceoptions = [
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('None')
+            // Value returned to you in modal submission
+            .setValue('collar_none'),
+    ]
+
+    for (let i = 0; i < collaroptionssorted.length; i++) {
+        collarchoiceoptions.push(
+            new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel(collaroptionssorted[i].name)
+            // Value returned to you in modal submission
+            .setValue(collaroptionssorted[i].value),
+        )
+    }
+
+    const collarchoice = new StringSelectMenuBuilder()
+        .setCustomId('collarchoice')
+        .setPlaceholder('Flavor Text for Collar')
+        .addOptions(...collarchoiceoptions)
+
     const restrictionsLabelmitten = new LabelBuilder()
         .setLabel(`Allow ${othertext} to mitten you?`)
         .setStringSelectMenuComponent(restrictionsInputmitten)
@@ -156,9 +186,13 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
         .setLabel(`Allow ${othertext} to put you in heavy bondage?`)
         .setStringSelectMenuComponent(restrictionsInputheavy)
 
+    const collarchoiceLabel = new LabelBuilder()
+        .setLabel(`(Optional) What specific collar to wear?`)
+        .setStringSelectMenuComponent(collarchoice)
+
     // Add labels to modal
     modal.addTextDisplayComponents(restrictionWarningText)
-        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy); 
+        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy,collarchoiceLabel)
 
     return modal;
 }

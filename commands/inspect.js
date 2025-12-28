@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
 const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription, getChastityName } = require('./../functions/vibefunctions.js')
-const { getCollar, getCollarPerm, getCollarKeys } = require('./../functions/collarfunctions.js')
+const { getCollar, getCollarPerm, getCollarKeys, getCollarName } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
 const { getPronouns, getPronounsSet } = require('./../functions/pronounfunctions.js')
@@ -108,7 +108,7 @@ module.exports = {
             }
             // Collar status
             if (getCollar(inspectuser.id)) {
-                let currentcollartext = "Locked Up Nice and Tight!"
+                let currentcollartext = (getCollarName(inspectuser.id) ? getCollarName(inspectuser.id) : "Locked Up Nice and Tight!")
                 let isLocked = ((getCollar(inspectuser.id).keyholder == interaction.user) || (!getCollar(inspectuser.id).keyholder_only))
                 let lockemoji = isLocked ? "🔑" : "🔒"
                 if (getCollar(inspectuser.id).keyholder == "discarded") {
