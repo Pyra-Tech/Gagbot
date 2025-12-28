@@ -19,8 +19,6 @@ const chastitytypes = [
     { name: "Queensbelt", value: "belt_queen" },
 ]
 
-// the arousal under which it is treated as 0
-const RESET_LIMIT = 0.1;
 // the minimum arousal required for frustration to also impact speach
 const STUTTER_LIMIT = 1;
 // the arousal needed for an unbelted user to orgasm
@@ -44,8 +42,10 @@ const FRUSTRATION_MAX_COEFFICIENT = 7;
 const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
-const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE) ?? 6000;
-const AROUSAL_STEP_SIZE_SCALING = 60000 / AROUSAL_STEP_SIZE;
+const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
+const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;
+// the arousal under which it is treated as 0
+const RESET_LIMIT = 0.1 * AROUSAL_STEP_SIZE_SCALING;
 
 const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -77,6 +77,7 @@ const assignVibe = (user, intensity, vibetype = "bullet vibe") => {
             vibetype: vibetype,
             intensity: intensity
         }]
+        addArousal(user, intensity / 2);
     } else {
         const existingVibe = process.vibe[user].find(v => v.vibetype === vibetype);
         if (existingVibe) {
@@ -264,7 +265,7 @@ function updateArousalValues() {
         const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
         arousal.timestamp = now;
         arousal.prev = arousal.arousal;
-        arousal.arousal = next;
+        arousal.arousal = next < RESET_LIMIT ? 0 : next;
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
 }
@@ -320,10 +321,9 @@ function getArousal(user) {
 }
 
 function addArousal(user, change) {
-    const arousal = process.arousal[user]?.arousal ?? 0;
-    arousal += change;
-    process.arousal[user].arousal = arousal;
-    return arousal;
+    if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: Date.now()};
+    process.arousal[user].arousal += change;
+    return process.arousal[user].arousal;
 }
 
 function clearArousal(user) {
