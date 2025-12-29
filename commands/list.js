@@ -1,12 +1,18 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags } = require("discord.js");
 const { mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
+const { chastitytypes } = require("./../functions/vibefunctions.js");
+const { headweartypes } = require("./../functions/headwearfunctions.js");
+const { collartypes } = require("./../functions/collarfunctions.js");
 
 const PAGE_SIZE = 10;
 
 const restraints = [
   ["Heavy", heavytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
   ["Mittens", mittentypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
+  ["Chastity", chastitytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
+  ["Masks", headweartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Restricts: ${(heavy.blockinspect || heavy.blockemote) ? `${heavy.blockinspect ? `Inspect ` : ``}${heavy.blockemote ? `Emote ` : ``}` : `-# No description`}`, inline: false }))],
+  ["Collars", collartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
 ];
 
 const restraintOptions = restraints.map(([name, _], idx) => ({ label: name, value: idx }));
@@ -38,7 +44,10 @@ module.exports = {
         page = Number(page);
         details = Number(details) > 0;
 
-        if (type == "select") type = interaction.values[0];
+        if (type == "select") {
+          type = interaction.values[0]
+          page = 0
+        }
         else type = Number(type);
 
         interaction.update(buildMessage(type, page, details));
