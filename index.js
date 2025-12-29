@@ -18,25 +18,25 @@ let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAG
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
 
 let processdatatoload = [
-    { textname: "gaggedusers.txt", processvar: "gags" },
-    { textname: "mittenedusers.txt", processvar: "mitten" },
-    { textname: "chastityusers.txt", processvar: "chastity" },
-    { textname: "vibeusers.txt", processvar: "vibe" },
-    { textname: "collarusers.txt", processvar: "collar" },
-    { textname: "heavyusers.txt", processvar: "heavy" },
-    { textname: "pronounsusers.txt", processvar: "pronouns" },
-    { textname: "usersdata.txt", processvar: "usersdata" },
-    { textname: "consentusers.txt", processvar: "consented" },
-    { textname: "optinusers.txt", processvar: "optins" },
-    { textname: "corsetusers.txt", processvar: "corset" },
-    { textname: "arousal.txt", processvar: "arousal" },
-    { textname: "keyfumbling.txt", processvar: "keyfumbling" },
+    { textname: "gaggedusers.txt", processvar: "gags", default: {} },
+    { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
+    { textname: "chastityusers.txt", processvar: "chastity", default: {} },
+    { textname: "vibeusers.txt", processvar: "vibe", default: {} },
+    { textname: "collarusers.txt", processvar: "collar", default: {} },
+    { textname: "heavyusers.txt", processvar: "heavy", default: {} },
+    { textname: "pronounsusers.txt", processvar: "pronouns", default: {} },
+    { textname: "usersdata.txt", processvar: "usercontext", default: {} },
+    { textname: "consentusers.txt", processvar: "consented", default: {} },
+    { textname: "optinusers.txt", processvar: "optins", default: {} },
+    { textname: "corsetusers.txt", processvar: "corset", default: {} },
+    { textname: "arousal.txt", processvar: "arousal", default: {} },
+    { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
 ]
 
 processdatatoload.forEach((s) => {
     try {
         if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/${s.textname}`)) {
-            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/${s.textname}`, JSON.stringify({}))
+            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/${s.textname}`, JSON.stringify(s.default))
         }
         process[s.processvar] = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/${s.textname}`))
     }
@@ -45,6 +45,19 @@ processdatatoload.forEach((s) => {
         console.log(err)
     }
 })
+  
+try {
+    // return lost keys since keyfinding changed
+    for (const key in process.chastity) {
+        if (process.chastity[key].oldKeyholder) process.chastity[key].keyholder = process.chastity[key].oldKeyholder;
+    }
+    for (const key in process.collar) {
+        if (process.collar[key].oldKeyholder) process.collar[key].keyholder = process.collar[key].oldKeyholder;
+    }
+}
+catch (err) { 
+    console.log(err);
+}
 
 try {
     // add breath values for old corsets, this only needs to run once
