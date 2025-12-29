@@ -369,19 +369,21 @@ const texts_gag = {
 const texts_headwear = {
     heavy: {
         self: {
+            // Ephemeral
             worn: [
                 `You are already wearing a VAR_C2, but you wouldn't be able to put it on anyway!`
             ],
             noworn: [
-                `TARGET_TAG is already wearing a VAR_C2, but you wouldn't be able to put it on TARGET_THEM anyway!`
+                `USER_TAG scoots against a VAR_C2, but USER_THEY can only move it around a couple of inches, much less lift it because of USER_THEIR VAR_C1!`
             ]
         },
         other: {
+            // Ephemeral
             worn: [
-
+                `TARGET_TAG is already wearing a VAR_C2, but you wouldn't be able to put it on TARGET_THEM anyway!`
             ],
             noworn: [
-
+                `USER_TAG boops a VAR_C2 towards TARGET_TAG, but USER_THEY can't really put it on TARGET_THEM because of USER_THEIR VAR_C1. USER_THEY should grow arms!`
             ]
         }
     },
@@ -389,37 +391,40 @@ const texts_headwear = {
         mitten: {
             self: {
                 worn: [
-
+                    `You are already wearing a VAR_C2, but you wouldn't be able to put it on anyway!`
                 ],
                 noworn: [
-
+                    `USER_TAG fumbles with a VAR_C2, trying to put it on USER_THEIR head, but can't grip it well enough!`
                 ]
             },
             other: {
+                // Ephemeral
                 worn: [
-
+                    `TARGET_TAG is already wearing a VAR_C2, but you wouldn't be able to put it on TARGET_THEM anyway!`
                 ],
                 noworn: [
-
+                    `USER_TAG uses both mittens and throws a VAR_C2 towards TARGET_TAG, indicating to put it on. USER_THEY_CAP can't put it on TARGET_THEM though.`
                 ]
             }
         },
         nomitten: {
             self: {
+                // Ephemeral
                 worn: [
-
+                    `You are already wearing a VAR_C2!`
                 ],
-                noworn: {
-
-                }
+                noworn: [
+                    `USER_TAG places a VAR_C2 on USER_THEIR lovely head, securing the straps on snugly!`
+                ]
             },
             other: {
+                // Ephemeral
                 worn: [
-
+                    `You are already wearing a VAR_C2!`
                 ],
-                noworn: {
-
-                }
+                noworn: [
+                    `USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`
+                ]
             }
         }
     }
@@ -639,7 +644,7 @@ const texts_uncorset = {
         self: {
             corset: {
                 chastity: [
-                    `Since USER_THEY don't have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR corset, but USER_THEIR chastity belt is in the way.`
+                    `Since USER_THEY USER_DOESNT have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR corset, but USER_THEIR chastity belt is in the way.`
                 ],
                 nochastity: [
                     `USER_TAG wriggles in USER_THEIR VAR_C1, but without arms, USER_THEY can't easily undo the laces of USER_THEIR corset to take it off!`
@@ -805,6 +810,137 @@ const texts_ungag = {
     }
 }
 
+const texts_unheadwear = {
+    heavy: {
+        self: {
+            single: {
+                worn: [
+                    `USER_TAG tries to use the wall to push off the VAR_C2 on USER_THEIR face, but can't really get any leverage!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't wearing a VAR_C2, but you couldn't remove it anyway!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `USER_TAG tries to use the wall to push off the headgear on USER_THEIR face, but can't really get any leverage!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't wearing any head restraints, but you couldn't remove them anyway!`
+                ]
+            }
+        },
+        other: {
+            single: {
+                worn: [
+                    `USER_TAG brushes up against TARGET_TAG, trying to peel off the VAR_C2 stuck on TARGET_THEIR head, but it holds firmly!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't wearing a VAR_C2, but you couldn't remove it anyway!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `USER_TAG brushes up against TARGET_TAG, trying to peel off the headwear stuck on TARGET_THEIR head, but it all holds firmly!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`
+                ]
+            }
+        }
+    },
+    noheavy: {
+        mitten: {
+            self: {
+                single: {
+                    worn: [
+                        `USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `You aren't wearing a VAR_C2, but you couldn't remove it anyway!`
+                    ]
+                },
+                multiple: {
+                    worn: [
+                        `USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `You aren't wearing any head restraints, but you couldn't remove them anyway!`
+                    ]
+                }
+            },
+            other: {
+                single: {
+                    worn: [
+                        `USER_TAG paws at the VAR_C2 on TARGET_TAG's head, trying to inch it off of TARGET_THEIR face!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `TARGET_TAG isn't wearing a VAR_C2, but you couldn't remove it anyway!`
+                    ]
+                },
+                multiple: {
+                    worn: [
+                        `USER_TAG paws at the head gear on TARGET_TAG's head, trying to inch it all off of TARGET_THEIR face!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`
+                    ]
+                }
+            }
+        },
+        nomitten: {
+            self: {
+                single: {
+                    worn: [
+                        `USER_TAG carefully undoes the straps on the VAR_C2, gently pulling it off of USER_THEIR head!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `You aren't currently wearing a VAR_C2!`
+                    ]
+                },
+                multiple: {
+                    worn: [
+                        `USER_TAG carefully undoes the straps on all of the headgear USER_THEY are wearing, gently pulling it off of USER_THEIR head, one by one!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `You aren't currently wearing any headgear!`
+                    ]
+                }
+            },
+            other: {
+                single: {
+                    worn: [
+                        `USER_TAG runs USER_THEIR hands on TARGET_TAG's head, unclasping the straps to TARGET_THEIR VAR_C2 and taking it off!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `TARGET_TAG isn't currently wearing a VAR_C2!`
+                    ]
+                },
+                multiple: {
+                    worn: [
+                        `USER_TAG runs USER_THEIR hands on TARGET_TAG's head, unclasping the straps to TARGET_THEIR head restraints and peeling them all off!`
+                    ],
+                    // Ephemeral
+                    noworn: [
+                        `TARGET_TAG isn't currently wearing any headgear!`
+                    ]
+                }
+            }
+        }
+    }
+}
+
 const texts_unheavy = {
     heavy: {
         self: [
@@ -870,10 +1006,10 @@ const texts_unvibe = {
             },
             nochastity: {
                 single: [
-                    `USER_TAG trashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`
+                    `USER_TAG thrashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`
                 ],
                 both: [
-                    `USER_TAG trashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`
+                    `USER_TAG thrashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`
                 ]
             }
         },
@@ -1192,6 +1328,7 @@ const textarrays = {
     texts_collarequip: texts_collarequip,
     texts_corset: texts_corset,
     texts_gag: texts_gag,
+    texts_headwear: texts_headwear,
     texts_heavy: texts_heavy,
     texts_letgo: texts_letgo,
     texts_mitten: texts_mitten,
@@ -1199,6 +1336,7 @@ const textarrays = {
     texts_uncollar: texts_uncollar,
     texts_uncorset: texts_uncorset,
     texts_ungag: texts_ungag,
+    texts_unheadwear: texts_unheadwear,
     texts_unheavy: texts_unheavy,
     texts_unmitten: texts_unmitten,
     texts_unvibe: texts_unvibe,

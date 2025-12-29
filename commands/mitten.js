@@ -27,7 +27,7 @@ module.exports = {
 		}
 		else {
             try {
-                let mittens = process.mittentypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                let mittens = mittentypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
 			    await interaction.respond(mittens)
             }
 			catch (err) {

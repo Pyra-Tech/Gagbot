@@ -211,6 +211,7 @@ module.exports = {
                             else {
                                 // We do not have the key
                                 data.nokey = true;
+                                interaction.reply(getText(data))
                             }
                         }
                         else {
@@ -294,7 +295,7 @@ module.exports = {
                             else {
                                 // We do not have the key
                                 data.nokey = true;
-                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                                interaction.reply(getText(data))
                             }
                         }
                         else {

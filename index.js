@@ -9,6 +9,7 @@ const { assignMitten, garbleMessage } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
+const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js');
 const { updateArousalValues } = require('./functions/vibefunctions.js');
@@ -30,6 +31,7 @@ let processdatatoload = [
     { textname: "optinusers.txt", processvar: "optins", default: {} },
     { textname: "corsetusers.txt", processvar: "corset", default: {} },
     { textname: "arousal.txt", processvar: "arousal", default: {} },
+    { textname: "headwearusers.txt", processvar: "headwear", default: {} },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
 ]
 
@@ -77,6 +79,7 @@ Object.keys(process.mitten).forEach((m) => {
 
 // Later loaders for autocompletes
 loadHeavyTypes(); 
+loadHeadwearTypes();
 assignMemeImages();
 
 // Grab all the command files from the commands directory

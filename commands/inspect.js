@@ -4,6 +4,7 @@ const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDe
 const { getCollar, getCollarPerm, getCollarKeys, getCollarName } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
+const { getHeadwear, getHeadwearName } = require('./../functions/headwearfunctions.js')
 const { getPronouns, getPronounsSet } = require('./../functions/pronounfunctions.js')
 
 module.exports = {
@@ -32,6 +33,19 @@ module.exports = {
             }
             else {
                 inspectparts.push(`<:Gag:1073495437635506216> Gag: Not currently worn.`)
+            }
+            // Headwear parts!
+            if (getHeadwear(inspectuser.id).length > 0) {
+                let headout = `👤 Headwear: **`;
+                getHeadwear(inspectuser.id).forEach((h) => {
+                    headout = `${headout}${getHeadwearName(inspectuser.id, h)}, `
+                })
+                headout = headout.slice(0,-2)
+                headout = `${headout}**`
+                inspectparts.push(headout)
+            }
+            else {
+                inspectparts.push(`👤 Headwear: Not currently worn.`)
             }
             // Mitten status
             if (getMitten(inspectuser.id)) {

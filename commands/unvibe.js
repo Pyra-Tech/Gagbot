@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getChastity, getVibe, removeVibe, discardChastityKey } = require('./../functions/vibefunctions.js')
+const { getChastity, getVibe, removeVibe, discardChastityKey, canAccessChastity } = require('./../functions/vibefunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
@@ -188,6 +188,7 @@ module.exports = {
                             else {
                                 // We do not have the key
                                 data.nokey = true;
+                                interaction.reply(getText(data))
                             }
                         }
                         else {
@@ -230,7 +231,7 @@ module.exports = {
                         if (getChastity(vibeuser.id)) {
                             // in chastity
                             data.chastity = true
-                            if ((getChastity(vibeuser.id)?.access !== 2) && (getChastity(vibeuser.id).keyholder == interaction.user.id)) {
+                            if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
                                 // We have the key to the belt
                                 data.key = true
                                 const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
@@ -285,7 +286,7 @@ module.exports = {
                                     }
                                 }
                             }
-                            else if ((getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id)) {
+                            /*else if ((getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id)) {
                                 // public access key
                                 data.public = true
                                 if (vibetype) {
@@ -300,7 +301,7 @@ module.exports = {
                                     interaction.reply(getText(data))
                                     removeVibe(vibeuser.id, vibetype)
                                 }
-                            }
+                            }*/
                             else {
                                 // We do not have the key
                                 data.nokey = true;
