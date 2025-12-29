@@ -79,6 +79,23 @@ const getHeadwearName = (userID, headnname) => {
     }
 }
 
+// Gets the full headwear entry
+// There's a better way to do this.
+// I didnt feel like doing some kind of .some condition checking. 
+// Plz simplify.
+const getHeadwearBlocks = (headnname) => {
+    let convertmittenarr = {}
+    for (let i = 0; i < headweartypes.length; i++) {
+        convertmittenarr[headweartypes[i].value] = headweartypes[i]
+    }
+    if (headnname) {
+        return convertmittenarr[headnname];
+    }
+    else {
+        return undefined;
+    }
+}
+
 // Returns an object with true/false if *ANY* headwear they're wearing 
 // blocks a given function. 
 // { canEmote: true, canInspect: true }
@@ -87,8 +104,15 @@ const getHeadwearRestrictions = (userID) => {
         canEmote: true,
         canInspect: true
     }
-
-
+    let wornheadwear = getHeadwear(userID);
+    for (let i = 0; i < wornheadwear.length; i++) {
+        if (getHeadwearBlocks(wornheadwear[i]).blockemote) {
+            allowedperms.canEmote = false
+        }
+        if (getHeadwearBlocks(wornheadwear[i]).blockinspect) {
+            allowedperms.canInspect = false
+        }
+    }
 
     return allowedperms
 }
@@ -99,3 +123,4 @@ exports.assignHeadwear = assignHeadwear
 exports.getHeadwear = getHeadwear
 exports.deleteHeadwear = deleteHeadwear
 exports.getHeadwearName = getHeadwearName;
+exports.getHeadwearRestrictions = getHeadwearRestrictions;
