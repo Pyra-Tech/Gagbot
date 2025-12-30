@@ -93,8 +93,9 @@ module.exports = {
         }
 
         const frustrationMultiplier = 1 + rollKeyFumbleN(interaction.user.id, wearer, 20).reduce((a, b) => a + b) / 100;
-
-        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime) * frustrationMultiplier, Number(access), Number(keyholderAfter))) {
+        frustrationMultiplier = 1 // Set to neuter frustration
+        
+        if (timelockChastity(interaction.client, wearer, keyholder, Math.floor(Number(unlockTime) * frustrationMultiplier), Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
           interaction.reply({
             content: "Timelock confirmed",

@@ -115,6 +115,13 @@ const client = new discord.Client({
 client.on("clientReady", async () => {
     // This is run once we’re logged in!
     console.log(`Logged in as ${client.user.tag}!`)
+    try {
+        await client.application.fetch();
+        console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
+    }
+    catch (err) {
+        console.log(err)
+    }
     restartChastityTimers(client);
     setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
 })
