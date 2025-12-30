@@ -65,15 +65,18 @@ const getChastity = (user) => {
     return process.chastity[user];
 }
 
+// Chastity does not need an origbinder function
+
 const removeChastity = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
     delete process.chastity[user];
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
 }
 
-const assignVibe = (user, intensity, vibetype = "bullet vibe") => {
+const assignVibe = (user, intensity, vibetype = "bullet vibe", origbinder) => {
     if (!optins.getEnableVibes(user)) return;
     if (process.vibe == undefined) { process.vibe = {} }
+    let originalbinder = process.vibe[user]?.origbinder // ... well I was gonna finish vibe code but this needs a bigger rework
     if (!process.vibe[user]) {        
         process.vibe[user] = [{
             vibetype: vibetype,

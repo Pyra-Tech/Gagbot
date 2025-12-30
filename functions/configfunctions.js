@@ -1,14 +1,15 @@
 const { ButtonStyle, ActionRowBuilder, SectionBuilder, StringSelectMenuBuilder, 
     StringSelectMenuOptionBuilder, PermissionsBitField, ButtonBuilder,
-    ComponentType, MessageFlags} = require("discord.js")
+    ComponentType, MessageFlags,
+    RoleSelectMenuBuilder} = require("discord.js")
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { getHeavy } = require('./../functions/heavyfunctions.js')
-const { getCorset } = require('./../functions/corsetfunctions.js')
+const { getHeavyBinder } = require('./../functions/heavyfunctions.js')
+const { getCorsetBinder } = require('./../functions/corsetfunctions.js')
 const { getVibe, getChastityKeyholder } = require('./../functions/vibefunctions.js')
-const { getMitten, getGagg } = require('./../functions/gagfunctions.js')
-const { getHeadwear } = require('./../functions/headwearfunctions.js');
+const { getMittenBinder, getGagBinder } = require('./../functions/gagfunctions.js')
+const { getHeadwearBinder } = require('./../functions/headwearfunctions.js');
 const { getCollarKeyholder } = require("./collarfunctions");
 
 const configoptions = {
@@ -149,7 +150,7 @@ const configoptions = {
             disabled: () => { return false }
         },
         "removebondage": {
-            name: "Prompt to Remove Non-Keyed Bondage",
+            name: "Prompt to Modify Non-Keyed Bondage",
             desc: "Should you be prompted for others to **/ungag** you, etc?",
             choices: [
                 {
@@ -184,6 +185,47 @@ const configoptions = {
             default: "accept",
             disabled: () => { return false }
         }
+    },
+    "Server Settings": {
+        "server_allowgags": {
+            name: "Allow Gags",
+            desc: "Allows /gag and /ungag",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Gags are disabled*",
+                    select_function: (serverID) => { return false } // We will need to have this update commands
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Gags are enabled",
+                    select_function: (serverID) => { return false } // We will need to have this update commands
+                },
+            ],
+            default: "Enabled",
+            disabled: () => { return false }
+        } 
+        // And so on for other features
+    },
+    "Bot Settings": {
+        "bot_enablebot": {
+            name: "Global Enable Bot",
+            desc: "Should the bot be active and respond to messages",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Bot will not respond to messages*",
+                    select_function: (userID) => { return false } // We will need to have this update commands
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Bot responds to messages",
+                    select_function: (userID) => { return false } // We will need to have this update commands
+                },
+            ],
+            default: "Enabled",
+            disabled: () => { return false }
+        }
     }
 } 
 
@@ -206,6 +248,23 @@ function generateConfigModal(interaction, menuset = "General", page) {
         pagecomponents.push(buttonsection)
     })
 
+    // If manage messages on the server, user is considered a moderator.
+    // Give them server specific components, namely to designate a safeword role
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages) && menuset == "Server Settings") {
+        let currrole // Get current safeword role that's set here
+        pagecomponents.push(new ActionRowBuilder()
+            .addComponents(new RoleSelectMenuBuilder()
+                .setCustomId(`roleselectopt_${interaction.guildId}`)
+                .setPlaceholder(`Select Safeword role for /reset`)
+                .setMinValues(0)
+                .setMaxValues(1)
+                //.setDefaultRoles() -- Set the current safeword role here if theres one already
+            )
+        )
+    }
+
+    // If bot owner, construct a selector for servers here and allow them to make the client leave them
+
     // Construct the menu selector
     let menupageoptions = new StringSelectMenuBuilder()
         .setCustomId('config_menuselector')
@@ -213,10 +272,12 @@ function generateConfigModal(interaction, menuset = "General", page) {
     
     let menupageoptionsarr = []
     Object.keys(configoptions).forEach((k) => {
-        let opt = new StringSelectMenuOptionBuilder()
-            .setLabel(k)
-            .setValue(`menuopt_${k}`)
-        menupageoptionsarr.push(opt)
+        if ((k != "Server Settings") && (k != "Bot Settings")) {
+            let opt = new StringSelectMenuOptionBuilder()
+                .setLabel(k)
+                .setValue(`menuopt_${k}`)
+            menupageoptionsarr.push(opt)
+        }
     })
 
     // If the user is a moderator on that server, allow configuration of that server
@@ -224,7 +285,7 @@ function generateConfigModal(interaction, menuset = "General", page) {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
         let opt = new StringSelectMenuOptionBuilder()
             .setLabel("Server Settings")
-            .setValue(`menuopt_Server`)
+            .setValue(`menuopt_Server Settings`)
         menupageoptionsarr.push(opt)
     }
 
@@ -233,7 +294,7 @@ function generateConfigModal(interaction, menuset = "General", page) {
     if (interaction.user.id == interaction.client.application.owner.id) {
         let opt = new StringSelectMenuOptionBuilder()
             .setLabel("Bot Settings")
-            .setValue(`menuopt_Bot`)
+            .setValue(`menuopt_Bot Settings`)
         menupageoptionsarr.push(opt)
     }
 
@@ -317,24 +378,22 @@ function checkBondageRemoval(userID, targetID, type) {
     // if binder or KH, return true if target ID is origbinder
     if ((useroption == "all_binder") || (useroption == "all_binder_and_keyholder")) {
         let restraintobject;
-        if (type == "heavy") { restraintobject = getHeavy(targetID) } 
-        if (type == "gag") { restraintobject = getGagg(targetID) } 
-        if (type == "mitten") { restraintobject = getMitten(targetID) } 
-        if (type == "corset") { restraintobject = getCorset(targetID) } 
-        if (type == "headwear") { restraintobject = getHeadwear(targetID) } 
-        if (type == "vibe") { restraintobject = getVibe(targetID) } 
+        if (type == "heavy") { restraintobject = getHeavyBinder(targetID) } 
+        if (type == "gag") { restraintobject = getGagBinder(targetID) } 
+        if (type == "mitten") { restraintobject = getMittenBinder(targetID) } 
+        if (type == "corset") { restraintobject = getCorsetBinder(targetID) } 
+        if (type == "headwear") { restraintobject = getHeadwearBinder(targetID) } 
+        // if (type == "vibe") { restraintobject = getVibe(targetID) } 
 
         if (restraintobject) {
-            if (restraintobject.origbinder == userID) { return true }
+            if (restraintobject == userID) { return true }
         }
     }
-
-    console.log("didnt match ANYTHING")
 
     return false
 }
 
-async function handleBondageRemoval(user, target, type) {
+async function handleBondageRemoval(user, target, type, change = false) {
     return new Promise(async (res,rej) => {
         let buttons = [
             new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
@@ -342,7 +401,7 @@ async function handleBondageRemoval(user, target, type) {
         ]
         let dmchannel = await target.createDM();
         await dmchannel.send({
-            content: `${user} would like to remove your ${type}. Do you want to allow this action?`,
+            content: `${user} would like to ${change ? "change" : "remove"} your ${type}. Do you want to allow this action?`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
             // Create a collector for up to 30 seconds
@@ -352,13 +411,13 @@ async function handleBondageRemoval(user, target, type) {
                 console.log(i)
                 if (i.customId == "acceptButton") {
                     await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${user} is permitted to take your ${type} off!`)
+                        i.reply(`Confirmed - ${user} is permitted to ${change ? `change your ${type}` : `take your ${type} off`}!`)
                     })
                     res(true);
                 }
                 else {
                     await mess.delete().then(() => {
-                        i.reply(`Rejected - ${user} is blocked from taking your ${type} off!`)
+                        i.reply(`Rejected - ${user} is blocked from ${change ? `changing your ${type}` : `taking your ${type} off`}!`)
                     })
                     rej(true);
                 }
@@ -368,7 +427,7 @@ async function handleBondageRemoval(user, target, type) {
                 // timed out
                 if (collected.length == 0) {
                     await mess.delete().then(() => {
-                        i.reply(`Timed out - ${user} is blocked from taking your ${type} off!`)
+                        i.reply(`Timed out - ${user} is blocked from ${change ? `changing your ${type}` : `taking your ${type} off`}!`)
                     })
                     rej(true);
                 }

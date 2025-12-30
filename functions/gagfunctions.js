@@ -40,10 +40,11 @@ const convertGagText = (type) => {
 
 const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
     if (process.gags == undefined) { process.gags = {} }
+    let originalbinder = process.gags[userID]?.origbinder
     process.gags[userID] = {
         gagtype: gagtype,
         intensity: intensity,
-        origbinder: origbinder
+        origbinder: originalbinder ?? origbinder // Preserve original binder until it is removed. 
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`, JSON.stringify(process.gags));
 }
@@ -53,9 +54,9 @@ const getGag = (userID) => {
     return process.gags[userID]?.gagtype
 }
 
-// Rename this later probably. Or forget lol. It's used to get the origbinder prop. 
-const getGagg = (userID) => {
-    return process.gags[userID]
+const getGagBinder = (userID) => {
+    if (process.gags == undefined) { process.gags = {} }
+    return process.gags[userID]?.origbinder
 }
 
 const getGagIntensity = (userID) => {
@@ -69,10 +70,12 @@ const deleteGag = (userID) => {
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`, JSON.stringify(process.gags));
 }
 
-const assignMitten = (userID, mittentype) => {
+const assignMitten = (userID, mittentype, origbinder) => {
     if (process.mitten == undefined) { process.mitten = {} }
+    let originalbinder = process.mitten[userID]?.origbinder;
     process.mitten[userID] = {
-        mittenname: mittentype
+        mittenname: mittentype,
+        origbinder: originalbinder ?? origbinder // Preserve original binder until it is removed. 
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`, JSON.stringify(process.mitten));
 }
@@ -80,6 +83,11 @@ const assignMitten = (userID, mittentype) => {
 const getMitten = (userID) => {
     if (process.mitten == undefined) { process.mitten = {} }
     return process.mitten[userID]
+}
+
+const getMittenBinder = (userID) => {
+    if (process.mitten == undefined) { process.mitten = {} }
+    return process.mitten[userID]?.origbinder
 }
 
 const deleteMitten = (userID) => {
@@ -332,9 +340,8 @@ const garbleMessage = async (threadId, msg) => {
 
 exports.assignGag = assignGag;
 exports.getGag = getGag;
-
-exports.getGagg = getGagg;
-
+exports.getGagBinder = getGagBinder;
+exports.getMittenBinder = getMittenBinder;
 exports.getGagIntensity = getGagIntensity;
 exports.deleteGag = deleteGag;
 exports.assignMitten = assignMitten;

@@ -160,7 +160,7 @@ client.on('interactionCreate', async (interaction) => {
         if (interaction.isMessageComponent()) {
             // Lazy workaround for config handling, that will probably stand the test of time. 
             if (interaction.customId.startsWith("config_")) {
-                let configfunc = require(`./commands/test.js`)
+                let configfunc = require(`./commands/config.js`)
                 configfunc.interactionresponse(interaction);  
             }
             const [key, ...args] = interaction.customId.split("-");

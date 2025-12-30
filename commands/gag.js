@@ -5,7 +5,8 @@ const { getGag, assignGag, getMitten } = require('./../functions/gagfunctions.js
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
-const { getText } = require("./../functions/textfunctions.js");
+const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
+const { checkBondageRemoval, handleBondageRemoval } = require('../functions/configfunctions.js');
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -191,9 +192,27 @@ module.exports = {
 					data.other = true
 					if (getGag(gaggeduser.id)) {
 						// They are already gagged, so we want to change gags
+						// Note, we should check if we're allowed in this case, since it may interfere.
 						data.gag = true
-						interaction.reply(getText(data))
-						assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						// Now lets make sure the wearer wants that.
+						if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
+							// Allowed immediately, lets go
+							interaction.reply(getText(data))
+							assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						}
+						else {
+							// We need to ask first. 
+							let datatogeneric = Object.assign({}, data.textdata);
+							datatogeneric.c1 = "gag";
+							interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral })
+							let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag", true).then(async (res) => {
+								await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric))
+								await interaction.followUp(getText(data))
+								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+							}, async (rej) => {
+								await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric))
+							})
+						}
 					}
 					else {
 						// Not already gagged, lets put one on
