@@ -100,6 +100,7 @@ module.exports = {
         const frustrationMultiplier = rollKeyFumbleN(interaction.user.id, wearer, 20).reduce((a, b) => a + b) / 100;
 
         const modifiedUnlockTime = Number(unlockTime) + (Number(unlockTime) - Date.now()) * frustrationMultiplier;
+        modifiedUnlockTime = Number(unlockTime) + (Number(unlockTime) - Date.now()) // Remove frustration multiplier. 
 
         if (timelockChastity(interaction.client, wearer, keyholder, Math.floor(modifiedUnlockTime), Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
