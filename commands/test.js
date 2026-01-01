@@ -91,13 +91,13 @@ module.exports = {
             // This way of doing it is gonna be fucky.
             // From the top. Lets do an if/else for what kind we chose
             // heavy, gag, mitten, chastity, head, corset, collar
-            if (chosenopt == "heavy") {
+            if (chosenopt == "heavy" && heavybondage) {
                 data.heavy = true;
                 // Heavy Bondage is... pretty uniquely only influenced by itself. 
                 // It will also only ever have named bondage.
                 interaction.reply(getText(data))
             }
-            else if (chosenopt == "gag") {
+            else if (chosenopt == "gag" && gagbondage) {
                 data.gag = true;
                 // Gags are influenced by heavy bondage or mittens. 
                 if (heavybondage) {
@@ -108,6 +108,7 @@ module.exports = {
                 else {
                     data.noheavy = true;
                     if (mittenbondage) {
+                        // Mittens are so cute
                         data.mitten = true;
                         interaction.reply(getText(data))
                     }
@@ -117,65 +118,120 @@ module.exports = {
                     }
                 }
             }
-            else if (chosenopt == "mitten") {
+            else if (chosenopt == "mitten" && mittenbondage) {
                 data.mitten = true;
-            }
-            else if (chosenopt == "chastity") {
-
-            }
-            else if (chosenopt == "head") {
-
-            }
-            else if (chosenopt == "corset") {
-
-            }
-            else if (chosenopt == "collar") {
-
-            }
-            
-            if (getHeavy(interaction.user.id)) {
-                data.heavy = true
-                interaction.reply(getText(data))
-            }
-            else if (getMitten(interaction.user.id)) {
-                data.mitten = true
-                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
-            }
-            else {
-                // Not mittened
-                data.nomitten = true
-                if (chosenmittens) {
-                    // Chose to wear named mittens
-                    data.namedmitten = true
-                    if (getGag(interaction.user.id)) {
-                        // Wearing a gag already. 
-                        data.gag = true
-                        interaction.reply(getText(data))
-                        assignMitten(interaction.user.id, chosenmittens);
-                    }
-                    else {
-                        // Not wearing a gag
-                        data.nogag = true
-                        interaction.reply(getText(data))
-                        assignMitten(interaction.user.id, chosenmittens);
-                    }
+                // Mittens are influenced by heavy bondage, inherently
+                // BUT, lets add a 50% chance or guaranteed with gag to get a 
+                // text that doesn't involve using teeth!
+                if (heavybondage) {
+                    // Heavy Bondage is disabling.
+                    data.heavy = true;
+                    interaction.reply(getText(data))
                 }
                 else {
-                    // Chose to wear regular mittens
-                    data.nonamedmitten = true
-                    if (getGag(interaction.user.id)) {
-                        // Wearing a gag already. 
-                        data.gag = true
+                    data.noheavy = true;
+                    if (gagbondage || (Math.random() > 0.5)) {
+                        // Either gagged, or not using teeth or similar
+                        data.gag = true;
                         interaction.reply(getText(data))
-                        assignMitten(interaction.user.id, chosenmittens);
                     }
                     else {
-                        // Not wearing a gag
                         data.nogag = true
                         interaction.reply(getText(data))
-                        assignMitten(interaction.user.id, chosenmittens);
                     }
                 }
+            }
+            else if (chosenopt == "chastity" && chastitybondage) {
+                data.chastity = true
+                // Chastity is influenced by heavy bondage, inherently.
+                // Added chance for dextrous fingers if not in mittens, like above with gags
+                if (heavybondage) {
+                    // Heavy Bondage is disabling.
+                    data.heavy = true;
+                    interaction.reply(getText(data))
+                }
+                else {
+                    data.noheavy = true;
+                    if (mittenbondage || (Math.random() > 0.5)) {
+                        // Either mittened, or not using fingers or similar
+                        data.mitten = true;
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        data.nomitten = true
+                        interaction.reply(getText(data))
+                    }
+                }
+            }
+            else if (chosenopt == "head" && headbondage) {
+                data.headwear = true
+                // Headwear is influenced by heavy bondage, inherently.
+                // Added chance for dextrous fingers if not in mittens, like above with gags
+                if (heavybondage) {
+                    // Heavy Bondage is disabling.
+                    data.heavy = true;
+                    interaction.reply(getText(data))
+                }
+                else {
+                    data.noheavy = true;
+                    if (mittenbondage || (Math.random() > 0.5)) {
+                        // Either mittened, or not using fingers or similar
+                        data.mitten = true;
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        data.nomitten = true
+                        interaction.reply(getText(data))
+                    }
+                }
+            }
+            else if (chosenopt == "corset" && corsetbondage) {
+                data.corset = true
+                // Corsets are influenced the same way as above. 
+                // Added chance for dextrous fingers if not in mittens, like above with gags
+                if (heavybondage) {
+                    // Heavy Bondage is disabling.
+                    data.heavy = true;
+                    interaction.reply(getText(data))
+                }
+                else {
+                    data.noheavy = true;
+                    if (mittenbondage || (Math.random() > 0.5)) {
+                        // Either mittened, or not using fingers or similar
+                        data.mitten = true;
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        data.nomitten = true
+                        interaction.reply(getText(data))
+                    }
+                }
+            }
+            else if (chosenopt == "collar" && collarbondage) {
+                data.collar = true;
+                // Finally, collars are similarly influenced!
+                // Added chance for dextrous fingers if not in mittens, like above with gags
+                if (heavybondage) {
+                    // Heavy Bondage is disabling.
+                    data.heavy = true;
+                    interaction.reply(getText(data))
+                }
+                else {
+                    data.noheavy = true;
+                    if (mittenbondage || (Math.random() > 0.5)) {
+                        // Either mittened, or not using fingers or similar
+                        data.mitten = true;
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        data.nomitten = true
+                        interaction.reply(getText(data))
+                    }
+                }
+            }
+            else {
+                data.nostruggle = true;
+                interaction.reply(getText(data))
             }
         }
         catch (err) {

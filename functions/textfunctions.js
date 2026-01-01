@@ -544,6 +544,10 @@ const texts_mitten = {
     }
 }
 
+const texts_struggle = {
+    
+}
+
 const texts_unchastity = {
     heavy: {
         self: {
