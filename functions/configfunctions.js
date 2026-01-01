@@ -369,10 +369,10 @@ exports.setOption = setOption;
 
 const functions = {};
 
-Object.entries(configoptions).forEach((_, page) => {
-    Object.entries(page).forEach((_, option) => {
-        Object.entries(option).forEach((_, value) => {
-            functions[`get${value.uname}`] = (user) => getOption(user, option) == value
+Object.entries(configoptions).forEach(([_, page]) => {
+    Object.entries(page).forEach(([key, option]) => {
+        option.choices.forEach((choice) => {
+            functions[`get${choice.uname}`] = (user) => getOption(user, key) == choice.value
         })
     })
 });
