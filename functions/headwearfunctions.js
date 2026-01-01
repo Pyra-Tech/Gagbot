@@ -55,8 +55,15 @@ const headweartypes = [
     { name: "Moon Phase Headchain", value: "moonphase_headchain" },
     { name: "Elemental Headchain", value: "elemental_headchain" },
     { name: "Starveiled Headdress", value: "starveiled_headchain" },
+    { name: "Maid Headdress", value: "maid_headchain" },
     { name: "Demon Horns", value: "demon_horns" },
     { name: "Demon Horns (Sheep)", value: "demon_horns_sheep" },
+    { name: "Cat Ears", value: "ears_cat" },
+    { name: "Futuristic Cat Ears", value: "ears_cat_future" },
+    { name: "Bunny Ears", value: "ears_bunny" },
+    { name: "Floppy Bunny Ears", value: "ears_bunny_floppy" },
+    { name: "Dog Ears", value: "ears_dog" },
+    { name: "Fox Ears", value: "ears_fox" },
 ]
 
 /**************

@@ -5,7 +5,7 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage, gagtypesset } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
@@ -78,6 +78,7 @@ Object.keys(process.mitten).forEach((m) => {
 })
 
 // Later loaders for autocompletes
+gagtypesset();
 loadHeavyTypes(); 
 loadHeadwearTypes();
 assignMemeImages();
