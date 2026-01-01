@@ -20,6 +20,23 @@ for (const file of commandFiles) {
     );
 }
 
+const gagtypesset = () => {
+    // Grab all the command files from the commands directory
+    const gagtypes = [];
+    const commandsPath = path.join(__dirname, '..', 'gags');
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+    // Push the gag name over to the choice array. 
+    for (const file of commandFiles) {
+        const gag = require(`./../gags/${file}`);
+        gagtypes.push(
+            { name: gag.choicename, value: file.replace('.js', '') }
+        );
+    }
+
+    process.gagtypes = gagtypes;
+}
+
 const mittentypes = [
     { name: "Kitty Paws", value: "mittens_kitty" },
     { name: "Cyber Doll Mittens", value: "mittens_cyberdoll" },
@@ -350,6 +367,8 @@ const garbleMessage = async (threadId, msg) => {
         console.log(err);
     }
 }
+
+exports.gagtypesset = gagtypesset;
 
 exports.assignGag = assignGag;
 exports.getGag = getGag;
