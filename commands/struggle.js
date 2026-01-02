@@ -12,7 +12,7 @@ const { getCollar, getCollarName } = require('../functions/collarfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('test')
+		.setName('struggle')
 		.setDescription('Struggle with one of your restraints...')
         .addStringOption(opt =>
 			opt.setName('type')
@@ -32,14 +32,19 @@ module.exports = {
 
             let outopts = [];
             if (heavybondage) { outopts.push({ name: `Heavy Bondage: ${getHeavy(interaction.user.id).type}`, value: "heavy" }) } 
-            if (gagbondage) { outopts.push({ name: `Gag: ${convertGagText(getGag(interaction.user.id).gagtype)}`, value: "gag" }) } 
+            if (gagbondage) { outopts.push({ name: `Gag: ${convertGagText(getGag(interaction.user.id))}`, value: "gag" }) } 
             if (mittenbondage) { outopts.push({ name: `Mittens${(mittenbondage.mittenname ? `: ${getMittenName(interaction.user.id)}` : "")}`, value: "mitten" }) } 
             if (chastitybondage) { outopts.push({ name: `Chastity${(chastitybondage.chastitytype ? `: ${getChastityName(interaction.user.id)}` : "")}`, value: "chastity" }) } 
-            if (headbondage) { outopts.push({ name: `Head Restraints`, value: "head" }) } 
+            if (headbondage.length > 0) { outopts.push({ name: `Head Restraints`, value: "head" }) } 
             if (corsetbondage) { outopts.push({ name: `Corset`, value: "corset" }) } 
             if (collarbondage) { outopts.push({ name: `Collar${(collarbondage.collartype ? `: ${getCollarName(interaction.user.id)}` : "")}`, value: "collar" }) }
                                                                                                         
-            if (outopts.length == 0) { outopts = [{ name: "Nothing", value: "nothing" }]}
+            if (outopts.length == 0) { 
+                outopts = [{ name: "Nothing", value: "nothing" }]
+            }
+            else {
+                outopts.push({ name: "Struggle with nothing in particular...", value: "nothing" })
+            }
             await interaction.respond(outopts)
         }
         catch (err) {
@@ -48,11 +53,6 @@ module.exports = {
 	},
     async execute(interaction) {
         try {
-            if (interaction.user.id !== interaction.client?.application?.owner?.id) {
-                await interaction.reply(`You're not ${interaction.client?.application?.owner?.displayName}. Go away.`)
-                return
-            }
-
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
             if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
@@ -68,25 +68,25 @@ module.exports = {
 
             // Build data tree:
             let data = {
-                textarray: "texts_struggles",
+                textarray: "texts_struggle",
                 textdata: {
                     interactionuser: interaction.user,
                     targetuser: interaction.user, // Doesn't really matter but we're adding to avoid a crash
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-                    c2: getGag(interaction.user.id),
-                    c3: getMittenName(interaction.user.id),
-                    c4: getChastityName(interaction.user.id),
-                    c5: getCollarName(interaction.user.id)
+                    c2: convertGagText(getGag(interaction.user.id)),
+                    c3: getMittenName(interaction.user.id) ?? "mittens",
+                    c4: getChastityName(interaction.user.id) ?? "chastity belt",
+                    c5: getCollarName(interaction.user.id) ?? "collar"
                 }
             }
 
             let chosenopt = interaction.options.getString('type')
 
-            if (!chosenopt) {
+            /*if (!chosenopt) {
                 // Something went CRITICALLY wrong. Eject, eject!
                 interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral })
                 return;
-            }
+            }*/
 
             // This way of doing it is gonna be fucky.
             // From the top. Lets do an if/else for what kind we chose
@@ -107,13 +107,19 @@ module.exports = {
                 }
                 else {
                     data.noheavy = true;
-                    if (mittenbondage) {
-                        // Mittens are so cute
-                        data.mitten = true;
+                    if (mittenbondage || (Math.random() > 0.5)) {
+                        // Either mittened, or not using fingers or similar
+                        data.nofingers = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (mittenbondage && (Math.random() > 0.5)) {
+                        // Mittened and random chance! 
+                        data.mitten = true
                         interaction.reply(getText(data))
                     }
                     else {
-                        data.nomitten = true;
+                        // No mittens and ABLE TO USE FINGERS!
+                        data.nomitten = true
                         interaction.reply(getText(data))
                     }
                 }
@@ -131,12 +137,18 @@ module.exports = {
                 else {
                     data.noheavy = true;
                     if (gagbondage || (Math.random() > 0.5)) {
-                        // Either gagged, or not using teeth or similar
-                        data.gag = true;
+                        // Either gagged, or not using teeth
+                        data.nomouth = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (gagbondage && (Math.random() > 0.5)) {
+                        // Gagged and random chance! 
+                        data.gag = true
                         interaction.reply(getText(data))
                     }
                     else {
-                        data.nogag = true
+                        // No gag and ABLE TO USE TEETH!
+                        data.mouth = true
                         interaction.reply(getText(data))
                     }
                 }
@@ -151,19 +163,26 @@ module.exports = {
                     interaction.reply(getText(data))
                 }
                 else {
+                    // Because the number of responses vary so much, going to use 33% chance for mitten/finger text
                     data.noheavy = true;
-                    if (mittenbondage || (Math.random() > 0.5)) {
+                    if (mittenbondage || (Math.random() > 0.33)) {
                         // Either mittened, or not using fingers or similar
-                        data.mitten = true;
+                        data.nofingers = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (mittenbondage && (Math.random() > 0.66)) {
+                        // Mittened and random chance! 
+                        data.mitten = true
                         interaction.reply(getText(data))
                     }
                     else {
+                        // No mittens and ABLE TO USE FINGERS!
                         data.nomitten = true
                         interaction.reply(getText(data))
                     }
                 }
             }
-            else if (chosenopt == "head" && headbondage) {
+            else if (chosenopt == "head" && headbondage.length > 0) {
                 data.headwear = true
                 // Headwear is influenced by heavy bondage, inherently.
                 // Added chance for dextrous fingers if not in mittens, like above with gags
@@ -176,10 +195,16 @@ module.exports = {
                     data.noheavy = true;
                     if (mittenbondage || (Math.random() > 0.5)) {
                         // Either mittened, or not using fingers or similar
-                        data.mitten = true;
+                        data.nofingers = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (mittenbondage && (Math.random() > 0.5)) {
+                        // Mittened and random chance! 
+                        data.mitten = true
                         interaction.reply(getText(data))
                     }
                     else {
+                        // No mittens and ABLE TO USE FINGERS!
                         data.nomitten = true
                         interaction.reply(getText(data))
                     }
@@ -198,10 +223,16 @@ module.exports = {
                     data.noheavy = true;
                     if (mittenbondage || (Math.random() > 0.5)) {
                         // Either mittened, or not using fingers or similar
-                        data.mitten = true;
+                        data.nofingers = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (mittenbondage && (Math.random() > 0.5)) {
+                        // Mittened and random chance! 
+                        data.mitten = true
                         interaction.reply(getText(data))
                     }
                     else {
+                        // No mittens and ABLE TO USE FINGERS!
                         data.nomitten = true
                         interaction.reply(getText(data))
                     }
@@ -220,10 +251,16 @@ module.exports = {
                     data.noheavy = true;
                     if (mittenbondage || (Math.random() > 0.5)) {
                         // Either mittened, or not using fingers or similar
-                        data.mitten = true;
+                        data.nofingers = true;
+                        interaction.reply(getText(data))
+                    }
+                    else if (mittenbondage && (Math.random() > 0.5)) {
+                        // Mittened and random chance! 
+                        data.mitten = true
                         interaction.reply(getText(data))
                     }
                     else {
+                        // No mittens and ABLE TO USE FINGERS!
                         data.nomitten = true
                         interaction.reply(getText(data))
                     }

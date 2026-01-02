@@ -319,7 +319,6 @@ const getClonedChastityKeysOwned = (userID) => {
     let ownedkeys = []
     Object.keys(process.chastity).forEach((k) => {
         if (process.chastity[k].clonedKeyholders) {
-            console.log(process.chastity[k].clonedKeyholders)
             if (process.chastity[k].clonedKeyholders.includes(userID)) {
                 ownedkeys.push(`${k}_chastitybelt`)
             }

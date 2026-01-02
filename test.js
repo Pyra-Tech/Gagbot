@@ -1,9 +1,9 @@
-const { getText } = require("./functions/textfunctions.js");
-const { processHeadwearEmoji } = require("./functions/headwearfunctions.js");
-const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require('./functions/headwearfunctions.js');
+let replacewith = "he";
+let outtext = `Good USER_TRY are chaste.`
+outtext = outtext.replaceAll("USER_TRY", () => {
+    if (replacewith == "she") { return "girls" }
+    if (replacewith == "he") { return "boys" }
+    return "toys"
+});
 
-let itemsworn = getHeadwear("125093095405518850")
-let itemslocked = getLockedHeadgear("125093095405518850")
-
-console.log(itemsworn)
-console.log(itemslocked)
+console.log(outtext)
