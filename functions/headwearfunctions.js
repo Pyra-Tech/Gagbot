@@ -31,8 +31,9 @@ const headweartypes = [
     { name: "Dog Mask", value: "mask_dog", blockinspect: true, blockemote: true, replaceemote: "🐶" },
     { name: "Frog Mask", value: "mask_frog", blockinspect: true, blockemote: true, replaceemote: "🐸" },
     { name: "Turtle Mask", value: "mask_turtle", blockinspect: true, blockemote: true, replaceemote: "🐢" },
-    { name: "Doll Visor", value: "doll_visor", blockinspect: true, blockemote: true },
-    { name: "Doll Visor (transparent)", value: "doll_visor_trans", },
+    { name: "Doll Visor", value: "doll_visor", blockemote: true },                                      // Doll Visor removes emotes only.
+    { name: "Doll Visor (opaque)", value: "doll_visor_blind", blockinspect: true, blockemote: true },   // Blindfolding Doll Visor
+    { name: "Doll Visor (transparent)", value: "doll_visor_trans", },                                   // Cosmetic Item
     { name: "VR Headset", value: "vr_visor", blockinspect: true },
     { name: "Protective Eye Goggles", value: "eye_goggles", },
     { name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
@@ -65,6 +66,8 @@ const headweartypes = [
     { name: "Dog Ears", value: "ears_dog" },
     { name: "Fox Ears", value: "ears_fox" },
 ]
+
+const DOLLVISORS = ["doll_visor", "doll_visor_blind"]
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -232,8 +235,19 @@ const processHeadwearEmoji = (userID, text) => {
     let outtext = text.replaceAll(regex, replaceemote);
 
     if (replaceemote && !outtext.includes(replaceemote)) { outtext = `${outtext} ${replaceemote}`}
-    
-    if (outtext.length == 0) { outtext = `*(<@${userID}>'s face shows no emotion...)*`}
+
+    if (outtext.length == 0) {
+
+        // Handle Doll Visors
+        if(getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))){
+            let dollDigits = process.dolloverrides[userID] ? process.dolloverrides[userID].id : `${userID}`.slice(-4)
+            // Below is a stylistic choice it's uncertain about.
+            let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
+            outtext = `*(DOLL-${dollID}'s face shows no emotion...)*`
+        }else{
+            outtext = `*(<@${userID}>'s face shows no emotion...)*`
+        }
+    }
     return outtext
 }
 
@@ -251,3 +265,4 @@ exports.processHeadwearEmoji = processHeadwearEmoji;
 exports.addLockedHeadgear = addLockedHeadgear;
 exports.getLockedHeadgear = getLockedHeadgear;
 exports.removeLockedHeadgear = removeLockedHeadgear;
+exports.DOLLVISORS = DOLLVISORS;

@@ -5,7 +5,12 @@ const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
-const { getHeadwearRestrictions, processHeadwearEmoji } = require('./headwearfunctions.js')
+const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js')
+
+//const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+// Abomination of a regex for corset compatibility.
+const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -131,7 +136,7 @@ const getMittenName = (userID, mittenname) => {
     }
 }
 
-const splitMessage = (text) => {
+const splitMessage = (text, inputRegex=null) => {
 
     /*************************************************************************************
      * Massive Regex, let's break it down:
@@ -152,7 +157,7 @@ const splitMessage = (text) => {
 
     let output = [];
     let deepCopy = text.split()[0]
-    let found = deepCopy.match(regex)
+    let found = deepCopy.match(inputRegex ? inputRegex : regex)
 
     for(const x in found){
 
@@ -310,6 +315,51 @@ const garbleMessage = async (threadId, msg) => {
             outtext = messagetexts.join("");
         }
 
+        // Handle Dollification
+        let dollIDDisplay;
+        if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
+            modifiedmessage = true;
+            dollDigits      = process.dolloverrides[msg.author.id] ? process.dolloverrides[msg.author.id].id : `${msg.author.id}`.slice(-4)
+            // Include the tag - Otherwise, there is NO WAY to tell who it is.
+            let dollIDShort     = "DOLL-" + dollDigits
+            let dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
+            let dollIDColor     = process.dolloverrides[msg.author.id]?.color ? process.dolloverrides[msg.author.id]?.color : "34"
+            // Display names max 32 chars.
+            let truncateDisplay = ""
+            try{
+                truncateDisplay = msg.member.displayName.slice(0,16) + (msg.member.displayName.length > 16 ? "..." : "")
+            }catch(err){
+                console.error(err.message);     // Following is not tested but SHOULD work.
+                truncateDisplay = msg.author.displayName.slice(0,16) + (msg.author.displayName.length > 16 ? "..." : "")
+            }
+            dollIDDisplay       = dollIDShort + ` (@${truncateDisplay})`
+
+            let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
+
+
+            // Strip all codeblocks from messages
+            for(let i = 0; i < dollMessageParts.length; i++){
+                if(dollMessageParts[i].garble){
+                    dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/```(js|javascript|ansi)?\s*/g,  "")
+                }
+            }
+            dollMessageParts = dollMessageParts.filter((part) => {return part.text != ""})
+
+            // Put every "garble" messagePart in ANSI.
+            for(let i = 0; i < dollMessageParts.length; i++){
+                if(dollMessageParts[i].garble){
+                    // Uncorset
+                    dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
+                    dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
+                }
+            }
+
+            outtext = dollMessageParts.map(m => m.text).join("")
+
+            // Merge any code blocks with nothing but whitespace in between.
+            outtext = outtext.replaceAll(/```\s+```ansi/g,"")
+        }
+
         if (modifiedmessage) { //Fake reply with a ping
             if (msg.type == "19") {
                 const replied = await msg.fetchReference();
@@ -344,7 +394,7 @@ const garbleMessage = async (threadId, msg) => {
                         msg.channel.send(msg.content)
                         outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                     }
-                    messageSendImg(threadId, outtext, msg.member.displayAvatarURL(), msg.member.displayName, msg.id, spoiler).then(() => {
+                    messageSendImg(threadId, outtext, msg.member.displayAvatarURL(), (dollIDDisplay ? dollIDDisplay : msg.member.displayName), msg.id, spoiler).then(() => {
                         msg.delete().then(() => {
                             fs.rmSync(`./${spoilertext}downloadedimage_${msg.id}.png`)
                         });
@@ -357,7 +407,7 @@ const garbleMessage = async (threadId, msg) => {
                     outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                 }
                 if (outtext.length == 0) { outtext = "Something went wrong. Ping <@125093095405518850> and let her know!"}
-                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), msg.member.displayName).then(() => {
+                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), (dollIDDisplay ? dollIDDisplay : msg.member.displayName)).then(() => {
                     msg.delete();
                 })
             }
