@@ -296,7 +296,7 @@ const discardCollarKey = (user) => {
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     if (process.collar[user]) {
         process.collar[user].keyholder = "discarded";
-        process.collar[lockedUser].clonedKeyholders = [];
+        process.collar[user].clonedKeyholders = [];
         process.discardedKeys.push({
           restraint: "collar",
           wearer: user

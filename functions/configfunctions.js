@@ -1,6 +1,6 @@
 const { ButtonStyle, ActionRowBuilder, SectionBuilder, StringSelectMenuBuilder, 
     StringSelectMenuOptionBuilder, PermissionsBitField, MessageFlags,
-    RoleSelectMenuBuilder} = require("discord.js")
+    RoleSelectMenuBuilder,TextDisplayBuilder, ChannelSelectMenuBuilder } = require("discord.js")
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -38,6 +38,7 @@ const configoptions = {
                     uname: "DynamicArousal"
                 }
             ],
+            menutype: "choice",
             default: 2,
             disabled: () => { return false } // if true, button is greyed out
         },
@@ -70,6 +71,7 @@ const configoptions = {
                     uname: "KeyFumblingOthers"
                 }
             ],
+            menutype: "choice",
             default: "self",
             disabled: () => { return false } // if true, button is greyed out
         },
@@ -94,6 +96,7 @@ const configoptions = {
                     uname: "KeyLoss"
                 }
             ],
+            menutype: "choice",
             default: "disabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") } // if true, button is greyed out
         },
@@ -118,6 +121,7 @@ const configoptions = {
                     uname: "BlessedLuck"
                 },
             ],
+            menutype: "choice",
             default: "enabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
         }
@@ -152,6 +156,7 @@ const configoptions = {
                     uname: "KeyGivingAuto"
                 },
             ],
+            menutype: "choice",
             default: "prompt",
             disabled: () => { return false }
         },
@@ -192,47 +197,187 @@ const configoptions = {
                     uname: "RemoveBondageAuto"
                 },
             ],
+            menutype: "choice",
             default: "accept",
             disabled: () => { return false }
         }
     },
-    "Server Settings": {
-        "server_allowgags": {
+    "Server": {
+        "server-allowgags": {
             name: "Allow Gags",
-            desc: "Allows /gag and /ungag",
+            desc: "Allows **/gag** and **/ungag**",
             choices: [
                 {
                     name: "Disabled",
                     helptext: "*Gags are disabled*",
-                    select_function: (serverID) => { return false } // We will need to have this update commands
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
                 },
                 {
                     name: "Enabled",
                     helptext: "Gags are enabled",
-                    select_function: (serverID) => { return false } // We will need to have this update commands
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
                 },
             ],
+            menutype: "choice_server",
             default: "Enabled",
             disabled: () => { return false }
-        } 
+        },
+        "server-allowmitten": {
+            name: "Allow Gags",
+            desc: "Allows **/mitten** and **/unmitten**",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Mittens are disabled*",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Mittens are enabled",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_server",
+            default: "Enabled",
+            disabled: () => { return false }
+        },
+        "server-allowvibe": {
+            name: "Allow Vibes",
+            desc: "Allows **/vibe** and **/unvibe**",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Vibrators are disabled*",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Vibrators are enabled",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_server",
+            default: "Enabled",
+            disabled: () => { return false }
+        },
+        "server-allowchastity": {
+            name: "Allow Chastity",
+            desc: "Allows **/chastity** and **/unchastity**",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Gags are disabled*",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Gags are enabled",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_server",
+            default: "Enabled",
+            disabled: () => { return false }
+        },
+        "server-allowcorset": {
+            name: "Allow Corsets",
+            desc: "Allows **/corset** and **/uncorset**",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Corsets are disabled*",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Corsets are enabled",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_server",
+            default: "Enabled",
+            disabled: () => { return false }
+        },
+        "server-allowheadandwear": {
+            name: "Allow Headwear and Apparel",
+            desc: "Allows **/mask**, **/wear and **/unmask**, **/unwear**",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Headgear is disabled*",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Enabled",
+                    helptext: "Headgear is enabled",
+                    select_function: (serverID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_server",
+            default: "Enabled",
+            disabled: () => { return false }
+        },
+        "server-channelspermitted": {
+            name: "Allowed Channels",
+            desc: "If selected, which channels to allow Gagbot to interact with.",
+            menutype: "choice_server_channels",
+            default: [],
+            disabled: () => { return false }
+        },
+        "server-safewordroleid": {
+            name: "Safeword Role",
+            desc: "Which role must be assigned to self reset with **/reset**",
+            menutype: "choice_server_role",
+            default: "",
+            disabled: () => { return false }
+        },
         // And so on for other features
     },
-    "Bot Settings": {
-        "bot_enablebot": {
+    "Bot": {
+        "bot-enablebot": {
             name: "Global Enable Bot",
             desc: "Should the bot be active and respond to messages",
             choices: [
                 {
                     name: "Disabled",
                     helptext: "*Bot will not respond to messages*",
-                    select_function: (userID) => { return false } // We will need to have this update commands
+                    select_function: (userID) => { return false }, // We will need to have this update commands
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
                 },
                 {
                     name: "Enabled",
                     helptext: "Bot responds to messages",
-                    select_function: (userID) => { return false } // We will need to have this update commands
+                    select_function: (userID) => { return false }, // We will need to have this update commands
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
                 },
             ],
+            menutype: "choice_bot",
             default: "Enabled",
             disabled: () => { return false }
         }
@@ -240,84 +385,163 @@ const configoptions = {
 } 
 
 function generateConfigModal(interaction, menuset = "General", page) {
-    // Construct the list of options for a given menu set
-    let pagecomponents = [];
-    Object.keys(configoptions[menuset]).forEach((k) => {
-        let buttonsection = new SectionBuilder()
-            .addTextDisplayComponents(
-                (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}`),
-                (textdisplay) => textdisplay.setContent(`${configoptions[menuset][k].desc}`),
-                (textdisplay) => textdisplay.setContent(`-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.helptext}`)
-            )
-            .setButtonAccessory((button) =>
-                button.setCustomId(`config_pageopt_${menuset}_${k}`)
-                    .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name)
-                    .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style)
-                    .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
-            )
-        pagecomponents.push(buttonsection)
-    })
+    try {
+        // Construct the list of options for a given menu set
+        let pagecomponents = [];
+        Object.keys(configoptions[menuset]).forEach(async (k) => {
+            if (configoptions[menuset][k].menutype == "choice") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}`),
+                        (textdisplay) => textdisplay.setContent(`${configoptions[menuset][k].desc}`),
+                        (textdisplay) => textdisplay.setContent(`-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.helptext}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name)
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style)
+                            .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }
+            else if (configoptions[menuset][k].menutype == "choice_server") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}`),
+                        (textdisplay) => textdisplay.setContent(`${configoptions[menuset][k].desc}`),
+                        (textdisplay) => textdisplay.setContent(`-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.helptext}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.name)
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.style)
+                            .setDisabled(configoptions[menuset][k].disabled(interaction.guildId))
+                    )
+                pagecomponents.push(buttonsection)
+            }
+            else if (configoptions[menuset][k].menutype == "choice_server_channels") {
+                let currentrole = "Select allowed channels..."
+                let channelsmentioned = [];
+                if (getServerOption(interaction.guildId,k) && getServerOption(interaction.guildId,k).length > 0) {
+                    getServerOption(interaction.guildId,k).forEach(async (c) => {
+                        let channeltoadd = await interaction.guild.channels.fetch(getServerOption(interaction.guildId,k))
+                        channelsmentioned.push(channeltoadd)
+                    })
+                }
+                
+                let roledescription = new TextDisplayBuilder()
+                    .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
+                let rolesection = new ActionRowBuilder()
+                    .addComponents(new ChannelSelectMenuBuilder()
+                            .setCustomId(`config_serveroptrole_${k}`)
+                            .setPlaceholder(currentrole)
+                            .setMinValues(0)
+                            .setMaxValues(25)
+                    )
+                if (channelsmentioned && (channelsmentioned.length > 0)) {
+                    rolesection.setDefaultChannels(...channelsmentioned);
+                }
+                pagecomponents.push(roledescription)
+                pagecomponents.push(rolesection)
+            }
+            else if (configoptions[menuset][k].menutype == "choice_server_role") {
+                let currentrole = "Select safeword role..."
+                let rolefetched;
+                if (getServerOption(interaction.guildId,k) && getServerOption(interaction.guildId,k).length > 0) {
+                    rolefetched = await interaction.guild.roles.fetch(getServerOption(interaction.guildId,k))
+                }
+                
+                let roledescription = new TextDisplayBuilder()
+                    .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
+                let rolesection = new ActionRowBuilder()
+                    .addComponents(new RoleSelectMenuBuilder()
+                            .setCustomId(`config_serveroptrole_${k}`)
+                            .setPlaceholder(currentrole)
+                            .setMinValues(0)
+                            .setMaxValues(1)
+                    )
+                if (rolefetched) {
+                    rolesection.setDefaultRoles(rolefetched);
+                }
+                pagecomponents.push(roledescription)
+                pagecomponents.push(rolesection)
+            }
+        })
 
-    // If manage messages on the server, user is considered a moderator.
-    // Give them server specific components, namely to designate a safeword role
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages) && menuset == "Server Settings") {
-        let currrole // Get current safeword role that's set here
-        pagecomponents.push(new ActionRowBuilder()
-            .addComponents(new RoleSelectMenuBuilder()
-                .setCustomId(`roleselectopt_${interaction.guildId}`)
-                .setPlaceholder(`Select Safeword role for /reset`)
-                .setMinValues(0)
-                .setMaxValues(1)
-                //.setDefaultRoles() -- Set the current safeword role here if theres one already
+        // If manage messages on the server, user is considered a moderator.
+        // Give them server specific components, namely to designate a safeword role
+        if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages) && menuset == "Server Settings") {
+            let currrole // Get current safeword role that's set here
+            pagecomponents.push(new ActionRowBuilder()
+                .addComponents(new RoleSelectMenuBuilder()
+                    .setCustomId(`roleselectopt_${interaction.guildId}`)
+                    .setPlaceholder(`Select Safeword role for /reset`)
+                    .setMinValues(0)
+                    .setMaxValues(1)
+                    //.setDefaultRoles() -- Set the current safeword role here if theres one already
+                )
             )
-        )
-    }
-
-    // If bot owner, construct a selector for servers here and allow them to make the client leave them
-
-    // Construct the menu selector
-    let menupageoptions = new StringSelectMenuBuilder()
-        .setCustomId('config_menuselector')
-        .setPlaceholder('Choose Menu Section')
-    
-    let menupageoptionsarr = []
-    Object.keys(configoptions).forEach((k) => {
-        if ((k != "Server Settings") && (k != "Bot Settings")) {
-            let opt = new StringSelectMenuOptionBuilder()
-                .setLabel(k)
-                .setValue(`menuopt_${k}`)
-            menupageoptionsarr.push(opt)
         }
-    })
 
-    // If the user is a moderator on that server, allow configuration of that server
-    // Note, they must have global manage messages permission.
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-        let opt = new StringSelectMenuOptionBuilder()
-            .setLabel("Server Settings")
-            .setValue(`menuopt_Server Settings`)
-        menupageoptionsarr.push(opt)
+        let pagemenutext = menuset;
+        // If bot owner, construct a selector for servers here and allow them to make the client leave them
+
+        // Construct the menu selector
+        let menupageoptions = new StringSelectMenuBuilder()
+            .setCustomId('config_menuselector')
+        
+        let menupageoptionsarr = []
+        Object.keys(configoptions).forEach((k) => {
+            if ((k != "Server") && (k != "Bot")) {
+                let opt = new StringSelectMenuOptionBuilder()
+                    .setLabel(k)
+                    .setValue(`menuopt_${k}`)
+                menupageoptionsarr.push(opt)
+            }
+        })
+
+        // If the user is a moderator on that server, allow configuration of that server
+        // Note, they must have global manage messages permission.
+        if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
+            let opt = new StringSelectMenuOptionBuilder()
+                .setLabel("Server Settings")
+                .setValue(`menuopt_Server`)
+            menupageoptionsarr.push(opt)
+            // Set the page text to prettier if this is on their settings
+            if (menuset == "Server") {
+                pagemenutext = "Server Settings"
+            }
+        }
+
+        // If the user is the owner of the bot
+        // The application should already be retrieved during the index.js initialization. 
+        if (interaction.user.id == interaction.client.application.owner.id) {
+            let opt = new StringSelectMenuOptionBuilder()
+                .setLabel("Bot Settings")
+                .setValue(`menuopt_Bot`)
+            menupageoptionsarr.push(opt)
+            // Set the page text to prettier if this is on their settings
+            if (menuset == "Bot") {
+                pagemenutext = "Bot Settings"
+            }
+        }
+
+        menupageoptions.setPlaceholder(pagemenutext)
+
+        // Add all of the available options we have for the menu selection
+        menupageoptions.addOptions(...menupageoptionsarr);
+
+        pagecomponents.push(new ActionRowBuilder()
+            .addComponents(menupageoptions)
+        )
+
+        return {
+            components: pagecomponents,
+            flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
+        }
     }
-
-    // If the user is the owner of the bot
-    // The application should already be retrieved during the index.js initialization. 
-    if (interaction.user.id == interaction.client.application.owner.id) {
-        let opt = new StringSelectMenuOptionBuilder()
-            .setLabel("Bot Settings")
-            .setValue(`menuopt_Bot Settings`)
-        menupageoptionsarr.push(opt)
-    }
-
-    // Add all of the available options we have for the menu selection
-    menupageoptions.addOptions(...menupageoptionsarr);
-
-    pagecomponents.push(new ActionRowBuilder()
-        .addComponents(menupageoptions)
-    )
-
-    return {
-        components: pagecomponents,
-        flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
+    catch (err) {
+        console.log(err)
     }
 }
 
@@ -347,7 +571,7 @@ function getOption(userID, option) {
             if (k == option) { process.configs.users[userID][k] = configoptions["General"][k].default }
         })
         if (process.readytosave == undefined) { process.readytosave = {} }
-    process.readytosave.configs = true;
+        process.readytosave.configs = true;
     }
     return process.configs.users[userID][option];
 }
@@ -365,18 +589,57 @@ function initializeOptions(userID) {
     process.readytosave.configs = true;
 }
 
+function setServerOption(serverID, option, choice) {
+    if (process.configs == undefined) { process.configs = {} } 
+    if (process.configs.servers == undefined) { process.configs.servers = {} } 
+    if (process.configs.servers[serverID] == undefined) { process.configs.servers[serverID] = {} } 
+    process.configs.servers[serverID][option] = choice;
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.configs = true;
+}
+
+function getServerOption(serverID, option) {
+    if (process.configs == undefined) { process.configs = {} } 
+    if (process.configs.servers == undefined) { process.configs.servers = {} } 
+    if (process.configs.servers[serverID] == undefined) { 
+        process.configs.servers[serverID] = {} 
+        initializeServerOptions(serverID)
+    } 
+    if (process.configs.servers[serverID][option] == undefined) {
+        Object.keys(configoptions["Server"]).forEach((k) => {
+            if (k == option) { process.configs.servers[serverID][k] = configoptions["Server"][k].default }
+        })
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.configs = true;
+    }
+    return process.configs.servers[serverID][option];
+}
+
+function initializeServerOptions(serverID) {
+    Object.keys(configoptions["Server"]).forEach((k) => {
+        process.configs.servers[serverID][k] = configoptions["Server"][k].default
+    })
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.configs = true;
+}
+
 exports.generateConfigModal = generateConfigModal;
 exports.configoptions = configoptions;
 exports.getOption = getOption;
 exports.setOption = setOption;
 
+exports.getServerOption = getServerOption;
+exports.setServerOption = setServerOption;
+
 const functions = {};
 
 Object.entries(configoptions).forEach(([_, page]) => {
     Object.entries(page).forEach(([key, option]) => {
-        option.choices.forEach((choice) => {
-            functions[`get${choice.uname}`] = (user) => getOption(user, key) == choice.value
-        })
+        if (option.choices) {
+            option.choices.forEach((choice) => {
+                functions[`get${choice.uname}`] = (user) => getOption(user, key) == choice.value
+            })
+        }
     })
 });
 

@@ -10,6 +10,7 @@ let wearabletypes = [
     { name: "Leather Pony Boots", value: "leather_ponyboots", colorable: true },
     { name: "Leather Thigh Belts", value: "leather_thighbelts", colorable: true },
     { name: "Shock Module", value: "shock_module" },
+    { name: "Tail", value: "tail", colorable: true, uniquecolors: ["Cat", "Dog", "Bunny", "Sheep", "Demon"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Big Cute Ribbon", value: "bigcute_ribbon", colorable: true },
     { name: "Latex Bra", value: "bra_latex", colorable: true, forbiddenColors: [], uniquecolors: ["Starry", "Shadow"] },
     { name: "Latex Panties", value: "panties_latex", colorable: true, forbiddenColors: [], uniquecolors: ["Starry", "Shadow"] },
