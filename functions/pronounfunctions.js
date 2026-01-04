@@ -104,7 +104,8 @@ const setPronouns = (user, pronouns) => {
 
     process.pronouns[user] = pronounsMap.get(pronouns);
 
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/pronounsusers.txt`, JSON.stringify(process.pronouns));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.pronouns = true;
 }
 
 // -----------------------------------------------------------------
@@ -128,17 +129,24 @@ const convertPronounsText = (text, data) => {
     // Additionally, to handle a followup is/are:
     outtext = outtext.replaceAll("USER_ISARE", (getPronouns(interactionuser.id, "subject") == "they") ? "are" : "is");
     // And was/were
-    outtext = outtext.replaceAll("USER_WERE", (getPronouns(interactionuser.id, "subject") == "they") ? "was" : "were");
+    outtext = outtext.replaceAll("USER_WERE", (getPronouns(interactionuser.id, "subject") == "they") ? "were" : "was");
     // And wasn't/weren't
     outtext = outtext.replaceAll("USER_WERENT", (getPronouns(interactionuser.id, "subject") == "they") ? "weren't" : "wasn't");
     // And "doesn't"
-    outtext = outtext.replaceAll("USER_DOESNT", (getPronouns(interactionuser.id, "subject") == "they") ? "doesn't" : "don't");
+    outtext = outtext.replaceAll("USER_DOESNT", (getPronouns(interactionuser.id, "subject") == "they") ? "don't" : "doesn't");
     // And "es"
     outtext = outtext.replaceAll("USER_ES", (getPronouns(interactionuser.id, "subject") == "they") ? "" : "es");
     // And "s"
     outtext = outtext.replaceAll("USER_S", (getPronouns(interactionuser.id, "subject") == "they") ? "" : "s");
     // And "try"
     outtext = outtext.replaceAll("USER_TRY", (getPronouns(interactionuser.id, "subject") == "they") ? "try" : "tries");
+
+    // Other Replacements
+    outtext = outtext.replaceAll("USER_PRAISEOBJECT", () => {
+        if ((getPronouns(interactionuser.id, "subject") == "she")) { return "girls" }
+        if ((getPronouns(interactionuser.id, "subject") == "he")) { return "boys" }
+        return "toys"
+    });
 
     // Reflexive - Himself, Herself, Themselves, etc.
     outtext = outtext.replaceAll("USER_THEMSELF_CAP", getPronouns(interactionuser.id, "reflexive", true));
@@ -176,17 +184,24 @@ const convertPronounsText = (text, data) => {
     // Additionally, to handle a followup is/are:
     outtext = outtext.replaceAll("TARGET_ISARE", (getPronouns(targetuser.id, "subject") == "they") ? "are" : "is");
     // And was/were
-    outtext = outtext.replaceAll("TARGET_WERE", (getPronouns(targetuser.id, "subject") == "they") ? "was" : "were");
+    outtext = outtext.replaceAll("TARGET_WERE", (getPronouns(targetuser.id, "subject") == "they") ? "were" : "was");
     // And wasn't/weren't
     outtext = outtext.replaceAll("TARGET_WERENT", (getPronouns(targetuser.id, "subject") == "they") ? "weren't" : "wasn't");
     // And "doesn't"
-    outtext = outtext.replaceAll("TARGET_DOESNT", (getPronouns(targetuser.id, "subject") == "they") ? "doesn't" : "don't");
+    outtext = outtext.replaceAll("TARGET_DOESNT", (getPronouns(targetuser.id, "subject") == "they") ? "don't" : "doesn't");
     // And "es"
     outtext = outtext.replaceAll("TARGET_ES", (getPronouns(targetuser.id, "subject") == "they") ? "" : "es");
     // And "s"
     outtext = outtext.replaceAll("TARGET_S", (getPronouns(targetuser.id, "subject") == "they") ? "" : "s");
     // And "try"
     outtext = outtext.replaceAll("TARGET_TRY", (getPronouns(targetuser.id, "subject") == "they") ? "try" : "tries");
+
+    // Other Replacements
+    outtext = outtext.replaceAll("TARGET_PRAISEOBJECT", () => {
+        if ((getPronouns(targetuser.id, "subject") == "she")) { return "girls" }
+        if ((getPronouns(targetuser.id, "subject") == "he")) { return "boys" }
+        return "toys"
+    });
 
     // Reflexive - Himself, Herself, Themselves, etc.
     outtext = outtext.replaceAll("TARGET_THEMSELF_CAP", getPronouns(targetuser.id, "reflexive", true));

@@ -55,6 +55,8 @@ const heavytypes = [
     { name: "Hardlight Cuffs (strict)", value: "hardlight_strict", denialCoefficient: 4.5 },
     { name: "Bed Restraints", value: "bedrestraints", denialCoefficient: 6 },
     { name: "Chair with Cuffs", value: "chaircuffs", denialCoefficient: 3.5 },
+    { name: "Shadow Hands", value: "shadowhands", denialCoefficient: 1.5 },
+    { name: "Pile of Cats", value: "catpile", denialCoefficient: 99 } // Are you ***really*** going to disturb the kitties to let go?
 ];
 
 
@@ -87,7 +89,8 @@ const assignHeavy = (user, type, origbinder) => {
         typeval: type,
         origbinder: originalbinder ?? origbinder
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/heavyusers.txt`, JSON.stringify(process.heavy));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.heavy = true;
 }
 
 const getHeavy = (user) => {
@@ -103,7 +106,8 @@ const getHeavyBinder = (user) => {
 const removeHeavy = (user) => {
     if (process.heavy == undefined) { process.heavy = {} }
     delete process.heavy[user];
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/heavyusers.txt`, JSON.stringify(process.heavy));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.heavy = true;
 }
 
 exports.loadHeavyTypes = loadHeavyTypes

@@ -32,6 +32,15 @@ module.exports = {
                 }
             }
 
+            if (!getHeavy(heavyuser.id)) {
+                // They aren't bound lol. 
+                data.noheavy = true
+                data.noheavyequipped = true
+                data.other = true
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                return;
+            }
+
             if (getHeavy(interaction.user.id)) {
                 // user IS in heavy bondage
                 data.heavy = true

@@ -7,7 +7,7 @@ const { arousedtexts } = require('../vibes/aroused/aroused_texts.js');
 const { config } = require('./configfunctions.js');
 
 const chastitytypes = [
-    { name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15 },
+    { name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15, minVibe: 2, minArousal: 1 },
     { name: "Blacksteel Chastity Belt", value: "belt_blacksteel", denialCoefficient: 7.5 },
     { name: "Silver Chastity Belt", value: "belt_silver", denialCoefficient: 5 },
     { name: "Ancient Chastity Belt", value: "belt_ancient", denialCoefficient: 15 },
@@ -16,7 +16,7 @@ const chastitytypes = [
     { name: "Hardlight Belt", value: "belt_hardlight", denialCoefficient: 10 },
     { name: "Wolf Panties", value: "belt_wolf", denialCoefficient: 7.5 },
     { name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
-    { name: "Chastity Belt of Eternal Binding", value: "belt_eternal", denialCoefficient: 20 },
+    { name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 20 },
     { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
 ]
 
@@ -49,6 +49,11 @@ const ORGASM_COOLDOWN = 60 * 1000;
 const ORGASM_FRUSTRATION = 5;
 const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
 const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;;
+// how large an impact the arousal variance has
+const AROUSAL_PERIOD_AMPLITUDE = 0.3;
+// the inverses of the period lengths used for arousal variance. The lengths should be coprime
+const AROUSAL_PERIOD_A = 1 / 19;
+const AROUSAL_PERIOD_B = 1 / 33;
 
 const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -58,7 +63,8 @@ const assignChastity = (user, keyholder, namedchastity) => {
         extraFrustration: 0,
         chastitytype: namedchastity
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
 }
 
 const getChastity = (user) => {
@@ -71,7 +77,8 @@ const getChastity = (user) => {
 const removeChastity = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
     delete process.chastity[user];
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
 }
 
 const assignVibe = (user, intensity, vibetype = "bullet vibe", origbinder) => {
@@ -95,7 +102,8 @@ const assignVibe = (user, intensity, vibetype = "bullet vibe", origbinder) => {
             });
         }
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`, JSON.stringify(process.vibe));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.vibe = true;
 }
 
 const getVibe = (user) => {
@@ -113,7 +121,8 @@ const removeVibe = (user, vibetype) => {
             delete process.vibe[user]; // Discard the vibes object as we are no longer using it. 
         }
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`, JSON.stringify(process.vibe));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.vibe = true;
 }
 
 const getChastityKeys = (user) => {
@@ -334,7 +343,8 @@ const cloneChastityKey = (chastityuser, newKeyholder, bra) => {
         chastity.clonedKeyholders = [];
     }
     chastity.clonedKeyholders.push(newKeyholder)
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
 }
 
 // Called to remove a single cloned keyholder from the list. 
@@ -346,7 +356,8 @@ const revokeChastityKey = (chastityuser, newKeyholder) => {
     if (chastity.clonedKeyholders.includes(newKeyholder)) {
         chastity.clonedKeyholders.splice(chastity.clonedKeyholders.indexOf(newKeyholder), 1)
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
 }
 
 // Called to get cloned keys on a restraint
@@ -363,7 +374,6 @@ const getClonedChastityKeysOwned = (userID) => {
     let ownedkeys = []
     Object.keys(process.chastity).forEach((k) => {
         if (process.chastity[k].clonedKeyholders) {
-            console.log(process.chastity[k].clonedKeyholders)
             if (process.chastity[k].clonedKeyholders.includes(userID)) {
                 ownedkeys.push(`${k}_chastitybelt`)
             }
@@ -396,7 +406,8 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
         if (process.chastity[lockedUser].keyholder != newKeyholder) {
             process.chastity[lockedUser].keyholder = newKeyholder;
             process.chastity[lockedUser].clonedKeyholders = []
-            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+            if (process.readytosave == undefined) { process.readytosave = {} }
+            process.readytosave.chastity = true;
             return true;
         }
     }
@@ -415,20 +426,23 @@ const discardChastityKey = (user) => {
           wearer: user
         })
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
+    process.readytosave.discardedKeys = true;
 }
 
 const findChastityKey = (index, newKeyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     const chastity = process.discardedKeys.splice(index, 1);
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.discardedKeys = true;
     if (chastity.length < 1) return false;
     if (process.chastity[chastity[0].wearer]) {
       process.chastity[chastity[0].wearer].keyholder = newKeyholder;
       process.chastity[chastity[0].wearer].clonedKeyholders = []
-      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+      if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.chastity = true;
       return true;
     }
     return false;
@@ -473,7 +487,7 @@ function stutterText(text, intensity, arousedtexts) {
                 outtext = `${outtext}${text}`
             }
             if (Math.random() < intensity / 40) { // 0.5-5% to insert an arousal text
-                let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf~"
+                let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf\\~"
                 outtext = `${outtext} ${arousedtext}`
             }
             return outtext;
@@ -493,16 +507,24 @@ function stutterText(text, intensity, arousedtexts) {
 function updateArousalValues() {
     try {
         const now = Date.now();
+        const time = now * AROUSAL_STEP_SIZE_SCALING;
         for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
+        for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
         for (const user in process.arousal) {
             const arousal = process.arousal[user];
             if (arousal.timestamp > now) continue;
-            const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
+            const next = calcNextArousal(time, arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
             arousal.timestamp = now;
             arousal.prev = arousal.arousal;
             arousal.arousal = next < RESET_LIMIT ? 0 : next;
+            const chastity = getChastity(user);
+            if (chastity) {
+                const minArousal = chastitytypes.find(c => c.value == chastity.chastitytype)?.minArousal ?? 0;
+                if (arousal.arousal < minArousal) arousal.arousal = minArousal;
+            }
         }
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.arousal = true;
     }
     catch (err) {
         // SAM PLEASE TRY CATCH THESE THINGS
@@ -569,11 +591,12 @@ function addArousal(user, change) {
 
 function clearArousal(user) {
   process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
-  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.arousal = true;
 }
 
-function calcNextArousal(arousal, prev, growthCoefficient, decayCoefficient) {
-  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
+function calcNextArousal(time, arousal, prev, growthCoefficient, decayCoefficient) {
+  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
   const next = noDecay - AROUSAL_STEP_SIZE_SCALING * decayCoefficient * Math.max((arousal + prev / 2), 0.1);
   return next;
 }
@@ -594,7 +617,8 @@ function tryOrgasm(user) {
     if (chastity) {
       chastity.extraFrustration = 0;
       chastity.timestamp = (chastity.timestamp + now) / 2;
-      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+      if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.chastity = true;
     }
     return true;
   }
@@ -604,7 +628,8 @@ function tryOrgasm(user) {
   if (chastity) {
     const extraFrustration = chastity.extraFrustration ?? 0;
     chastity.extraFrustration = extraFrustration + ORGASM_FRUSTRATION;
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
   }
 
   return false;
@@ -618,9 +643,12 @@ function setArousalCooldown(user) {
 
 // modify when more things affect it
 function calcGrowthCoefficient(user) {
-  const vibes = getVibe(user);
-  if (!vibes) return 0;
-  return vibes.reduce((a, b) => a + b.intensity, 0) * VIBE_SCALING;
+  let vibes = getVibe(user);
+  let minVibe = 0;
+  const chastity = getChastity(user);
+  if (chastity) minVibe = chastitytypes.find(c => c.value == chastity.chastitytype)?.minVibe ?? 0;
+  if (!vibes && !minVibe) return 0;
+  return Math.max(vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, minVibe) * VIBE_SCALING;
 }
 
 // modify when more things affect it

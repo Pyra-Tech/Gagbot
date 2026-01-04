@@ -1,4 +1,7 @@
 // We were originally going to install Moment, but frankly, since I just need to try to do a basic time parse, we're going to write our own. 
+let fs = require('fs')
+let path = require('path')
+let admZip = require('adm-zip');
 
 // Takes input string, outputs a date object. 
 const parseTime = (text) => {
@@ -40,5 +43,143 @@ const calculateTimeout = (text) => {
     }
 }
 
+// I refuse to use proper databases. This is to generate backups. 
+// This is vibecoded, admittedly, and then adjusted, but the result looks solid. 
+const getTimestringForZip = () => {
+    const d = new Date();
+
+    // Date Components
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const yyyy = d.getFullYear();
+
+    // Time Components
+    const hh = String(d.getHours()).padStart(2, '0'); // 24-hour format
+    const min = String(d.getMinutes()).padStart(2, '0');
+
+    // Combine
+    const formatted = `${mm}-${dd}-${yyyy}-${hh}-${min}`;
+    //console.log(formatted); // Example: "01/01/2026-21:05"
+
+    return formatted;
+}
+
+const backupsAreAnnoying = () => {
+    try {
+        let filepath = process.GagbotSavedFileDirectory;
+        let dest = path.resolve(filepath, "backups");
+        let files = fs.readdirSync(filepath).filter(file => file.endsWith('.txt'));
+
+        let zip = new admZip();
+
+        let timestring = getTimestringForZip();
+
+        files.forEach(f => {
+            zip.addLocalFile(path.resolve(filepath, f));
+        })
+
+        zip.writeZip(path.resolve(dest, `backup-${timestring}.zip`));
+
+        console.log(`Completed zip .\\backup\\backup-${timestring}.zip`)
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+// Take each prop of the process.readytosave and save that file. 
+// Then reset it. 
+const saveFiles = () => {
+    try {
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        console.log(process.readytosave)
+        Object.keys(process.readytosave).forEach((k) => {
+            let filepath;
+            let processvar;
+            // Honestly, this could probably just be a similar thing like the processdatatoload at the beginning of index.js
+            // but meh. This allows for potential configuration later. 
+            switch (k) {
+                case "wearable":
+                    filepath = `${process.GagbotSavedFileDirectory}/wearables.txt`
+                    processvar = "wearable"
+                    break;
+                case "gags":
+                    filepath = `${process.GagbotSavedFileDirectory}/gaggedusers.txt`
+                    processvar = "gags"
+                    break;
+                case "mitten":
+                    filepath = `${process.GagbotSavedFileDirectory}/mittenedusers.txt`
+                    processvar = "mitten"
+                    break;
+                case "chastity":
+                    filepath = `${process.GagbotSavedFileDirectory}/chastityusers.txt`
+                    processvar = "chastity"
+                    break;
+                case "arousal":
+                    filepath = `${process.GagbotSavedFileDirectory}/arousal.txt`
+                    processvar = "arousal"
+                    break;
+                case "vibe":
+                    filepath = `${process.GagbotSavedFileDirectory}/vibeusers.txt`
+                    processvar = "vibe"
+                    break;
+                case "collar":
+                    filepath = `${process.GagbotSavedFileDirectory}/collarusers.txt`
+                    processvar = "collar"
+                    break;
+                case "heavy":
+                    filepath = `${process.GagbotSavedFileDirectory}/heavyusers.txt`
+                    processvar = "heavy"
+                    break;
+                case "pronouns":
+                    filepath = `${process.GagbotSavedFileDirectory}/pronounsusers.txt`
+                    processvar = "pronouns"
+                    break;
+                case "usercontext":
+                    filepath = `${process.GagbotSavedFileDirectory}/usersdata.txt`
+                    processvar = "usercontext"
+                    break;
+                case "consented":
+                    filepath = `${process.GagbotSavedFileDirectory}/consentusers.txt`
+                    processvar = "consented"
+                    break;
+                case "corset":
+                    filepath = `${process.GagbotSavedFileDirectory}/corsetusers.txt`
+                    processvar = "corset"
+                    break;
+                case "headwear":
+                    filepath = `${process.GagbotSavedFileDirectory}/headwearusers.txt`
+                    processvar = "headwear"
+                    break;
+                case "discardedKeys":
+                    filepath = `${process.GagbotSavedFileDirectory}/discardedkeys.txt`
+                    processvar = "discardedKeys"
+                    break;
+                case "configs":
+                    filepath = `${process.GagbotSavedFileDirectory}/configs.txt`
+                    processvar = "configs"
+                    break;
+                case "dolloverrides":
+                    filepath = `${process.GagbotSavedFileDirectory}/dollusers.txt`
+                    processvar = "dolloverrides"
+                    break;
+                default:
+                    console.log(`Unknown save variable: ${k}`)
+            }
+            if (filepath && processvar) {
+                fs.writeFileSync(filepath, JSON.stringify(process[processvar]))
+                console.log(`----> Successfully Saved file ${filepath}`)
+            }
+        })
+        process.readytosave = {};
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 exports.parseTime = parseTime;
 exports.calculateTimeout = calculateTimeout;
+exports.getTimestringForZip = getTimestringForZip;
+exports.backupsAreAnnoying = backupsAreAnnoying;
+exports.saveFiles = saveFiles;

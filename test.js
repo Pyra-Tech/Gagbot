@@ -1,9 +1,13 @@
-const { getText } = require("./functions/textfunctions.js");
-const { processHeadwearEmoji } = require("./functions/headwearfunctions.js");
-const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require('./functions/headwearfunctions.js');
+const discord = require('discord.js')
+const fs = require('fs')
+const path = require('path');
+const admZip = require('adm-zip');
+const { getTimestringForZip } = require("./functions/timefunctions");
+const env = require('dotenv')
+const { loadWearables } = require("./functions/wearablefunctions.js");
 
-let itemsworn = getHeadwear("125093095405518850")
-let itemslocked = getLockedHeadgear("125093095405518850")
+env.config();
 
-console.log(itemsworn)
-console.log(itemslocked)
+loadWearables();
+console.log(process.wearableslist);
+console.log(`List is ${process.wearableslist.length} long.`)

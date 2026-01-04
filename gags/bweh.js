@@ -100,7 +100,7 @@ const garbleText = (text, intensity) => {
 
         // 15-45% chance to add a ~ at the end of the sentence!
         if (didBweh && Math.random() < ((intensity * MODBWEH)) + FLATBWEH) {
-            outtext = `${outtext}~`
+            outtext = `${outtext}\\~`
         }
     }
     return outtext

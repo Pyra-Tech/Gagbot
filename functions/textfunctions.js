@@ -193,10 +193,10 @@ const texts_corset = {
                     discard: {
                         self: {
                             corset: [
-                                `USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that they drop it somewhere so USER_THEY will remain just as out of breath as before!`
+                                `USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so USER_THEY will remain just as out of breath as before!`
                             ],
                             nocorset: [
-                                `USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that they drop it somewhere! Hopefully USER_THEY can find it soon!`
+                                `USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! Hopefully USER_THEY can find it soon!`
                             ]
                         },
                         other: {
@@ -562,6 +562,231 @@ const texts_mitten = {
     }
 }
 
+const texts_struggle = {
+    heavy: [
+        `USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
+        `Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
+        `The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
+        `USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
+        `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
+        `USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
+    ],
+    gag: {
+        heavy: [
+            `Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_SHE is wearing!`,
+            `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`,
+            `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG paws at USER_THEIR VAR_C2 with USER_THEIR wrist, trying to slip it off.`,
+                `USER_TAG uses the palm of USER_THEIR hand and brushes it against USER_THEIR VAR_C2`,
+                `USER_TAG sighs into USER_THEIR VAR_C2, happily thinking about how nice it is to not be able to speak!`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `USER_TAG uses the wrist straps on USER_THEIR VAR_C3 to try to hook under USER_THEIR VAR_C2, but can't really get any leverage.`,
+                `USER_TAG brushes the stuffing portion of USER_THEIR VAR_C2 with USER_THEIR VAR_C3. USER_THEY_CAP look very cute.`
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG uses USER_THEIR fingers to hook into the straps on USER_THEIR VAR_C2. Unfortunately, the buckles are very solid and offer no further give.`,
+                `USER_TAG runs USER_THEIR fingers all over the stuffing portion of USER_THEIR VAR_C2. So garbled. USER_THEIR_CAP words taken away. `,
+                `USER_TAG dances USER_THEIR fingertips on USER_THEIR VAR_C2. USER_THEY_CAP *could* take it off, but USER_THEY USER_ISARE enjoying it right now!`
+            ]
+        }
+    },
+    mitten: {
+        heavy: [
+            `USER_TAG squirms in USER_THEIR VAR_C1 to get to USER_THEIR VAR_C3, but getting to USER_THEIR hands is challenging right now...`,
+            `Trying to twist USER_THEIR arm in the VAR_C1 in just the right way, USER_TAG tries to get to USER_THEIR VAR_C3. Without any success, obviously.`,
+            `USER_TAG tries to push USER_THEIR VAR_C3 off inside the VAR_C1, but the straps hold firm inside!`,
+            `USER_TAG's attempts to get USER_THEIR VAR_C3 off are somewhat moot, considering USER_THEIR arms are still sealed away.`
+        ],
+        noheavy: {
+            // Using only wrists or other leverage, no teeth. 50% chance with or without gag
+            nomouth: [
+                `USER_TAG tries to brush the back of USER_THEIR VAR_C3 with USER_THEIR cheek.`,
+                `USER_TAG uses USER_THEIR chin to pinch and try to pull off the VAR_C3. The straps hold firm!`,
+                `USER_TAG claps USER_THEIR hands together. USER_THEY_CAP likeUSER_S these VAR_C3. USER_THEY_CAP USER_DOESNT need hands!`
+            ],
+            // Using only wrists, but brushing up with gag. 50% chance with gag
+            gag: [
+                `USER_TAG tries to bite the straps of USER_THEIR VAR_C3 with USER_THEIR teeth- Oh wait, USER_THEY can't. USER_THEY_CAP pout in frustration!`,
+                `USER_TAG brushes USER_THEIR VAR_C3 against USER_THEIR VAR_C2, but sadly, USER_THEY can't bite.`,
+                `USER_TAG meeps as USER_THEY can't find a way to make USER_THEIR VAR_C3 any looser with USER_THEIR mouth because of USER_THEIR VAR_C2`
+            ],
+            // Using teeth to try to help take off the mittens! 50% chance without gag
+            mouth: [
+                `Carefully nibbling on the straps, USER_TAG tries to undo them and escape from USER_THEIR VAR_C3.`,
+                `USER_TAG pinches the straps of USER_THEIR VAR_C3 with USER_THEIR teeth, but still can't get any leverage.`,
+                `USER_TAG uses USER_THEIR tongue to work on the buckles holding USER_THEIR VAR_C3 in place, but can't quite undo them.`,
+                `USER_TAG tries to bite USER_THEIR straps on USER_THEIR VAR_C3 to tear them apart! But the straps are made of high quality materials.`
+            ]
+        }
+    },
+    chastity: {
+        heavy: [
+            `USER_TAG fusses with USER_THEIR VAR_C1, trying to get free so USER_THEY can work on USER_THEIR VAR_C4, but it holds firm!`,
+            `USER_TAG tries to squeeze USER_THEIR thighs together to maybe shift USER_THEIR VAR_C4, but it's hard to with USER_THEIR VAR_C1.`,
+            `USER_TAG bucks with USER_THEIR hips, but despite the movement, USER_THEY cannot move USER_THEIR VAR_C4 even an inch without arms!`,
+            `The VAR_C1 cruelly separates USER_TAG from touching USER_THEIR VAR_C4. What *ever* will USER_THEY do?`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG runs USER_THEIR palms on USER_THEIR VAR_C4, but despite USER_THEIR best efforts, the belt remains unyielding on USER_THEIR hips.`,
+                `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
+                `USER_TAG gropes USER_THEMSELF with USER_THEIR hands, helplessly unable to touch...`,
+                `USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
+                `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`,
+                `USER_TAG mews in despair as USER_THEY can't get *any* feeling when touching down there! Poor USER_THEM!`,
+                `USER_TAG tried so hard to touch USER_THEMSELF, and didn't get so far. But in the end, it doesn't even matter.`,
+                `USER_TAG fusses with USER_THEIR belt, but USER_THEY forgot: Good USER_PRAISEOBJECT ***never*** cum.`,
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `USER_TAG tries to get USER_THEIR fingers under USER_THEIR VAR_C4, but... USER_THEIR VAR_C3 prevents USER_THEM from hooking on anything.`,
+                `USER_TAG's VAR_C3 really limit how much USER_THEY can get under USER_THEIR VAR_C4. Not like USER_THEY needed relief or anything.`,
+                `USER_TAG uses the smooth surface of USER_THEIR VAR_C3 to try to push on the waist band of USER_THEIR VAR_C4, but it doesn't help.`,
+                `USER_TAG paws at USER_THEIR VAR_C4, but sadly USER_THEY can't really do anything to push it off. Not that USER_THEY'd want to.`,
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG caresses the smooth metal of USER_THEIR VAR_C4, but the lock holds it snugly to USER_THEIR hips!`,
+                `USER_TAG tries to get a couple of fingers under USER_THEIR VAR_C4, but it's quite challenging to do so. USER_THEY_CAP should use the key!`,
+                `USER_TAG squeezes USER_THEIR thumb under the waistband of USER_THEIR VAR_C4, but can accomplish little more than shift it a bit.`,
+                `USER_TAG dances USER_THEIR fingernails on the protective shield of USER_THEIR VAR_C4. Oh how nice it would be to touch...`
+            ]
+        }
+    },
+    headwear: {
+        heavy: [
+            `USER_TAG rubs USER_THEIR face against the wall, trying to scoot the things on USER_THEIR head off, but can't without arms.`,
+            `USER_TAG tugs against USER_THEIR VAR_C1 so USER_THEY can take off USER_THEIR head gear, but the restraint holds firm!`,
+            `USER_TAG kneels and tries to rub USER_THEIR head gear off on the floor. It looks cute, but the head gear stays on as if nothing happened.`,
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `Using USER_THEIR wrists, USER_TAG tries to push the headwear on USER_THEIR head, but it doesn't budge.`,
+                `USER_TAG tries to fumble with USER_THEIR headgear, trying to find something USER_THEY wanted all along. The headgear is somewhere it belongs.`,
+                `USER_TAG contorts USER_THEIR face in strange, goofy shapes to try to squeeze USER_THEIR head out of the headgear. It didn't really help though.`,
+                `USER_TAG bobs USER_THEIR head back and forth to bounce things off of it. The head gear holds firmly though.`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `USER_TAG paws at USER_THEIR face cutely to knock some of the things off of USER_THEIR head. The things barely hang on!`,
+                `USER_TAG uses the balled fists inside USER_THEIR VAR_C3 to try to peel some of the things off of USER_THEIR head. Unsuccessfully, of course.`,
+                `USER_TAG prods at USER_THEIR head gear to try to loosen it and pull something off. The head gear is quite secure though.`,
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG runs USER_THEIR fingers over USER_THEIR head gear. It all feels so nice on USER_THEIR head... USER_THEY_CAP should keep wearing it!`,
+                `USER_TAG tries to use a finger to get some leverage and knock some head wear off of USER_THEIR head. It's not falling off anytime soon though.`,
+                `USER_TAG dextrously slips USER_THEIR fingers under some of their head gear! USER_THEY_CAP *could* take it off, but USER_THEIR head looks pretty with it on.`,
+            ]
+        }
+    },
+    corset: {
+        heavy: [
+            `USER_TAG squirms in USER_THEIR VAR_C1, but can't really do much about the tightly hugging corset around USER_THEM!`,
+            `USER_TAG bounces USER_THEIR hips from side to side, seeing if USER_THEY can flex USER_THEIR corset, but to no avail.`,
+            `USER_TAG tugs against USER_THEIR VAR_C1, trying to reach the strings on USER_THEIR corset... but they're just out of reach...`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG uses USER_THEIR wrists to try to scooch USER_THEIR corset a bit and make it more comfortable. It doesn't work though.`,
+                `USER_TAG takes a deep breath- well, as deep as USER_THEY can manage. The corset's boning holds firm and does not show any signs of relief.`,
+                `Despite USER_THEIR best efforts to wiggle USER_THEIR midsection, USER_TAG just can't get anywhere with escaping USER_THEIR corset.`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `USER_TAG paws at the clasps on USER_THEIR corset, trying to use both hands to push the corset clasps apart. The corset refuses to give USER_THEM any chance.`,
+                `USER_TAG runs USER_THEIR VAR_C3 on the sides of USER_THEIR corset. So pretty. So feminine. So hourglassy!`,
+                `USER_TAG fiddles with the laces on USER_THEIR corset, but obviously the VAR_C3 gives USER_THEM no fingers to grip with!`
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG tries to pinch and undo the laces on USER_THEIR corset, but USER_THEY struggleUSER_S to see what USER_THEY USER_ISARE doing and ends up creating an impossible knot.`,
+                `USER_TAG pushes USER_THEIR fingers underneath the corset USER_THEY USER_ISARE wearing but it is so tightly on USER_THEM that USER_THEY can't even make it budge.`,
+                `USER_TAG runs USER_THEIR fingers all over USER_THEIR corset. It feels so nice to wear. So formfitting.`
+            ]
+        }
+    },
+    collar: {
+        heavy: [
+            `USER_TAG clumsily tries to use a nearby table to push USER_THEIR VAR_C5 off. It's difficult to do so without arms.`,
+            `USER_TAG crinks USER_THEIR neck a bit to adjust USER_THEIR VAR_C5, but it doesn't really help since USER_THEIR VAR_C1 is sealing USER_THEIR arms away.`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG prods at USER_THEIR collar. Such a good pet. Yes. That is USER_THEM! 💜`,
+                `USER_TAG twists USER_THEIR head, trying to get some kind of grip on USER_THEIR VAR_C5 to pull it off, but... no dice.`,
+                `Using USER_THEIR wrists, USER_TAG tries to fidget with USER_THEIR VAR_C5. USER_THEIR_CAP elbows projected out looks adorable, almost pet-like!`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `USER_TAG bats the lock hanging on USER_THEIR VAR_C5, but mittens make it hard to use keys anyway. USER_THEY_CAP probably don't have them. Right?`,
+                `USER_TAG paws at USER_THEIR VAR_C5, but the collar's straps are unyielding, just like USER_THEIR mittens.`,
+                `USER_TAG runs the back of USER_THEIR hand over USER_THEIR VAR_C5. The collar's lock doesn't really care though.`,
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG tugs at the ring on USER_THEIR VAR_C5. It offers a fantastic leash point, but absolutely no hint that USER_THEY can remove it. Someone should leash USER_THEM!`,
+                `USER_TAG squeezes USER_THEIR fingers under USER_THEIR VAR_C5, then tugging as hard as USER_THEY can. The collar too is made of high quality material and refuses to come off!`,
+                `USER_TAG tries to use a finger or two to pull against USER_THEIR VAR_C5, as if USER_THEYRE sweating, but the air of the dungeon is kept quite cool. `
+            ]
+        }
+    },
+    nostruggle: [
+        `USER_TAG squirms absent-mindedly with nothing in particular.`,
+        `USER_TAG wiggles with nothing specifically on USER_THEMSELF.`,
+        `Despite how fun USER_THEIR imagination may be, USER_TAG fidgets with nothing.`,
+        `With nothing on USER_TAG's mind, USER_THEY rollUSER_S USER_THEIR muscles to get more comfortable!`,
+        `Fantasizing about intense bondage, USER_TAG twiddles USER_THEIR thumbs!`,
+        `USER_TAG considers how USER_THEY could play a card game, before looking back up with a tiny wiggle!`,
+        `USER_TAG bumps into a book. Despite this though, maybe USER_THEY shouldn't read it yet.`,
+        `The dungeon echoes as USER_TAG shifts USER_THEIR weight a bit, anticipating what will happen next!`,
+        `USER_TAG's breath trembles slightly at the cold breeze as USER_THEY considerUSER_S the logistics of being bound by Gagbot.`,
+        `Fantasies of struggling in restraints swim through USER_TAG's mind!`,
+        `USER_TAG's sighs as USER_THEY realizeUSER_S USER_THEY could REALLY go for cuddles right now...`,
+        `USER_TAG's mind is quite unbound right now. USER_THEY_CAP clearly wishUSER_ES that would change!`,
+        `Imagining the idea of *thrashing* in some restraints right now, USER_TAG sighs in delicious fantasy!`,
+        `USER_TAG fantasizes the idea of eating pizza! Pepperonis and cheese! So tasty!`,
+        `USER_TAG imagines eating a chocolate chip cookie! With milk too! Just a soft warm cookie...`,
+        `USER_TAG really wants some chocolate right now. Someone should feed USER_THEM some chocolate!`,
+        `USER_TAG's mind drifts off to that last video game USER_THEY USER_WERE playing. Such good progress!`,
+        `USER_TAG idly fantasizes about being praised. Someone should praise USER_THEM!`,
+        `USER_TAG hums to USER_THEMSELF, humming some catchy tune that others probably can't identify. Unless they're in the know.`,
+        `USER_TAG is considering announcing to everyone that USER_THEY lost The Game!`,
+        `USER_TAG wants a new pair of handcuffs. Where? On who? Who knows!`,
+        `USER_TAG wants a new pair of handcuffs. Probably on USER_THEMSELF. Someone should bind USER_THEM!`,
+        `USER_TAG nods as USER_THEY USER_ISARE reminded by USER_THEIR subconscious brain to drink some water!`,
+        `USER_TAG tries to imagine how best to adjust USER_THEIR speech when gagged. Perhaps with practice, USER_THEY can figure it out!`,
+        `All the keys clanging and bondage restraints strewn about makes USER_TAG swim in happy thoughts!`,
+        `USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
+        `USER_TAG clears USER_THEIR throat and then begins to speak: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.`,
+        `USER_TAG's mind is fantasizing about the cute characters in that last anime USER_THEY watched. Everyone should ask USER_THEM about it!`,
+        `USER_TAG's voice echoes through the halls as USER_THEY monologueUSER_S: ***Tell me, for whom do you fight...***`,
+        `USER_TAG wants ice cream. Everyone should have ice cream. USER_THEY_CAP wantUSER_S to know what everyone's favorite flavor is!`,
+        `USER_TAG is getting cold feet. Someone should tie USER_THEM up and tickle USER_THEIR feet so they warm up!`,
+        `USER_TAG wants hot cocoa and to sit cozily by a fire on a stormy day, just pleasantly reading and enjoying the warm. Under a blankey. So nice...`,
+        `USER_TAG fans USER_THEMSELF as USER_THEY lookUSER_S at the strewn restraints. Gagbot has been busy. Hopefully USER_THEY USER_ISARE the next target!`,
+        `USER_TAG starts mumbling, counting sheep to USER_THEMSELF. USER_THEY might be a little sleepy...`,
+        `USER_TAG starts scrolling on YourSpace, and comes across a post titled, 'rawr XD' with a girl with too much eyeshadow and a terrible webcam in the dark.`,
+        `USER_TAG wants to take a selfie. In bondage, of course. Who wouldn't want to take beautiful pictures wearing a ball gag?`,
+        `USER_TAG's breathing accelerates a little as USER_THEY fantasize about being in chains, kneeling at the feet of someone here... Who will give USER_THEM that fantasy?`,
+        `USER_TAG might have had some water recently, but it's good to remember to get more. Can never have too much, afterall.`,
+        `All this talk about servitude and the moans from the dungeon's denizens makes it impossible for USER_TAG to focus...`,
+        `USER_TAG wants to lay in someone's lap. Or maybe have someone lay in USER_THEIR lap. Maybe both.`,
+        `USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
+    ]
+}
+
 const texts_unchastity = {
     heavy: {
         self: {
@@ -737,7 +962,7 @@ const texts_uncorset = {
                                 `USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`
                             ],
                             nodiscard: [
-                                `USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR corset alone until they calm down!`
+                                `USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR corset alone until USER_THEY calm down!`
                             ]
                         },
                         nofumble: [
@@ -1208,6 +1433,93 @@ const texts_unvibe = {
     }
 }
 
+const texts_unwear = {
+    heavy: {
+        self: {
+            single: {
+                worn: [
+                    `Try as USER_THEY might, USER_TAG can't wriggle out of USER_THEIR VAR_C2 right now in USER_THEIR bondage.`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't wearing a VAR_C2, but you couldn't remove it anyway!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `Try as USER_THEY might, USER_TAG can't really take off USER_THEIR clothes while USER_THEY are tied up.`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't wearing any head restraints, but you couldn't remove them anyway!`
+                ]
+            }
+        },
+        other: {
+            single: {
+                worn: [
+                    `Despite all of USER_THEIR enthusiasm, USER_TAG is unable to take off TARGET_TAG's VAR_C2 without USER_THEIR arms.`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't wearing a VAR_C2, but you couldn't remove it anyway!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `Despite all of USER_THEIR enthusiasm, USER_TAG is unable to undress TARGET_TAG without USER_THEIR arms.`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`
+                ]
+            }
+        }
+    },
+    noheavy: {
+        self: {
+            single: {
+                worn: [
+                    `USER_TAG slowly slips out of USER_THEIR VAR_C2, folding it and putting it away for future wear!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't currently wearing a VAR_C2!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `USER_TAG slowly slips out of USER_THEIR clothes, folding them all up and stowing them away for future wear!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `You aren't currently wearing any headgear!`
+                ]
+            }
+        },
+        other: {
+            single: {
+                worn: [
+                    `Slowly, USER_TAG runs USER_THEIR fingers over TARGET_TAG, sensually pulling off TARGET_THEIR VAR_C2 and setting it aside.`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't currently wearing a VAR_C2!`
+                ]
+            },
+            multiple: {
+                worn: [
+                    `Giggling with glee, USER_TAG pulls all the clothes off of TARGET_TAG and sets them aside!`
+                ],
+                // Ephemeral
+                noworn: [
+                    `TARGET_TAG isn't currently wearing any headgear!`
+                ]
+            }
+        }
+    }
+}
+
 const texts_vibe = {
     heavy: {
         self: {
@@ -1379,6 +1691,49 @@ const texts_vibe = {
     }
 }
 
+const texts_wear = {
+    heavy: {
+        self: {
+            // Ephemeral
+            worn: [
+                `You are already wearing a VAR_C2, but you wouldn't be able to put it on anyway!`
+            ],
+            noworn: [
+                `USER_TAG nuzzles a VAR_C2, but putting it on would be kinda difficult without USER_THEIR arms.`
+            ]
+        },
+        other: {
+            // Ephemeral
+            worn: [
+                `TARGET_TAG is already wearing a VAR_C2, but you wouldn't be able to put it on TARGET_THEM anyway!`
+            ],
+            noworn: [
+                `USER_TAG tries to pick up a VAR_C2 and slip it on TARGET_TAG... with something besides USER_THEIR arms, since USER_THEY USER_ISARE wearing a VAR_C1.`
+            ]
+        }
+    },
+    noheavy: {
+        self: {
+            // Ephemeral
+            worn: [
+                `You are already wearing a VAR_C2!`
+            ],
+            noworn: [
+                `USER_TAG picks up a beautiful VAR_C2 and puts it on! It sits snugly on USER_THEM!`
+            ]
+        },
+        other: {
+            // Ephemeral
+            worn: [
+                `You are already wearing a VAR_C2!`
+            ],
+            noworn: [
+                `USER_TAG helps TARGET_TAG into a VAR_C2, ensuring it all fits snugly!`
+            ]
+        }
+    }
+} 
+
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
@@ -1390,6 +1745,7 @@ const textarrays = {
     texts_key: texts_key,
     texts_letgo: texts_letgo,
     texts_mitten: texts_mitten,
+    texts_struggle: texts_struggle,
     texts_unchastity: texts_unchastity,
     texts_uncollar: texts_uncollar,
     texts_uncorset: texts_uncorset,
@@ -1398,7 +1754,9 @@ const textarrays = {
     texts_unheavy: texts_unheavy,
     texts_unmitten: texts_unmitten,
     texts_unvibe: texts_unvibe,
-    texts_vibe: texts_vibe
+    texts_unwear: texts_unwear,
+    texts_vibe: texts_vibe,
+    texts_wear: texts_wear
 }
 
 // Get generic text and spit out a pronoun respecting version YAY

@@ -31,7 +31,8 @@ const assignCollar = (user, keyholder, restraints, only, customcollar) => {
         heavy: restraints.heavy,
         collartype: customcollar
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
 }
 
 const getCollar = (user) => {
@@ -50,7 +51,8 @@ const getCollarPerm = (user, perm) => {
 const removeCollar = (user) => {
     if (process.collar == undefined) { process.collar = {} }
     delete process.collar[user];
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
 }
 
 const getCollarKeys = (user) => {
@@ -261,7 +263,8 @@ const cloneCollarKey = (collarUser, newKeyholder) => {
         collar.clonedKeyholders = [];
     }
     collar.clonedKeyholders.push(newKeyholder)
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
 }
 
 // Called to remove a single cloned keyholder from the list. 
@@ -273,7 +276,8 @@ const revokeCollarKey = (collarUser, newKeyholder) => {
     if (collar.clonedKeyholders.includes(newKeyholder)) {
         collar.clonedKeyholders.splice(collar.clonedKeyholders.indexOf(newKeyholder), 1)
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
 }
 
 // Called to get cloned keys
@@ -290,7 +294,6 @@ const getClonedCollarKeysOwned = (userID) => {
     let ownedkeys = []
     Object.keys(process.collar).forEach((k) => {
         if (process.collar[k].clonedKeyholders) {
-            console.log(process.collar[k].clonedKeyholders)
             if (process.collar[k].clonedKeyholders.includes(userID)) {
                 ownedkeys.push(`${k}_collar`)
             }
@@ -306,9 +309,7 @@ const getOtherKeysCollar = (userID) => {
     let ownedkeys = []
     Object.keys(process.collar).forEach((k) => {
         if (process.collar[k].keyholder == userID) {
-            console.log(process.collar[k])
             if (process.collar[k].clonedKeyholders) {
-                console.log(process.collar[k].clonedKeyholders)
                 process.collar[k].clonedKeyholders.forEach((c) => {
                     ownedkeys.push(`${k}_${c}`)
                 })
@@ -326,7 +327,8 @@ const transferCollarKey = (lockedUser, newKeyholder) => {
             process.collar[lockedUser].keyholder = newKeyholder;
             // Erase cloned keys in this process!
             process.collar[lockedUser].clonedKeyholders = [];
-            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+            if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
             return true;
         }
     }
@@ -339,27 +341,30 @@ const discardCollarKey = (user) => {
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     if (process.collar[user]) {
         process.collar[user].keyholder = "discarded";
-        process.collar[lockedUser].clonedKeyholders = [];
+        process.collar[user].clonedKeyholders = [];
         process.discardedKeys.push({
           restraint: "collar",
           wearer: user
         })
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
+    process.readytosave.discardedKeys = true;
 }
 
 const findCollarKey = (index, newKeyholder) => {
     if (process.collar == undefined) { process.collar = {} }
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     const collar = process.discardedKeys.splice(index, 1);
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.discardedKeys = true;
     if (collar.length < 1) return false;
     if (process.collar[collar[0].wearer]) {
       process.collar[collar[0].wearer].keyholder = newKeyholder;
       // Erase cloned keys in this process!
       process.collar[lockedUser].clonedKeyholders = [];
-      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+      if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.collar = true;
       return true;
     }
     return false;

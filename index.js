@@ -13,6 +13,25 @@ const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js');
 const { updateArousalValues } = require('./functions/vibefunctions.js');
+const { backupsAreAnnoying, saveFiles } = require('./functions/timefunctions.js');
+const { loadEmoji } = require("./functions/messagefunctions.js");
+const { loadWearables } = require("./functions/wearablefunctions.js");
+
+// Prevent node from killing us immediately when we do the next line.
+process.stdin.resume();
+
+// I've never considered overriding this before lol
+process.on('SIGINT', () => {
+    try {
+        console.log('Received SIGINT. Performing graceful shutdown...');
+        saveFiles();
+        process.exit(0);
+    }
+    catch (err) {
+        console.log(err);
+        process.abort();
+    }
+});
 
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
 
@@ -32,7 +51,9 @@ let processdatatoload = [
     { textname: "arousal.txt", processvar: "arousal", default: {} },
     { textname: "headwearusers.txt", processvar: "headwear", default: {} },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}}
+    { textname: "configs.txt", processvar: "configs", default: {}},
+    { textname: "dollusers.txt", processvar: "dolloverrides", default: {}},
+    { textname: "wearables.txt", processvar: "wearable", default: {}}
 ]
 
 processdatatoload.forEach((s) => {
@@ -81,6 +102,7 @@ Object.keys(process.mitten).forEach((m) => {
 gagtypesset();
 loadHeavyTypes(); 
 loadHeadwearTypes();
+loadWearables();
 assignMemeImages();
 
 // Grab all the command files from the commands directory
@@ -123,6 +145,7 @@ client.on("clientReady", async () => {
         console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);
         console.log(`Components: [${Array.from(componentHandlers.keys()).join(", ")}]`);
         console.log(`Autocompletes: [${Array.from(autocompletehandlers.keys()).join(", ")}]`);
+        loadEmoji(client);
     }
     catch (err) {
         console.log(err)
@@ -193,5 +216,16 @@ client.on('interactionCreate', async (interaction) => {
         console.log(err);
     }
 })
+
+// I refuse to use a proper database with backups. 
+// This is a solution to backup the terrible database. 
+backupsAreAnnoying();
+let backupset = setInterval(() => {
+    backupsAreAnnoying()
+}, parseInt(process.env.BACKUPDELAY ?? 3600000)) // Backups every one hour, or time specified in .env
+
+let savefileset = setInterval(() => {
+    saveFiles();
+}, parseInt(process.env.SAVEDELAY ?? 60000)) // Backups every one hour, or time specified in .env
 
 client.login(process.env.DISCORDBOTTOKEN)
