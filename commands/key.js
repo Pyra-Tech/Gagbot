@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
-const { generateConfigModal, configoptions, getOption, setOption } = require('./../functions/configfunctions.js');
+const { generateConfigModal, configoptions, getOption, setOption, config } = require('./../functions/configfunctions.js');
 const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require('./../functions/headwearfunctions.js');
-const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar } = require('./../functions/collarfunctions.js');
-const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity } = require('./../functions/vibefunctions.js');
+const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey } = require('./../functions/collarfunctions.js');
+const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey } = require('./../functions/vibefunctions.js');
 const { getText, getTextGeneric } = require('./../functions/textfunctions.js');
 
 module.exports = {
@@ -35,18 +35,36 @@ module.exports = {
 					opt.setName("clones")
 						.setDescription("Which key clone to revoke?")
 						.setAutocomplete(true)
+					)  
+		)
+        .addSubcommand((subcommand) =>
+      		subcommand
+				.setName("give")
+				.setDescription("Give a primary key you're holding...")
+                .addUserOption((opt) => 
+                    opt.setName("wearer")
+						.setDescription("Whose restraint to give key for?")
 					)
+				.addStringOption((opt) => 
+					opt.setName("restraint")
+						.setDescription("Which restraint of theirs to give key for?")
+						.setAutocomplete(true)
+					)
+                .addUserOption((opt) => 
+                    opt.setName("newkeyholder")
+						.setDescription("Who to give the key to?")
+					)  
     ),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
 		let subcommand = interaction.options.getSubcommand();
 		try {
-			if (subcommand == "clone") {
+			if (subcommand == "clone" || subcommand == "give") {
                 // We want to return ONLY options that the user COULD clone a key for
                 // So if they own a collar key, it only gives "Collar"
-                let chosenuserid = interaction.options.get('user')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
-				let collarkeyholder = canAccessCollar(chosenuserid, interaction.user.id, undefined, true);
-                let chastitykeyholder = canAccessChastity(chosenuserid, interaction.user.id, undefined, true);
+                let chosenuserid = interaction.options.get('wearer')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
+				let collarkeyholder = (getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, undefined, true).access);
+                let chastitykeyholder = (getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, undefined, true).access);
 
 				let choices = [];
                 if (!collarkeyholder && !chastitykeyholder) {
@@ -415,6 +433,188 @@ module.exports = {
                 catch (err) {
                     console.log(err);
                     await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling transfer.', components: [] });
+                    return;
+                }
+            } else if (subcommand == "give") {
+                const wearer = interaction.options.getUser("wearer") ?? interaction.user;
+                const restraint = interaction.options.getString("restraint")
+                const newKeyholder = interaction.options.getUser("newkeyholder")
+                
+                // We're missing info, back to the start!
+                if (!wearer || !restraint || !newKeyholder) {
+                    interaction.reply({ content: `Something went wrong. The command was parsed as:\nGive ${wearer}'s key for ${restraint} and give to ${newKeyholder}!`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                // We can't give to ourselves lol
+                if (interaction.user == newKeyholder) {
+                    interaction.reply({ content: `You can't give yourself the key you're holding!`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                // Check if the interaction user has access to give the key for the target restraint.
+                let cangive = false;
+                let chosenrestraintreadable;
+                if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true)) { 
+                    cangive = true 
+                    chosenrestraintreadable = "collar";
+                    choiceemoji = "<:collar:1449984183261986939>";
+                }
+                if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true)) { 
+                    cangive = true 
+                    chosenrestraintreadable = "chastity belt"
+                    choiceemoji = "<:Chastity:1073495208861380629>"
+                }
+                if (!cangive) {
+                    interaction.reply({ content: `You do not have the keys for ${wearer}'s ${restraint}.`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                // At this point, we're sure this is a valid giving attempt. Prompt the user that this is what they want to do.
+                // Prompt and ensure the user intended to run this command for this combination. 
+                let components = [
+                    {
+                        type: ComponentType.ActionRow,
+                        components: [
+                            {
+                                type: ComponentType.Button,
+                                label: "Cancel",
+                                customId: `cancel`,
+                                style: ButtonStyle.Danger,
+                            },
+                            {
+                                type: ComponentType.Button,
+                                label: "Give the Key",
+                                customId: `agreetogivebutton`,
+                                style: ButtonStyle.Success,
+                            }
+                        ],
+                    },
+                ]
+
+                let responsetext = `Giving the keys for ${choiceemoji}${wearer} to 🔑${newKeyholder}. *You will no longer be able to access that restraint.*\n\nPlease confirm by pressing the button below:`
+                if (wearer == interaction.user) {
+                    responsetext = `Giving the keys for your ${choiceemoji}${chosenrestraintreadable} to 🔑${newKeyholder}. *You will no longer be able to access your restraint.*\n\nPlease confirm by pressing the button below:`
+                }
+
+                let response = await interaction.reply({ 
+                    content: responsetext, 
+                    flags: MessageFlags.Ephemeral, 
+                    components: components,
+                    withResponse: true 
+                })
+                let confirmation;
+
+                const collectorFilter = (i) => i.user.id === interaction.user.id;
+                try {
+                    confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
+
+                    if (confirmation.customId === 'agreetogivebutton') {
+                        // Skip the DM if the wearer is the giver or receiver, or if they have auto accepting enabled
+                        if (wearer == interaction.user || wearer == newKeyholder || config.getKeyGivingAuto(wearer.id)) {
+                            let data = {
+                                textarray: "texts_key",
+                                textdata: {
+                                    interactionuser: interaction.user,
+                                    targetuser: wearer,
+                                    c1: chosenrestraintreadable,
+                                    c2: newKeyholder
+                                }
+                            }
+                            data.give = true;
+                            if (wearer == interaction.user) {
+                                data.self = true;
+                            }
+                            else {
+                                data.other = true;
+                            }
+                            data[restraint] = true;
+                            if (restraint == "collar") {
+                                await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata) , components: [] })
+                                await confirmation.followUp(getText(data))
+                                transferCollarKey(wearer.id, newKeyholder.id);
+                            }
+                            else if (restraint == "chastitybelt") {
+                                await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata), components: [] })
+                                await confirmation.followUp(getText(data))
+                                transferChastityKey(wearer.id, newKeyholder.id);
+                            }
+                        }
+                        else {
+                            await confirmation.update({ content: `Prompting the user for permission.`, components: [] });
+                            if (restraint == "collar") {
+                                let canRemove = await promptTransferCollarKey(interaction.user, wearer, newKeyholder).then(async (res) => {
+                                    // User said yes
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    data.give = true;
+                                    data.other = true;
+                                    data[restraint] = true;
+                                    await confirmation.editReply(getTextGeneric("give_accept", data.textdata))
+                                    await confirmation.followUp(getText(data))
+                                    transferCollarKey(wearer.id, newKeyholder.id);
+                                }, async (rej) => {
+                                    // User said no.
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    await interaction.editReply(getTextGeneric("give_decline", data.textdata))
+                                })
+                            }
+                            else if (restraint == "chastitybelt") {
+                                let canRemove = await promptTransferChastityKey(interaction.user, wearer, newKeyholder).then(async (res) => {
+                                    // User said yes
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    data.give = true;
+                                    data.other = true;
+                                    data[restraint] = true;
+                                    await confirmation.editReply(getTextGeneric("give_accept", data.textdata))
+                                    await confirmation.followUp(getText(data))
+                                    transferChastityKey(wearer.id, newKeyholder.id);
+                                }, async (rej) => {
+                                    // User said no.
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    await interaction.editReply(getTextGeneric("give_decline", data.textdata))
+                                })
+                            }
+                        }
+                    } else if (confirmation.customId === 'cancel') {
+                        await confirmation.update({ content: 'Action cancelled', components: [] });
+                        return; // Stop with the key cloning immediately. 
+                    }
+                } 
+                catch (err) {
+                    console.log(err);
+                    await interaction.editReply({ content: 'Confirmation not received within 30 seconds, cancelling transfer.', components: [] });
                     return;
                 }
             }
