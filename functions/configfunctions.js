@@ -391,7 +391,7 @@ const configoptions = {
     "Bot": {
         "bot-enablebot": {
             name: "Global Enable Bot",
-            desc: "Should the bot be active and respond to messages",
+            desc: "Should the bot be active and respond to messages?",
             choices: [
                 {
                     name: "Disabled",
@@ -536,14 +536,16 @@ function generateConfigModal(interaction, menuset = "General", page) {
                 else {
                     // Create a text box explaining the server doesn't have a configuration yet
                     // And a shiny button to create a default. 
+                    let disabled = ((getBotOption("bot-allownewsetup") == "Disabled") && (interaction.user.id != interaction.client.application.owner.id))
                     let noserverdescription = new TextDisplayBuilder()
-                        .setContent(`### This server does not yet have a configuration. Click the button below to setup default settings.\nSetting up **${interaction.guild.name}**.`)
+                        .setContent(`### This server does not yet have a configuration. Click the button below to setup default settings.\nSetting up **${interaction.guild.name}**`)
                     let button = new ButtonBuilder()
                         .setCustomId(`config_createnewconfig_${menuset}_${k}`)
                         .setLabel(`Create Default Config`)
                         .setStyle(ButtonStyle.Primary)
+                        .setDisabled(disabled);
                     let noserverdescription2 = new TextDisplayBuilder()
-                        .setContent(`-# You will then be able to use slash commands here.`)
+                        .setContent((disabled) ? `-# The bot's owner has forbidden new installations except from them. Please contact them for initial setup.` : `-# You will then be able to use slash commands here.`)
                     pagecomponents.push(noserverdescription);
                     pagecomponents.push(new ActionRowBuilder().addComponents(button))
                     pagecomponents.push(noserverdescription2);
@@ -789,6 +791,15 @@ function initializeBotOptions() {
     process.readytosave.configs = true;
 }
 
+// Leave from the guild as if we never existed... which is just delete the properties here.
+function leaveServerOptions(serverID) {
+    if (process.configs == undefined) { process.configs = {} } 
+    if (process.configs.servers == undefined) { process.configs.servers = {} } 
+    delete process.configs.servers[serverID]
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.configs = true;
+}
+
 // Wholesale remove all commands from a guild. 
 async function removeAllCommands(interaction, serverID) {
     try {
@@ -827,6 +838,9 @@ async function setCommands(interaction, serverID) {
             console.log(`Ignoring file at ./../commands/${file} because it does not have either a data or an execute export.`)
         }
     }
+
+    // We have config globally deployed, dont have it in the guild's list lol
+    delete commands["config.js"];
 
     // Now go through each server option (if available) and remove entries if disabled.
     if (getServerOption(serverID, "server-allowgags") == "Disabled") {
@@ -940,6 +954,7 @@ exports.setCommands = setCommands;
 exports.setGlobalCommands = setGlobalCommands;
 
 exports.knownServer = knownServer;
+exports.leaveServerOptions = leaveServerOptions;
 
 const functions = {};
 

@@ -6,7 +6,7 @@ const { getConsent, handleConsent, timelockChastityModalnew } = require('./../fu
 const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
-const { setCommands } = require('../functions/configfunctions.js');
+const { setCommands, getBotOption, leaveServerOptions } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -77,11 +77,23 @@ module.exports = {
 				console.log(optionparts[4])
 				console.log(optionparts[3])
 				if (optionparts[4] == "delete") {
+					leaveServerOptions(optionparts[3]);
 					await removeAllCommands(interaction, optionparts[3]);
 				}
 				else if (optionparts[4] == "setup") {
 					initializeServerOptions(optionparts[3])
 					await setCommands(interaction, optionparts[3]);
+				}
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "createnewconfig") {
+				await interaction.client.application.fetch();
+				let canadd = ((getBotOption("bot-allownewsetup") == "Disabled") && (interaction.user.id != interaction.client.application.owner.id))
+				console.log(!canadd);
+				if (!canadd) {
+					console.log(interaction.guildId)
+					initializeServerOptions(interaction.guildId)
+					await setCommands(interaction, interaction.guildId);
 				}
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
