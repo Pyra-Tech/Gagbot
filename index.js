@@ -54,7 +54,8 @@ let processdatatoload = [
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
     { textname: "configs.txt", processvar: "configs", default: {}},
     { textname: "dollusers.txt", processvar: "dolloverrides", default: {}},
-    { textname: "wearables.txt", processvar: "wearable", default: {}}
+    { textname: "wearables.txt", processvar: "wearable", default: {}},
+    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}}
 ]
 
 processdatatoload.forEach((s) => {

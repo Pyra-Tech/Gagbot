@@ -438,7 +438,7 @@ const configoptions = {
     }
 } 
 
-function generateConfigModal(interaction, menuset = "General", page) {
+function generateConfigModal(interaction, menuset = "General", page, statustext) {
     console.log("Start of generate config modal")
     return new Promise(async (res,rej) => {
         let pagecomponents = [];
@@ -494,7 +494,7 @@ function generateConfigModal(interaction, menuset = "General", page) {
                     }
                     
                     let roledescription = new TextDisplayBuilder()
-                        .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
+                        .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}${statustext ? statustext : ""}`)
                     let component = new ChannelSelectMenuBuilder()
                                 .setCustomId(`config_serveroptchannel_${menuset}_${k}`)
                                 .setPlaceholder(currentrole)
@@ -936,6 +936,57 @@ function knownServer(serverID) {
     return (process.configs.servers[serverID] != undefined)
 }
 
+// Tries to find a webhook by the name "Gagbot" to use it, or creates a new one
+// Returns an object with webhook info or none if it cannot be made. 
+async function createWebhook(interaction, channel) {
+    try {
+        // First, check if we can manage webhooks. If we can't, vamos. 
+        if (!channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageWebhooks)) {
+            return false;
+        }
+
+        // We're now reasonably sure we can make webhooks. 
+        // Check if a Gagbot webhook already exists. If it does, use it.
+        let existingwebhooks = await channel.fetchWebhooks();
+        let webhook
+        existingwebhooks.forEach((w) => {
+            if (w.applicationId == interaction.client.user.id ) { webhook = w }
+        })
+        // A gagbot webhook does not exist. Create one. 
+        if (!webhook) {
+            webhook = await channel.createWebhook({
+                name: "Gagbot",
+                reason: "Auto-generated Webhook for Gagbot"
+            })
+        }
+        if (process.webhook == undefined) { process.webhook = {} }
+        if (process.webhookstoload == undefined) { process.webhookstoload = {} }
+        process.webhook[channel.id] = webhook;
+        process.webhookstoload[channel.id] = webhook.id;
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.webhooks = true;
+        console.log(process.webhookstoload);
+        return webhook;
+    }
+    catch (err) {
+        console.log(err)
+        return false;
+    }
+}
+
+// Load all known webhooks into the list 
+function loadWebhooks(client) {
+    Object.keys(process.webhookstoload).forEach(async (w) => {
+        try {
+            process.webhook[w] = await client.fetchWebhook(process.webhook[w])
+        }
+        catch (err) {
+            // Webhook is invalid. Delete it. We'll catch issues later. 
+            delete process.webhook[w];
+        }
+    })
+}
+
 exports.generateConfigModal = generateConfigModal;
 exports.configoptions = configoptions;
 exports.getOption = getOption;
@@ -955,6 +1006,9 @@ exports.setGlobalCommands = setGlobalCommands;
 
 exports.knownServer = knownServer;
 exports.leaveServerOptions = leaveServerOptions;
+
+exports.createWebhook = createWebhook;
+exports.loadWebhooks = loadWebhooks;
 
 const functions = {};
 

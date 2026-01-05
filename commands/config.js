@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField } = require('discord.js');
 const { mittentypes } = require('./../functions/gagfunctions.js')
 const { heavytypes } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
@@ -6,7 +6,7 @@ const { getConsent, handleConsent, timelockChastityModalnew } = require('./../fu
 const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
-const { setCommands, getBotOption, leaveServerOptions } = require('../functions/configfunctions.js');
+const { setCommands, getBotOption, leaveServerOptions, createWebhook } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -69,9 +69,28 @@ module.exports = {
 				let channelsselected = interaction.channels ? interaction.channels?.keys() : [];
 				channelsselected = Array.from(channelsselected);
 				console.log(channelsselected);
-				setServerOption(interaction.guildId, "server-channelspermitted", channelsselected)
+				let savedchannels = [];
+				let failedtext;
+				channelsselected.forEach(async (c) => {
+					let channel = await interaction.client.channels.fetch(c);
+					console.log("CREATING WEBHOOK")
+					let webhook = await createWebhook(interaction, channel)
+					if (webhook && channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageMessages)) {
+						// We have a successful webhook AND Manage Messages.
+						failedtext = `\n-# ✅ ***Created webhook and can manage messages in #${channel.name}***`
+						savedchannels.push(c)
+					}
+					else {
+						failedtext = `\n-# ❌ ***Failed to create webhook or missing perms for #${channel.name}***`
+					}
+				})
+				function sleep(ms) {
+					return new Promise(resolve => setTimeout(resolve, ms));
+				}
+				await sleep(200); // Pauses for 200 milliseconds
+				setServerOption(interaction.guildId, "server-channelspermitted", savedchannels)
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"))
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], undefined, failedtext));
 			}
 			else if (optionparts[1] == "botguilds") {
 				console.log(optionparts[4])

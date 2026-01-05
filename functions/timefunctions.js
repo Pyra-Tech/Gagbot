@@ -163,6 +163,10 @@ const saveFiles = () => {
                     filepath = `${process.GagbotSavedFileDirectory}/dollusers.txt`
                     processvar = "dolloverrides"
                     break;
+                case "webhooks":
+                    filepath = `${process.GagbotSavedFileDirectory}/webhooks.txt`
+                    processvar = "webhookstoload"
+                    break;
                 default:
                     console.log(`Unknown save variable: ${k}`)
             }
