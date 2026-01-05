@@ -24,9 +24,10 @@ const loadEmoji = async (client) => {
 
 const messageSend = async (msg, str, avatarURL, username, threadId) => {
     let webhookClient;
+    let channel_id = threadId ? msg.channel.parentId : msg.channel.id
     // New webhook method
-    if (process.webhook[msg.channel.id]) {
-        webhookClient = process.webhook[msg.channel.id];
+    if (process.webhook[channel_id]) {
+        webhookClient = process.webhook[channel_id];
         webhookClient.send({
             threadId: threadId,
             content: str,
@@ -50,9 +51,10 @@ const messageSend = async (msg, str, avatarURL, username, threadId) => {
 
 const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs) => {
     let webhookClient;
+    let channel_id = threadId ? msg.channel.parentId : msg.channel.id
     // New webhook method
-    if (process.webhook[msg.channel.id]) {
-        webhookClient = process.webhook[msg.channel.id];   
+    if (process.webhook[channel_id]) {
+        webhookClient = process.webhook[channel_id];   
         let attachments = [];
         attachs.forEach((f) => {
             attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }))
