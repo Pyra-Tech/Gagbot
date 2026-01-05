@@ -154,7 +154,8 @@ client.on("clientReady", async () => {
         setGlobalCommands(client);
 
         // Load webhooks
-        loadWebhooks(client);
+        await loadWebhooks(client);
+        console.log(`Webhook Channels: [${Array.from(process.webhook.keys()).join(", ")}]`)
     }
     catch (err) {
         console.log(err)
@@ -225,19 +226,26 @@ client.on('interactionCreate', async (interaction) => {
             return;
         }
         
-        if (knownServer(interaction.guildId) || (interaction.commandName === "config")) {
-            if (interaction.guildId != "938203644023685181") {
-                commands.get(interaction.commandName)?.execute(interaction);
-                return;
-            }
-        }
-
-        if ((interaction.channel.id != process.env.CHANNELID && interaction.channel.parentId != process.env.CHANNELID) && (interaction.channel.id != process.env.CHANNELIDDEV)) { 
-            interaction.reply({ content: `Please use these commands over in <#${process.env.CHANNELID}>.`, flags: discord.MessageFlags.Ephemeral })
+        if (interaction.commandName === "config") {
+            commands.get(interaction.commandName)?.execute(interaction);
             return;
         }
 
-        commands.get(interaction.commandName)?.execute(interaction);
+        let channelid = interaction.channelId;
+        let thread = false;
+        if (interaction.channel.isThread()) {
+            thread = true
+            channelid = interaction.channel.parentId
+        }
+
+        if (process.webhook[channelid]) {
+            commands.get(interaction.commandName)?.execute(interaction);
+            return;
+        }
+        else {
+            interaction.reply({ content: `Please use this command in a channel that's setup for it.`, flags: discord.MessageFlags.Ephemeral })
+            return;
+        }
     }
     catch (err) {
         console.log(err);
@@ -255,4 +263,7 @@ let savefileset = setInterval(() => {
     saveFiles();
 }, parseInt(process.env.SAVEDELAY ?? 60000)) // Backups every one hour, or time specified in .env
 
+if (process.webhook) {
+    process.webhook = {};
+}
 client.login(process.env.DISCORDBOTTOKEN)
