@@ -3,7 +3,10 @@ const { mittentypes } = require('./../functions/gagfunctions.js')
 const { heavytypes } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, timelockChastityModalnew } = require('./../functions/interactivefunctions.js')
-const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption } = require('./../functions/configfunctions.js');
+const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
+const { removeAllCommands } = require('../functions/configfunctions.js');
+const { initializeServerOptions } = require('../functions/configfunctions.js');
+const { setCommands } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,7 +14,7 @@ module.exports = {
         .setDescription(`Configure settings...`),
 	async execute(interaction) {
 		try {			
-			interaction.reply(generateConfigModal(interaction, "General", 0));
+			interaction.reply(await generateConfigModal(interaction, "General", 0));
 		}
 		catch (err) {
 			console.log(err)
@@ -24,7 +27,7 @@ module.exports = {
 			
 			// We changed page, new page!
 			if (optionparts[1] == "menuselector") {
-				interaction.update(generateConfigModal(interaction, interaction.values[0].split("_")[1]));
+				interaction.update(await generateConfigModal(interaction, interaction.values[0].split("_")[1]));
 			}
 			else if (optionparts[1] == "pageopt") {
 				// Frankly I hate arrays for this but lets break it down.
@@ -39,7 +42,7 @@ module.exports = {
 				// After doing so, run the NEW option's select_function. 
 				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
 				// Finally, reprompt the user, now with the new choice set. 
-				interaction.update(generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
 			else if (optionparts[1] == "spageopt") {
 				// Frankly I hate arrays for this but lets break it down. For servers this time.
@@ -52,9 +55,15 @@ module.exports = {
 				setServerOption(interaction.guildId, optionparts[3], optionschoice[newindex])
 
 				// After doing so, run the NEW option's select_function. 
-				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
+				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId)
 				// Finally, reprompt the user, now with the new choice set. 
-				interaction.update(generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "refreshcmdButton") {
+				await setCommands(interaction, interaction.guildId);
+
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(await generateConfigModal(interaction, "Server"));
 			}
 			else if (optionparts[1] == "serveroptchannel") {
 				let channelsselected = interaction.channels ? interaction.channels?.keys() : [];
@@ -62,12 +71,22 @@ module.exports = {
 				console.log(channelsselected);
 				setServerOption(interaction.guildId, "server-channelspermitted", channelsselected)
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"))
-				interaction.update(generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
 			else if (optionparts[1] == "botguilds") {
 				console.log(optionparts[4])
 				console.log(optionparts[3])
-				interaction.update(generateConfigModal(interaction, optionparts[2]));
+				if (optionparts[4] == "delete") {
+					await removeAllCommands(interaction, optionparts[3]);
+				}
+				else if (optionparts[4] == "setup") {
+					initializeServerOptions(optionparts[3])
+					await setCommands(interaction, optionparts[3]);
+				}
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else {
+				console.log(interaction)
 			}
 		}
 		catch (err) {

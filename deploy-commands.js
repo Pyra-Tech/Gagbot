@@ -20,6 +20,8 @@ for (const file of commandFiles) {
     }
 }
 
+console.log(commands)
+
 // Construct and prepare an instance of the REST module
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORDBOTTOKEN);
 

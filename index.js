@@ -16,6 +16,7 @@ const { updateArousalValues } = require('./functions/vibefunctions.js');
 const { backupsAreAnnoying, saveFiles } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
+const { knownServer, setGlobalCommands } = require('./functions/configfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -145,7 +146,11 @@ client.on("clientReady", async () => {
         console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);
         console.log(`Components: [${Array.from(componentHandlers.keys()).join(", ")}]`);
         console.log(`Autocompletes: [${Array.from(autocompletehandlers.keys()).join(", ")}]`);
+        // Load emoji into the application's emoji manager
         loadEmoji(client);
+
+        // Load the /config function globally, as we can handle that whereever. 
+        setGlobalCommands(client);
     }
     catch (err) {
         console.log(err)
@@ -204,7 +209,14 @@ client.on('interactionCreate', async (interaction) => {
             }
             return;
         }
-      
+        
+        if (knownServer(interaction.guildId) || (interaction.commandName === "config")) {
+            if (interaction.guildId != "938203644023685181") {
+                commands.get(interaction.commandName)?.execute(interaction);
+                return;
+            }
+        }
+
         if ((interaction.channel.id != process.env.CHANNELID && interaction.channel.parentId != process.env.CHANNELID) && (interaction.channel.id != process.env.CHANNELIDDEV)) { 
             interaction.reply({ content: `Please use these commands over in <#${process.env.CHANNELID}>.`, flags: discord.MessageFlags.Ephemeral })
             return;

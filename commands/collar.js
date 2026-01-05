@@ -144,7 +144,7 @@ module.exports = {
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
                                     heavy: choice_heavy 
-                                }, true, choice_collartype)
+                                }, false, choice_collartype)
                         }
                         else {
                             data.nonamedcollar = true
@@ -153,7 +153,7 @@ module.exports = {
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
                                     heavy: choice_heavy 
-                                }, true)
+                                }, false)
                         }
                     }
                 }
@@ -191,7 +191,7 @@ module.exports = {
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
                                     heavy: choice_heavy 
-                                }, true, choice_collartype)
+                                }, false, choice_collartype)
                         }
                         else {
                             data.nonamedcollar = true
@@ -200,7 +200,7 @@ module.exports = {
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
                                     heavy: choice_heavy 
-                                }, true)
+                                }, false)
                         }
                     }
                 }
