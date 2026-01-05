@@ -22,51 +22,62 @@ const loadEmoji = async (client) => {
     }
 }
 
-const messageSend = async (threadId, str, avatarURL, username) => {
-    // When called, we want to do something with str and then send it.
-    const webhookClient = new WebhookClient({ 
-        id: process.env.WEBHOOKID, 
-        token: process.env.WEBHOOKTOKEN 
-    })
-
-    webhookClient.send({
-        threadId: threadId,
-        content: str,
-        username: username,
-        avatarURL: avatarURL,
-        allowedMentions: {
-            "parse": []
-        }
-    }).then(() => {
-        return true
-    })
+const messageSend = async (msg, str, avatarURL, username, threadId) => {
+    let webhookClient;
+    // New webhook method
+    if (process.webhook[msg.channel.id]) {
+        webhookClient = process.webhook[msg.channel.id];
+        webhookClient.send({
+            threadId: threadId,
+            content: str,
+            username: username,
+            avatarURL: avatarURL,
+            allowedMentions: {
+                "parse": []
+            }
+        }).then(() => {
+            return true
+        })
+    }
+    // Legacy Webhook method
+    /*else {
+        webhookClient = new WebhookClient({ 
+            id: process.env.WEBHOOKID, 
+            token: process.env.WEBHOOKTOKEN 
+        })
+    }*/
 }
 
-const messageSendImg = async (threadId, str, avatarURL, username, msgid, spoiler) => {
-    // When called, we want to do something with str and then send it.
-    const webhookClient = new WebhookClient({ 
-        id: process.env.WEBHOOKID, 
-        token: process.env.WEBHOOKTOKEN 
-    })
+const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs) => {
+    let webhookClient;
+    // New webhook method
+    if (process.webhook[msg.channel.id]) {
+        webhookClient = process.webhook[msg.channel.id];   
+        let attachments = [];
+        attachs.forEach((f) => {
+            attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }))
+        })
 
-    let spoilertext = spoiler ? "SPOILER_" : ""
-
-    let imageonsystem = `./${spoilertext}downloadedimage_${msgid}.png`
-    
-    let file = new AttachmentBuilder(imageonsystem, { name: imageonsystem } );
-
-    webhookClient.send({
-        threadId: threadId,
-        content: str,
-        username: username,
-        avatarURL: avatarURL,
-        files: [file],
-        allowedMentions: {
-            "parse": []
-        }
-    }).then(() => {
-        return true
-    })
+        webhookClient.send({
+            threadId: threadId,
+            content: str,
+            username: username,
+            avatarURL: avatarURL,
+            files: attachments,
+            allowedMentions: {
+                "parse": []
+            }
+        }).then(() => {
+            return true
+        })
+    }
+    // Legacy Webhook method
+    /*else {
+        webhookClient = new WebhookClient({ 
+            id: process.env.WEBHOOKID, 
+            token: process.env.WEBHOOKTOKEN 
+        })
+    }*/
 }
 
 const messageSendDev = async (str, avatarURL, username) => {

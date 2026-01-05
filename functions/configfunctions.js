@@ -606,7 +606,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            await sleep(1000); // Pauses for 500 milliseconds
+            await sleep(1000); // Pauses for 1000 milliseconds
         }
 
         // Create Menu Selector 
@@ -978,11 +978,12 @@ async function createWebhook(interaction, channel) {
 function loadWebhooks(client) {
     Object.keys(process.webhookstoload).forEach(async (w) => {
         try {
-            process.webhook[w] = await client.fetchWebhook(process.webhook[w])
+            if (process.webhook == undefined) { process.webhook = {} }
+            process.webhook[w] = await client.fetchWebhook(process.webhookstoload[w])
         }
         catch (err) {
             // Webhook is invalid. Delete it. We'll catch issues later. 
-            delete process.webhook[w];
+            console.log(err)
         }
     })
 }

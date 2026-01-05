@@ -5,7 +5,7 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage, gagtypesset } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage, gagtypesset, modifymessage } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
@@ -16,7 +16,7 @@ const { updateArousalValues } = require('./functions/vibefunctions.js');
 const { backupsAreAnnoying, saveFiles } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
-const { knownServer, setGlobalCommands } = require('./functions/configfunctions.js');
+const { knownServer, setGlobalCommands, loadWebhooks } = require('./functions/configfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -152,6 +152,9 @@ client.on("clientReady", async () => {
 
         // Load the /config function globally, as we can handle that whereever. 
         setGlobalCommands(client);
+
+        // Load webhooks
+        loadWebhooks(client);
     }
     catch (err) {
         console.log(err)
@@ -163,16 +166,27 @@ client.on("clientReady", async () => {
 client.on("messageCreate", async (msg) => {
     // This is called when a message is received.
     try {
-        console.log(`${(msg.channel.id != process.env.CHANNELID)}`)
+        if (msg.author.bot || msg.webhookId || msg.stickers?.first()) { return };
+        /*console.log(`${(msg.channel.id != process.env.CHANNELID)}`)
         console.log(`${msg.webhookId}`)
         console.log(`${msg.author.bot}`)
         console.log(`${msg.stickers?.first()}`)
-        console.log(`${msg.attachments?.first()}`)
+        console.log(`${msg.attachments?.first()}`)*/
+        let channelid = msg.channelId;
+        let thread = false;
+        if (msg.channel.isThread()) {
+            thread = true
+            channelid = msg.channel.parentId
+        }
+        if (process.webhook[channelid]) {
+            handleKeyFinding(msg);
+            modifymessage(msg, thread ? msg.channelId : null);
+        }
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
         //console.log(msg.member.displayAvatarURL())
         //console.log(msg.member.displayName)
-        handleKeyFinding(msg);
-        garbleMessage(msg.channel.isThread() ? msg.channelId : null, msg);
+        //handleKeyFinding(msg);
+        //garbleMessage(msg.channel.isThread() ? msg.channelId : null, msg);
     }
     catch (err) {
         console.log(err);

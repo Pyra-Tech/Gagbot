@@ -475,7 +475,7 @@ function stutterText(text, intensity, arousedtexts) {
         outtext = '';
         if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || (text.charAt(0) == "\n") || (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
             let stuttered = false;
-            console.log("a");console.log(text);console.log(intensity);
+            //console.log("a");console.log(text);console.log(intensity);
             if (Math.random() < intensity / 10) { // 2-20% to cause a stutter
                 let stuttertimes = Math.min(Math.max(Math.floor(Math.random() * 0.3 * intensity), 1), 8) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
                 for (let i = 0; i < stuttertimes; i++) {

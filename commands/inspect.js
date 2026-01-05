@@ -20,7 +20,6 @@ module.exports = {
         try {
             let inspectuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
             let headwearrestrictions = getHeadwearRestrictions(interaction.user.id)
-            console.log(headwearrestrictions);
             let inspectparts = [];
             let titletext = ``
             let outtext = ``
