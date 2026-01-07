@@ -101,6 +101,63 @@ const configoptions = {
             default: "disabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") } // if true, button is greyed out
         },
+        "arousaleffectpotency": {
+            name: "Arousal Effect Potency",
+            desc: "How much should arousal modify your speech?",
+            choices: [
+                {
+                    name: "Very Little",
+                    helptext: "*33% of base*",
+                    select_function: (userID) => { return false },
+                    value: 0.33,
+                    style: ButtonStyle.Secondary,
+                    uname: "ArousalEffect033"
+                },
+                {
+                    name: "Less",
+                    helptext: "*66% of base*",
+                    select_function: (userID) => { return false },
+                    value: 0.66,
+                    style: ButtonStyle.Secondary,
+                    uname: "ArousalEffect066"
+                },
+                {
+                    name: "Normal",
+                    helptext: "100% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.00,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect100"
+                },
+                {
+                    name: "More",
+                    helptext: "133% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.33,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect133"
+                },
+                {
+                    name: "Much More",
+                    helptext: "166% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.66,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect166"
+                },
+                {
+                    name: "Too Much...",
+                    helptext: "200% of base",
+                    select_function: (userID) => { return false },
+                    value: 2.00,
+                    style: ButtonStyle.Danger,
+                    uname: "ArousalEffect200"
+                },
+            ],
+            menutype: "choice",
+            default: 1.00,
+            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
+        },
         "blessed-luck": {
             name: "Blessed Luck",
             desc: "Should failed rolls from fumbling contribute to future rolls?",
@@ -125,7 +182,7 @@ const configoptions = {
             menutype: "choice",
             default: "enabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
-        }
+        },
     },
     "General": {
         "keygiving": {
@@ -454,8 +511,8 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                     .setButtonAccessory((button) =>
                         button.setCustomId(`config_pageopt_${menuset}_${k}`)
-                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name)
-                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name ?? "Undefined")
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style ?? ButtonStyle.Danger)
                             .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
                     )
                 pagecomponents.push(buttonsection)
