@@ -605,6 +605,30 @@ const texts_key = {
                 "USER_TAG has magically broken the cloned key for TARGET_TAG's chastity bra that VAR_C2 was holding!"
             ]
         }
+    },
+    swapitem: {
+        self: {
+            collar: [
+                `USER_TAG carefully undoes the strap on USER_THEIR VAR_C1, letting it fall in front of USER_THEM as USER_THEY swapUSER_S it to a VAR_C2!`
+            ],
+            chastitybelt: [
+                `USER_TAG puts the key in USER_THEIR VAR_C1. The locking mechanism opens, granting USER_THEM a brief moment of freedom before USER_THEY putUSER_S a VAR_C2 in the same place!`
+            ],
+            chastitybra: [
+                `USER_TAG unlocks the little lock on the front of USER_THEIR VAR_C2. USER_THEIR_CAP chest is free for a brief moment before it is bound again with a VAR_C2!`
+            ]
+        },
+        other: {
+            collar: [
+                `USER_TAG carefully undoes the strap on TARGET_TAG's VAR_C1, letting it fall in front of TARGET_THEM as USER_THEY swapUSER_S it to a VAR_C2!`
+            ],
+            chastitybelt: [
+                `USER_TAG puts the key in TARGET_TAG's VAR_C1. The locking mechanism opens, granting TARGET_THEM a brief moment of freedom before USER_THEY putUSER_S a VAR_C2 on TARGET_THEM in the same place!`
+            ],
+            chastitybra: [
+                `USER_TAG unlocks the little lock on the front of TARGET_TAG VAR_C2. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`
+            ]
+        }
     }
 }
 
