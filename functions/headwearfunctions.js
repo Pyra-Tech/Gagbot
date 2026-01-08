@@ -2,19 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const headweartypes = [
-    { name: "Latex Hood", value: "hood_latex", },
-    { name: "Leather Hood", value: "hood_leather", },
-    { name: "Maid Hood", value: "hood_maid", },
+
+    // Hoods
+    { name: "Latex Hood (no eyes)", value: "hood_latexfull", blockinspect: true, blockemote: true },
+    { name: "Leather Hood (no eyes)", value: "hood_leatherfull", blockinspect: true, blockemote: true },
+    { name: "Maid Hood (no eyes)", value: "hood_maidfull", blockinspect: true, blockemote: true },
+    { name: "Hardlight Hood (no eyes)", value: "hood_hardlightfull", blockinspect: true, blockemote: true },
+
+    // Blindfolds
     { name: "Leather Blindfold", value: "blindfold_leather", blockinspect: true },
     { name: "Blackout Lenses", value: "blindfold_blackout", blockinspect: true },
     { name: "Cloth Blindfold", value: "blindfold_cloth", blockinspect: true },
     { name: "High-Security Blindfold", value: "blindfold_highsec", blockinspect: true },
     { name: "Latex Blindfold", value: "blindfold_latex", blockinspect: true },
     { name: "Sleep Mask", value: "blindfold_sleep", blockinspect: true },
-    { name: "Leather Head Harness", value: "headharness_leather" },
-    { name: "Latex Hood (no eyes)", value: "hood_latexfull", blockinspect: true, blockemote: true },
-    { name: "Hardlight Hood", value: "hood_hardlight", },
-    { name: "Hardlight Hood (no eyes)", value: "hood_hardlightfull", blockinspect: true, blockemote: true },
+    
+    //Kigus
     { name: "Kigu Mask (😀)", value: "mask_kigu_😀", blockinspect: true, blockemote: true, replaceemote: "😀" },
     { name: "Kigu Mask (🥰)", value: "mask_kigu_🥰", blockinspect: true, blockemote: true, replaceemote: "🥰" },
     { name: "Kigu Mask (Yesh)", value: "mask_kigu_Yesh", blockinspect: true, blockemote: true, replaceemote: "<:Yesh:1448775211838341251>" },
@@ -25,6 +28,8 @@ const headweartypes = [
     { name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "<:happymaid:1244055447900655666>" },
     { name: "Kigu Mask (Shy)", value: "mask_kigu_shy", blockinspect: true, blockemote: true, replaceemote: "<:ShyUmmm:1457443930131009641>" },
     { name: "Kigu Mask (Cursed Epicenter)", value: "mask_kigu_epicenter", blockinspect: true, blockemote: true, replaceemote: "<:EpicenterCursed:1167683745428549632>" },
+
+    // Masks
     { name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
     { name: "Kitty Mask", value: "mask_kitty", blockinspect: true, blockemote: true, replaceemote: "🐱" },
     { name: "Bunny Mask", value: "mask_bunny", blockinspect: true, blockemote: true, replaceemote: "🐰" },
@@ -33,43 +38,15 @@ const headweartypes = [
     { name: "Frog Mask", value: "mask_frog", blockinspect: true, blockemote: true, replaceemote: "🐸" },
     { name: "Turtle Mask", value: "mask_turtle", blockinspect: true, blockemote: true, replaceemote: "🐢" },
     { name: "Fox Mask", value: "mask_fox", blockinspect: true, blockemote: true, replaceemote: "🦊" },
+
+    // Visors and Headsets
     { name: "Doll Visor", value: "doll_visor", blockemote: true },                                      // Doll Visor removes emotes only.
-    { name: "Doll Visor (opaque)", value: "doll_visor_blind", blockinspect: true, blockemote: true },   // Blindfolding Doll Visor
-    { name: "Doll Visor (transparent)", value: "doll_visor_trans", },                                   // Cosmetic Item
+    { name: "Doll Visor (Opaque)", value: "doll_visor_blind", blockinspect: true, blockemote: true },   // Blindfolding Doll Visor
+    { name: "Doll Visor (Transparent)", value: "doll_visor_trans", },                                   // Cosmetic Item
     { name: "VR Headset", value: "vr_visor", blockinspect: true },
-    { name: "Protective Eye Goggles", value: "eye_goggles", },
+
+    // Misc
     { name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
-    { name: "Witchy Glasses", value: "glasses_witchy" },
-    { name: "Full Frame Glasses", value: "glasses_fullframe" },
-    { name: "Nostalgia Glasses", value: "glasses_nostalgia" },
-    { name: "Half-rimmed Glasses", value: "glasses_halfrimmed" },
-    { name: "Librarian's Spectacles", value: "glasses_librarian" },
-    { name: "Moonveiled Glasses", value: "glasses_moon" },
-    { name: "Starry Night Glasses", value: "glasses_stars" },
-    { name: "Ridiculously Big Witch Hat", value: "witchhat_big" },
-    { name: "Witch Hat", value: "witchhat_normal" },
-    { name: "Princess Crown", value: "princess_crown" },
-    { name: "Sunless Tiara", value: "sunless_crown" },
-    { name: "Lunar Crescent Tiara", value: "lunar_crown" },
-    { name: "Twilight Crown", value: "twilight_crown" },
-    { name: "Moon Phase Headchain", value: "moonphase_headchain" },
-    { name: "Elemental Headchain", value: "elemental_headchain" },
-    { name: "Starveiled Headdress", value: "starveiled_headchain" },
-    { name: "Faceveil", value: "faceveil" },
-    { name: "Maid Headdress", value: "maid_headchain" },
-    { name: "Demon Horns", value: "demon_horns" },
-    { name: "Demon Horns (Sheep)", value: "demon_horns_sheep" },
-    { name: "Cat Ears", value: "ears_cat" },
-    { name: "Futuristic Cat Ears", value: "ears_cat_future" },
-    { name: "Bunny Ears", value: "ears_bunny" },
-    { name: "Floppy Bunny Ears", value: "ears_bunny_floppy" },
-    { name: "Dog Ears", value: "ears_dog" },
-    { name: "Fox Ears", value: "ears_fox" },
-    { name: "Hairpins", value: "Hairpins" },
-    { name: "Hairstick", value: "hairstick" },
-    { name: "Half Faceveil", value: "faceveil_half" },
-    { name: "Sunglasses", value: "sunglasses" },
-    { name: "Vampire Fangs", value: "fangs_vampire" },
 ]
 
 const DOLLVISORS = ["doll_visor", "doll_visor_blind"]

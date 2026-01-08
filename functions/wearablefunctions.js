@@ -2,14 +2,45 @@ const fs = require('fs');
 const path = require('path');
 
 let wearabletypes = [
-    // Tails and Misc Body Parts
-    { name: "Tail", value: "tail", colorable: true, uniqueColors: ["Cat", "Dog", "Bunny", "Sheep", "Demon", "Fox", "Pony", "Lizard", "Dragon"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Wings", value: "wings", colorable: true, uniqueColors: ["Cat", "Dog", "Demon", "Angel", "Imp", "Succubus", "Bat", "Butterfly", "Dragon", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    // Aesthetic Body Parts
+    { name: "Ears", value: "ears", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Tail", value: "tail", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon", "Lamia"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Wings", value: "wings", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Horns", value: "horns", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Womb Tattoo", value: "wombtat", colorable: true, uniqueColors: ["Glowing", "Starry", "Shimmering", "Cyber"] },
     { name: "Vine Hair", value: "hair_vine", colorable: true, uniqueColors: ["Flowery", "Verdant"] },
+    { name: "Vampire Fangs", value: "fangs_vampire" },
+    { name: "Halo", value: "halo", colorable: true, uniqueColors: ["Angelic", "Ghostly", "Ethereal", "Holy Light", "Cyber"] },
 
-    // Headwear - Relocate to Masks?
+    // Hats
     { name: "Stylish Hat", value: "stylish_hat", colorable: true },
+    { name: "Top Hat", value: "top_hat", colorable: true },
+    { name: "Fedora", value: "fedora", colorable: true },
+    { name: "Cowboy Hat", value: "cowboy_hat", colorable: true },
+    { name: "Fascinator", value: "fascinator", colorable: true },
+    { name: "Witch Hat", value: "witchhat_normal", colorable: true, uniqueColors: ["Flowery", "Ridiculously Big", "Starry",] },
+    { name: "Crown", value: "crown", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Princess", "Twilight", "Mithril", "Crystal", "Flower", "Laurel"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Tiara", value: "tiara", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Princess", "Lunar Crescent", "Sunless", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+
+    // Glasses and Goggles
+    { name: "Glasses", value: "glasses", colorable: true, uniqueColors: ["Witchy", "Round", "Starry Night", "Full Frame", "Half-Rimmed", "Open-Framed", "Moonveil"] },
+    { name: "Sunglasses", value: "sunglasses", colorable: true, uniqueColors: ["Mirrored", "Aviator", "Heart Shaped", "Kamina"] },
+    { name: "Goggles", value: "goggles", colorable: true, uniqueColors: ["Steampunk", "Alchemist", "Ski", "Lab"] },
+    { name: "Librarian's Spectacles", value: "glasses_librarian" },
+    { name: "Monocle", value: "monocle" },
+
+    // Misc Head, Face and Hair Accessories
+    { name: "Headchain", value: "headchain", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Mithril", "Lunar Crescent", "Starveiled", "Elemental", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Veil", value: "veil", colorable: true, uniqueColors: ["Stary", "Sheer", "Silk", "Half-Face"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Hood", value: "hood", colorable: true, uniqueColors: ["Leather", "Latex", "Maid", "Hardlight", "Medieval"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Hairpins", value: "Hairpins", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Solar", "Lunar", "Crystal", "Obsidian", "Jade", "Amethyst", "Ruby", "Emerald", "Sapphire"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Hairstick", value: "hairstick" },
+    { name: "Maid Headdress", value: "maid_headdress" },
+    { name: "Kitsune Half-Mask", value: "mask_kitsune" },
+    { name: "Domino Mask", value: "mask_domino" },
+    { name: "Eyeshadow", value: "eyeshadow", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
+    { name: "Lipstick", value: "lipstick", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
+    { name: "Kissmark", value: "kissmark", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
 
     // Bunnygirls
     { name: "Playbunny Outfit", value: "outfit_playbunny" },
@@ -28,6 +59,7 @@ let wearabletypes = [
     { name: "Leather Pony Boots", value: "ponyboots_leather", colorable: true },
     { name: "Leather Thigh Belts", value: "thighbelts_leather", colorable: true },
     { name: "Leather Pony Tack", value: "ponytack_leather", colorable: true },
+    { name: "Leather Head Harness", value: "headharness_leather" },
     { name: "Blinkers", value: "blinkers_leather", colorable: true },
     { name: "Reins", value: "reins_leather", colorable: true },
 
@@ -74,7 +106,7 @@ let wearabletypes = [
     { name: "Fashionable Suit", value: "suit_fashionable", colorable: true },
     { name: "Wool Suit", value: "suit_wool", colorable: true },
     { name: "Sukumizu", value: "sukumizu", colorable: true },
-    { name: "Bikini", value: "bikini", colorable: true, uniqueColors: ["Cow Print", "Skimpy", "Frilly", "Tiger Print"] },
+    { name: "Bikini", value: "bikini", colorable: true, uniqueColors: ["Cow Print", "Skimpy", "Frilly", "Tiger Print", "Leaf"] },
     { name: "Latex Bikini", value: "bikini_latex", colorable: true, uniqueColors: ["Starry", "Shadow", "Cow Print", "Tiger Print"] },
     { name: "Holy Knight Armor", value: "armor_holyknight" },
     { name: "Dragonscale Bikini", value: "dragonscale_bikini" },
@@ -176,7 +208,7 @@ let wearabletypes = [
     { name: "Waist Cincher", value: "waistcincher", colorable: true },
     { name: "Latex Waist Cincher", value: "waistcincher_latex", colorable: true },
     { name: "Nipple Pasties", value: "nipple_pasties", colorable: true },
-    { name: "Stockings", value: "stockings", colorable: true },
+    { name: "Stockings", value: "stockings", colorable: true, uniqueColors: ["Checked"] },
     { name: "Pantyhose", value: "pantyhose", colorable: true },
     { name: "Latex Stockings", value: "stockings_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Latex Pantyhose", value: "pantyhose_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
@@ -209,7 +241,7 @@ let wearabletypes = [
     { name: "Ballet Shoes", value: "ballet_shoes", colorable: true },
     { name: "Sandals", value: "sandals", colorable: true },
     { name: "Strappy Sandals", value: "sandals_strappy", colorable: true },
-    { name: "Toenail Polish", value: "polish_toenails", colorable: true, uniqueColors: ["Color-changing", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
+    { name: "Toenail Polish", value: "polish_toenails", colorable: true, uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
     { name: "Ankle Boots", value: "ankleboots", colorable: true },
     { name: "Cowboy Boots", value: "cowboyboots", colorable: true },
     { name: "Knee High Boots", value: "kneehighboots", colorable: true },
@@ -217,7 +249,7 @@ let wearabletypes = [
     { name: "Platform Heels", value: "platformheels", colorable: true },
     { name: "Pumps", value: "pumps", colorable: true },
     { name: "Anklets", value: "anklets", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Greaves", value: "greaves", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Greaves", value: "greaves", colorable: true, uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
     // Gloves and Armwear
     { name: "Opera Gloves", value: "gloves_opera", colorable: true, uniqueColors: ["Gothic"] },
@@ -233,11 +265,11 @@ let wearabletypes = [
     { name: "Detached Latex Sleeves", value: "sleeves_detached_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
     { name: "Long Detached Sleeves", value: "sleeves_longdetatched", colorable: true, uniqueColors: ["Gothic"] },
     { name: "Long Detached Latex Sleeves", value: "sleeves_longdetached_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
-    { name: "Fingernail Polish", value: "polish_fingernails", colorable: true, uniqueColors: ["Color-changing", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
+    { name: "Fingernail Polish", value: "polish_fingernails", colorable: true, uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
     { name: "Wristcuff", value: "wristcuff", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Bracelet", value: "bracelet", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Armbands", value: "armbands", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Gauntlets", value: "gauntlet", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Gauntlets", value: "gauntlet", colorable: true, uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
     //Misc Accessories
     { name: "Backpack", value: "backpack" },
