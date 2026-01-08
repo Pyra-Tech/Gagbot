@@ -286,10 +286,10 @@ let wearabletypes = [
     { name: "Necklace", value: "necklace", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Bowtie", value: "bowtie", colorable: true },
     { name: "Tie", value: "tie", colorable: true },
-    { name: "Hoshi no Tama", value: "tama", colorable: true },
+    { name: "Hoshi no Tama", value: "tama" },
     { name: "Silk Belt", value: "belt_silk", colorable: true },
     { name: "Leather Belt", value: "belt_leather", colorable: true },
-    { name: "Leather Bandolier", value: "belt_leather", colorable: true },
+    { name: "Leather Bandolier", value: "belt_leather"},
 ]
 
 // Each colorable entry above will have a copy of the following added
