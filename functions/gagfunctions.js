@@ -405,7 +405,6 @@ function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {
 
 async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     // Handle Dollification
-    console.log(outtextin)
     let modified = modifiedmessage
     let outtext = outtextin
     let dollIDDisplay;
