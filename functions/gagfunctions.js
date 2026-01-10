@@ -407,11 +407,11 @@ function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let outtext = outtextin
     let dollIDDisplay;
     if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
-        modifiedmessage = true;
+        modified = true;
         dollDigits      = process.dolloverrides[msg.author.id] ? process.dolloverrides[msg.author.id].id : `${msg.author.id}`.slice(-4)
         // Include the tag - Otherwise, there is NO WAY to tell who it is.
         let dollIDShort     = "DOLL-" + dollDigits
-        let dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
+        let dollID          = "DOLL-" + (dollDigits.length >= 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
         let dollIDColor     = process.dolloverrides[msg.author.id]?.color ? process.dolloverrides[msg.author.id]?.color : "34"
         // Display names max 32 chars.
         let truncateDisplay = ""
@@ -421,7 +421,7 @@ function textGarbleDOLL(msg, modifiedmessage, outtextin) {
             console.error(err.message);     // Following is not tested but SHOULD work.
             truncateDisplay = msg.author.displayName.slice(0,16) + (msg.author.displayName.length > 16 ? "..." : "")
         }
-        dollIDDisplay       = dollIDShort + ` (@${truncateDisplay})`
+        dollIDDisplay       = dollIDShort + ` (${truncateDisplay})`
 
         let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
 

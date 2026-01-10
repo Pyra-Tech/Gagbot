@@ -277,6 +277,26 @@ const configoptions = {
             disabled: () => { return false }
         }
     },
+    /*"Misc": {
+        "dollvisorname": {
+            name: "Doll Visor Name",
+            desc: "Set a custom name for Doll Visor name tags.",
+            descmodal: "What should the Doll Visor change your tag to? Standard format is DOLL-####.",
+            choices: [
+                {
+                    name: "Set Name",
+                    helptext: "Doll Visor name is set to ",
+                    select_function: (userID) => { return false },
+                    value: "SETDEFAULT",
+                    style: ButtonStyle.Secondary,
+                    uname: "RemoveBondagePrompt"
+                },
+            ],
+            menutype: "choice_textentry",
+            default: "SETDEFAULT",
+            disabled: () => { return false }
+        }
+    },*/
     "Server": {
         "server-allowgags": {
             name: "Allow Gags",
@@ -1115,6 +1135,17 @@ function loadWebhooks(client) {
             console.log(err)
         }
     })
+}
+
+// Recieves an interaction, with desctext and the optionval referencing 
+// the option name to pass into setOption. We will want to store this
+// interaction along with 
+function generateTextEntryModal(interaction, desctext, optionval) {
+    if (process.recentinteraction == undefined) { process.recentinteraction = {}}
+    process.recentinteraction[interaction.user.id] = {
+        interaction: interaction,
+        timestamp: performance.now() // If the interaction was at least 15 minutes ago (900000 ms), invalidate it. 
+    }
 }
 
 exports.generateConfigModal = generateConfigModal;
