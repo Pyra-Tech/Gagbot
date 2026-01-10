@@ -444,7 +444,12 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 }
             }
             dollID = `${dollIDOverride}`
-            dollIDDisplay = `${dollIDOverride}${additionalpart}`;
+            if (dollIDOverride.includes(msg.author.displayName)) {
+                dollIDDisplay = `${dollIDOverride}`
+            }
+            else {
+                dollIDDisplay = `${dollIDOverride}${additionalpart}`;
+            }
         }
         
         let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
