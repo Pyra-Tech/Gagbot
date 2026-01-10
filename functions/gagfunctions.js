@@ -434,17 +434,17 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
             let additionalpart = ``;
             if (dollIDOverride.length < 25) {
                 let additionallength = 32 - dollIDOverride.length; // max length of name
-                if ((additionallength - 3) > msg.author.displayName.length) {
-                    additionalpart = ` (${msg.author.displayName})`
+                if ((additionallength - 3) > msg.member.displayName.length) {
+                    additionalpart = ` (${msg.member.displayName})`
                 }
                 else {
                     // Get the length of their name, minus 6 for additional characters to fit into ...
-                    let reducedname = msg.author.displayName.slice(0, Math.min((additionallength - 6), msg.author.displayName.length))
+                    let reducedname = msg.member.displayName.slice(0, Math.min((additionallength - 6), msg.member.displayName.length))
                     additionalpart = ` (${reducedname}...)`
                 }
             }
             dollID = `${dollIDOverride}`
-            if (dollIDOverride.includes(msg.author.displayName)) {
+            if (dollIDOverride.includes(msg.member.displayName)) {
                 dollIDDisplay = `${dollIDOverride}`
             }
             else {
