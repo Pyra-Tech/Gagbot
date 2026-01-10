@@ -270,11 +270,7 @@ let wearabletypes = [
     { name: "Big Cute Ribbon", value: "bigcute_ribbon", colorable: true },
     { name: "Feather Boa", value: "feather_boa", colorable: true },
     { name: "Bridal Wristlets", value: "wristlets_bridal", colorable: true, uniqueColors: ["Gothic"] },
-<<<<<<< HEAD
     { name: "Choker", value: "choker", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Tattoo"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-=======
-    { name: "Choker", value: "choker", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
->>>>>>> aa4c329107941940efa4d5eca3c40e2213207dba
     { name: "Leather Choker", value: "choker_leather", colorable: true },
     { name: "Cloak", value: "cloak", colorable: true, uniqueColors: ["Witch", "Rogue", "Vampire", "Hooded", "Elven"] },
     { name: "Latex Cloak", value: "cloak_latex", colorable: true, uniqueColors: ["Witch", "Rogue", "Vampire", "Hooded"] },
