@@ -87,6 +87,7 @@ let wearabletypes = [
     { name: "Leather Legbinder", value: "legbinder_leather", colorable: true },
     { name: "Latex Hobble Skirt", value: "hobble_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Leather Hobble Skirt", value: "hobble_leather", colorable: true },
+    { name: "Rope Karada", value: "rope_karada", colorable: true },
     { name: "Rope Ties", value: "rope_ties", colorable: true },
     { name: "Shock Module", value: "shock_module" },
     { name: "Leash", value: "leash", colorable: true, uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic"] },
