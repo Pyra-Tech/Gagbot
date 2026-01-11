@@ -347,6 +347,31 @@ const configoptions = {
             menutype: "choice_dollcolor",
             default: 34,
             disabled: () => { return false }
+        },
+        "dollforcedit": {
+            name: "Doll Visor Forced Pronouns",
+            desc: "Should the Doll Visor force you to use it/its pronouns when worn?",
+            choices: [
+                {
+                    name: "No",
+                    helptext: "*Doll Visor will not affect pronouns*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "DollVisorForcedNo"
+                },
+                {
+                    name: "Yes",
+                    helptext: "You will use it/its pronouns while wearing a visor",
+                    select_function: (userID) => { return false },
+                    value: "enabled",
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisorForced"
+                },
+            ],
+            menutype: "choice",
+            default: "enabled",
+            disabled: (userID) => { return false }
         }
     },
     "Server": {
