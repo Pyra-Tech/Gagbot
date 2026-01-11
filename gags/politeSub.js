@@ -38,7 +38,6 @@ const garbleText = (text) => {
         }
     })
 
-
     return textout;
 }
 
