@@ -76,7 +76,7 @@ let wearabletypes = [
     { name: "Doll Barcode", value: "cyberdoll_barcode" },
 
     //Faux Bondage and Non Restrictive Gear
-    { name: "Harness", value: "harness_leather", colorable: true, uniqueColors: ["Vine", "Leather", "Latex", "Leather", "Rubber"]  },
+    { name: "Harness", value: "harness_leather", colorable: true, uniqueColors: ["Vine", "Leather", "Latex", "Leather", "Rubber", "Shibari"]  },
     { name: "Bondage Wrist Cuffs", value: "cuffswrist_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
     { name: "Latex Wrist Cuffs", value: "cuffswrist_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Bondage Ankle Cuffs", value: "cuffsankle_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
@@ -87,7 +87,6 @@ let wearabletypes = [
     { name: "Leather Legbinder", value: "legbinder_leather", colorable: true },
     { name: "Latex Hobble Skirt", value: "hobble_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Leather Hobble Skirt", value: "hobble_leather", colorable: true },
-    { name: "Rope Karada", value: "rope_karada", colorable: true },
     { name: "Rope Ties", value: "rope_ties", colorable: true },
     { name: "Shock Module", value: "shock_module" },
     { name: "Leash", value: "leash", colorable: true, uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic"] },
