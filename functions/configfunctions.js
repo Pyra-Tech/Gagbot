@@ -630,6 +630,64 @@ const configoptions = {
             menutype: "choice_bot",
             default: "Disabled",
             disabled: () => { return false }
+        },
+        "bot-timetickrate": {
+            name: "Time Tick Rate",
+            desc: "How fast to calculate arousal and timelocks?",
+            choices: [
+                {
+                    name: "200ms",
+                    helptext: "***Every 200 milliseconds (may lag)***",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 200,
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "500ms",
+                    helptext: "***Every 500 milliseconds (may lag)***",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 500,
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "1 Second",
+                    helptext: "*Every second (may lag)*",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 1000,
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "2 Seconds",
+                    helptext: "Every 2 seconds",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 2000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "5 Seconds",
+                    helptext: "Every 5 seconds",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 5000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "10 Seconds",
+                    helptext: "Every 10 seconds",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 10000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "30 Seconds",
+                    helptext: "Every 30 seconds",
+                    select_function: () => { return false }, // We will need to update tick rate with this
+                    value: 30000,
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice_bot",
+            default: 2000,
+            disabled: () => { return false }
         }
     }
 } 

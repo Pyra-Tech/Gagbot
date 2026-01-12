@@ -13,10 +13,10 @@ const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js');
 const { updateArousalValues } = require('./functions/vibefunctions.js');
-const { backupsAreAnnoying, saveFiles } = require('./functions/timefunctions.js');
+const { backupsAreAnnoying, saveFiles, processUnlockTimes } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
-const { knownServer, setGlobalCommands, loadWebhooks } = require('./functions/configfunctions.js');
+const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -163,8 +163,12 @@ client.on("clientReady", async () => {
     catch (err) {
         console.log(err)
     }
-    restartChastityTimers(client);
-    setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
+    process.timetick = setInterval(() => {
+        updateArousalValues();
+        processUnlockTimes(client);
+    }, getBotOption("bot-timetickrate") ?? 6000)
+    //restartChastityTimers(client);
+    // setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
 })
 
 client.on("messageCreate", async (msg) => {

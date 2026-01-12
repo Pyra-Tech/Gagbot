@@ -35,6 +35,7 @@ const heavytypes = [
     { name: "Piddlefours", value: "petsuit_piddlefours", denialCoefficient: 2 },
     { name: "Leather Petsuit", value: "petsuit_leather", denialCoefficient: 2.5 },
     { name: "Alchemical Petsuit", value: "petsuit_latex", denialCoefficient: 2.5 },
+    { name: "Autotape Petsuit", value: "petsuit_tape", denialCoefficient: 2.5 },
     { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex", denialCoefficient: 3 },
     { name: "Bast Petsuit", value: "petsuit_bast", denialCoefficient: 3 },
     { name: "Nevermere Punishment Suit", value: "petsuit_nevermere", denialCoefficient: 3.5 },
@@ -99,6 +100,7 @@ const heavytypes = [
     { name: "Shadow Hands", value: "shadowhands", denialCoefficient: 1.5 },
     { name: "Entangling Vines", value: "entangling_vines", denialCoefficient: 1.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
+    { name: "Sticky Glue", value: "stickyglue_bondage", denialCoefficient: 5 },
 ];
 
 

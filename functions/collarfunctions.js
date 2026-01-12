@@ -180,6 +180,23 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
     return accessval;
 }
 
+// Returns UNIX timestring of the wearer's unlock time. 
+// second flag to true to return a Discord UNIX timestring instead. 
+const getCollarTimelock = (user, UNIXTimestring) => {
+    if (process.collar == undefined) { process.collar = {} }
+    if (!UNIXTimestring) {
+        return process.collar[user]?.unlockTime
+    }
+    else {
+        if (process.collar[user]?.unlockTime) {
+            return `<t:${Math.floor(process.collar[user]?.unlockTime / 1000)}:f>`
+        }
+        else {
+            return null
+        }
+    }
+}
+
 // Called to prompt the wearer if it is okay to clone a key.
 async function promptCloneCollarKey(user, target, clonekeyholder) {
     return new Promise(async (res,rej) => {
@@ -408,3 +425,5 @@ exports.revokeCollarKey = revokeCollarKey;
 exports.getClonedCollarKey = getClonedCollarKey;
 exports.getClonedCollarKeysOwned = getClonedCollarKeysOwned;
 exports.getOtherKeysCollar = getOtherKeysCollar;
+
+exports.getCollarTimelock = getCollarTimelock;
