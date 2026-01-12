@@ -7,6 +7,7 @@ const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.j
 const { getVibeEquivalent } = require('./vibefunctions.js');
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js')
 const { getOption } = require(`./../functions/configfunctions.js`);
+const { getText } = require(`./../functions/textfunctions.js`)
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 // Abomination of a regex for corset compatibility.
@@ -15,11 +16,11 @@ const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*u
 
 const DOLLPROTOCOL = [
     // Banned words
-    {"regex": /(?<=(^|[^A-Zaz]))i(?=($|[^A-Zaz]))/gi,           "value": 1, "redact": false, "string": "I",},   // "I"
-    {"regex": /(?<=(^|[^A-Zaz]))i'm(?=($|[^A-Zaz]))/gi,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
-    {"regex": /(?<=(^|[^A-Zaz]))my(?=($|[^A-Zaz]))/gi,          "value": 1, "redact": false, "string": "My",},   // "my"
-    {"regex": /(?<=(^|[^A-Zaz]))me(?=($|[^A-Zaz]))/gi,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
-    {"regex": /(?<=(^|[^A-Zaz]))myself(?=($|[^A-Zaz]))/gi,      "value": 1, "redact": false, "string": "Myself",},   // "Me"
+    {"regex": /(?<![\u0005A-Za-z])i(?![A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
+    {"regex": /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
+    {"regex": /(?<![\u0005A-Za-z])my(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "My",},   // "my"
+    {"regex": /(?<![\u0005A-Za-z])me(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
+    {"regex": /(?<![\u0005A-Za-z])myself(?![A-Za-z])/i,      "value": 1, "redact": false, "string": "Myself",},   // "Me"
     // Redacted
     {"regex": /(c.{0,10}a.{0,10}t.{0,10}h.{0,10}e.{0,10}r.{0,10}i.{0,10}n.{0,10}e.{0,10})? ?w.{0,10}i.{0,10}l.{0,10}l.{0,10}o.{0,10}w.{0,10}s/gi, "value": 999, "redact": true },  // SHUT
 ]
@@ -271,10 +272,11 @@ const modifymessage = async (msg, threadId) => {
         modifiedmessage = dolltreturned.modifiedmessage;
         outtext = dolltreturned.outtext;
         let dollIDDisplay = dolltreturned.dollIDDisplay;
+        let dollProtocol = dolltreturned.dollProtocolViolation ? true : false
 
         // Finally, send it if we modified the message.
         if (modifiedmessage) { 
-            await sendTheMessage(msg, outtext, dollIDDisplay, threadId);
+            await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol);
         }
     }
     catch (err) {
@@ -424,6 +426,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
     let dollProtocol = (getOption(msg.author.id, "dollforcedprotocol") == "enabled")
     let dollProtocolViolations = []
+    let dollProtocolViolated = false;
     if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
         modified = true;
         // If dollIDOverride is not specified or the override is exactly a string of numbers...
@@ -483,7 +486,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
                 console.log(dollMessageParts[i].text)
                 let replacebolds = Array.from(dollMessageParts[i].text.matchAll(/((\*\*)|(\_\_))[^(\*|\_)]+((\*\*)|(\_\_))/g)).map((a) => a[0])
-                console.log(replacebolds)
+                //console.log(replacebolds)
                 replacebolds.forEach((b) => {
                     let replaceb = `[1m${b.slice(2,-2)}[0m` // Capture the part within the bolding
                     dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
@@ -492,22 +495,27 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 // Loop on protocols
                 if(dollProtocol){
                     DOLLPROTOCOL.forEach((r) => {
-                        let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
-                        if(replaceProtocol.length > 0){dollProtocolViolations.push(
-                            r.redact ? "REDACTED" : r.string
-                        )}
-                        replaceProtocol.forEach((b) => {
-                            let replacep = r.redact ? `[1;40;30m[REDACTED][0m` : `[0;31m[${b}][0m`
-                            dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replacep)
-                        })
+                        //let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
+                        let replaceProtocol = dollMessageParts[i].text.match(r.regex)
+                        if(replaceProtocol){
+                            dollProtocolViolations.push(r.redact ? "REDACTED" : r.string)
+
+                            while(dollMessageParts[i].text.match(r.regex)){
+                                console.log(dollMessageParts[i].text)
+                                console.log(dollMessageParts[i].text.match(r.regex))
+                                dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex,r.redact ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`)
+                            }
+                        }
                     })
                 }
 
 
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}`
+                dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(``, "")
 
                 // Log protocol violations
                 if(dollProtocolViolations.length > 0){
+                    dollProtocolViolated = true;
                     dollMessageParts[i].text += `\n[1;31mERROR [0;31m- Protocol Violation!`
                     //dollProtocolViolations.forEach((v) => {dollMessageParts[i].text += `"${v}", `})
                 }
@@ -524,10 +532,10 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         // Merge any code blocks with nothing but whitespace in between.
         outtext = outtext.replaceAll(/```\s+```ansi/g,"")
     }
-    return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay }
+    return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay, dollProtocolViolation: dollProtocolViolated }
 }
 
-async function sendTheMessage(msg, outtext, dollIDDisplay, threadID) {
+async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtocol) {
     try {
         // If this is a reply, we want to create a reply in-line because webhooks can't reply. 
         if (msg.type == "19") { 
@@ -608,7 +616,24 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID) {
                 // Cleanup after sending. 
                 msg.delete().then(() => {
                     // If the user violates Doll Protocol, do STUFF
-                    msg.channel.send("Meow");
+                    if(dollProtocol){
+                        // Gag the doll for being bad.
+                        assignGag(msg.author.id, "ball", 5, msg.author.id)
+
+                        // Send reply
+                        // msg.channel.send("USER has violated their Doll Protocol! Their Doll Visor installs a Ball Gag upon them.");
+
+                        // Build data tree for finding string.
+                        let data = {
+                            textarray: "texts_dollprotocol",
+                            textdata: {
+                                interactionuser: msg.author,
+                                targetuser: msg.author,
+                            }
+                        }
+                        data.levelONE = true;
+                        msg.channel.send(getText(data))
+                    }
                 })
             })
         }
