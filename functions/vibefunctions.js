@@ -10,7 +10,7 @@ const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, But
 const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 const { arousedtexts } = require('../vibes/aroused/aroused_texts.js');
 const { config } = require('./configfunctions.js');
-const { getOption } = require(`./configfunctions.js`);
+const { getOption, getBotOption } = require(`./configfunctions.js`);
 
 const chastitytypes = [
     { name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15, minVibe: 2, minArousal: 1 },
@@ -1018,7 +1018,7 @@ function stutterText(msg,text, intensity, arousedtexts) {
 function updateArousalValues() {
     try {
         const now = Date.now();
-        const time = now * AROUSAL_STEP_SIZE_SCALING;
+        const time = now * (getBotOption("bot-timetickrate") / 60000);
         for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
         for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
         for (const user in process.arousal) {
@@ -1083,7 +1083,7 @@ function getArousalChangeDescription(user) {
   
   const arousal = process.arousal[user];
   if (!arousal) return null;
-  const lastChange = (arousal.arousal - arousal.prev) / AROUSAL_STEP_SIZE_SCALING;
+  const lastChange = (arousal.arousal - arousal.prev) / (getBotOption("bot-timetickrate") / 60000);
   if (Math.abs(lastChange) < 0.01) return null;
   // these numbers are mostly arbitrary
   if (lastChange < -2) return "and cooling off rapidly";
@@ -1110,8 +1110,8 @@ function clearArousal(user) {
 }
 
 function calcNextArousal(time, arousal, prev, growthCoefficient, decayCoefficient) {
-  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
-  const next = noDecay - AROUSAL_STEP_SIZE_SCALING * decayCoefficient * Math.max((arousal + prev / 2), 0.1);
+  const noDecay = arousal + (getBotOption("bot-timetickrate") / 60000) * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
+  const next = noDecay - (getBotOption("bot-timetickrate") / 60000) * decayCoefficient * Math.max((arousal + prev / 2), 0.1);
   return next;
 }
 

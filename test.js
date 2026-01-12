@@ -6,21 +6,25 @@ const { getTimestringForZip } = require("./functions/timefunctions");
 const env = require('dotenv')
 const nlp = require('compromise');
 const nlpSpeech = require('compromise-speech');
+const { getChastity } = require('./functions/vibefunctions.js');
 nlp.extend(nlpSpeech);
 
 env.config();
 
-let textinputs = [`compromise`, `Enraa`, `super`, `XD`, `lol`, `mostly`, `indication`]
-textinputs.forEach((t) => {
-    let tmodified = nlp(t)
-    tmodified.compute('syllables')
-    tmodified.terms().json().forEach((termdata) => {
-        console.log(`Syllables output for ${termdata.text}:`)
-        console.log(termdata.terms[0].syllables)
-    })
-})
+let chastityobject = {
+    keyholder:"483321153675591690",
+    timestamp: 1767811537052,
+    extraFrustration:0,
+    chastitytype:"belt_tungsten",
+    keyholderAfter: "483321153675591690",
+    unlockTime: 1769798985767,
+    access:1
+};
+let currnow = Date.now();
 
-
+console.log(chastityobject.unlockTime)
+console.log(currnow)
+console.log(chastityobject.unlockTime < currnow);
 
 /*
 const client = new discord.Client({

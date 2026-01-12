@@ -6,7 +6,9 @@ const { getConsent, handleConsent, timelockChastityModalnew } = require('./../fu
 const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
-const { setCommands, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require('../functions/configfunctions.js');
+const { setCommands, setBotOption, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require('../functions/configfunctions.js');
+const { updateArousalValues } = require('../functions/vibefunctions.js');
+const { processUnlockTimes } = require('../functions/timefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -60,6 +62,32 @@ module.exports = {
 				// After doing so, run the NEW option's select_function. 
 				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
 					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId)
+				}
+				
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "bpageopt") {
+				// Frankly I hate arrays for this but lets break it down. For servers this time.
+				// We retrieve all of the choices for the given configuration option, mapping their values.
+				// We then find the current value and then increment it, resetting to 0 when out of range.
+				// Then we assign it to setOption. This means that choices are chosen from top to bottom in a circle.
+				let optionschoice = configoptions[optionparts[2]][optionparts[3]].choices.map((c) => c.value);
+				let newindex = optionschoice.indexOf(getBotOption(optionparts[3])) + 1;
+				if (newindex >= optionschoice.length) { newindex = 0 }
+				setBotOption(optionparts[3], optionschoice[newindex])
+
+				// After doing so, run the NEW option's select_function. 
+				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
+					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId)
+				}
+
+				if (optionparts[3] == "bot-timetickrate") {
+					clearInterval(process.timetick);
+					process.timetick = setInterval(() => {
+						updateArousalValues();
+						processUnlockTimes(interaction.client);
+					}, getBotOption("bot-timetickrate") ?? 6000)
 				}
 				
 				// Finally, reprompt the user, now with the new choice set. 

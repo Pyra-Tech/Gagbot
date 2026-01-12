@@ -15,7 +15,9 @@ const garbleText = (text) => {
         "maitresse",
         "administrator",
         "mommy",
-        "daddy"
+        "daddy",
+        "mxtress",
+        "overseer"
     ]
 
     let silenttitles = [
@@ -28,6 +30,7 @@ const garbleText = (text) => {
         `\n*goes mute without an honorific*\n`,
         `\n*meeps but produces no audible words*\n`,
         `\n*casts eyes downward, like a good sub*\n`,
+        `\n*blushes and mumbles something*\n`
     ]
 
     let textout = silenttitles[Math.floor(Math.random() * silenttitles.length)]

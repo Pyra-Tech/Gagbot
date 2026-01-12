@@ -246,13 +246,13 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
 }
 
 const timelockChastityModal = (interaction, wearer) => {
-    const modal = new ModalBuilder().setCustomId(`chastitytimelock_${wearer.id}`).setTitle('Chastity Timelock');
+    const modal = new ModalBuilder().setCustomId(`timelock_${wearer.id}_chastitybelt`).setTitle('Chastity Belt Timelock');
 
     let restrictionWarningText = new TextDisplayBuilder()
     let warningText = interaction.user.id == wearer.id ? `# Timelock (Chastity Belt)
-This will lock your belt for a set period of time. Please configure your timelock below.
+This will lock your chastity belt for a set period of time. Please configure your timelock below.
 -# Once confirmed, you will have a final prompt before the timelock starts` : `# Timelock (Chastity Belt)
-This will lock ${wearer}'s belt for a set period of time. Please configure your timelock below.
+This will lock ${wearer}'s chastity belt for a set period of time. Please configure your timelock below.
 -# Once confirmed, you will have a final prompt before the timelock starts`
 
     restrictionWarningText.setContent(warningText)
@@ -270,35 +270,69 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
         .setMaxValues(1)
         .setRequired(false)
     
+    let accesswhileboundoptions = [
+        new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Everyone Else')
+                // Description of option
+                .setDescription(`Everyone except ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`} can vibe and corset ${(interaction.user.id == wearer.id) ? "you" : `${getPronouns(wearer.id, "object")}`}`)
+                // Value returned to you in modal submission
+                .setValue('access_others'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Keyholder Only')
+            // Description of option
+            .setDescription(`Only the keyholder can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}`}'s belt`)
+            // Value returned to you in modal submission
+            .setValue('access_kh'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Nobody')
+            // Description of option
+            .setDescription(`Nobody, not even you, can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} belt`)
+            // Value returned to you in modal submission
+            .setValue('access_no'),
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        accesswhileboundoptions.splice(1,1);
+    }*/
+
     const accesswhilebound = new StringSelectMenuBuilder()
         .setCustomId('accesswhilebound')
         .setPlaceholder('Belt Access')
         .setRequired(true)
         .setMinValues(1)
         .setMaxValues(1)
-        .addOptions(
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Everyone Else')
-                // Description of option
-                .setDescription('Everyone except the wearer can vibe and corset the wearer')
-                // Value returned to you in modal submission
-                .setValue('access_others'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Keyholder Only')
-                // Description of option
-                .setDescription('Only the non-wearer keyholder access the wearer\' belt')
-                // Value returned to you in modal submission
-                .setValue('access_kh'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Nobody')
-                // Description of option
-                .setDescription('Nobody, not even you, can access the wearer\' belt')
-                // Value returned to you in modal submission
-                .setValue('access_no'),
-        )
+        .addOptions(...accesswhileboundoptions)
+
+    let keyholderafteroptions = [
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Unlock')
+            // Description of option
+            .setDescription(`Unlocks ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} belt, letting it fall off`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_unlock'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Return')
+            // Description of option
+            .setDescription(`Returns the keys to ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`}`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_return'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('To Keyholder')
+            // Description of option
+            .setDescription('Returns keys to the keyholder')
+            // Value returned to you in modal submission
+            .setValue('keyholder_keyholder')
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        keyholderafteroptions.splice(2,1);
+    }*/
 
     const keyholderafter = new StringSelectMenuBuilder()
         .setCustomId('keyholderafter')
@@ -306,29 +340,7 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
         .setRequired(true)
         .setMinValues(1)
         .setMaxValues(1)
-        .addOptions(
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Unlock')
-                // Description of option
-                .setDescription('Unlocks the belt, letting it fall off')
-                // Value returned to you in modal submission
-                .setValue('keyholder_unlock'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Return')
-                // Description of option
-                .setDescription('Returns the keys to the wearer')
-                // Value returned to you in modal submission
-                .setValue('keyholder_return'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('To Keyholder')
-                // Description of option
-                .setDescription('Returns keys to the keyholder')
-                // Value returned to you in modal submission
-                .setValue('keyholder_keyholder'),
-        )
+        .addOptions(...keyholderafteroptions)
 
     const userselectlabel = new LabelBuilder()
         .setLabel(`Who should hold keys?`)
@@ -355,6 +367,311 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
 
     return modal;
 }
+
+const timelockChastityBraModal = (interaction, wearer) => {
+    const modal = new ModalBuilder().setCustomId(`timelock_${wearer.id}_chastitybra`).setTitle('Chastity Bra Timelock');
+
+    let restrictionWarningText = new TextDisplayBuilder()
+    let warningText = interaction.user.id == wearer.id ? `# Timelock (Chastity Bra)
+This will lock your chastity bra for a set period of time. Please configure your timelock below.
+-# Once confirmed, you will have a final prompt before the timelock starts` : `# Timelock (Chastity Bra)
+This will lock ${wearer}'s chastity bra for a set period of time. Please configure your timelock below.
+-# Once confirmed, you will have a final prompt before the timelock starts`
+
+    restrictionWarningText.setContent(warningText)
+
+    const timelockamt = new TextInputBuilder()
+        .setCustomId('timelockinput')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g. 10 days 5h 24 mins')
+        .setRequired(true)
+
+    const userselect = new UserSelectMenuBuilder()
+        .setCustomId('userselection')
+        .setPlaceholder('Keyholder...')
+        .setMinValues(0)
+        .setMaxValues(1)
+        .setRequired(false)
+    
+    let accesswhileboundoptions = [
+        new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Everyone Else')
+                // Description of option
+                .setDescription(`Everyone except ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`} can do things to ${(interaction.user.id == wearer.id) ? "you" : `${getPronouns(wearer.id, "object")}`}`)
+                // Value returned to you in modal submission
+                .setValue('access_others'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Keyholder Only')
+            // Description of option
+            .setDescription(`Only the keyholder can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}`}'s bra`)
+            // Value returned to you in modal submission
+            .setValue('access_kh'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Nobody')
+            // Description of option
+            .setDescription(`Nobody, not even you, can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} bra`)
+            // Value returned to you in modal submission
+            .setValue('access_no'),
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        accesswhileboundoptions.splice(1,1);
+    }*/
+
+    const accesswhilebound = new StringSelectMenuBuilder()
+        .setCustomId('accesswhilebound')
+        .setPlaceholder('Bra Access')
+        .setRequired(true)
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(...accesswhileboundoptions)
+
+    let keyholderafteroptions = [
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Unlock')
+            // Description of option
+            .setDescription(`Unlocks ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} bra, letting it fall off`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_unlock'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Return')
+            // Description of option
+            .setDescription(`Returns the keys to ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`}`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_return'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('To Keyholder')
+            // Description of option
+            .setDescription('Returns keys to the keyholder')
+            // Value returned to you in modal submission
+            .setValue('keyholder_keyholder')
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        keyholderafteroptions.splice(2,1);
+    }*/
+
+    const keyholderafter = new StringSelectMenuBuilder()
+        .setCustomId('keyholderafter')
+        .setPlaceholder('Action after lock')
+        .setRequired(true)
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(...keyholderafteroptions)
+
+    const userselectlabel = new LabelBuilder()
+        .setLabel(`Who should hold keys?`)
+        .setDescription(`Select a keyholder here...`)
+        .setUserSelectMenuComponent(userselect)
+
+    const labeltimelockamt = new LabelBuilder()
+        .setLabel(`How long should the timelock be?`)
+        .setDescription("This can be a range like `1 hour - 24 hours`")
+        .setTextInputComponent(timelockamt)
+
+    const labelaccesswhilebound = new LabelBuilder()
+        .setLabel(`Who can access during the timelock?`)
+        .setStringSelectMenuComponent(accesswhilebound)
+
+    const labelkeyholderafter = new LabelBuilder()
+        .setLabel(`What happens after?`)
+        .setStringSelectMenuComponent(keyholderafter)
+
+    // Add labels to modal
+    modal.addTextDisplayComponents(restrictionWarningText)
+    if (interaction.user.id == wearer.id) modal.addLabelComponents(userselectlabel);
+    modal.addLabelComponents(labeltimelockamt, labelaccesswhilebound, labelkeyholderafter); 
+
+    return modal;
+}
+
+const timelockCollarModal = (interaction, wearer) => {
+    const modal = new ModalBuilder().setCustomId(`timelock_${wearer.id}_collar`).setTitle('Collar Timelock');
+
+    let restrictionWarningText = new TextDisplayBuilder()
+    let warningText = interaction.user.id == wearer.id ? `# Timelock (Collar)
+This will lock your collar for a set period of time. Please configure your timelock below.
+-# Once confirmed, you will have a final prompt before the timelock starts` : `# Timelock (Collar)
+This will lock ${wearer}'s collar for a set period of time. Please configure your timelock below.
+-# Once confirmed, you will have a final prompt before the timelock starts`
+
+    restrictionWarningText.setContent(warningText)
+
+    const timelockamt = new TextInputBuilder()
+        .setCustomId('timelockinput')
+        .setStyle(TextInputStyle.Short)
+        .setPlaceholder('e.g. 10 days 5h 24 mins')
+        .setRequired(true)
+
+    const userselect = new UserSelectMenuBuilder()
+        .setCustomId('userselection')
+        .setPlaceholder('Keyholder...')
+        .setMinValues(0)
+        .setMaxValues(1)
+        .setRequired(false)
+    
+    let accesswhileboundoptions = [
+        new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Everyone Else')
+                // Description of option
+                .setDescription(`Everyone except ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`} can collarequip ${(interaction.user.id == wearer.id) ? "you" : `${getPronouns(wearer.id, "object")}`}`)
+                // Value returned to you in modal submission
+                .setValue('access_others'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Keyholder Only')
+            // Description of option
+            .setDescription(`Only the keyholder can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}`}'s collar`)
+            // Value returned to you in modal submission
+            .setValue('access_kh'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Nobody')
+            // Description of option
+            .setDescription(`Nobody, not even you, can access ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} collar`)
+            // Value returned to you in modal submission
+            .setValue('access_no'),
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        accesswhileboundoptions.splice(1,1);
+    }*/
+
+    const accesswhilebound = new StringSelectMenuBuilder()
+        .setCustomId('accesswhilebound')
+        .setPlaceholder('Collar Access')
+        .setRequired(true)
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(...accesswhileboundoptions)
+
+    let keyholderafteroptions = [
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Unlock')
+            // Description of option
+            .setDescription(`Unlocks ${(interaction.user.id == wearer.id) ? "your" : `${wearer.displayName}'s`} collar, letting it fall off`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_unlock'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('Return')
+            // Description of option
+            .setDescription(`Returns the keys to ${(interaction.user.id == wearer.id) ? "you" : `${wearer.displayName}`}`)
+            // Value returned to you in modal submission
+            .setValue('keyholder_return'),
+        new StringSelectMenuOptionBuilder()
+            // Label displayed to user
+            .setLabel('To Keyholder')
+            // Description of option
+            .setDescription('Returns keys to the keyholder')
+            // Value returned to you in modal submission
+            .setValue('keyholder_keyholder')
+    ]
+
+    /*if (interaction.user.id == wearer.id) {
+        keyholderafteroptions.splice(2,1);
+    }*/
+
+    const keyholderafter = new StringSelectMenuBuilder()
+        .setCustomId('keyholderafter')
+        .setPlaceholder('Action after lock')
+        .setRequired(true)
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(...keyholderafteroptions)
+
+    const userselectlabel = new LabelBuilder()
+        .setLabel(`Who should hold keys?`)
+        .setDescription(`Select a keyholder here...`)
+        .setUserSelectMenuComponent(userselect)
+
+    const labeltimelockamt = new LabelBuilder()
+        .setLabel(`How long should the timelock be?`)
+        .setDescription("This can be a range like `1 hour - 24 hours`")
+        .setTextInputComponent(timelockamt)
+
+    const labelaccesswhilebound = new LabelBuilder()
+        .setLabel(`Who can access during the timelock?`)
+        .setStringSelectMenuComponent(accesswhilebound)
+
+    const labelkeyholderafter = new LabelBuilder()
+        .setLabel(`What happens after?`)
+        .setStringSelectMenuComponent(keyholderafter)
+
+    // Add labels to modal
+    modal.addTextDisplayComponents(restrictionWarningText)
+    if (interaction.user.id == wearer.id) modal.addLabelComponents(userselectlabel);
+    modal.addLabelComponents(labeltimelockamt, labelaccesswhilebound, labelkeyholderafter); 
+
+    return modal;
+}
+
+function timelockBuildConfirm (interaction, wearer, keyholder, type, access, keyholderAfter, unlockTime1, unlockTime2) {
+    const confirm = new ButtonBuilder().setCustomId('confirm').setLabel('Confirm').setStyle(ButtonStyle.Success).setEmoji('✅');
+    const reject = new ButtonBuilder().setCustomId('reject').setLabel(`Reject`).setStyle(ButtonStyle.Danger).setEmoji('🛑')
+    const row = new ActionRowBuilder().addComponents(reject, confirm);
+
+    console.log(Date.now())
+    console.log(unlockTime1)
+    console.log(unlockTime2)
+    console.log(isNaN(unlockTime1))
+    console.log(isNaN(unlockTime2))
+    console.log([(isNaN(unlockTime1) ? 0 : unlockTime1), (isNaN(unlockTime2) ? 0 : unlockTime2)])
+    console.log([(isNaN(unlockTime1) ? 0 : unlockTime1), (isNaN(unlockTime2) ? 0 : unlockTime2)].filter((f) => { return (f > Date.now())}))
+
+    let times = [(isNaN(unlockTime1) ? 0 : unlockTime1), (isNaN(unlockTime2) ? 0 : unlockTime2)].filter((f) => { return (f > Date.now())}).sort((a,b) => { return a-b })
+    if (times.length == 0) {
+        // WE DONT HAVE A VALID TIME LOCK VALUE, TELL THE USER THEYRE SILLY LOL
+        return {
+            modal: {
+                content: `Something went wrong making your timelock. Either you (somehow) supplied values in the past or none. Try again.`,
+                flags: MessageFlags.Ephemeral
+            }
+        }
+    }
+
+    let devicetext = "chastity belt";
+    if (type == "chastitybra") { devicetext = "chastity bra" }
+    if (type == "collar") { devicetext = "collar" }
+
+    let timestring = `<t:${(times[0] / 1000) | 0}:f>`
+    let unlockTime = times[0]
+    if (times.length == 2) {
+        timestring = `<t:${(times[0] / 1000) | 0}:f> - <t:${(times[1] / 1000) | 0}:f>`
+        unlockTime = (times[0] + Math.floor((times[1] - times[0]) * Math.random()))
+    }
+
+    let accesstodevice = `Others will be able to play with ${(interaction.user.id == wearer) ? "your" : `<@${wearer}>'s`} ${devicetext}.\n`
+    if (access == 1) { accesstodevice = `${(interaction.user.id == wearer) ? `<@${keyholder}>` : `Only you`} will be able to play with ${(interaction.user.id == wearer) ? "your" : `<@${wearer}>'s`} ${devicetext}.\n` }
+    if (access == 2) { accesstodevice = `Nobody will be able to touch ${(interaction.user.id == wearer) ? "your" : `<@${wearer}>'s`} ${devicetext}.\n`}
+
+    let keyholderafter = `${(interaction.user.id == wearer) ? "Your" : `<@${wearer}>'s`} ${devicetext} will unlock at the end of the timer.\n`
+    if (keyholderAfter == 1) { keyholderafter = `${(interaction.user.id == wearer) ? "You" : `<@${wearer}>`} will receive the keys afterwards.\n` }
+    if (keyholderAfter == 2) { keyholderafter = `${(interaction.user.id == wearer) ? "Your keyholder" : `You`} will retain the keys afterwards.\n` }
+
+    let outtext = `# Timelock\nConfirm locking ${(interaction.user.id == wearer) ? `your ${devicetext}` : `<@${wearer}>'s ${devicetext}`} until ${timestring}?\n${accesstodevice}${keyholderafter}\n-# Note: Frustration may cause the actual unlock time to be later`
+
+    return {
+        modal: {
+            content: outtext,
+            components: [row],
+            flags: MessageFlags.Ephemeral,
+            withResponse: true
+        },
+        unlockTime: unlockTime
+    }
+}
+
+
+    
 
 // Assigns images to the process variable memes. Called once during index.js startup. 
 // Is this needed? Heck no. But I want it. For the Absolute Cinema meme. 
@@ -475,6 +792,9 @@ exports.getConsent = getConsent
 exports.handleConsent = handleConsent
 exports.collarPermModal = collarPermModal
 exports.timelockChastityModal = timelockChastityModal
+exports.timelockChastityBraModal = timelockChastityBraModal
+exports.timelockCollarModal = timelockCollarModal
+exports.timelockBuildConfirm = timelockBuildConfirm;
 
 exports.handleBondageRemoval = handleBondageRemoval;
 exports.checkBondageRemoval = checkBondageRemoval;

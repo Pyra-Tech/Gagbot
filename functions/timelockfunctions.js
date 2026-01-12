@@ -1,4 +1,5 @@
-const { removeChastity } = require("./vibefunctions");
+const { removeChastity, removeChastityBra, removeCollar } = require("./vibefunctions");
+const { getPronouns } = require("./pronounfunctions.js");
 const fs = require("fs");
 
 // returns whether the locking was successful
@@ -44,34 +45,14 @@ function unlockTimelockChastity(client, wearer, skipWrite = false) {
   return true;
 }
 
-function restartChastityTimers(client) {
-  if (process.chastity == undefined) process.chastity = {};
-  const now = Date.now();
-  const toUnlock = [];
-  for (const wearer in process.chastity) {
-    const unlockTime = process.chastity[wearer]?.unlockTime;
-    if (!unlockTime) continue;
-    if (unlockTime <= now) toUnlock.push(wearer);
-    else {
-      console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-      setTimeout(() => {
-        unlockTimelockChastity(client, wearer);
-      }, unlockTime - now);
-    }
-  }
-  for (const wearer of toUnlock) {
-    unlockTimelockChastity(client, wearer, true);
-  }
-  // only write to file once for this
-  if (process.readytosave == undefined) { process.readytosave = {} }
-    process.readytosave.chastity = true;
-}
-
 async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
   if (process.chastity[wearer]?.webhookchannel) { 
     const channel = await client.channels.fetch(process.chastity[wearer].webhookchannel);
     if (!keyholder) {
       channel.send(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`)
+    }
+    else if (wearer == keyholder) {
+      channel.send(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(wearer, "object")} holding the keys!`)
     }
     else {
       channel.send(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`)
@@ -79,6 +60,127 @@ async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
   }
 }
 
+// returns whether the locking was successful
+function timelockChastityBra(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+  const now = Date.now();
+  if (now >= unlockTime) return false;
+  if (process.chastitybra == undefined) process.chastitybra = {};
+  const chastitybra = process.chastitybra[wearer];
+  chastitybra.keyholder = keyholder;
+  if (!chastitybra) return false;
+  if (chastitybra.keyholder == wearer) {
+    chastitybra.keyholder = null;
+    chastitybra.keyholderAfter = keyholderAfter ? wearer : null;
+    chastitybra.webhookchannel = webhookchannel;
+  } else chastitybra.keyholderAfter = [null, wearer, chastitybra.keyholder][keyholderAfter];
+  if (access == 2) chastitybra.keyholder = null;
+  chastitybra.unlockTime = unlockTime;
+  chastitybra.access = access;
+  console.log(`timelock set to unlock in ${unlockTime - now} ms`);
+  setTimeout(() => {
+    unlockTimelockChastity(client, wearer);
+  }, unlockTime - now);
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
+  return true;
+}
+
+// returns whether the unlocking was successful
+function unlockTimelockChastityBra(client, wearer, skipWrite = false) {
+  if (process.chastitybra == undefined) process.chastitybra = {};
+  const chastitybra = process.chastitybra[wearer];
+  if (!chastitybra || !chastitybra.unlockTime) return false;
+  chastitybra.keyholder = chastitybra.keyholderAfter;
+  chastitybra.keyholderAfter = null;
+  chastitybra.unlockTime = null;
+  chastitybra.access = null;
+  if (!chastitybra.keyholder) removeChastityBra(wearer);
+  else if (!skipWrite) {
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
+  }
+  sendTimelockChastityBraUnlockMessage(client, wearer, chastitybra.keyholder);
+  return true;
+}
+
+async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
+  if (process.chastitybra[wearer]?.webhookchannel) { 
+    const channel = await client.channels.fetch(process.chastitybra[wearer].webhookchannel);
+    if (!keyholder) {
+      channel.send(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`)
+    }
+    else if (wearer == keyholder) {
+      channel.send(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`)
+    }
+    else {
+      channel.send(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`)
+    };
+  }
+}
+
+// returns whether the locking was successful
+function timelockCollar(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+  const now = Date.now();
+  if (now >= unlockTime) return false;
+  if (process.collar == undefined) process.collar = {};
+  const collar = process.collar[wearer];
+  collar.keyholder = keyholder;
+  if (!collar) return false;
+  if (collar.keyholder == wearer) {
+    collar.keyholder = null;
+    collar.keyholderAfter = keyholderAfter ? wearer : null;
+    collar.webhookchannel = webhookchannel;
+  } else collar.keyholderAfter = [null, wearer, collar.keyholder][keyholderAfter];
+  if (access == 2) collar.keyholder = null;
+  collar.unlockTime = unlockTime;
+  collar.access = access;
+  console.log(`timelock set to unlock in ${unlockTime - now} ms`);
+  setTimeout(() => {
+    unlockTimelockChastity(client, wearer);
+  }, unlockTime - now);
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
+  return true;
+}
+
+// returns whether the unlocking was successful
+function unlockTimelockCollar(client, wearer, skipWrite = false) {
+  if (process.collar == undefined) process.collar = {};
+  const collar = process.collar[wearer];
+  if (!collar || !collar.unlockTime) return false;
+  collar.keyholder = collar.keyholderAfter;
+  collar.keyholderAfter = null;
+  collar.unlockTime = null;
+  collar.access = null;
+  if (!collar.keyholder) removeCollar(wearer);
+  else if (!skipWrite) {
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
+  }
+  sendTimelockCollarUnlockMessage(client, wearer, collar.keyholder);
+  return true;
+}
+
+async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
+  if (process.collar[wearer]?.webhookchannel) { 
+    const channel = await client.channels.fetch(process.collar[wearer].webhookchannel);
+    if (!keyholder) {
+      channel.send(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`)
+    }
+    else if (wearer == keyholder) {
+      channel.send(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`)
+    }
+    else {
+      channel.send(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`)
+    };
+  }
+}
+
 exports.timelockChastity = timelockChastity;
 exports.unlockTimelockChastity = unlockTimelockChastity;
-exports.restartChastityTimers = restartChastityTimers;
+
+exports.timelockChastityBra = timelockChastityBra;
+exports.unlockTimelockChastityBra = unlockTimelockChastityBra;
+
+exports.timelockCollar = timelockCollar;
+exports.unlockTimelockCollar = unlockTimelockCollar;
