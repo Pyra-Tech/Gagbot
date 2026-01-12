@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
 const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription, getChastityName, getClonedChastityKeysOwned, canAccessChastity } = require('./../functions/vibefunctions.js')
-const { getCollar, getCollarPerm, getCollarKeys, getCollarName, getClonedCollarKeysOwned, canAccessCollar } = require('./../functions/collarfunctions.js')
+const { getCollar, getCollarPerm, getCollarKeys, getCollarName, getClonedCollarKeysOwned, canAccessCollar, getCollarTimelock } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear, deleteHeadwear, removeLockedHeadgear } = require('./../functions/headwearfunctions.js')
@@ -231,6 +231,10 @@ module.exports = {
                 let isLocked = (canAccessCollar(inspectuser.id, interaction.user.id).access)
                 let lockemoji = isLocked ? "🔑" : "🔒"
                 if (!headwearrestrictions.canInspect) { lockemoji = "❓" }
+                let collarkeyaccess = getCollar(inspectuser.id)?.access
+                let timelockedtext = "Timelocked (Open)"
+                if (collarkeyaccess == 1) { timelockedtext = "Timelocked (Keyed)" }
+                if (collarkeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
                 if (!headwearrestrictions.canInspect) {
                     // Wearer is blind - they can only tell its on and locked. Nothing more. 
                     collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Locked (blind)**`)
@@ -243,6 +247,9 @@ module.exports = {
                     else {
                         collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing! Free Use!**`)
                     }
+                }
+                else if (getCollarTimelock(inspectuser.id)) {
+                    inspectparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getCollarTimelock(inspectuser.id, true)}**`)
                 }
                 else if (!getCollar(inspectuser.id).keyholder_only) {
                     // Free use!

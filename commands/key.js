@@ -913,18 +913,24 @@ module.exports = {
                         data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
                         data.textdata.c2 = newrestraintname;
                         getCollar(wearer.id).collartype = newrestraint;
+                        if (process.readytosave == undefined) { process.readytosave = {} }
+                        process.readytosave.collar = true;
                         interaction.reply(getText(data));
                     }
                     else if (restrainttype == "chastitybelt") {
                         data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
                         data.textdata.c2 = newrestraintname;
                         getChastity(wearer.id).chastitytype = newrestraint;
+                        if (process.readytosave == undefined) { process.readytosave = {} }
+                        process.readytosave.chastity = true;
                         interaction.reply(getText(data));
                     }
                     else if (restrainttype == "chastitybra") {
                         data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
                         data.textdata.c2 = newrestraintname;
                         getChastityBra(wearer.id).chastitytype = newrestraint;
+                        if (process.readytosave == undefined) { process.readytosave = {} }
+                        process.readytosave.chastitybra = true;
                         interaction.reply(getText(data));
                     }
                 }

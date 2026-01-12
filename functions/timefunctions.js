@@ -2,6 +2,7 @@
 let fs = require('fs')
 let path = require('path')
 let admZip = require('adm-zip');
+const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
 
 // Takes input string, outputs a date object. 
 const parseTime = (text) => {
@@ -186,8 +187,35 @@ const saveFiles = () => {
     }
 }
 
+function processUnlockTimes(client) {
+    let now = Date.now();
+    if (process.chastity) {
+        Object.keys(process.chastity).forEach((person) => {
+            if (process.chastity[person]?.unlockTime < now) {
+                unlockTimelockChastity(client, person);
+            }
+        })
+    }
+    if (process.chastitybra) {
+        Object.keys(process.chastitybra).forEach((person) => {
+            if (process.chastitybra[person]?.unlockTime < now) {
+                unlockTimelockChastityBra(client, person);
+            }
+        })
+    }
+    if (process.collar) {
+        Object.keys(process.collar).forEach((person) => {
+            if (process.collar[person]?.unlockTime < now) {
+                unlockTimelockCollar(client, person);
+            }
+        })
+    }
+}
+
 exports.parseTime = parseTime;
 exports.calculateTimeout = calculateTimeout;
 exports.getTimestringForZip = getTimestringForZip;
 exports.backupsAreAnnoying = backupsAreAnnoying;
 exports.saveFiles = saveFiles;
+
+exports.processUnlockTimes = processUnlockTimes;
