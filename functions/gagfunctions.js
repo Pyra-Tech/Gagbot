@@ -15,8 +15,9 @@ const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*u
 
 
 const DOLLPROTOCOL = [
+    // Regex uses an ENQ character to not rematch matches.
     // Banned words
-    {"regex": /(?<![\u0005A-Za-z])i(?![A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
+    {"regex": /(?<![\u0005A-Za-z])i(?!['A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
     {"regex": /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
     {"regex": /(?<![\u0005A-Za-z])my(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "My",},   // "my"
     {"regex": /(?<![\u0005A-Za-z])me(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
@@ -500,9 +501,8 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                         if(replaceProtocol){
                             dollProtocolViolations.push(r.redact ? "REDACTED" : r.string)
 
+                            // Stuff an ENQ character before each match.
                             while(dollMessageParts[i].text.match(r.regex)){
-                                console.log(dollMessageParts[i].text)
-                                console.log(dollMessageParts[i].text.match(r.regex))
                                 dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex,r.redact ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`)
                             }
                         }
