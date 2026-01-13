@@ -207,6 +207,9 @@ const modifymessage = async (msg, threadId) => {
         let dollIDDisplay = dolltreturned.dollIDDisplay;
         let dollProtocol = dolltreturned.dollProtocolViolation ? true : false
 
+        // Scrub all control characters used to delineate text.
+        outtext = outtext.replaceAll(/[]/g, "")
+
         // Finally, send it if we modified the message.
         if (modifiedmessage) { 
             await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol);

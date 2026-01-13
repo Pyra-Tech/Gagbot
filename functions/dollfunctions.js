@@ -4,17 +4,21 @@ const { splitMessage } = require(`./../functions/messagefunctions.js`);
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 // Abomination of a regex for corset compatibility.
-const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+//const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
+// Uses BEL characters to prevent separating arousal moans when visored.
+const DOLLREGEX = /(((?<![\*])(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
 const DOLLPROTOCOL = [
     // Regex uses an ENQ character to not rematch matches.
     // Banned words
-    {"regex": /(?<![\u0005A-Za-z])i(?![-'A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
-    {"regex": /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
-    {"regex": /(?<![\u0005A-Za-z])my(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "My",},   // "my"
-    {"regex": /(?<![\u0005A-Za-z])me(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
-    {"regex": /(?<![\u0005A-Za-z])myself(?![A-Za-z])/i,      "value": 1, "redact": false, "string": "Myself",},   // "Me"
+    {"regex": /(?<![\u0005A-Za-z])i(?!['A-Za-z])/i,        "value": 1, "redact": false, "string": "I",},       // "I"
+    {"regex": /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i,        "value": 1, "redact": false, "string": "I'm",},     // "I'm"
+    {"regex": /(?<![\u0005A-Za-z])my(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "My",},      // "My"
+    {"regex": /(?<![\u0005A-Za-z])me(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "Me",},      // "Me"
+    {"regex": /(?<![\u0005A-Za-z])myself(?![A-Za-z])/i,     "value": 1, "redact": false, "string": "Myself",},  // "Myself"
+    {"regex": /(?<![\u0005A-Za-z])mine(?![A-Za-z])/i,       "value": 1, "redact": false, "string": "Mine",},    // "Mine (False Positives!)"
+    {"regex": /(?<![\u0005A-Za-z])gimme(?![A-Za-z])/i,      "value": 1, "redact": false, "string": "Gimme",},   // "Gimme (Give me)"
     // Redacted
     {"regex": /(c.{0,10}a.{0,10}t.{0,10}h.{0,10}e.{0,10}r.{0,10}i.{0,10}n.{0,10}e.{0,10}) ?w.{0,10}i.{0,10}l.{0,10}l.{0,10}o.{0,10}w.{0,10}s/gi, "value": 999, "redact": true },  // SHUT
 ]
@@ -118,7 +122,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
 
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}`
-                dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(``, "")
+                dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(//g, "")
 
                 // Log protocol violations
                 if(dollProtocolViolations.length > 0){
