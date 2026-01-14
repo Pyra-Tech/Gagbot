@@ -6,10 +6,13 @@ const texts_chastity = {
     chastitybelt: {
         heavy: {
             chastity: [
-                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`,
+                `USER_TAG wiggles a bit, trying to adjust USER_THEIR VAR_C2, but USER_THEIR VAR_C1 makes it hard to reach...`
             ],
             nochastity: [
-                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`,
+                `USER_TAG shifts USER_THEIR hips, wanting to put USER_THEMSELF in chastity because USER_THEY are a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
+                `USER_TAG bumps into a VAR_C2, wanting so desperately to put it on USER_THEIR hips, but USER_THEIR VAR_C1 gives USER_THEM no arms with which to work with.`
             ]
         },
         noheavy: {
@@ -24,18 +27,34 @@ const texts_chastity = {
             nochastity: {
                 namedchastity: {
                     key_other: [
-                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`,
+                        `USER_TAG wraps a VAR_C2 around USER_THEIR waist, turns the lock and then presents the key to TARGET_TAG!`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEMSELF into a VAR_C2, sealing it away until TARGET_TAG says otherwise!`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
                     ],
                     key_self: [
-                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEMSELF away... but USER_THEY still have the key.`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
                 nonamedchastity: {
                     key_other: [
-                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`,
+                        `USER_TAG wraps a VAR_C2 around USER_THEIR waist, turns the lock and then presents the key to TARGET_TAG!`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEMSELF into a VAR_C2, sealing it away until TARGET_TAG says otherwise!`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
                     ],
                     key_self: [
-                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEMSELF away... but USER_THEY still have the key.`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
             }
@@ -44,10 +63,13 @@ const texts_chastity = {
     chastitybra: {
         heavy: {
             chastity: [
-                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`,
+                `USER_TAG wiggles a bit, trying to adjust USER_THEIR VAR_C2, but USER_THEIR VAR_C1 makes it hard to reach...`
             ],
             nochastity: [
-                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`,
+                `USER_TAG shifts USER_THEIR shoulder, wanting to put USER_THEMSELF in chastity because USER_THEY are a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
+                `USER_TAG bumps into a VAR_C2, wanting so desperately to put it on USER_THEIR chest, but USER_THEIR VAR_C1 gives USER_THEM no arms with which to work with.`
             ]
         },
         noheavy: {
@@ -62,18 +84,34 @@ const texts_chastity = {
             nochastity: {
                 namedchastity: {
                     key_other: [
-                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`
+                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`,
+                        `USER_TAG wraps a VAR_C2 around USER_THEIR chest, turns the lock and then presents the key to TARGET_TAG!`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEIR breasts into a VAR_C2, sealing them away until TARGET_TAG says otherwise!`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
                     ],
                     key_self: [
-                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
                 nonamedchastity: {
                     key_other: [
-                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`
+                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`,
+                        `USER_TAG wraps a VAR_C2 around USER_THEIR chest, turns the lock and then presents the key to TARGET_TAG!`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEIR breasts into a VAR_C2, sealing them away until TARGET_TAG says otherwise!`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
                     ],
                     key_self: [
-                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
+                        { required: (userID) => { return (getArousal(userID) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
+                        { required: (userID) => { return (getArousal(userID) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
             }
