@@ -268,7 +268,7 @@ module.exports = {
                     collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>**`)
                 }
                 // Output Collar Perms
-                collarparts.push(`-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}`)
+                collarparts.push(`-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}, Masks: ${getCollarPerm(inspectuser.id, "mask") ? "YES":"NO"}`)
             }
             else {
                 collarparts.push(`<:collar:1449984183261986939> Collar: Not currently worn.`)

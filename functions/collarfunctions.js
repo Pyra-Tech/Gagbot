@@ -30,6 +30,7 @@ const assignCollar = (user, keyholder, restraints, only, customcollar) => {
         mitten: restraints.mitten,
         chastity: restraints.chastity,
         heavy: restraints.heavy,
+        mask: restraints.mask,
         collartype: customcollar
     }
     if (process.readytosave == undefined) { process.readytosave = {} }

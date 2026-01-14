@@ -1,6 +1,6 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
-const { getChastity } = require("./vibefunctions.js");
+const { getChastity, getArousal } = require("./vibefunctions.js");
 
 const texts_chastity = {
     chastitybelt: {
@@ -589,12 +589,24 @@ const texts_headwear = {
                 ]
             },
             other: {
-                // Ephemeral
-                worn: [
-                    `You are already wearing a VAR_C2!`
-                ],
-                noworn: [
-                    `USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`
+                collar: {
+                    maskperm: {
+                        // Ephemeral
+                        worn: [
+                            `You are already wearing a VAR_C2!`
+                        ],
+                        noworn: [
+                            `USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`
+                        ]
+                    },
+                    nomaskperm: [
+                        // Ephemeral
+                        `TARGET_TAG's collar does not allow you to mask TARGET_THEM!`
+                    ]
+                },
+                nocollar: [
+                    // Ephemeral
+                    `TARGET_TAG is not wearing a collar!`
                 ]
             }
         }
