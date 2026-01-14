@@ -170,6 +170,7 @@ function punishDoll(userID, amount){
     let doll = process.dolls[userID]
     if(doll){
         doll.violations += amount
+        doll.goodDollStreak = 0;        // BAD DOLL
 
         console.log("BAD DOLL:")
         console.log(process.dolls[userID])

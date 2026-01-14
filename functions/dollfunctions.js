@@ -46,6 +46,7 @@ const PROTOCOLVIOLATIONS =  {
     ]
 }
 const DOLLMAXPUNISHMENT = 3;
+const DOLLREWARDTHRESH  = 5;
 
 
 /**************************************************
@@ -100,15 +101,21 @@ function rewardDoll(userID){
     let doll = process.dolls[userID]
     if(doll){
         doll.goodDollStreak++
-
-        if(){
-
+        // Reward the doll
+        if(doll.goodDollStreak >= DOLLREWARDTHRESH){
+            doll.goodDollStreak = 0;                                            // Reset Streak
+            if(doll.violations > 0){
+                doll.violations--
+                return "violation"
+            }                          // Simply reward by decrementing a violation.
+            else if((doll.violations == 0) && (doll.punishmentLevel > 0)){      // Or reward by decrementing punishment level.
+                doll.punishmentLevel--
+                doll.violations = (getOption(userID,"dollpunishthresh") - 1)
+                return "punishlevel"
+            }
         }
-        // Simply decrement violations
-        if(doll.violations > 0){doll.violations--}
-        else if(){
-
-        }
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.dolls = true;
     }
 }
 
@@ -233,6 +240,11 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
                     vioMessage = PROTOCOLVIOLATIONS[dollProtocolVioType][Math.floor(Math.random() * PROTOCOLVIOLATIONS[dollProtocolVioType].length)]
                     dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation (${totalViolations}/${getOption(msg.author.id,"dollpunishthresh")}) - ${vioMessage}`
+                }else if (dollProtocolViolations == 0 && i == lastDollifiedMessage){
+                    let goodDollReturn = rewardDoll(msg.author.id);
+                    console.log(goodDollReturn)
+                    if(goodDollReturn == "violation")       {dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.author.id].violations}/${getOption(msg.author.id,"dollpunishthresh")}). It is a Good Doll.`}
+                    else if(goodDollReturn == "punishlevel"){dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`}
                 }
                 dollMessageParts[i].text += `\`\`\``
             }
