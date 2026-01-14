@@ -1,6 +1,8 @@
 const { getOption } = require(`./../functions/configfunctions.js`);
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js');
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
+const { assignGag, assignMitten } = require('./../functions/gagfunctions.js')
+const { assignHeavy }  = require(`./../functions/heavyfunctions.js`);
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 // Abomination of a regex for corset compatibility.
@@ -43,6 +45,7 @@ const PROTOCOLVIOLATIONS =  {
         "Doll's search query used forbidden parameters."
     ]
 }
+const DOLLMAXPUNISHMENT = 3;
 
 
 /**************************************************
@@ -60,6 +63,7 @@ function checkDollification(userID){
             process.dolls[userID] = {
                 "violations"        : 0,
                 "punishmentLevel"   : 0,
+                "goodDollStreak"    : 0,
             }
             // Save the doll to the database.
             if (process.readytosave == undefined) { process.readytosave = {} }
@@ -78,27 +82,6 @@ function checkDollification(userID){
     return isDoll;
 }
 /**********************************************
- * Punishes a doll.
- * @param userID - The user's discord ID number
- * @param amount - How many violations?
- **********************************************/
-function punishDoll(userID, amount){
-    if (process.dolls == undefined){process.dolls = {}}
-    let doll = process.dolls[userID]
-    if(doll){
-        doll.violations += amount
-
-        // Compute punishments by dividing violations by punishThresh.
-        let punishThresh = getOption(userID,"dollpunishthresh")
-        let punishments = Math.floor(doll.violations / punishThresh)
-        // Remove punishments from violation score.
-        doll.violations = doll.violations % punishThresh
-        if(punishments > 0){
-            doll.punishmentLevel += punishments
-        }
-    }
-}
-/**********************************************
  * Determine if a user is wearing doll gear.
  * @param userID - The user's discord ID number
  **********************************************/
@@ -108,6 +91,30 @@ function isValidDoll(userID){
     return getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))
 }
 
+/**********************************************
+ * Reward a doll for following protocol.
+ * @param userID - The user's discord ID number
+ **********************************************/
+function rewardDoll(userID){
+    if (process.dolls == undefined){process.dolls = {}}
+    let doll = process.dolls[userID]
+    if(doll){
+        doll.goodDollStreak++
+
+        if(){
+
+        }
+        // Simply decrement violations
+        if(doll.violations > 0){doll.violations--}
+        else if(){
+
+        }
+    }
+}
+
+/**********************************************
+ * Garble a Doll's message.
+ **********************************************/
 async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     // Handle Dollification
     let modified = modifiedmessage
@@ -118,8 +125,8 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollIDOverride = getOption(msg.author.id, "dollvisorname")
     let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
     let dollProtocol = (getOption(msg.author.id, "dollforcedprotocol") == "enabled")
-    let dollProtocolViolations = []
-    let dollProtocolViolated = false;
+    let dollProtocolViolations = 0;
+    let dollProtocolVioType = undefined;
     if(dollified){
         modified = true;
         // If dollIDOverride is not specified or the override is exactly a string of numbers...
@@ -172,6 +179,14 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         }
         dollMessageParts = dollMessageParts.filter((part) => {return part.text != ""})
 
+        // Find the last message block that contains garbled text
+        let lastDollifiedMessage = undefined
+        for(let i = 0; i < dollMessageParts.length; i++){
+            if(dollMessageParts[i].garble){
+                lastDollifiedMessage = i
+            }
+        }
+
         // Put every "garble" messagePart in ANSI.
         for(let i = 0; i < dollMessageParts.length; i++){
             if(dollMessageParts[i].garble){
@@ -186,17 +201,16 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 })
 
                 // Loop on protocols
-                let violationType = undefined;      // Store the highest prio violation here.
                 if(dollProtocol){
                     DOLLPROTOCOL.forEach((r) => {
                         //let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
                         let replaceProtocol = dollMessageParts[i].text.match(r.regex)
                         if(replaceProtocol){
-                            dollProtocolViolations.push(r.type)
-                            violationType = (violationType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[violationType] ? r.type : violationType) : r.type)
+                            dollProtocolVioType = (dollProtocolVioType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[dollProtocolVioType] ? r.type : dollProtocolVioType) : r.type)
 
                             // Stuff an ENQ character before each match.
                             while(dollMessageParts[i].text.match(r.regex)){
+                                dollProtocolViolations++;
                                 dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex,r.type == "redact" ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`)
                             }
                         }
@@ -207,14 +221,18 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}`
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(//g, "")
 
-                // Log protocol violations overall, then append an error message after the offending line.
-                if(dollProtocolViolations.length > 0){
-                    dollProtocolViolated = true;
+                // Append an error message to the final garbled text block.
+                if(dollProtocolViolations > 0 && i == lastDollifiedMessage){
 
-                    if(violationType){
-                        vioMessage = PROTOCOLVIOLATIONS[violationType][Math.floor(Math.random() * PROTOCOLVIOLATIONS[violationType].length)]
-                        dollMessageParts[i].text += `\n[1;31mERROR:[0;31m Protocol Violation - ${vioMessage}`
-                    }
+                    let totalViolations = dollProtocolViolations + process.dolls[msg.author.id].violations
+
+                    // WARN if below punishment threshold. ERROR if exceeded.
+                    // CRITICAL if new violations >= punishmentThresh
+                    let violationTier = (totalViolations >= getOption(msg.author.id,"dollpunishthresh")) ? ((dollProtocolViolations >= getOption(msg.author.id,"dollpunishthresh")) ? "CRITICAL" : "ERROR") : "WARN" 
+                    let violationColor = (violationTier == "CRITICAL") ? "31m" : ((violationTier == "ERROR") ? "31m" : "33m")
+
+                    vioMessage = PROTOCOLVIOLATIONS[dollProtocolVioType][Math.floor(Math.random() * PROTOCOLVIOLATIONS[dollProtocolVioType].length)]
+                    dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation (${totalViolations}/${getOption(msg.author.id,"dollpunishthresh")}) - ${vioMessage}`
                 }
                 dollMessageParts[i].text += `\`\`\``
             }
@@ -229,10 +247,11 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         // Merge any code blocks with nothing but whitespace in between.
         outtext = outtext.replaceAll(/```\s+```ansi/g,"")
     }
-    return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay, dollProtocolViolation: dollProtocolViolated }
+    return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay, dollProtocolViolations: dollProtocolViolations }
 }
 
 // Exports
 exports.checkDollification = checkDollification;
-exports.punishDoll = punishDoll;
+//exports.punishDoll = punishDoll;
 exports.textGarbleDOLL = textGarbleDOLL;
+exports.DOLLMAXPUNISHMENT = DOLLMAXPUNISHMENT;
