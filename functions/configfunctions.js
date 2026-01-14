@@ -182,7 +182,7 @@ const configoptions = {
             ],
             menutype: "choice",
             default: 1.00,
-            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
+            disabled: (userID) => { return (getOption(userID,"arousalsystem") == 0) }
         }
     },
     "General": {
