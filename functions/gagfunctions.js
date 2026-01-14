@@ -217,7 +217,7 @@ function punishDoll(userID, amount){
 
         if (process.readytosave == undefined) { process.readytosave = {} }
         process.readytosave.dolls = true;
-        return {punishmentLevel: doll.punishmentLevel, skipped: skipped}
+        return {punish: (punishments > 0 ? true : false), punishmentLevel: doll.punishmentLevel, skipped: skipped}
     }
 }
 
@@ -500,7 +500,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
                         let dollPunishment = punishDoll(msg.author.id, dollProtocol);
 
                         // If the doll was actually punished
-                        if(dollPunishment.punishmentLevel > 0){
+                        if(dollPunishment.punish){
                             // Build data tree for finding string.
                             let data = {
                                 textarray: "texts_dollprotocol",
