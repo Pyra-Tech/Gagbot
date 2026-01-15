@@ -13,7 +13,7 @@ const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js');
 const { updateArousalValues } = require('./functions/vibefunctions.js');
-const { backupsAreAnnoying, saveFiles, processUnlockTimes } = require('./functions/timefunctions.js');
+const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
 const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
@@ -165,8 +165,7 @@ client.on("clientReady", async () => {
         console.log(err)
     }
     process.timetick = setInterval(() => {
-        updateArousalValues();
-        processUnlockTimes(client);
+        processTimedEvents()
     }, getBotOption("bot-timetickrate") ?? 6000)
     //restartChastityTimers(client);
     // setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));

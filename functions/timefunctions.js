@@ -3,6 +3,7 @@ let fs = require('fs')
 let path = require('path')
 let admZip = require('adm-zip');
 const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
+const { updateArousalValues } = require('./vibefunctions.js');
 
 // Takes input string, outputs a date object. 
 const parseTime = (text) => {
@@ -187,6 +188,11 @@ const saveFiles = () => {
     }
 }
 
+function processTimedEvents() {
+    updateArousalValues();
+    processUnlockTimes(process.client);
+}
+
 function processUnlockTimes(client) {
     let now = Date.now();
     if (process.chastity) {
@@ -219,3 +225,4 @@ exports.backupsAreAnnoying = backupsAreAnnoying;
 exports.saveFiles = saveFiles;
 
 exports.processUnlockTimes = processUnlockTimes;
+exports.processTimedEvents = processTimedEvents;
