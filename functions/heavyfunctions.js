@@ -6,7 +6,7 @@ const heavytypes = [
     // Armbinders
     { name: "Ancient Armbinder", value: "armbinder_ancient", denialCoefficient: 3.5 },
     { name: "Latex Armbinder", value: "armbinder_latex", denialCoefficient: 2 },
-    { name: "Leather Armbinder", value: "Armbinder_leather", denialCoefficient: 2 },
+    { name: "Leather Armbinder", value: "armbinder_leather", denialCoefficient: 2 },
     { name: "High Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5 },
     { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", denialCoefficient: 3 },
     { name: "Crystal Armbinder", value: "armbinder_crystal", denialCoefficient: 3 },
