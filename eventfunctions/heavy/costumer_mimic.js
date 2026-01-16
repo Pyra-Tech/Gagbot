@@ -148,18 +148,86 @@ let functiontick = async (userID) => {
                 // Increment Costume Index
                 process.userevents[userID].costumermimic.costumeidx++;
                 break;
-
-            // To Be implemented later when needed for Costumer Mimic outfits
+                
             case "chastitybelt":
+                data.applyingrestraints = true;
+                if (!getChastity(userID) || (getChastity(userID) && (getChastity(userID).getChastityName != nextitem.itemtowear))) {
+                    data.chastitybelt = true;
+                    if (getChastity(userID)) {
+                        data.textdata.c1 = getChastityName(undefined, getChastity(userID).getChastityName), // chastity name
+                            data.textdata.c2 = getChastityName(undefined, nextitem.itemtowear), // new chastity name
 
+                            assignChastity(userID, nextitem.itemtowear, getChastity(userID).origbinder)
+
+                        data.replace = true;
+                    }
+                    else {
+                        assignChastity(userID, nextitem.itemtowear, targetobject.id)
+                        data.textdata.c1 = getChastityName(undefined, nextitem.itemtowear), // chastity name
+
+                            assignChastity(userID, nextitem.itemtowear, getChastity(userID).origbinder)
+
+                        data.add = true;
+                    }
+                    messageSendChannel(getText(data), process.recentmessages[userID]);
+
+                }
+                // Increment Costume Index
+                process.userevents[userID].costumermimic.costumeidx++;
                 break;
-            // To Be implemented later when needed for Costumer Mimic outfits
+                
             case "chastitybra":
+                data.applyingrestraints = true;
+                if (!getChastityBra(userID) || (getChastityBra(userID) && (getChastityBra(userID).getChastityBraName != nextitem.itemtowear))) {
+                    data.chastitybra = true;
+                    if (getChastityBra(userID)) {
+                        data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).getChastityBraName), // chastity bra name
+                            data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // new chastity bra name
 
+                            assignChastityBra(userID, nextitem.itemtowear, getChastityBra(userID).origbinder)
+
+                        data.replace = true;
+                    }
+                    else {
+                        assignChastityBra(userID, nextitem.itemtowear, targetobject.id)
+                        data.textdata.c1 = getChastityBraName(undefined, nextitem.itemtowear), // chastity bra name
+
+                            assignChastityBra(userID, nextitem.itemtowear, getChastityBra(userID).origbinder)
+
+                        data.add = true;
+                    }
+                    messageSendChannel(getText(data), process.recentmessages[userID]);
+
+                }
+                // Increment Costume Index
+                process.userevents[userID].costumermimic.costumeidx++;
                 break;
-            // To Be implemented later when needed for Costumer Mimic outfits
+                
             case "collar":
+                data.applyingrestraints = true;
+                if (!getCollar(userID) || (getCollar(userID) && (getCollar(userID).getCollarName != nextitem.itemtowear))) {
+                    data.collar = true;
+                    if (getCollar(userID)) {
+                        data.textdata.c1 = getCollarName(undefined, getCollar(userID).getCollarName), // collar name
+                            data.textdata.c2 = getCollarName(undefined, nextitem.itemtowear), // new collar name
 
+                            assignCollar(userID, nextitem.itemtowear, getCollar(userID).origbinder)
+
+                        data.replace = true;
+                    }
+                    else {
+                        assignCollar(userID, nextitem.itemtowear, targetobject.id)
+                        data.textdata.c1 = getCollarName(undefined, nextitem.itemtowear), // collar name
+
+                            assignCollar(userID, nextitem.itemtowear, getCollar(userID).origbinder)
+
+                        data.add = true;
+                    }
+                    messageSendChannel(getText(data), process.recentmessages[userID]);
+
+                }
+                // Increment Costume Index
+                process.userevents[userID].costumermimic.costumeidx++;
                 break;
 
             default:
