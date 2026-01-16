@@ -39,7 +39,7 @@ const bunnygirl_outfit = new Array ([
 ]);
 
 
-const mimicCostumes = [maid_outfit, ponygirl_outfit];
+const mimicCostumes = [maid_outfit, ponygirl_outfit, bunnygirl_outfit];
 
 // Export the array for use in other functions.
 exports.mimicCostumes = mimicCostumes;
