@@ -103,6 +103,7 @@ const heavytypes = [
     //{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
     { name: "Sticky Glue", value: "stickyglue_bondage", denialCoefficient: 5 },
+    { name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },
 ];
 
 
