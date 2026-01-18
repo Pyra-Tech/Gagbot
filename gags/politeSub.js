@@ -35,7 +35,8 @@ const garbleText = (text, intensity) => {
         "duke",
         "dukes",
         "dame",
-        "count"
+        "count",
+        "overlord"
     ]
 
     let silenttitles = [
