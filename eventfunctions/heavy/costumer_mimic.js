@@ -1,7 +1,7 @@
 const { getCollarName, getCollar, assignCollar } = require("../../functions/collarfunctions.js");
-const { assignMitten, getMitten, getMittenName, getGag } = require("../../functions/gagfunctions.js");
+const { assignMitten, getMitten, getMittenName, getGag, convertGagText, assignGag } = require("../../functions/gagfunctions.js");
 const { getHeadwear, DOLLVISORS, getHeadwearName, assignHeadwear } = require("../../functions/headwearfunctions.js");
-const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions.js");
+const { removeHeavy, getHeavy, assignHeavy } = require("../../functions/heavyfunctions.js");
 const { messageSendChannel } = require("../../functions/messagefunctions.js");
 const { getText } = require("../../functions/textfunctions.js");
 const { getChastityBra } = require("../../functions/vibefunctions.js");
@@ -21,14 +21,14 @@ const maid_outfit = new Array([
     {category: "wearable", itemtowear: "stockings", color: "White" },
     {category: "mittens", itemtowear: "mittens_maid", color: null },
     {category: "headwear", itemtowear: "mask_kigu_cutemaid", color: null },
-    {category: "gag", itemtowear: "politesub", color: null },
+    {category: "gag", itemtowear: "politeSub", color: null },
     {category: "heavy", itemtowear: "straitjacket_maid", color: null },
 ]);
 
 const ponygirl_outfit = new Array ([
     {category: "wearable", itemtowear: "ponyboots_leather", color: "Red" },
     {category: "wearable", itemtowear: "ponytack_leather", color: "Red" },
-    {category: "wearable", itemtowear: "headharness_leather", color: "Red" },
+    {category: "wearable", itemtowear: "headharness_leather", color: null },
     {category: "wearable", itemtowear: "blinkers_leather", color: "Red" },
     {category: "mittens", itemtowear: "mittens_leather", color: null },
     {category: "headwear", itemtowear: "blindfold_leather", color: null },
@@ -38,7 +38,7 @@ const ponygirl_outfit = new Array ([
 
 const bunnygirl_outfit = new Array ([
     {category: "wearable", itemtowear: "outfit_playbunny_headwear", color: "Blue" },    
-    {category: "wearable", itemtowear: "outfit_playbunny_collar", color: "White" },
+    //{category: "wearable", itemtowear: "outfit_playbunny_collar", color: "White" },
     {category: "wearable", itemtowear: "suit_outfit", color: "Playbunny" },  // "
     {category: "wearable", itemtowear: "bunnytights", color: "White" },
     {category: "wearable", itemtowear: "highheels", color: "Blue" },
@@ -52,7 +52,11 @@ const bunnygirl_outfit = new Array ([
 ]);
 
 
-const mimicCostumes = [maid_outfit, ponygirl_outfit, bunnygirl_outfit];
+const mimicCostumes = {
+    maid_outfit: maid_outfit, 
+    ponygirl_outfit: ponygirl_outfit, 
+    bunnygirl_outfit: bunnygirl_outfit
+};
 
 
 // Costumer Mimic Event Function
@@ -65,8 +69,10 @@ let functiontick = async (userID) => {
     if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
     if (process.userevents[userID].costumermimic == undefined) { process.userevents[userID].costumermimic = { stage: 0 } }
     if (process.userevents[userID].costumermimic.costumeidx == undefined) { process.userevents[userID].costumermimic.costumeidx = 0 }
+    if (process.userevents[userID].costumermimic.origbinder == undefined) { process.userevents[userID].costumermimic.origbinder = getHeavy(userID).origbinder }
+
     // Randomly select an outfit from mimicCostumes.js
-    if (process.userevents[userID].costumermimic.outfit == undefined) { process.userevents[userID].costumermimic.outfit = mimicCostumes[Math.floor(Math.random() * mimicCostumes.length)]; }
+    if (process.userevents[userID].costumermimic.outfit == undefined) { process.userevents[userID].costumermimic.outfit = Object.keys(mimicCostumes)[Math.floor(Math.random() * Object.keys(mimicCostumes).length)]; }
     let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))); // Current clothes that can be removed
 
     // get the user object, if it doesn't exist, go away
@@ -92,31 +98,39 @@ let functiontick = async (userID) => {
         }
     }
 
+    console.log(process.userevents[userID].costumermimic)
+
     // Select Item from Chosen Outfit based in index
-    let nextitem = mimicCostumes[process.userevents[userID].costumermimic.outfit[process.userevents[userID].costumermimic.costumeidx]];
+    let nextitem = mimicCostumes[process.userevents[userID].costumermimic.outfit][0][process.userevents[userID].costumermimic.costumeidx];
     let itemtoequipcolored = null;
 
     data.heavy = true;
-    data.costumemimic = true;
+    data.costumer_mimic = true;
 
-    if (process.userevents[userID].costumermimic.stage == 0 && (currclothes.length > 0)) {
-        // Fetch Wearable name and remove it 
-        data.textdata.c1 = getWearableName(undefined, currclothes[0]);
-        data.removeclothing = true;
-        deleteWearable(userID, currclothes[0]);
+    if (process.userevents[userID].costumermimic.stage == 0) {
+        if (currclothes.length > 0) {
+            console.log(currclothes)
+            console.log(getWearableName(undefined, currclothes[0]))
+            // Fetch Wearable name and remove it 
+            data.textdata.c1 = getWearableName(undefined, currclothes[0]);
+            data.removeclothing = true;
+            deleteWearable(userID, currclothes[0]);
 
-        // Send a message saying it stripped something off the wearer <3
-        messageSendChannel(getText(data), process.recentmessages[userID])
-
-    } else {
-        // Victim Stripped of all unprotected clothing, progress to next stage
-        process.userevents[userID].costumermimic.stage = 1;
-        data.donestripping = true;
-        messageSendChannel(getText(data), process.recentmessages[userID])
+            // Send a message saying it stripped something off the wearer <3
+            messageSendChannel(getText(data), process.recentmessages[userID])
+            return;
+        } 
+        else {
+            // Victim Stripped of all unprotected clothing, progress to next stage
+            process.userevents[userID].costumermimic.stage = 1;
+            data.donestripping = true;
+            messageSendChannel(getText(data), process.recentmessages[userID])
+            return;
+        }
     }
 
     // Apply Outfit Items once stripped until last index of array is reached or a heavy item is found
-    if (process.userevents[userID].costumermimic.stage == 1 && process.userevents[userID].costumermimic.costumeidx < process.userevents[userID].costumermimic.outfit.length && nextitem.category != "heavy") {
+    if (process.userevents[userID].costumermimic.stage == 1 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit][0].length && nextitem.category != "heavy") {
 
         data.applyingOutfit = true;
         switch (nextitem.category) {
@@ -124,6 +138,13 @@ let functiontick = async (userID) => {
                 data.wearable = true;
                 itemtoequipcolored = colourItem(nextitem.itemtowear, nextitem.color);
                 if (itemtoequipcolored != null) {
+                    data.textdata.c1 = getWearableName(undefined, itemtoequipcolored)
+                    assignWearable(userID, itemtoequipcolored);
+                    data.add = true;
+                    messageSendChannel(getText(data), process.recentmessages[userID])
+                }
+                else {
+                    data.textdata.c1 = getWearableName(undefined, nextitem.itemtowear)
                     assignWearable(userID, itemtoequipcolored);
                     data.add = true;
                     messageSendChannel(getText(data), process.recentmessages[userID])
@@ -133,7 +154,6 @@ let functiontick = async (userID) => {
                 break;
 
             case "headwear":
-                data.applyingrestraints = true;
                 if (!getHeadwear(userID) || (getHeadwear(userID) && (getHeadwear(userID).getHeadwearName != nextitem.itemtowear))) {
                     data.headwear = true;
                     data.textdata.c1 = getHeadwearName(undefined, nextitem.itemtowear), // headwear name
@@ -143,20 +163,18 @@ let functiontick = async (userID) => {
 
                     data.add = true;
                     messageSendChannel(getText(data), process.recentmessages[userID])
-                    process.userevents[userID].costumermimic.costumeidx++;
                 }
                 // Increment Costume Index
                 process.userevents[userID].costumermimic.costumeidx++;
                 break;
 
             case "gag":
-                data.applyingrestraints = true;
                 if (!getGag(userID) || (getGag(userID) && (getGag(userID).getGagName != nextitem.itemtowear))) {
                     data.gag = true;
-                    data.textdata.c1 = getGagName(undefined, nextitem.itemtowear), // gag name
+                    data.textdata.c1 = convertGagText(nextitem.itemtowear), // gag name
 
                         // Apply the gag    
-                        assignGag(userID, nextitem.itemtowear, targetobject.id)
+                        assignGag(userID, nextitem.itemtowear, Math.floor(Math.random() * 10) + 1, process.userevents[userID].costumermimic.origbinder)
 
                     data.add = true;
                     messageSendChannel(getText(data), process.recentmessages[userID])
@@ -166,11 +184,10 @@ let functiontick = async (userID) => {
                 break;
 
             case "mittens":
-                data.applyingrestraints = true;
                 if (!getMitten(userID) || (getMitten(userID) && (getMitten(userID).getMittenName != nextitem.itemtowear))) {
                     data.mitten = true;
                     if (getMitten(userID)) {
-                        data.textdata.c1 = getMittenName(undefined, getMitten(userID).getMittenName), // mitten name
+                        data.textdata.c1 = getMittenName(undefined, getMitten(userID).mittenname) ?? "mittens", // mitten name
                             data.textdata.c2 = getMittenName(undefined, nextitem.itemtowear), // new mitten name
 
                             assignMitten(userID, nextitem.itemtowear, getMitten(userID).origbinder)
@@ -193,11 +210,10 @@ let functiontick = async (userID) => {
                 break;
                 
             case "chastitybelt":
-                data.applyingrestraints = true;
                 if (!getChastity(userID) || (getChastity(userID) && (getChastity(userID).getChastityName != nextitem.itemtowear))) {
                     data.chastitybelt = true;
                     if (getChastity(userID)) {
-                        data.textdata.c1 = getChastityName(undefined, getChastity(userID).getChastityName), // chastity name
+                        data.textdata.c1 = getChastityName(undefined, getChastity(userID).getChastityName) ?? "chastity belt", // chastity name
                             data.textdata.c2 = getChastityName(undefined, nextitem.itemtowear), // new chastity name
 
                             assignChastity(userID, nextitem.itemtowear, getChastity(userID).origbinder)
@@ -220,11 +236,10 @@ let functiontick = async (userID) => {
                 break;
                 
             case "chastitybra":
-                data.applyingrestraints = true;
                 if (!getChastityBra(userID) || (getChastityBra(userID) && (getChastityBra(userID).getChastityBraName != nextitem.itemtowear))) {
                     data.chastitybra = true;
                     if (getChastityBra(userID)) {
-                        data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).getChastityBraName), // chastity bra name
+                        data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).getChastityBraName) ?? "chastity bra", // chastity bra name
                             data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // new chastity bra name
 
                             assignChastityBra(userID, nextitem.itemtowear, getChastityBra(userID).origbinder)
@@ -247,11 +262,10 @@ let functiontick = async (userID) => {
                 break;
                 
             case "collar":
-                data.applyingrestraints = true;
                 if (!getCollar(userID) || (getCollar(userID) && (getCollar(userID).getCollarName != nextitem.itemtowear))) {
                     data.collar = true;
                     if (getCollar(userID)) {
-                        data.textdata.c1 = getCollarName(undefined, getCollar(userID).getCollarName), // collar name
+                        data.textdata.c1 = getCollarName(undefined, getCollar(userID).getCollarName) ?? "collar", // collar name
                             data.textdata.c2 = getCollarName(undefined, nextitem.itemtowear), // new collar name
 
                             assignCollar(userID, nextitem.itemtowear, getCollar(userID).origbinder)
@@ -284,17 +298,17 @@ let functiontick = async (userID) => {
                 break;
         }
 
-    } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= process.userevents[userID].costumermimic.outfit.length) {
+    } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit][0].length) {
         // Final Stage - Remove Mimic Heavy and spit them out, then apply Outfit Heavy!
         // heavy item reached or end of outfit reached        
-        
+
         // Remove Current Heavy (Mimic)
         removeHeavy(userID);
         data.spitout = true;
 
         // Apply New Heavy
         if (nextitem.itemtowear && nextitem.category == "heavy") {
-            assignHeavy(userID, nextitem.itemtowear, null);
+            assignHeavy(userID, nextitem.itemtowear, process.userevents[userID].costumermimic.origbinder);
             data.textdata.c1 = getHeavy(userID).type; // heavy name
             data.add = true;
             messageSendChannel(getText(data), process.recentmessages[userID]);
@@ -309,8 +323,11 @@ let functiontick = async (userID) => {
 }
 
 const colourItem = (itemtowear, color) => {
-    if (color) {
-        return `${itemtowear}${color ? ("_" + color) : ""}`;
+    if (color && getWearableName(undefined, `${itemtowear}_${color.toLowerCase()}`)) {
+        return `${itemtowear}_${color.toLowerCase()}`;
+    }
+    else {
+        return `${itemtowear}`
     }
 }
 

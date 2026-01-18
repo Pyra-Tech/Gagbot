@@ -52,7 +52,7 @@ const texts_chastity = {
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
                         `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEMSELF away... but USER_THEY still have the key.`,
-                        `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
+                        `USER_TAG whispers a sweet goodbye as USER_THEY wrapUSER_S a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
                         { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
                         { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
                     ]
@@ -2431,9 +2431,9 @@ const texts_eventfunctions = {
         costumer_mimic: {
             removeclothing: [
                 // OMNOMNOMNOM
-                `The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
-                `The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
-                `The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
+                `The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_THEY USER_ISARE wearing!`,
+                `The Costumer Mimic's tentacles rip off the VAR_C1 that USER_THEY USER_ISARE wearing, stuffing it into its gaping maw and storing it away!`,
+                `The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_THEY USER_ISARE wearing, dissolving it away before absorbing the remains!`,
             ],
             donestripping: [
                 `Having finished consuming all of their current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`,
@@ -2466,10 +2466,10 @@ const texts_eventfunctions = {
                 },
                 chastitybra: {
                     replace: [
-                        `The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into their storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`
+                        `The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`
                     ],
                     add: [
-                        `The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away their breasts.`
+                        `The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`
                     ]
                 },
                 collar: {
