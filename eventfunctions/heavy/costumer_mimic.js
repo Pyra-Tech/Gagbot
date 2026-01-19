@@ -389,7 +389,8 @@ let functiontick = async (userID) => {
                         data.textdata.c1 = getChastityName(undefined, getChastity(userID).getChastityName) ?? "chastity belt", // chastity name
                             data.textdata.c2 = getChastityName(undefined, nextitem.itemtowear), // new chastity name
 
-                            assignChastity(userID, nextitem.itemtowear, getChastity(userID).origbinder)
+                            // Update Chastity Belt Name with new type
+                            process.chastity[userID].chastitytype = nextitem.itemtowear
 
                         data.replace = true;
                     }
@@ -414,8 +415,9 @@ let functiontick = async (userID) => {
                     if (getChastityBra(userID)) {
                         data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).getChastityBraName) ?? "chastity bra", // chastity bra name
                             data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // new chastity bra name
-
-                            assignChastityBra(userID, nextitem.itemtowear, getChastityBra(userID).origbinder)
+                            
+                            // Update Chastity Bra Name with new type
+                            process.chastitybra[userID].chastitytype =  nextitem.itemtowear
 
                         data.replace = true;
                     }
@@ -441,7 +443,8 @@ let functiontick = async (userID) => {
                         data.textdata.c1 = getCollarName(undefined, getCollar(userID).getCollarName) ?? "collar", // collar name
                             data.textdata.c2 = getCollarName(undefined, nextitem.itemtowear), // new collar name
 
-                            assignCollar(userID, nextitem.itemtowear, getCollar(userID).origbinder)
+                            // Update Collar Name with new type
+                            process.collar[userID].collartype = nextitem.itemtowear
 
                         data.replace = true;
                     }
