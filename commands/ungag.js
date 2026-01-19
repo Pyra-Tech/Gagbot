@@ -11,11 +11,13 @@ module.exports = {
 		.setName("ungag")
 		.setDescription("Remove a gag from a user")
 		.addUserOption((opt) => opt.setName("user").setDescription("The user to remove gag from (leave blank for yourself)"))
-        .addStringOption((opt) => opt.setName("gag").setDescription("Which gag to remove?").setAutocomplete(true)),
-    async autoComplete(interaction) {
+		.addStringOption((opt) => opt.setName("gag").setDescription("Which gag to remove?").setAutocomplete(true)),
+	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-        let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-        let worngags = getGags(chosenuserid).map((g) => { return { name: process.gagtypes.find((t) => t.value == g.gagtype).name, value: g.gagtype } } )
+		let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+		let worngags = getGags(chosenuserid).map((g) => {
+			return { name: process.gagtypes.find((t) => t.value == g.gagtype).name, value: g.gagtype };
+		});
 
 		if (focusedValue == "") {
 			// User hasn't entered anything, lets give them a suggested set of 10
@@ -33,10 +35,10 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			let gaggeduser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
-            let gagtoremove = interaction.options.getString("gag")
-            if (getGags(gaggeduser.id).length == 1) {
-                gagtoremove = getGags(gaggeduser.id)[0].gagtype
-            }
+			let gagtoremove = interaction.options.getString("gag");
+			if (getGags(gaggeduser.id).length == 1) {
+				gagtoremove = getGags(gaggeduser.id)[0].gagtype;
+			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
@@ -48,7 +50,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: gaggeduser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-                    c2: process.gagtypes.find((t) => t.value == gagtoremove)?.name ?? "gag"
+					c2: process.gagtypes.find((t) => t.value == gagtoremove)?.name ?? "gag",
 				},
 			};
 
@@ -122,15 +124,14 @@ module.exports = {
 							// We are wearing a gag
 							data.gag = true;
 							if (gagtoremove) {
-                                data.single = true;
-                                interaction.reply(getText(data));
-                                deleteGag(gaggeduser.id, gagtoremove);
-                            }
-                            else {
-                                data.multiple = true;
-                                interaction.reply(getText(data));
-                                deleteGag(gaggeduser.id);
-                            }
+								data.single = true;
+								interaction.reply(getText(data));
+								deleteGag(gaggeduser.id, gagtoremove);
+							} else {
+								data.multiple = true;
+								interaction.reply(getText(data));
+								deleteGag(gaggeduser.id);
+							}
 						} else {
 							// Not gagged! Ephemeral
 							data.nogag = true;
@@ -145,16 +146,15 @@ module.exports = {
 							// Now lets make sure the wearer wants that.
 							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
-                                if (gagtoremove) {
-                                    data.single = true;
-                                    interaction.reply(getText(data));
-                                    deleteGag(gaggeduser.id, gagtoremove);
-                                }
-                                else {
-                                    data.multiple = true;
-                                    interaction.reply(getText(data));
-                                    deleteGag(gaggeduser.id);
-                                }
+								if (gagtoremove) {
+									data.single = true;
+									interaction.reply(getText(data));
+									deleteGag(gaggeduser.id, gagtoremove);
+								} else {
+									data.multiple = true;
+									interaction.reply(getText(data));
+									deleteGag(gaggeduser.id);
+								}
 								interaction.reply(getText(data));
 							} else {
 								// We need to ask first.
@@ -166,16 +166,15 @@ module.exports = {
 										await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 										await interaction.followUp(getText(data));
 										if (gagtoremove) {
-                                            data.single = true;
-                                            interaction.reply(getText(data));
-                                            deleteGag(gaggeduser.id, gagtoremove);
-                                        }
-                                        else {
-                                            data.multiple = true;
-                                            interaction.reply(getText(data));
-                                            deleteGag(gaggeduser.id);
-                                        }
-                                        interaction.reply(getText(data));
+											data.single = true;
+											interaction.reply(getText(data));
+											deleteGag(gaggeduser.id, gagtoremove);
+										} else {
+											data.multiple = true;
+											interaction.reply(getText(data));
+											deleteGag(gaggeduser.id);
+										}
+										interaction.reply(getText(data));
 									},
 									async (rej) => {
 										await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));
