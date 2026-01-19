@@ -6,7 +6,7 @@ const heavytypes = [
     // Armbinders
     { name: "Ancient Armbinder", value: "armbinder_ancient", denialCoefficient: 3.5 },
     { name: "Latex Armbinder", value: "armbinder_latex", denialCoefficient: 2 },
-    { name: "Leather Armbinder", value: "Armbinder_leather", denialCoefficient: 2 },
+    { name: "Leather Armbinder", value: "armbinder_leather", denialCoefficient: 2 },
     { name: "High Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5 },
     { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", denialCoefficient: 3 },
     { name: "Crystal Armbinder", value: "armbinder_crystal", denialCoefficient: 3 },
@@ -103,6 +103,24 @@ const heavytypes = [
     //{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
     { name: "Sticky Glue", value: "stickyglue_bondage", denialCoefficient: 5 },
+    { name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },
+    
+    // Heavy Restraints with unique name functions
+    { name: "Dominant's Lap", value: "dominants_lap", denialCoefficient: 3, noself: true, noother: false, namefunction: async (interaction, data) => {
+        if ((data.textarray != "texts_collarequip") && (data.textarray != "texts_struggle")) { return data } // Only affect struggle and collarequip. 
+        else {
+            // Typescript is going to fucking hate me for what Im about to do.
+            // Guess what though? Typescript ain't my boss
+            // It will *deal* with this. I'd just be putting //@ts-ignore all over this function otherwise. 
+            let datatoreturn = Object.assign({}, data);
+            if (data.textarray == "texts_collarequip") {
+                let guilduser = await interaction.guild.members.cache.get(datatoreturn.textdata.interactionuser.id)
+                datatoreturn.textdata.c3 = `${guilduser.displayName}'s Lap`
+            }
+            
+            return datatoreturn
+        }
+    }},
 ];
 
 
@@ -123,15 +141,20 @@ const convertheavy = (type) => {
     return convertheavyarr[type];
 }
 
+// Get the base heavy object by type
+const getBaseHeavy = (type) => {
+    return heavytypes.find(h => h.value == type);
+}
+
 const heavyDenialCoefficient = (type) => {
     return heavytypes.find(h => h.value == type)?.denialCoefficient;
 }
 
-const assignHeavy = (user, type, origbinder) => {
+const assignHeavy = (user, type, origbinder, customname) => {
     if (process.heavy == undefined) { process.heavy = {} }
     let originalbinder = process.heavy[user]?.origbinder
     process.heavy[user] = {
-        type: convertheavy(type),
+        type: customname ?? convertheavy(type),
         typeval: type,
         origbinder: originalbinder ?? origbinder
     }
@@ -164,4 +187,5 @@ exports.getHeavyBinder = getHeavyBinder;
 exports.removeHeavy = removeHeavy
 exports.commandsheavy = heavytypes
 exports.convertheavy = convertheavy
+exports.getBaseHeavy = getBaseHeavy;
 exports.heavyDenialCoefficient = heavyDenialCoefficient;

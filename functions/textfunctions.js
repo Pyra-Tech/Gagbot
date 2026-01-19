@@ -11,7 +11,7 @@ const texts_chastity = {
             ],
             nochastity: [
                 `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`,
-                `USER_TAG shifts USER_THEIR hips, wanting to put USER_THEMSELF in chastity because USER_THEY are a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
+                `USER_TAG shifts USER_THEIR hips, wanting to put USER_THEMSELF in chastity because USER_THEY USER_ISARE a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
                 `USER_TAG bumps into a VAR_C2, wanting so desperately to put it on USER_THEIR hips, but USER_THEIR VAR_C1 gives USER_THEM no arms with which to work with.`
             ]
         },
@@ -68,7 +68,7 @@ const texts_chastity = {
             ],
             nochastity: [
                 `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`,
-                `USER_TAG shifts USER_THEIR shoulder, wanting to put USER_THEMSELF in chastity because USER_THEY are a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
+                `USER_TAG shifts USER_THEIR shoulder, wanting to put USER_THEMSELF in chastity because USER_THEY USER_ISARE a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`,
                 `USER_TAG bumps into a VAR_C2, wanting so desperately to put it on USER_THEIR chest, but USER_THEIR VAR_C1 gives USER_THEM no arms with which to work with.`
             ]
         },
@@ -92,10 +92,10 @@ const texts_chastity = {
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
-                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still USER_HAVE the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still USER_HAVE the key, but at least it's something...`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
                 nonamedchastity: {
@@ -108,10 +108,10 @@ const texts_chastity = {
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
-                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
+                        `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still USER_HAVE the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still USER_HAVE the key, but at least it's something...`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
                     ]
                 },
             }
@@ -239,6 +239,8 @@ const texts_collarequip = {
                         // Misc
                         { only: (t) => { return (t.c3.includes("Festive Ribbons") || t.c3.includes("Wrapping Paper")) }, text: `USER_TAG carefully wraps TARGET_TAG in VAR_C2! Who are they planning to gift such a present too~?` },
                         { only: (t) => { return t.c3.includes("Magic Mirror") }, text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C2! As TARGET_THEY touch it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!` },
+                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`},
+                        { only: (t) => { return (t.c3.endsWith("'s Lap")) }, text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.` }
                     ],
                     notallowed: [
                         `TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`
@@ -864,6 +866,7 @@ const texts_struggle = {
         `USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
         `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
         `USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
+        { only: (t) => { return (t.c1.endsWith("'s Lap")) }, text: `USER_TAG wiggles a little bit in VAR_C1, but a stern look quickly keeps USER_THEM in check.` }
     ],
     gag: {
         heavy: [
@@ -1065,9 +1068,9 @@ const texts_struggle = {
         `USER_TAG tries to imagine how best to adjust USER_THEIR speech when gagged. Perhaps with practice, USER_THEY can figure it out!`,
         `All the keys clanging and bondage restraints strewn about makes USER_TAG swim in happy thoughts!`,
         `USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
-        `USER_TAG clears USER_THEIR throat and then begins to speak: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A single lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.`,
+        { required: (t) => { return (!(process.gags && process.gags[t.interactionuser.id])) }, text: `USER_TAG clears USER_THEIR throat and then begins to speak: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A single lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.` },
         `USER_TAG's mind is fantasizing about the cute characters in that last anime USER_THEY watched. Everyone should ask USER_THEM about it!`,
-        `USER_TAG's voice echoes through the halls as USER_THEY monologueUSER_S: ***Tell me, for whom do you fight...***`,
+        { required: (t) => { return (!(process.gags && process.gags[t.interactionuser.id])) }, text: `USER_TAG's voice echoes through the halls as USER_THEY monologueUSER_S: ***Tell me, for whom do you fight...***` },
         `USER_TAG wants ice cream. Everyone should have ice cream. USER_THEY_CAP wantUSER_S to know what everyone's favorite flavor is!`,
         `USER_TAG is getting cold feet. Someone should tie USER_THEM up and tickle USER_THEIR feet so they warm up!`,
         `USER_TAG wants hot cocoa and to sit cozily by a fire on a stormy day, just pleasantly reading and enjoying the warm. Under a blankey. So nice...`,
@@ -1080,7 +1083,7 @@ const texts_struggle = {
         `All this talk about servitude and the moans from the dungeon's denizens makes it impossible for USER_TAG to focus...`,
         `USER_TAG wants to lay in someone's lap. Or maybe have someone lay in USER_THEIR lap. Maybe both.`,
         `USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
-        `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY blushUSER_ES a little at the thought~`,
+        `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`,
         `USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
         `USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
         // 2 hours in chastity
@@ -1634,7 +1637,8 @@ const texts_unheadwear = {
 const texts_unheavy = {
     heavy: {
         self: [
-            `USER_TAG wiggles in USER_THEIR VAR_C1, but obviously USER_THEY USER_ISARE *very* helpless and can't get far with taking it off on USER_THEIR own!`
+            `USER_TAG wiggles in USER_THEIR VAR_C1, but obviously USER_THEY USER_ISARE *very* helpless and can't get far with taking it off on USER_THEIR own!`,
+            { only: (t) => { return (t.c1.endsWith("'s Lap")) }, text: `USER_TAG wiggles a bit in VAR_C1, but it's so warm and comfy there...` }
         ],
         other: [
             `USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of USER_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`
@@ -1645,6 +1649,7 @@ const texts_unheavy = {
             `USER_TAG helps TARGET_TAG out of TARGET_THEIR VAR_C2! TARGET_THEY_CAP stretchTARGET_ES TARGET_THEIR arms and sighTARGET_S with gratitude!`,
             { only: (t) => { return t.c2.includes("Doll Processing") }, text: `USER_TAG fights off an automated arm as USER_THEY rescueUSER_S TARGET_TAG from the VAR_C2!` },
             { only: (t) => { return t.c2.includes("Doll Processing") }, text: `USER_TAG tackles TARGET_TAG, pulling USER_THEM off of the belt of the VAR_C2!` },
+            { only: (t) => { return (t.c2.endsWith("'s Lap")) }, text: `USER_TAG helps TARGET_TAG off of the warm lap TARGET_THEY TARGET_WERE laying on!` }
         ],
         noheavyequipped: {
             self: [
@@ -1877,7 +1882,7 @@ const texts_unwear = {
             },
             multiple: {
                 worn: [
-                    `Try as USER_THEY might, USER_TAG can't really take off USER_THEIR clothes while USER_THEY are tied up.`
+                    `Try as USER_THEY might, USER_TAG can't really take off USER_THEIR clothes while USER_THEY USER_ISARE tied up.`
                 ],
                 // Ephemeral
                 noworn: [
@@ -2456,60 +2461,136 @@ const texts_eventfunctions = {
             processingcomplete: [
                 `As USER_TAG reaches the end of the Doll Processing Facility, USER_THEY USER_ISARE finally released. USER_THEY_CAP USER_ISARE no longer human. USER_THEY_CAP USER_ISARE just a Doll. USER_THEY_CAP serveUSER_S the Dollmaker.`
             ]
+        },
+        costumer_mimic: {
+            removeclothing: [
+                // OMNOMNOMNOM
+                `The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_THEY USER_ISARE wearing!`,
+                `The Costumer Mimic's tentacles rip off the VAR_C1 that USER_THEY USER_ISARE wearing, stuffing it into its gaping maw and storing it away!`,
+                `The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_THEY USER_ISARE wearing, dissolving it away before absorbing the remains!`,
+            ],
+            donestripping: [
+                `Having finished consuming all of their current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`,
+                `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`,
+                `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`
+            ],
+            applyingOutfit: {
+                wearable: {
+                    add: [
+                        `The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`,
+                        `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`,
+                        `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`
+                    ],
+                },
+                mitten: {
+                    replace: [
+                        `The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`
+                    ],
+                    add: [
+                        `The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`
+                    ]
+                },
+                chastitybelt: {
+                    replace: [
+                        `The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`
+                    ],
+                    add: [
+                        `The Costumer Mimic locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`
+                    ]
+                },
+                chastitybra: {
+                    replace: [
+                        `The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`
+                    ],
+                    add: [
+                        `The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`
+                    ]
+                },
+                collar: {
+                    replace: [
+                        `The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`
+                    ],
+                    add: [
+                        `USER_TAG is forced to lean forward as the Costumer Mimic moves their hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`
+                    ]
+                },
+                headwear: {
+                    add: [
+                        `The Costumer Mimic produces a VAR_C1 from within itself and secures it onto USER_TAG's head.`
+                    ]
+                },
+                gag: {
+                    add: [
+                        `The Costumer Mimic pulls a VAR_C1 from its storage and secures it into USER_TAG's mouth.`
+                    ]
+                },
+                unknown: [
+                    `The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from their storage. Perhaps it ran out of space?`
+                ]
+            },
+            spitout:
+            {
+                add: [
+                    `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but not before securing USER_THEM into a VAR_C1 first~.`
+                ],
+                none: [
+                    `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`
+                ]
+            }
         }
     }
 }
 
 const textarrays = {
-    texts_chastity: texts_chastity,
-    texts_collar: texts_collar,
-    texts_collarequip: texts_collarequip,
-    texts_corset: texts_corset,
-    texts_dollprotocol: texts_dollprotocol,
-    texts_gag: texts_gag,
-    texts_headwear: texts_headwear,
-    texts_heavy: texts_heavy,
-    texts_key: texts_key,
-    texts_letgo: texts_letgo,
-    texts_mitten: texts_mitten,
-    texts_struggle: texts_struggle,
-    texts_unchastity: texts_unchastity,
-    texts_uncollar: texts_uncollar,
-    texts_uncorset: texts_uncorset,
-    texts_ungag: texts_ungag,
-    texts_unheadwear: texts_unheadwear,
-    texts_unheavy: texts_unheavy,
-    texts_unmitten: texts_unmitten,
-    texts_unvibe: texts_unvibe,
-    texts_unwear: texts_unwear,
-    texts_vibe: texts_vibe,
-    texts_wear: texts_wear,
-    texts_timelock: texts_timelock,
-    texts_eventfunctions: texts_eventfunctions
-}
+        texts_chastity: texts_chastity,
+        texts_collar: texts_collar,
+        texts_collarequip: texts_collarequip,
+        texts_corset: texts_corset,
+        texts_dollprotocol: texts_dollprotocol,
+        texts_gag: texts_gag,
+        texts_headwear: texts_headwear,
+        texts_heavy: texts_heavy,
+        texts_key: texts_key,
+        texts_letgo: texts_letgo,
+        texts_mitten: texts_mitten,
+        texts_struggle: texts_struggle,
+        texts_unchastity: texts_unchastity,
+        texts_uncollar: texts_uncollar,
+        texts_uncorset: texts_uncorset,
+        texts_ungag: texts_ungag,
+        texts_unheadwear: texts_unheadwear,
+        texts_unheavy: texts_unheavy,
+        texts_unmitten: texts_unmitten,
+        texts_unvibe: texts_unvibe,
+        texts_unwear: texts_unwear,
+        texts_vibe: texts_vibe,
+        texts_wear: texts_wear,
+        texts_timelock: texts_timelock,
+        texts_eventfunctions: texts_eventfunctions
+    }
 
 // Get generic text and spit out a pronoun respecting version YAY
 const getTextGeneric = (type, data_in) => {
     let generics = {
         "unbind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
         "unbind_decline": "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
-        "unbind_accept": "TARGET_TAG has accepted your offer to help with USER_THEIR VAR_C1!",
+        "unbind_accept": "TARGET_TAG has accepted your offer to help with TARGET_THEIR VAR_C1!",
         "unbind_timeout": "The request to help TARGET_TAG timed out!",
         "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-        "changebind_decline": "TARGET_TAG has declined allowing you to change USER_THEIR bindings.",
-        "changebind_accept": "TARGET_TAG has allowed you to change USER_THEIR bindings.",
-        "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
+        "changebind_decline": "TARGET_TAG has declined allowing you to change TARGET_THEIR bindings.",
+        "changebind_accept": "TARGET_TAG has allowed you to change TARGET_THEIR bindings.",
+        "clone_accept": "TARGET_TAG has allowed you to make a clone of TARGET_THEIR VAR_C1 key, giving it to VAR_C2!",
         "clone_accept_self": "Cloning your key...",
-        "clone_decline": "TARGET_TAG has forbidden you from making a clone of USER_THEIR VAR_C1 key for VAR_C2!",
-        "give_accept": "TARGET_TAG has allowed you to give USER_THEIR VAR_C1 key to VAR_C2!",
+        "clone_decline": "TARGET_TAG has forbidden you from making a clone of TARGET_THEIR VAR_C1 key for VAR_C2!",
+        "give_accept": "TARGET_TAG has allowed you to give TARGET_THEIR VAR_C1 key to VAR_C2!",
         "give_accept_self": "Giving your key...",
-        "give_decline": "TARGET_TAG has forbidden you from giving USER_THEIR VAR_C1 key to VAR_C2!",
+        "give_decline": "TARGET_TAG has forbidden you from giving TARGET_THEIR VAR_C1 key to VAR_C2!",
         "revoke_accept": "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
     }
 
-    let chosentext = generics[type];
-    return convertPronounsText(chosentext, data_in)
-}
+        let chosentext = generics[type];
+        return convertPronounsText(chosentext, data_in)
+    }
 
 
 /* ----------------------------------
@@ -2534,73 +2615,73 @@ to get the particular array of texts for that condition.
 THE PROPERTY ORDER IS IMPORTANT TO ENSURE THE TEXT RETRIEVAL WORKS AS INTENDED.
 -------------------------------------*/
 const getText = (data) => {
-    try {
-        let textarray = data.textarray;
-        let data_in = data.textdata;
-        let props = [];
-        for (k in data) {
-            if ((k != "textarray") && (k != "textdata")) {
-                props.push(k); // Should create the same order. 
+        try {
+            let textarray = data.textarray;
+            let data_in = data.textdata;
+            let props = [];
+            for (k in data) {
+                if ((k != "textarray") && (k != "textdata")) {
+                    props.push(k); // Should create the same order. 
+                }
             }
-        }
-        // At first I thought, a reducer might not be good performance. 
-        // Then I remembered, javascript passes *objects* and *arrays* by reference.
-        // This is gonna be so clever.
-        console.log(props)
-        let sentencearr = props.reduce((prev, curr) => {
-            return prev[curr];
-        }, textarrays[textarray]);
-        /* so what is this thing doing? 
-        It is iterating over each property and then returning the object at the named property.
-        This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
-        EXACTLY THE WAY THE TREE IS SET UP */
-        if (Array.isArray(sentencearr)) {
-            // Within the array, we want to handle the following cases:
-            // - Standard strings
-            // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
-            // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
-            //
-            // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
-            // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot. 
-            //
-            // If there are *any* onlyphrases, then chosenphrases will not be used. 
-            let chosenphrases = [];
-            let onlyphrases = [];
-            let only = false;
-            sentencearr.forEach((a) => {
-                if (typeof a == "string") {
-                    chosenphrases.push(a)
+            // At first I thought, a reducer might not be good performance. 
+            // Then I remembered, javascript passes *objects* and *arrays* by reference.
+            // This is gonna be so clever.
+            console.log(props)
+            let sentencearr = props.reduce((prev, curr) => {
+                return prev[curr];
+            }, textarrays[textarray]);
+            /* so what is this thing doing? 
+            It is iterating over each property and then returning the object at the named property.
+            This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
+            EXACTLY THE WAY THE TREE IS SET UP */
+            if (Array.isArray(sentencearr)) {
+                // Within the array, we want to handle the following cases:
+                // - Standard strings
+                // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
+                // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
+                //
+                // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
+                // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot. 
+                //
+                // If there are *any* onlyphrases, then chosenphrases will not be used. 
+                let chosenphrases = [];
+                let onlyphrases = [];
+                let only = false;
+                sentencearr.forEach((a) => {
+                    if (typeof a == "string") {
+                        chosenphrases.push(a)
+                    }
+                    else {
+                        if ((a.only != undefined) && a.only(data_in)) {
+                            onlyphrases.push(a.text);
+                            only = true;
+                        }
+                        else if ((a.required != undefined) && a.required(data_in)) {
+                            chosenphrases.push(a.text);
+                        }
+                    }
+                })
+                let outstring;
+                if (only) {
+                    outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
                 }
                 else {
-                    if ((a.only != undefined) && a.only(data_in)) {
-                        onlyphrases.push(a.text);
-                        only = true;
-                    }
-                    else if ((a.required != undefined) && a.required(data_in)) {
-                        chosenphrases.push(a.text);
-                    }
+                    outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
                 }
-            })
-            let outstring;
-            if (only) {
-                outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
+                outstring = convertPronounsText(outstring, data_in);
+
+                return outstring;
             }
             else {
-                outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
+                return ("There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", "))
             }
-            outstring = convertPronounsText(outstring, data_in);
-
-            return outstring;
         }
-        else {
-            return ("There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", "))
+        catch (err) {
+            console.log(err)
+            return "There was an error generating this text. See console error."
         }
     }
-    catch (err) {
-        console.log(err)
-        return "There was an error generating this text. See console error."
-    }
-}
 
 exports.getText = getText;
-exports.getTextGeneric = getTextGeneric;
+    exports.getTextGeneric = getTextGeneric;
