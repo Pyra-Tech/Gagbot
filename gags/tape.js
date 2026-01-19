@@ -46,44 +46,44 @@ const tapeCharMap = new Map([
 	["x", "g"],
 	["y", "m"],
 	["z", "g"],
-])
+]);
 
 const garbleText = (text, intensity) => {
-	let output = ""
+	let output = "";
 
 	// Split the string into words using ANY whitespace/control characters present. Double-spaces may occur, handle it gracefully with a '+'.
-	let textParts = text.split(/[\u0000-\u0020]+/)
+	let textParts = text.split(/[\u0000-\u0020]+/);
 
 	// Go word by word.
 	for (let x = 0; x < textParts.length; x++) {
-		let word = ""
-		let allCaps = !textParts[x].match(/[a-z]/) && textParts[x].length > 1 ? true : false
+		let word = "";
+		let allCaps = !textParts[x].match(/[a-z]/) && textParts[x].length > 1 ? true : false;
 
 		for (let itr = 0; itr < textParts[x].length; itr++) {
-			let nextChar = ""
-			let isUppercase = textParts[x][itr] != textParts[x][itr].toLowerCase()
+			let nextChar = "";
+			let isUppercase = textParts[x][itr] != textParts[x][itr].toLowerCase();
 			if (tapeCharMap.get(textParts[x][itr].toLowerCase())) {
 				// First letter is capital unless intensity 10. All other letters remain capital if intensity 1-6.
-				nextChar = isUppercase && ((itr == 0 && intensity < 9) || intensity < 7) ? tapeCharMap.get(textParts[x][itr].toLowerCase()).toUpperCase() : tapeCharMap.get(textParts[x][itr].toLowerCase())
+				nextChar = isUppercase && ((itr == 0 && intensity < 9) || intensity < 7) ? tapeCharMap.get(textParts[x][itr].toLowerCase()).toUpperCase() : tapeCharMap.get(textParts[x][itr].toLowerCase());
 
 				// Trash letters instead
 				if (Math.random() * 10 + 6 < intensity && itr != 0) {
-					nextChar = ""
+					nextChar = "";
 				}
-				word += nextChar
+				word += nextChar;
 
 				// Intensity - Add duplicate chars randomly
 				if (Math.random() * 10 > intensity + 5) {
-					word += allCaps ? nextChar : nextChar.toLowerCase()
+					word += allCaps ? nextChar : nextChar.toLowerCase();
 				}
 			} else {
-				nextChar = textParts[x][itr]
+				nextChar = textParts[x][itr];
 				if (nextChar.match(/[0-9]/)) {
-					let randChars = ["m", "n", "f", "p"]
-					let randInt = Math.floor(Math.random() * randChars.length)
-					nextChar = randChars[randInt]
+					let randChars = ["m", "n", "f", "p"];
+					let randInt = Math.floor(Math.random() * randChars.length);
+					nextChar = randChars[randInt];
 				}
-				word += nextChar
+				word += nextChar;
 			}
 		}
 
@@ -95,43 +95,43 @@ const garbleText = (text, intensity) => {
 
 		//console.log(word)
 
-		let ptr = word.length - 1 // Start on final character
+		let ptr = word.length - 1; // Start on final character
 		for (ptr; ptr >= 0; ptr--) {
 			// Iterate BACKWARDS
 			if (word[ptr].match(/[a-zA-z]/)) {
-				break
+				break;
 			} // Break if we hit alphabetical
 		} //  IF we don't hit one, ptr == 0, don't do anything
 		//console.log("WORD LEN: " + ptr)
-		let endchar = word.match(/[a-z]/) ? "h" : "H"
+		let endchar = word.match(/[a-z]/) ? "h" : "H";
 		switch (ptr) {
 			default: // Words should always end in a suitable letter.
 				if (ptr >= 0 && !word[ptr].match(/[fnh]/)) {
-					word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1)
+					word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1);
 				}
-				break
+				break;
 			case 1:
-				word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1)
-				break
+				word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1);
+				break;
 			case 0:
-				endchar = "ph" //word.match(/[a-z]/) ? "ph" : "PH"
-				word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1)
-				break
+				endchar = "ph"; //word.match(/[a-z]/) ? "ph" : "PH"
+				word = word.slice(0, ptr + 1) + endchar + word.slice(ptr + 1);
+				break;
 		}
 
 		if (x < textParts.length - 1) {
-			word += " "
+			word += " ";
 		} // Trailing space after each word, EXCEPT the last.
-		output += word
+		output += word;
 	}
 
 	// For high intensity, prepend "-#"
 
-	return output
-}
+	return output;
+};
 
-exports.garbleText = garbleText
-exports.choicename = "Tape Gag"
+exports.garbleText = garbleText;
+exports.choicename = "Tape Gag";
 
 // Unit Tests
 

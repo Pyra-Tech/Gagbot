@@ -1,1 +1,1 @@
-exports.choicename = "Bullet Vibe"
+exports.choicename = "Bullet Vibe";

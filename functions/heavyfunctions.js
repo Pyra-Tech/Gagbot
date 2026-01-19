@@ -1,6 +1,6 @@
-const fs = require("fs")
-const path = require("path")
-const https = require("https")
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
 
 const heavytypes = [
 	// Armbinders
@@ -114,23 +114,23 @@ const heavytypes = [
 		noother: false,
 		namefunction: async (interaction, data) => {
 			if (data.textarray != "texts_collarequip" && data.textarray != "texts_struggle") {
-				return data
+				return data;
 			} // Only affect struggle and collarequip.
 			else {
 				// Typescript is going to fucking hate me for what Im about to do.
 				// Guess what though? Typescript ain't my boss
 				// It will *deal* with this. I'd just be putting //@ts-ignore all over this function otherwise.
-				let datatoreturn = Object.assign({}, data)
+				let datatoreturn = Object.assign({}, data);
 				if (data.textarray == "texts_collarequip") {
-					let guilduser = await interaction.guild.members.cache.get(datatoreturn.textdata.interactionuser.id)
-					datatoreturn.textdata.c3 = `${guilduser.displayName}'s Lap`
+					let guilduser = await interaction.guild.members.cache.get(datatoreturn.textdata.interactionuser.id);
+					datatoreturn.textdata.c3 = `${guilduser.displayName}'s Lap`;
 				}
 
-				return datatoreturn
+				return datatoreturn;
 			}
 		},
 	},
-]
+];
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -138,74 +138,74 @@ const heavytypes = [
  ********************/
 const loadHeavyTypes = () => {
 	process.heavytypes = heavytypes.map((item) => {
-		return { name: item.name, value: item.value }
-	})
-}
+		return { name: item.name, value: item.value };
+	});
+};
 
 const convertheavy = (type) => {
-	let convertheavyarr
+	let convertheavyarr;
 	for (let i = 0; i < heavytypes.length; i++) {
 		if (convertheavyarr == undefined) {
-			convertheavyarr = {}
+			convertheavyarr = {};
 		}
-		convertheavyarr[heavytypes[i].value] = heavytypes[i].name
+		convertheavyarr[heavytypes[i].value] = heavytypes[i].name;
 	}
-	return convertheavyarr[type]
-}
+	return convertheavyarr[type];
+};
 
 // Get the base heavy object by type
 const getBaseHeavy = (type) => {
-	return heavytypes.find((h) => h.value == type)
-}
+	return heavytypes.find((h) => h.value == type);
+};
 
 const heavyDenialCoefficient = (type) => {
-	return heavytypes.find((h) => h.value == type)?.denialCoefficient
-}
+	return heavytypes.find((h) => h.value == type)?.denialCoefficient;
+};
 
 const assignHeavy = (user, type, origbinder, customname) => {
 	if (process.heavy == undefined) {
-		process.heavy = {}
+		process.heavy = {};
 	}
-	let originalbinder = process.heavy[user]?.origbinder
-	process.heavy[user] = { type: customname ?? convertheavy(type), typeval: type, origbinder: originalbinder ?? origbinder }
+	let originalbinder = process.heavy[user]?.origbinder;
+	process.heavy[user] = { type: customname ?? convertheavy(type), typeval: type, origbinder: originalbinder ?? origbinder };
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.heavy = true
-}
+	process.readytosave.heavy = true;
+};
 
 const getHeavy = (user) => {
 	if (process.heavy == undefined) {
-		process.heavy = {}
+		process.heavy = {};
 	}
-	return process.heavy[user]
-}
+	return process.heavy[user];
+};
 
 const getHeavyBinder = (user) => {
 	if (process.heavy == undefined) {
-		process.heavy = {}
+		process.heavy = {};
 	}
-	return process.heavy[user]?.origbinder
-}
+	return process.heavy[user]?.origbinder;
+};
 
 const removeHeavy = (user) => {
 	if (process.heavy == undefined) {
-		process.heavy = {}
+		process.heavy = {};
 	}
-	delete process.heavy[user]
+	delete process.heavy[user];
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.heavy = true
-}
+	process.readytosave.heavy = true;
+};
 
-exports.loadHeavyTypes = loadHeavyTypes
-exports.heavytypes = heavytypes
-exports.assignHeavy = assignHeavy
-exports.getHeavy = getHeavy
-exports.getHeavyBinder = getHeavyBinder
-exports.removeHeavy = removeHeavy
-exports.commandsheavy = heavytypes
-exports.convertheavy = convertheavy
-exports.getBaseHeavy = getBaseHeavy
-exports.heavyDenialCoefficient = heavyDenialCoefficient
+exports.loadHeavyTypes = loadHeavyTypes;
+exports.heavytypes = heavytypes;
+exports.assignHeavy = assignHeavy;
+exports.getHeavy = getHeavy;
+exports.getHeavyBinder = getHeavyBinder;
+exports.removeHeavy = removeHeavy;
+exports.commandsheavy = heavytypes;
+exports.convertheavy = convertheavy;
+exports.getBaseHeavy = getBaseHeavy;
+exports.heavyDenialCoefficient = heavyDenialCoefficient;

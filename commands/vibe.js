@@ -1,21 +1,21 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js")
-const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js")
-const { getHeavy } = require("./../functions/heavyfunctions.js")
-const { getPronouns } = require("./../functions/pronounfunctions.js")
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js")
-const fs = require("fs")
-const path = require("path")
-const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js")
-const { getText } = require("./../functions/textfunctions.js")
-const { config, getOption } = require("../functions/configfunctions.js")
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getPronouns } = require("./../functions/pronounfunctions.js");
+const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const fs = require("fs");
+const path = require("path");
+const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js");
+const { getText } = require("./../functions/textfunctions.js");
+const { config, getOption } = require("../functions/configfunctions.js");
 
-const vibetypes = []
-const commandsPath = path.join(__dirname, "..", "vibes")
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"))
+const vibetypes = [];
+const commandsPath = path.join(__dirname, "..", "vibes");
+const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
 
 for (const file of commandFiles) {
-	const vibe = require(`./../vibes/${file}`)
-	vibetypes.push({ name: vibe.choicename, value: file.replace(".js", "") })
+	const vibe = require(`./../vibes/${file}`);
+	vibetypes.push({ name: vibe.choicename, value: file.replace(".js", "") });
 }
 
 module.exports = {
@@ -32,27 +32,27 @@ module.exports = {
 		.addNumberOption((opt) => opt.setName("intensity").setDescription("How intensely to stimulate").setMinValue(1).setMaxValue(20)),
 	async execute(interaction) {
 		try {
-			let vibeuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user
-			let vibeintensity = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5
-			let vibetype = interaction.options.getString("type") ? interaction.options.getString("type") : "bullet vibe"
+			let vibeuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
+			let vibeintensity = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5;
+			let vibetype = interaction.options.getString("type") ? interaction.options.getString("type") : "bullet vibe";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(vibeuser.id)?.mainconsent) {
-				await handleConsent(interaction, vibeuser.id)
-				return
+				await handleConsent(interaction, vibeuser.id);
+				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(interaction.user.id)?.mainconsent) {
-				await handleConsent(interaction, interaction.user.id)
-				return
+				await handleConsent(interaction, interaction.user.id);
+				return;
 			}
 			// it has an optin now
 			if (getOption(vibeuser.id, "arousalsystem") == 0) {
 				if (vibeuser.id == interaction.user.id) {
-					interaction.reply({ content: `You have disabled the Arousal System in **/config** and would not be affected. Please review the Arousal System setting and enable it to use toys.`, flags: MessageFlags.Ephemeral })
+					interaction.reply({ content: `You have disabled the Arousal System in **/config** and would not be affected. Please review the Arousal System setting and enable it to use toys.`, flags: MessageFlags.Ephemeral });
 				} else {
-					interaction.reply({ content: `${vibeuser} has disabled the Arousal System in **/config** and would not be affected.`, flags: MessageFlags.Ephemeral })
+					interaction.reply({ content: `${vibeuser} has disabled the Arousal System in **/config** and would not be affected.`, flags: MessageFlags.Ephemeral });
 				}
-				return
+				return;
 			}
 			let data = {
 				textarray: "texts_vibe",
@@ -63,417 +63,417 @@ module.exports = {
 					c2: vibetype, // the chosen vibe type
 					c3: vibeintensity,
 				},
-			}
+			};
 
 			if (data.textdata.c2 == undefined) {
 				// Something went CRITICALLY wrong. Eject, eject!
-				interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral })
-				return
+				interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral });
+				return;
 			}
 
 			if (getHeavy(interaction.user.id)) {
 				// We are in heavy bondage
-				data.heavy = true
+				data.heavy = true;
 				if (vibeuser == interaction.user) {
 					// ourselves
-					data.self = true
+					data.self = true;
 					if (getChastity(vibeuser.id)) {
 						// in chastity
-						data.chastity = true
+						data.chastity = true;
 						if (vibetype) {
 							// specific single vibe
-							data.single = true
-							interaction.reply(getText(data))
+							data.single = true;
+							interaction.reply(getText(data));
 						} else {
 							// removing all vibes
-							data.both = true
-							interaction.reply(getText(data))
+							data.both = true;
+							interaction.reply(getText(data));
 						}
 					} else {
 						// not in chastity
-						data.nochastity = true
+						data.nochastity = true;
 						if (vibetype) {
 							// specific single vibe
-							data.single = true
-							interaction.reply(getText(data))
+							data.single = true;
+							interaction.reply(getText(data));
 						} else {
 							// removing all vibes
-							data.both = true
-							interaction.reply(getText(data))
+							data.both = true;
+							interaction.reply(getText(data));
 						}
 					}
 				} else {
 					// someone else
-					data.other = true
+					data.other = true;
 					if (getChastity(vibeuser.id)) {
 						// in chastity
-						data.chastity = true
+						data.chastity = true;
 						if (vibetype) {
 							// specific single vibe
-							data.single = true
-							interaction.reply(getText(data))
+							data.single = true;
+							interaction.reply(getText(data));
 						} else {
 							// removing all vibes
-							data.both = true
-							interaction.reply(getText(data))
+							data.both = true;
+							interaction.reply(getText(data));
 						}
 					} else {
 						// not in chastity
-						data.nochastity = true
+						data.nochastity = true;
 						if (vibetype) {
 							// specific single vibe
-							data.single = true
-							interaction.reply(getText(data))
+							data.single = true;
+							interaction.reply(getText(data));
 						} else {
 							// removing all vibes
-							data.both = true
-							interaction.reply(getText(data))
+							data.both = true;
+							interaction.reply(getText(data));
 						}
 					}
 				}
 			} else {
 				// We are in heavy bondage
-				data.noheavy = true
+				data.noheavy = true;
 				if (vibeuser == interaction.user) {
 					// ourselves
-					data.self = true
+					data.self = true;
 					if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => vibe.vibetype == vibetype) || !vibetype)) {
 						// wearing the vibe right now
-						data.vibe = true
+						data.vibe = true;
 						if (getChastity(vibeuser.id)) {
 							// in chastity
-							data.chastity = true
+							data.chastity = true;
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
-								data.key = true
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2)
+								data.key = true;
+								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
 								if (fumbleResults[0]) {
 									// User fumbles with the key due to their arousal and frustration
-									data.fumble = true
+									data.fumble = true;
 									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
 										// lost the key
-										data.discard = true
+										data.discard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.both = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										}
 									} else {
 										// fumbled, but didnt lose key
-										data.nodiscard = true
+										data.nodiscard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											interaction.reply(getText(data))
+											data.single = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											interaction.reply(getText(data))
+											data.both = true;
+											interaction.reply(getText(data));
 										}
 									}
 								} else {
 									// didnot fumble
-									data.nofumble = true
+									data.nofumble = true;
 									if (vibetype) {
 										// specific single vibe
-										data.single = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.single = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									} else {
 										// removing all vibes
-										data.both = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.both = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									}
 								}
 							} else {
 								// We do not have the key
-								data.nokey = true
-								interaction.reply(getText(data))
+								data.nokey = true;
+								interaction.reply(getText(data));
 							}
 						} else {
 							// not in chastity
-							data.nochastity = true
+							data.nochastity = true;
 							if (vibetype) {
 								// specific single vibe
-								data.single = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.single = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							} else {
 								// removing all vibes
-								data.both = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.both = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							}
 						}
 					} else {
 						// not wearing this kind of vibe
-						data.novibe = true
+						data.novibe = true;
 						if (getChastity(vibeuser.id)) {
 							// in chastity
-							data.chastity = true
+							data.chastity = true;
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
-								data.key = true
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2)
+								data.key = true;
+								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
 								if (fumbleResults[0]) {
 									// User fumbles with the key due to their arousal and frustration
-									data.fumble = true
+									data.fumble = true;
 									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
 										// lost the key
-										data.discard = true
+										data.discard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.both = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										}
 									} else {
 										// fumbled, but didnt lose key
-										data.nodiscard = true
+										data.nodiscard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											interaction.reply(getText(data))
+											data.single = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											interaction.reply(getText(data))
+											data.both = true;
+											interaction.reply(getText(data));
 										}
 									}
 								} else {
 									// didnot fumble
-									data.nofumble = true
+									data.nofumble = true;
 									if (vibetype) {
 										// specific single vibe
-										data.single = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.single = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									} else {
 										// removing all vibes
-										data.both = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.both = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									}
 								}
 							} else {
 								// We do not have the key
-								data.nokey = true
-								interaction.reply(getText(data))
+								data.nokey = true;
+								interaction.reply(getText(data));
 							}
 						} else {
 							// not in chastity
-							data.nochastity = true
+							data.nochastity = true;
 							if (vibetype) {
 								// specific single vibe
-								data.single = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.single = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							} else {
 								// removing all vibes
-								data.both = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.both = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							}
 						}
 					}
 				} else {
 					// them
-					data.other = true
+					data.other = true;
 					if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => vibe.vibetype == vibetype) || !vibetype)) {
 						// wearing the vibe right now
-						data.vibe = true
+						data.vibe = true;
 						if (getChastity(vibeuser.id)) {
 							// in chastity
-							data.chastity = true
+							data.chastity = true;
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt
-								data.key = true
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2)
+								data.key = true;
+								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
 								if (fumbleResults[0]) {
 									// User fumbles with the key due to their arousal and frustration
-									data.fumble = true
+									data.fumble = true;
 									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
 										// lost the key
-										data.discard = true
+										data.discard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.both = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										}
 									} else {
 										// fumbled, but didnt lose key
-										data.nodiscard = true
+										data.nodiscard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											interaction.reply(getText(data))
+											data.both = true;
+											interaction.reply(getText(data));
 										}
 									}
 								} else {
 									// didnot fumble
-									data.nofumble = true
+									data.nofumble = true;
 									if (vibetype) {
 										// specific single vibe
-										data.single = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.single = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									} else {
 										// removing all vibes
-										data.both = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.both = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									}
 								}
 							} else if (getChastity(vibeuser.id)?.access === 0 && vibeuser.id != interaction.user.id) {
 								// public access key
-								data.public = true
+								data.public = true;
 								if (vibetype) {
 									// specific single vibe
-									data.single = true
-									interaction.reply(getText(data))
-									assignVibe(vibeuser.id, vibeintensity, vibetype)
+									data.single = true;
+									interaction.reply(getText(data));
+									assignVibe(vibeuser.id, vibeintensity, vibetype);
 								} else {
 									// removing all vibes
-									data.both = true
-									interaction.reply(getText(data))
-									assignVibe(vibeuser.id, vibeintensity, vibetype)
+									data.both = true;
+									interaction.reply(getText(data));
+									assignVibe(vibeuser.id, vibeintensity, vibetype);
 								}
 							} else {
 								// We do not have the key
-								data.nokey = true
-								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+								data.nokey = true;
+								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 							}
 						} else {
 							// not in chastity
-							data.nochastity = true
+							data.nochastity = true;
 							if (vibetype) {
 								// specific single vibe
-								data.single = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.single = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							} else {
 								// removing all vibes
-								data.both = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.both = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							}
 						}
 					} else {
 						// not wearing chosen vibrators or any
-						data.novibe = true
+						data.novibe = true;
 						if (getChastity(vibeuser.id)) {
 							// in chastity
-							data.chastity = true
+							data.chastity = true;
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
-								data.key = true
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2)
+								data.key = true;
+								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
 								if (fumbleResults[0]) {
 									// User fumbles with the key due to their arousal and frustration
-									data.fumble = true
+									data.fumble = true;
 									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
 										// lost the key
-										data.discard = true
+										data.discard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.both = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										}
 									} else {
 										// fumbled, but didnt lose key
-										data.nodiscard = true
+										data.nodiscard = true;
 										if (vibetype) {
 											// specific single vibe
-											data.single = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.single = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
-											data.both = true
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
-											data[discardresult] = true
-											interaction.reply(getText(data))
+											data.both = true;
+											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											data[discardresult] = true;
+											interaction.reply(getText(data));
 										}
 									}
 								} else {
 									// didnot fumble
-									data.nofumble = true
+									data.nofumble = true;
 									if (vibetype) {
 										// specific single vibe
-										data.single = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.single = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									} else {
 										// removing all vibes
-										data.both = true
-										interaction.reply(getText(data))
-										assignVibe(vibeuser.id, vibeintensity, vibetype)
+										data.both = true;
+										interaction.reply(getText(data));
+										assignVibe(vibeuser.id, vibeintensity, vibetype);
 									}
 								}
 							} else {
 								// We do not have the key
-								data.nokey = true
-								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+								data.nokey = true;
+								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 							}
 						} else {
 							// not in chastity
-							data.nochastity = true
+							data.nochastity = true;
 							if (vibetype) {
 								// specific single vibe
-								data.single = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.single = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							} else {
 								// removing all vibes
-								data.both = true
-								interaction.reply(getText(data))
-								assignVibe(vibeuser.id, vibeintensity, vibetype)
+								data.both = true;
+								interaction.reply(getText(data));
+								assignVibe(vibeuser.id, vibeintensity, vibetype);
 							}
 						}
 					}
 				}
 			}
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 		}
 	},
-}
+};

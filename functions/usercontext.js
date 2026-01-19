@@ -1,30 +1,30 @@
-const fs = require("fs")
+const fs = require("fs");
 
 function setUserVar(user, key, value) {
-	console.log("aaaaa")
+	console.log("aaaaa");
 	if (process.usercontext == undefined) {
-		process.usercontext = {}
+		process.usercontext = {};
 	}
 	if (process.usercontext[user] == undefined) {
-		process.usercontext[user] = {}
+		process.usercontext[user] = {};
 	}
-	process.usercontext[user][key] = value
-	console.log(process.usercontext)
+	process.usercontext[user][key] = value;
+	console.log(process.usercontext);
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.usercontext = true
+	process.readytosave.usercontext = true;
 }
 
 function getUserVar(user, key) {
 	if (process.usercontext == undefined) {
-		process.usercontext = {}
+		process.usercontext = {};
 	}
 	if (process.usercontext[user] == undefined) {
-		process.usercontext[user] = {}
+		process.usercontext[user] = {};
 	}
-	return process.usercontext[user][key]
+	return process.usercontext[user][key];
 }
 
-exports.setUserVar = setUserVar
-exports.getUserVar = getUserVar
+exports.setUserVar = setUserVar;
+exports.getUserVar = getUserVar;

@@ -4,33 +4,33 @@
  ***************************/
 
 // Character maps stored in an array in a separate file for code cleanliness
-const { leetGagCharMaps } = require("./leet/leetCharMap.js")
+const { leetGagCharMaps } = require("./leet/leetCharMap.js");
 
 // Helper function to garble a text segment.
 const garbleText = (text, intensity) => {
-	let output = ""
-	let itr = 0
+	let output = "";
+	let itr = 0;
 	for (const char of text) {
 		if (char.match(/[A-Za-z]/)) {
-			let newChar = leetGagCharMaps[Math.ceil(intensity / 2) - 1].get(char.toLowerCase())
+			let newChar = leetGagCharMaps[Math.ceil(intensity / 2) - 1].get(char.toLowerCase());
 			if (newChar) {
 				// Converted Char
-				output += newChar
+				output += newChar;
 			} else {
 				// Unmapped Char
-				output += char
+				output += char;
 			}
 		} else {
 			// Non-alpha Char
-			output += char
+			output += char;
 		}
 	}
 
-	return output
-}
+	return output;
+};
 
-exports.garbleText = garbleText
-exports.choicename = "L337 Gag"
+exports.garbleText = garbleText;
+exports.choicename = "L337 Gag";
 
 // Unit Tests
 

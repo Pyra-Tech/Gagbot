@@ -1,8 +1,8 @@
-const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, PermissionFlagsBits } = require("discord.js")
-const { getMitten, deleteMitten } = require("./../functions/gagfunctions.js")
-const { getHeavy, commandsheavy } = require("./../functions/heavyfunctions.js")
-const { getPronouns } = require("./../functions/pronounfunctions.js")
-const { getConsent, handleConsent, timelockChastityModal } = require("./../functions/interactivefunctions.js")
+const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, PermissionFlagsBits } = require("discord.js");
+const { getMitten, deleteMitten } = require("./../functions/gagfunctions.js");
+const { getHeavy, commandsheavy } = require("./../functions/heavyfunctions.js");
+const { getPronouns } = require("./../functions/pronounfunctions.js");
+const { getConsent, handleConsent, timelockChastityModal } = require("./../functions/interactivefunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,23 +13,23 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			if (interaction.user.id !== interaction.client?.application?.owner?.id) {
-				await interaction.reply(`You're not ${interaction.client?.application?.owner?.displayName}. Go away.`)
-				return
+				await interaction.reply(`You're not ${interaction.client?.application?.owner?.displayName}. Go away.`);
+				return;
 			}
-			let command = interaction.options.getString("command")
-			let res
+			let command = interaction.options.getString("command");
+			let res;
 			try {
-				res = eval(command)
+				res = eval(command);
 			} catch (err) {
-				await interaction.reply({ content: err.toString(), flags: MessageFlags.Ephemeral })
+				await interaction.reply({ content: err.toString(), flags: MessageFlags.Ephemeral });
 			}
 			if (res) {
-				await interaction.reply({ content: `Eval result: ${res}`, flags: MessageFlags.Ephemeral })
+				await interaction.reply({ content: `Eval result: ${res}`, flags: MessageFlags.Ephemeral });
 			} else {
-				await interaction.reply({ content: `Command run. No return value.`, flags: MessageFlags.Ephemeral })
+				await interaction.reply({ content: `Command run. No return value.`, flags: MessageFlags.Ephemeral });
 			}
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 		}
 	},
-}
+};

@@ -1,5 +1,5 @@
-const fs = require("fs")
-const path = require("path")
+const fs = require("fs");
+const path = require("path");
 
 let wearabletypes = [
 	// Aesthetic Body Parts
@@ -288,11 +288,11 @@ let wearabletypes = [
 	{ name: "Silk Belt", value: "belt_silk", colorable: true },
 	{ name: "Leather Belt", value: "belt_leather", colorable: true },
 	{ name: "Leather Bandolier", value: "belt_leather" },
-]
+];
 
 // Each colorable entry above will have a copy of the following added
 // Unless it is excluded on forbiddenColors.
-const colors = ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"]
+const colors = ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"];
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -300,166 +300,166 @@ const colors = ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Whi
  ********************/
 const loadWearables = () => {
 	// Copy the array so we dont mutate the original lmao
-	let wearablestoadd = wearabletypes.slice(0)
+	let wearablestoadd = wearabletypes.slice(0);
 	// Iterate over each wearable type, filtering only the ones that are colorable.
-	let colorables = wearabletypes.filter((w) => w.colorable)
+	let colorables = wearabletypes.filter((w) => w.colorable);
 
 	// Now for each colorable, add an instance of each color to the list.
 	colorables.forEach((w) => {
-		let uniqueColors = w.uniqueColors ?? []
+		let uniqueColors = w.uniqueColors ?? [];
 		// Filter out any forbidden colors, if specified;
-		let colorss = colors.slice(0)
+		let colorss = colors.slice(0);
 		if (w.forbiddenColors) {
-			colorss = colorss.filter((c) => !w.forbiddenColors.includes(c))
+			colorss = colorss.filter((c) => !w.forbiddenColors.includes(c));
 		}
 		// Add all the colors and their unique forms
-		let colorstoadd = colorss.concat(...uniqueColors)
+		let colorstoadd = colorss.concat(...uniqueColors);
 		// Now for each color, push to the array.
 		colorstoadd.forEach((c) => {
-			let newobject = Object.assign({}, w)
-			newobject.name = `${c} ${w.name}`
-			newobject.value = `${w.value}_${c.toLowerCase()}`
-			wearablestoadd.push(newobject)
-		})
-	})
+			let newobject = Object.assign({}, w);
+			newobject.name = `${c} ${w.name}`;
+			newobject.value = `${w.value}_${c.toLowerCase()}`;
+			wearablestoadd.push(newobject);
+		});
+	});
 
 	let outarr = wearablestoadd.map((item) => {
-		return { name: item.name, value: item.value }
-	})
+		return { name: item.name, value: item.value };
+	});
 	// Since I have zero clue how to prevent the duplicates,
 	// the code feels solid and doesnt seem to have any obvious bugs.
 	// I'm just gonna dedupe them before committing them. This is a dumb workaround.
-	let outmap = new Map()
+	let outmap = new Map();
 	for (const i of outarr) {
-		outmap.set(i.value, i)
+		outmap.set(i.value, i);
 	}
-	process.wearableslist = Array.from(outmap.values())
-	console.log(`Wearables list is ${process.wearableslist.length} entries long.`)
-}
+	process.wearableslist = Array.from(outmap.values());
+	console.log(`Wearables list is ${process.wearableslist.length} entries long.`);
+};
 
 const assignWearable = (userID, wearable) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
 	if (process.wearable[userID]) {
-		process.wearable[userID].wornwearable.push(wearable)
+		process.wearable[userID].wornwearable.push(wearable);
 	} else {
-		process.wearable[userID] = { wornwearable: [wearable] }
+		process.wearable[userID] = { wornwearable: [wearable] };
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.wearable = true
-}
+	process.readytosave.wearable = true;
+};
 
 const getWearable = (userID) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
-	return process.wearable[userID]?.wornwearable ? process.wearable[userID]?.wornwearable : []
-}
+	return process.wearable[userID]?.wornwearable ? process.wearable[userID]?.wornwearable : [];
+};
 
 const getLockedWearable = (userID) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
-	return process.wearable[userID]?.locked ? process.wearable[userID]?.locked : []
-}
+	return process.wearable[userID]?.locked ? process.wearable[userID]?.locked : [];
+};
 
 const addLockedWearable = (userID, wearable) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
 	if (process.wearable[userID]) {
 		if (process.wearable[userID].locked == undefined) {
-			process.wearable[userID].locked = [wearable]
+			process.wearable[userID].locked = [wearable];
 		} else {
-			process.wearable[userID].locked.push(wearable)
+			process.wearable[userID].locked.push(wearable);
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.wearable = true
-}
+	process.readytosave.wearable = true;
+};
 
 const removeLockedWearable = (userID, wearable) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
 	if (process.wearable[userID]) {
 		if (process.wearable[userID].locked == undefined) {
-			return
+			return;
 		} else {
 			if (process.wearable[userID].locked.includes(wearable)) {
-				process.wearable[userID].locked.splice(process.wearable[userID].locked.indexOf(wearable), 1)
+				process.wearable[userID].locked.splice(process.wearable[userID].locked.indexOf(wearable), 1);
 			}
 			if (process.wearable[userID].locked.length == 0) {
-				delete process.wearable[userID].locked
+				delete process.wearable[userID].locked;
 			}
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.wearable = true
-}
+	process.readytosave.wearable = true;
+};
 
 const deleteWearable = (userID, wearable) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
 	if (!process.wearable[userID]) {
-		return false
+		return false;
 	}
 	if (wearable && process.wearable[userID].wornwearable.includes(wearable) && !getLockedWearable(userID).includes(wearable)) {
-		process.wearable[userID].wornwearable.splice(process.wearable[userID].wornwearable.indexOf(wearable), 1)
+		process.wearable[userID].wornwearable.splice(process.wearable[userID].wornwearable.indexOf(wearable), 1);
 		if (process.wearable[userID].wornwearable.length == 0) {
-			delete process.wearable[userID]
+			delete process.wearable[userID];
 		}
 	} else if (process.wearable[userID]) {
-		let locks = getLockedWearable(userID)
-		let savedheadgear = []
+		let locks = getLockedWearable(userID);
+		let savedheadgear = [];
 		process.wearable[userID].wornwearable.forEach((g) => {
 			if (locks.includes(g)) {
-				savedheadgear.push(g)
+				savedheadgear.push(g);
 			}
-		})
-		process.wearable[userID].wornwearable = savedheadgear
+		});
+		process.wearable[userID].wornwearable = savedheadgear;
 		if (process.wearable[userID].wornwearable.length == 0) {
-			delete process.wearable[userID]
+			delete process.wearable[userID];
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.wearable = true
-}
+	process.readytosave.wearable = true;
+};
 
 const getWearableName = (userID, wearablename) => {
 	if (process.wearable == undefined) {
-		process.wearable = {}
+		process.wearable = {};
 	}
-	let convertmittenarr = {}
+	let convertmittenarr = {};
 	for (let i = 0; i < process.wearableslist.length; i++) {
-		convertmittenarr[process.wearableslist[i].value] = process.wearableslist[i].name
+		convertmittenarr[process.wearableslist[i].value] = process.wearableslist[i].name;
 	}
 	if (wearablename) {
-		return convertmittenarr[wearablename]
+		return convertmittenarr[wearablename];
 	} else {
-		return undefined
+		return undefined;
 	}
-}
+};
 
-exports.wearabletypes = wearabletypes
-exports.loadWearables = loadWearables
-exports.wearablecolors = colors
+exports.wearabletypes = wearabletypes;
+exports.loadWearables = loadWearables;
+exports.wearablecolors = colors;
 
-exports.assignWearable = assignWearable
-exports.getWearable = getWearable
-exports.deleteWearable = deleteWearable
-exports.getWearableName = getWearableName
+exports.assignWearable = assignWearable;
+exports.getWearable = getWearable;
+exports.deleteWearable = deleteWearable;
+exports.getWearableName = getWearableName;
 
-exports.addLockedWearable = addLockedWearable
-exports.getLockedWearable = getLockedWearable
-exports.removeLockedWearable = removeLockedWearable
+exports.addLockedWearable = addLockedWearable;
+exports.getLockedWearable = getLockedWearable;
+exports.removeLockedWearable = removeLockedWearable;

@@ -1,5 +1,5 @@
-const fs = require("fs")
-const path = require("path")
+const fs = require("fs");
+const path = require("path");
 
 const headweartypes = [
 	// Hoods
@@ -46,9 +46,9 @@ const headweartypes = [
 
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
-]
+];
 
-const DOLLVISORS = ["doll_visor", "doll_visor_blind"]
+const DOLLVISORS = ["doll_visor", "doll_visor_blind"];
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -56,217 +56,217 @@ const DOLLVISORS = ["doll_visor", "doll_visor_blind"]
  ********************/
 const loadHeadwearTypes = () => {
 	process.headtypes = headweartypes.map((item) => {
-		return { name: item.name, value: item.value }
-	})
-}
+		return { name: item.name, value: item.value };
+	});
+};
 
 const assignHeadwear = (userID, headwear, origbinder) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
-	let originalbinder = process.headwear[userID]?.origbinder
+	let originalbinder = process.headwear[userID]?.origbinder;
 	if (process.headwear[userID]) {
-		process.headwear[userID].wornheadwear.push(headwear)
+		process.headwear[userID].wornheadwear.push(headwear);
 	} else {
-		process.headwear[userID] = { wornheadwear: [headwear], origbinder: originalbinder ?? origbinder }
+		process.headwear[userID] = { wornheadwear: [headwear], origbinder: originalbinder ?? origbinder };
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.headwear = true
-}
+	process.readytosave.headwear = true;
+};
 
 const getHeadwear = (userID) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
-	return process.headwear[userID]?.wornheadwear ? process.headwear[userID]?.wornheadwear : []
-}
+	return process.headwear[userID]?.wornheadwear ? process.headwear[userID]?.wornheadwear : [];
+};
 
 const getHeadwearBinder = (userID) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
-	return process.headwear[userID]?.origbinder
-}
+	return process.headwear[userID]?.origbinder;
+};
 
 const getLockedHeadgear = (userID) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
-	return process.headwear[userID]?.locked ? process.headwear[userID]?.locked : []
-}
+	return process.headwear[userID]?.locked ? process.headwear[userID]?.locked : [];
+};
 
 const addLockedHeadgear = (userID, headwear) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
 	if (process.headwear[userID]) {
 		if (process.headwear[userID].locked == undefined) {
-			process.headwear[userID].locked = [headwear]
+			process.headwear[userID].locked = [headwear];
 		} else {
-			process.headwear[userID].locked.push(headwear)
+			process.headwear[userID].locked.push(headwear);
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.headwear = true
-}
+	process.readytosave.headwear = true;
+};
 
 const removeLockedHeadgear = (userID, headwear) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
 	if (process.headwear[userID]) {
 		if (process.headwear[userID].locked == undefined) {
-			return
+			return;
 		} else {
 			if (process.headwear[userID].locked.includes(headwear)) {
-				process.headwear[userID].locked.splice(process.headwear[userID].locked.indexOf(headwear), 1)
+				process.headwear[userID].locked.splice(process.headwear[userID].locked.indexOf(headwear), 1);
 			}
 			if (process.headwear[userID].locked.length == 0) {
-				delete process.headwear[userID].locked
+				delete process.headwear[userID].locked;
 			}
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.headwear = true
-}
+	process.readytosave.headwear = true;
+};
 
 const deleteHeadwear = (userID, headwear) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
 	if (!process.headwear[userID]) {
-		return false
+		return false;
 	}
 	if (headwear && process.headwear[userID].wornheadwear.includes(headwear) && !getLockedHeadgear(userID).includes(headwear)) {
-		process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1)
+		process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1);
 		if (process.headwear[userID].wornheadwear.length == 0) {
-			delete process.headwear[userID]
+			delete process.headwear[userID];
 		}
 	} else if (process.headwear[userID]) {
-		let locks = getLockedHeadgear(userID)
-		let savedheadgear = []
+		let locks = getLockedHeadgear(userID);
+		let savedheadgear = [];
 		process.headwear[userID].wornheadwear.forEach((g) => {
 			if (locks.includes(g)) {
-				savedheadgear.push(g)
+				savedheadgear.push(g);
 			}
-		})
-		process.headwear[userID].wornheadwear = savedheadgear
+		});
+		process.headwear[userID].wornheadwear = savedheadgear;
 		if (process.headwear[userID].wornheadwear.length == 0) {
-			delete process.headwear[userID]
+			delete process.headwear[userID];
 		}
 	}
 	if (process.readytosave == undefined) {
-		process.readytosave = {}
+		process.readytosave = {};
 	}
-	process.readytosave.headwear = true
-}
+	process.readytosave.headwear = true;
+};
 
 const getHeadwearName = (userID, headnname) => {
 	if (process.headwear == undefined) {
-		process.headwear = {}
+		process.headwear = {};
 	}
-	let convertmittenarr = {}
+	let convertmittenarr = {};
 	for (let i = 0; i < headweartypes.length; i++) {
-		convertmittenarr[headweartypes[i].value] = headweartypes[i].name
+		convertmittenarr[headweartypes[i].value] = headweartypes[i].name;
 	}
 	if (headnname) {
-		return convertmittenarr[headnname]
+		return convertmittenarr[headnname];
 	}
 	/*
     else if (process.headwear[userID]?.wornheadwear) {
         return convertmittenarr[process.mitten[userID]?.mittenname]
     }*/ // I honestly dont have a clean way to represent this.
 	else {
-		return undefined
+		return undefined;
 	}
-}
+};
 
 // Gets the full headwear entry
 // There's a better way to do this.
 // I didnt feel like doing some kind of .some condition checking.
 // Plz simplify.
 const getHeadwearBlocks = (headnname) => {
-	let convertmittenarr = {}
+	let convertmittenarr = {};
 	for (let i = 0; i < headweartypes.length; i++) {
-		convertmittenarr[headweartypes[i].value] = headweartypes[i]
+		convertmittenarr[headweartypes[i].value] = headweartypes[i];
 	}
 	if (headnname) {
-		return convertmittenarr[headnname]
+		return convertmittenarr[headnname];
 	} else {
-		return undefined
+		return undefined;
 	}
-}
+};
 
 // Returns an object with true/false if *ANY* headwear they're wearing
 // blocks a given function.
 // { canEmote: true, canInspect: true }
 const getHeadwearRestrictions = (userID) => {
-	let allowedperms = { canEmote: true, canInspect: true }
-	let wornheadwear = getHeadwear(userID)
+	let allowedperms = { canEmote: true, canInspect: true };
+	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockemote) {
-			allowedperms.canEmote = false
+			allowedperms.canEmote = false;
 		}
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockinspect) {
-			allowedperms.canInspect = false
+			allowedperms.canInspect = false;
 		}
 	}
 
-	return allowedperms
-}
+	return allowedperms;
+};
 
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
 const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
 	//if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
 
-	let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g
-	let replaceemote = ""
-	let wornheadwear = getHeadwear(userID)
+	let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g;
+	let replaceemote = "";
+	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
-			replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote
+			replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote;
 		}
 	}
 
-	let outtext = text.replaceAll(regex, replaceemote)
+	let outtext = text.replaceAll(regex, replaceemote);
 
 	if (replaceemote && !outtext.includes(replaceemote)) {
-		outtext = `${outtext} ${replaceemote}`
+		outtext = `${outtext} ${replaceemote}`;
 	}
 
 	if (outtext.length == 0) {
-		let dollIDOverride = dollvisoroverride ?? "Unknown"
+		let dollIDOverride = dollvisoroverride ?? "Unknown";
 
 		// Handle Doll Visors
 		if (getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))) {
 			// Below is a stylistic choice it's uncertain about.
 			//let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
-			outtext = `*(${dollIDOverride}'s face shows no emotion...)*`
+			outtext = `*(${dollIDOverride}'s face shows no emotion...)*`;
 		} else {
-			outtext = `*(<@${userID}>'s face shows no emotion...)*`
+			outtext = `*(<@${userID}>'s face shows no emotion...)*`;
 		}
 	}
-	return outtext
-}
+	return outtext;
+};
 
-exports.headweartypes = headweartypes
-exports.loadHeadwearTypes = loadHeadwearTypes
-exports.assignHeadwear = assignHeadwear
-exports.getHeadwear = getHeadwear
-exports.getHeadwearBinder = getHeadwearBinder
-exports.deleteHeadwear = deleteHeadwear
-exports.getHeadwearName = getHeadwearName
-exports.getHeadwearRestrictions = getHeadwearRestrictions
+exports.headweartypes = headweartypes;
+exports.loadHeadwearTypes = loadHeadwearTypes;
+exports.assignHeadwear = assignHeadwear;
+exports.getHeadwear = getHeadwear;
+exports.getHeadwearBinder = getHeadwearBinder;
+exports.deleteHeadwear = deleteHeadwear;
+exports.getHeadwearName = getHeadwearName;
+exports.getHeadwearRestrictions = getHeadwearRestrictions;
 
-exports.processHeadwearEmoji = processHeadwearEmoji
+exports.processHeadwearEmoji = processHeadwearEmoji;
 
-exports.addLockedHeadgear = addLockedHeadgear
-exports.getLockedHeadgear = getLockedHeadgear
-exports.removeLockedHeadgear = removeLockedHeadgear
-exports.DOLLVISORS = DOLLVISORS
+exports.addLockedHeadgear = addLockedHeadgear;
+exports.getLockedHeadgear = getLockedHeadgear;
+exports.removeLockedHeadgear = removeLockedHeadgear;
+exports.DOLLVISORS = DOLLVISORS;

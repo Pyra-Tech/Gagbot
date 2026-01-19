@@ -1,5 +1,5 @@
-const fs = require("fs")
-const path = require("path")
+const fs = require("fs");
+const path = require("path");
 
 const fillerwords = [
 	"processor",
@@ -102,61 +102,61 @@ const fillerwords = [
 	"profile",
 	"template",
 	"schema",
-]
+];
 
 const determineLang = () => {
-	let timepermin = Math.min(performance.now() / 60000, 1) % 3
-	timepermin = 0 // For testing
-	let lang
+	let timepermin = Math.min(performance.now() / 60000, 1) % 3;
+	timepermin = 0; // For testing
+	let lang;
 	if (timepermin == 0) {
-		lang = "javascript"
+		lang = "javascript";
 	} else if (timepermin == 1) {
-		lang = "powershell"
+		lang = "powershell";
 	} else if (timepermin == 2) {
-		lang = "python"
+		lang = "python";
 	}
 
-	return lang
-}
+	return lang;
+};
 
 const codingConstruct = () => {
-	let lang = determineLang()
+	let lang = determineLang();
 	// Grab all the command files from the commands directory
-	let txtsPath = path.join(__dirname, `./../gagfiles/codegag/${lang}`)
-	let txts = fs.readdirSync(txtsPath).filter((file) => file.endsWith(".txt"))
+	let txtsPath = path.join(__dirname, `./../gagfiles/codegag/${lang}`);
+	let txts = fs.readdirSync(txtsPath).filter((file) => file.endsWith(".txt"));
 
-	let choice = Math.floor(Math.random() * txts.length)
+	let choice = Math.floor(Math.random() * txts.length);
 
-	let readtext = fs.readFileSync(path.join(__dirname, `./../gagfiles/codegag/${lang}`, txts[choice]), "utf8")
+	let readtext = fs.readFileSync(path.join(__dirname, `./../gagfiles/codegag/${lang}`, txts[choice]), "utf8");
 
-	return readtext
-}
+	return readtext;
+};
 
 const garbleText = (text, intensity) => {
-	let newtextparts = text.split(" ")
-	let outtext = ""
-	let codingconstruct = codingConstruct()
-	let wrestended = false
-	let wnum = 0
+	let newtextparts = text.split(" ");
+	let outtext = "";
+	let codingconstruct = codingConstruct();
+	let wrestended = false;
+	let wnum = 0;
 	for (let i = 0; i < 100; i++) {
 		if (codingconstruct.search(`w${i}`) > -1) {
-			wnum++
+			wnum++;
 		} else {
-			wrestended = true
+			wrestended = true;
 		}
 	}
-	console.log(newtextparts)
+	console.log(newtextparts);
 	while (newtextparts.length <= wnum) {
-		newtextparts.push(fillerwords[Math.floor(Math.random() * fillerwords.length)])
+		newtextparts.push(fillerwords[Math.floor(Math.random() * fillerwords.length)]);
 	}
 	for (let i = 0; i < newtextparts.length - 1; i++) {
 		// Should be the full length
-		codingconstruct = codingconstruct.replaceAll(`w${i}`, newtextparts[i])
+		codingconstruct = codingconstruct.replaceAll(`w${i}`, newtextparts[i]);
 	}
-	newtextparts.splice(0, wnum) // Slice off the first few elements
-	codingconstruct = codingconstruct.replaceAll(`wrest`, newtextparts.join(" "))
-	return "```" + determineLang() + "\n" + codingconstruct + "```"
-}
+	newtextparts.splice(0, wnum); // Slice off the first few elements
+	codingconstruct = codingconstruct.replaceAll(`wrest`, newtextparts.join(" "));
+	return "```" + determineLang() + "\n" + codingconstruct + "```";
+};
 
-exports.garbleText = garbleText
-exports.choicename = "Code Gag"
+exports.garbleText = garbleText;
+exports.choicename = "Code Gag";

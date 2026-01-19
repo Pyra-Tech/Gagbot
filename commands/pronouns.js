@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js")
-const { getPronouns, setPronouns, pronounsMap } = require("./../functions/pronounfunctions.js")
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { getPronouns, setPronouns, pronounsMap } = require("./../functions/pronounfunctions.js");
 
 // Build the choice array
-const pronounTypes = []
+const pronounTypes = [];
 
 for (const x of pronounsMap.keys()) {
-	pronounTypes.push({ name: x, value: x })
+	pronounTypes.push({ name: x, value: x });
 }
 
 module.exports = {
@@ -21,10 +21,10 @@ module.exports = {
 		),
 	async execute(interaction) {
 		try {
-			interaction.reply({ content: `Your pronouns have been set to "${interaction.options.getString("pronouns")}"`, flags: MessageFlags.Ephemeral })
-			setPronouns(interaction.user.id, interaction.options.getString("pronouns"))
+			interaction.reply({ content: `Your pronouns have been set to "${interaction.options.getString("pronouns")}"`, flags: MessageFlags.Ephemeral });
+			setPronouns(interaction.user.id, interaction.options.getString("pronouns"));
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 		}
 	},
-}
+};

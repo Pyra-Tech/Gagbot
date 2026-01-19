@@ -1,8 +1,8 @@
-const { convertPronounsText } = require("./../functions/pronounfunctions.js")
+const { convertPronounsText } = require("./../functions/pronounfunctions.js");
 
 const garbleText = (text, intensity) => {
-	let inputNumber = text.length
-	let output = "" // Empty target output, dont change
+	let inputNumber = text.length;
+	let output = ""; // Empty target output, dont change
 	//Replacement lines
 	let gagSoundList = [
 		"I love serving my Owners!",
@@ -44,33 +44,33 @@ const garbleText = (text, intensity) => {
 		"Change me to your liking",
 		"Thank you for showing this Sub its place",
 		"Chain me down",
-	]
+	];
 
 	while (inputNumber > 0) {
-		inputNumber -= Math.floor(Math.random * 10 + 21)
+		inputNumber -= Math.floor(Math.random * 10 + 21);
 		// replacer function to output, removing $[input[i]} removes the original word
-		output = `${output}\n${gagSoundList[Math.floor(Math.random() * gagSoundList.length)]} \n`
+		output = `${output}\n${gagSoundList[Math.floor(Math.random() * gagSoundList.length)]} \n`;
 	}
 
-	return output //Return
-}
+	return output; //Return
+};
 
 const messageend = (msg, intensity) => {
 	// Sounds to append
-	let endsoundList = ["I serve", "Ever yours", "I obey", "Please treat me well <3"]
+	let endsoundList = ["I serve", "Ever yours", "I obey", "Please treat me well <3"];
 
 	// Add "I am a good girl!" to the list
 	if (msg.member) {
-		endsoundList.push(convertPronounsText(`I am a good USER_PRAISEOBJECT!`, { interactionuser: msg.member.id, targetuser: msg.member.id }))
+		endsoundList.push(convertPronounsText(`I am a good USER_PRAISEOBJECT!`, { interactionuser: msg.member.id, targetuser: msg.member.id }));
 	}
 
 	if (intensity > 5) {
-		return endsoundList[Math.floor(Math.random() * endsoundList.length)]
+		return endsoundList[Math.floor(Math.random() * endsoundList.length)];
 	} else {
-		return ""
+		return "";
 	}
-}
+};
 
-exports.garbleText = garbleText
-exports.messageend = messageend
-exports.choicename = "Good Sub Gag"
+exports.garbleText = garbleText;
+exports.messageend = messageend;
+exports.choicename = "Good Sub Gag";
