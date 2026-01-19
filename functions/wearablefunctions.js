@@ -111,7 +111,7 @@ let wearabletypes = [
 	{ name: "Sukumizu", value: "sukumizu", colorable: true },
 	{ name: "Bikini", value: "bikini", colorable: true, uniqueColors: ["Cow Print", "Skimpy", "Frilly", "Tiger Print", "Leaf", "Dragonscale", "Chainmail", "Yellow Polka-Dot"] },
 	{ name: "Latex Bikini", value: "bikini_latex", colorable: true, uniqueColors: ["Starry", "Shadow", "Cow Print"] },
-	{ name: "Armour", value: "armour", colorable: true, uniqueColors: ["Steel", "Cobalt", "Dragon Scale", "Holy Knight", "Black Knight", "Chainmail", "Crystal"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Armour", value: "armour", colorable: true, uniqueColors: ["Steel", "Cobalt", "Dragon Scale", "Holy Knight", "Black Knight", "Chainmail", "Crystal", "Leather"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Exhibitionist", value: "exhibitionist" },
 	{ name: "Empress' Robes", value: "empressnewdress" },
 	{ name: "Latex Mermaid Tail", value: "mermaid_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
