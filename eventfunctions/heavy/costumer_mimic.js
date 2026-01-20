@@ -199,6 +199,7 @@ const healer_outfit = [
 ];
 
 const witch_outfit = [
+    { category: "headwear", itemtowear: "blindfold_blackout", color: null },
     { category: "wearable", itemtowear: "bra_lacy", color: "Purple" },
     { category: "wearable", itemtowear: "panties_lacy", color: "Purple" },
     { category: "wearable", itemtowear: "stockings", color: null },
