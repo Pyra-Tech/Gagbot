@@ -15,44 +15,40 @@
 //                |-  Tags -| |>///<| |Match code block | |------------ ANSI Color Username Block --------| |-ANSI Colors -| |-- Match italic text (ignore escaped asterisks)  -------| |--------  Match underscore italic text --------| |----------------------  Match website URLs     ---------------------------------------------------| |---- Emojis ----| |--- Unicode Emoji -----------------------------------------------|
 const oldregex = /(<@[0-9]+>)|(>\/+<)|(```((ansi|js)\n)?)|(\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(\u001b\[.+?m) ?|((\-#\s+)?((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|(<?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\n/g;
 
-const REGEX_OOC = /(?<OOC>((\-#\s+)?((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))/g
+const REGEX_OOC = /(?<OOC>((\-#\s+)?((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))/g;
 
+const splitMessageV2 = (text, inRegex = oldregex) => {
+	// RegExp have writable properties - get a fresh copy just in case of synchronization issues.
+	let regex = new RegExp(inRegex.source, "g");
 
-const splitMessageV2 = (text, inRegex=oldregex) => {
-    // RegExp have writable properties - get a fresh copy just in case of synchronization issues.
-    let regex = new RegExp(inRegex.source,"g")
+	// Split IC/OOC
+	let curr, chunk;
+	let startIndex = 0;
+	while ((curr = regex.exec(text)) !== null) {
+		// If anything is before the match, snag it.
+		if (startIndex != curr.index) {
+			chunk = text.substring(startIndex, curr.index);
+			console.log(`Chunk: ${chunk}`);
+		}
 
-    // Split IC/OOC
-    let curr, chunk
-    let startIndex = 0;
-    while((curr = regex.exec(text)) !== null){
+		// Get the match itself.
+		console.log(`Match: ${curr[0]}`);
+		startIndex = regex.lastIndex;
 
-        // If anything is before the match, snag it.
-        if(startIndex != curr.index){
-            chunk = text.substring(startIndex,curr.index)
-            console.log(`Chunk: ${chunk}`)
-        }
+		// console.log(curr[0])
+		// console.log(curr.index)
+		// console.log(curr)
+		// console.log(regex)
+	}
 
-        // Get the match itself.
-        console.log(`Match: ${curr[0]}`)
-        startIndex = regex.lastIndex
-
-        // console.log(curr[0])
-        // console.log(curr.index)
-        // console.log(curr)
-        // console.log(regex)
-    }
-
-    // Get the rest of the text.
-    chunk = text.substring(startIndex)
-    console.log(`Chunk: ${chunk}`)
-}
-
-
+	// Get the rest of the text.
+	chunk = text.substring(startIndex);
+	console.log(`Chunk: ${chunk}`);
+};
 
 // Unit Testing
 
-let strA = "*Meow!* Test meowssage. *Italics meowssage.* More text. *Meowre text!* Even meowre text."
-let strA_result = splitMessageV2(strA, REGEX_OOC)
+let strA = "*Meow!* Test meowssage. *Italics meowssage.* More text. *Meowre text!* Even meowre text.";
+let strA_result = splitMessageV2(strA, REGEX_OOC);
 
-console.log(strA_result)
+console.log(strA_result);
