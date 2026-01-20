@@ -201,11 +201,11 @@ const healer_outfit = [
 const witch_outfit = [
     { category: "wearable", itemtowear: "bra_lacy", color: "Purple" },
     { category: "wearable", itemtowear: "panties_lacy", color: "Purple" },
-    { category: "wearable", itemtowear: "stockings", color: "Purple" },
+    { category: "wearable", itemtowear: "stockings", color: null },
     { category: "wearable", itemtowear: "gloves_opera", color: "Purple" },
     { category: "wearable", itemtowear: "flowy_dress", color: "Purple" },
     { category: "wearable", itemtowear: "witchhat_normal", color: "Purple" },
-    { category: "wearable", itemtowear: "thighhighboots", color: "Purple" },
+    { category: "wearable", itemtowear: "kneehighboots", color: "Black" },
     { category: "wearable", itemtowear: "tome", color: "Shadowy Tome" },
     { category: "mittens", itemtowear: "mittens_hardlight", color: null },
     { category: "gag", itemtowear: "ball", color: null },
