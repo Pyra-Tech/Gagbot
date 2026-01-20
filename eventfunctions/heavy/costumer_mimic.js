@@ -233,6 +233,19 @@ const angel_outfit = [
     { category: "heavy", itemtowear: "scavengersdaughter", color: null },
 ];
 
+const mermaid_outfit = [
+    { category: "wearable", itemtowear: "mermaid_latex", color: "Aqua" },
+    { category: "wearable", itemtowear: "armbands", color: "Cobalt" },
+    { category: "wearable", itemtowear: "headchain", color: "Crystal" },
+    { category: "wearable", itemtowear: "bikini", color: "Skimpy" },
+    { category: "wearable", itemtowear: "pareo", color: "Aqua" },
+    { category: "mittens", itemtowear: "mittens_hardlight", color: null },
+    { category: "collar", itemtowear: "collar_moon", color: null },
+    { category: "gag", itemtowear: "silent", color: null },
+    { category: "wearable", itemtowear: "staff", color: "Elemental Staff" },
+    { category: "heavy", itemtowear: "armbinder_latex", color: null },
+];
+
 
 const mimicCostumes = {
     maid_outfit: maid_outfit,
@@ -249,6 +262,7 @@ const mimicCostumes = {
     healer_outfit: healer_outfit,
     witch_outfit: witch_outfit,
     angel_outfit: angel_outfit,
+    mermaid_outfit: mermaid_outfit,
 };
 
 // Costumer Mimic Event Function
