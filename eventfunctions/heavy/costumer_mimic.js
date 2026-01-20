@@ -14,37 +14,38 @@ const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignW
 
 // File Containing Costumer Mimic Outfits - Wearables, Headwear, Mittens, Gags, Heavy. Only one Heavy item per outfit, and always at the end.
 const maid_outfit = [
-    { category: "wearable", itemtowear: "maid_dress", color: "Black" },
-    { category: "wearable", itemtowear: "maid_apron", color: null },
     { category: "wearable", itemtowear: "garters", color: "White" },
     { category: "wearable", itemtowear: "stockings", color: "White" },
-    { category: "mittens", itemtowear: "mittens_maid", color: null },
-    { category: "collar", itemtowear: "collar_maid", color: null },
     { category: "chastitybelt", itemtowear: "belt_maid", color: null },
+    { category: "chastitybra", itemtowear: "bra_maid", color: null},
+    { category: "mittens", itemtowear: "mittens_maid", color: null },
+    { category: "wearable", itemtowear: "maid_dress", color: "Black" },
+    { category: "wearable", itemtowear: "maid_apron", color: null },
     { category: "gag", itemtowear: "politeSub", color: null },
+    { category: "collar", itemtowear: "collar_maid", color: null },
     { category: "headwear", itemtowear: "mask_kigu_cutemaid", color: null },
     { category: "wearable", itemtowear: "maid_headdress", color: null },
     { category: "heavy", itemtowear: "straitjacket_maid", color: null },
 ];
 
 const ponygirl_outfit = [
-    { category: "wearable", itemtowear: "ponyboots_leather", color: "Red" },
-    { category: "wearable", itemtowear: "ponytack_leather", color: "Red" },
-    { category: "wearable", itemtowear: "headharness_leather", color: "Red" },
-    { category: "wearable", itemtowear: "blinkers_leather", color: "Red" },
-    { category: "mittens", itemtowear: "mittens_leather", color: null },
-    { category: "headwear", itemtowear: "blindfold_leather", color: null },
-    { category: "gag", itemtowear: "ball", color: null },
     { category: "chastitybelt", itemtowear: "belt_silver", color: null },
     { category: "chastitybra", itemtowear: "bra_silver", color: null },
     { category: "collar", itemtowear: "collar_posture", color: null },
+    { category: "mittens", itemtowear: "mittens_leather", color: null },
+    { category: "wearable", itemtowear: "ponyboots_leather", color: "Red" },
+    { category: "wearable", itemtowear: "ponytack_leather", color: "Red" },
+    { category: "headwear", itemtowear: "blindfold_leather", color: null },
+    { category: "gag", itemtowear: "ball", color: null },
+    { category: "wearable", itemtowear: "headharness_leather", color: "Red" },
+    { category: "wearable", itemtowear: "blinkers_leather", color: "Red" },
     { category: "heavy", itemtowear: "armbinder_leather", color: null },
 ];
 
 const bunnygirl_outfit = [
     { category: "wearable", itemtowear: "outfit_playbunny_headwear", color: "Blue" },
-    { category: "wearable", itemtowear: "suit_outfit", color: "Playbunny" },
     { category: "wearable", itemtowear: "bunnytights", color: "White" },
+    { category: "wearable", itemtowear: "suit_outfit", color: "Playbunny" },
     { category: "wearable", itemtowear: "highheels", color: "Blue" },
     { category: "wearable", itemtowear: "cuffswrist_bondage", color: "Blue" },
     { category: "wearable", itemtowear: "cuffsankle_bondage", color: "Blue" },
@@ -122,7 +123,7 @@ const rogue_outfit = [
     { category: "wearable", itemtowear: "bra_leather", color: "Gray" },
     { category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "Gray" },
     { category: "wearable", itemtowear: "bootyshorts_leather", color: "Black" },
-    { category: "wearable", itemtowear: "top_crop_leather", color: "Gray" },
+    { category: "wearable", itemtowear: "top_crop_leather", color: "Black" },
     { category: "wearable", itemtowear: "thighhighboots", color: "Gray" },
     { category: "wearable", itemtowear: "bandolier_leather", color: null },
     { category: "mittens", itemtowear: "mittens_leather", color: null },
@@ -135,6 +136,7 @@ const rogue_outfit = [
 
 const dancer_outfit = [
     { category: "headwear", itemtowear: "blindfold_cloth", color: null },
+    { category: "collar", itemtowear: "collar_moon", color: null },
     { category: "wearable", itemtowear: "armbands", color: "Gold" },
     { category: "wearable", itemtowear: "bracelets", color: "Gold" },
     { category: "wearable", itemtowear: "anklets", color: "Gold" },
@@ -146,7 +148,6 @@ const dancer_outfit = [
     { category: "mittens", itemtowear: "mittens_leather", color: null },
     { category: "gag", itemtowear: "ball", color: null },
     { category: "wearable", itemtowear: "veil", color: "Half-Face" },
-    { category: "collar", itemtowear: "collar_moon", color: null },
     { category: "heavy", itemtowear: "displaystand", color: null },
 ];
 
@@ -172,8 +173,8 @@ const ranger_outfit = [
     { category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "Green" },
     { category: "wearable", itemtowear: "bootyshorts_leather", color: "Brown" },
     { category: "wearable", itemtowear: "top_halter", color: "Green" },
-    { category: "wearable", itemtowear: "armour", color: "Leather" },
     { category: "wearable", itemtowear: "kneehighboots", color: "Brown" },
+    { category: "wearable", itemtowear: "armour", color: "Leather" },
     { category: "mittens", itemtowear: "mittens_leather", color: null },
     { category: "gag", itemtowear: "silent", color: null },
     { category: "collar", itemtowear: "collar_leather", color: null },
@@ -183,6 +184,8 @@ const ranger_outfit = [
 
 const healer_outfit = [
     { category: "headwear", itemtowear: "blindfold_cloth", color: null },
+    { category: "collar", itemtowear: "collar_star", color: null },
+    { category: "gag", itemtowear: "politeSub", color: null },
     { category: "wearable", itemtowear: "stockings", color: "White" },
     { category: "wearable", itemtowear: "gloves_opera", color: "White" },
     { category: "chastitybelt", itemtowear: "belt_ancient", color: null },
@@ -190,11 +193,9 @@ const healer_outfit = [
     { category: "wearable", itemtowear: "shrine_maiden", color: "White" },
     { category: "wearable", itemtowear: "bigcute_ribbon", color: "Red" },
     { category: "wearable", itemtowear: "headchain", color: "Starveiled" },
-    { category: "wearable", itemtowear: "ankleboots", color: "White" },
-    { category: "wearable", itemtowear: "staff", color: "Gohei" },
+    { category: "wearable", itemtowear: "balletheels", color: "White" },
     { category: "mittens", itemtowear: "mittens_leather", color: null },
-    { category: "gag", itemtowear: "politeSub", color: null },
-    { category: "collar", itemtowear: "collar_star", color: null },
+    { category: "wearable", itemtowear: "staff", color: "Gohei" },
     { category: "wearable", itemtowear: "leash", color: "White" },
     { category: "heavy", itemtowear: "armbinder_ancient", color: null },
 ];
