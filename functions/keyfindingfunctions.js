@@ -47,7 +47,7 @@ function rollKeyFumble(keyholder, locked, maxFumbles = 1) {
 
 // return of 0 = never, 1+ = always
 function getFumbleChance(keyholder, locked) {
-  if (!config.getDisabledKeyFumbling(locked)) return 0;
+	if (!config.getDisabledKeyFumbling(locked)) return 0;
 	if (!config.getDynamicArousal(keyholder)) return 0;
 	if (keyholder != locked && (!config.getKeyFumblingOthers(keyholder) || !config.getKeyFumblingOthers(locked))) return 0;
 	let chance = FUMBLE_AROUSAL_POTENCY * Math.log(1 + FUMBLE_AROUSAL_COEFFICIENT * getArousal(keyholder)) + calcFrustration(keyholder);
