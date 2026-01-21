@@ -1314,7 +1314,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\`\`\`ansi\n[1;${getOption(interaction.user.id, k)}m${getOption(interaction.user.id, "dollvisorname")}: [0mIt is speaking.\`\`\``))
 					.setButtonAccessory((button) =>
 						button
-							.setCustomId(`config_pageopt_${menuset}_${k}`)
+							.setCustomId(`config_pageopt_${menuset}_${page}_${k}`)
 							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.name ?? "Undefined")
 							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.style ?? ButtonStyle.Danger)
 							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),

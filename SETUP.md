@@ -16,9 +16,8 @@
 - Navigate to the link provided under **Install Link**. This will join the bot to your server.
 
 #### Step 3 - Set up the .env File
-- Modify the **.env.md** file provided in the project's directory.
+- Copy the **.env.md** file provided in the project's directory and name the copy **.env**
   - Place the token noted above in the line under **DISCORDBOTTOKEN**.
-  - Rename the file to **.env**
  
 #### Step 4 - Run the Bot
 - Navigate to the root of the directory you placed the bot in
