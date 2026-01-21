@@ -377,13 +377,13 @@ const texts_gag = {
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over USER_THEIR mouth again.`,
+							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over TARGET_THEIR mouth again.`,
 						},
 						{
 							only: (t) => {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
+							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
 						},
 						//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
 					],
@@ -393,13 +393,13 @@ const texts_gag = {
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over USER_THEIR mouth.`,
+							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth.`,
 						},
 						{
 							only: (t) => {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
+							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
 						},
 					],
 				},
@@ -410,13 +410,13 @@ const texts_gag = {
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over USER_THEIR mouth, sealing it shut.`,
+							text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth, sealing it shut.`,
 						},
 						{
 							only: (t) => {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around USER_THEIR head to form a VAR_C3.`,
+							text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
 						},
 					],
 					forceful: [
@@ -432,7 +432,7 @@ const texts_gag = {
 							only: (t) => {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around USER_THEIR head to form a VAR_C3.`,
+							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
 						},
 					],
 					requesting: [
@@ -447,7 +447,7 @@ const texts_gag = {
 							only: (t) => {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
-							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around USER_THEIR head to form a VAR_C3.`,
+							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
 						},
 					],
 				},
