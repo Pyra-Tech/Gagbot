@@ -1070,42 +1070,47 @@ function updateArousalValues() {
 	try {
 		const now = Date.now();
 		const time = now * (getBotOption("bot-timetickrate") / 60000);
+		// for users in vibe or chastity, make sure they have a value in arousal
 		for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
 		for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
 		for (const user in process.arousal) {
 			const arousal = process.arousal[user];
+			// if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
 			if (arousal.timestamp > now) continue;
 			let vibes = getVibe(user);
 			let minVibe = 0;
+			let minArousal = 0;
 			let growthCoefficient = 1;
 			let decayCoefficient = UNBELTED_DECAY;
+
 			const chastity = getChastity(user);
 			const chastitybra = getChastityBra(user);
+			// get values from belt and bra
 			if (chastity) {
 				const info = chastitytypes.find((c) => c.value == chastity.chastitytype);
 				minVibe = info?.minVibe ?? 0;
+				minArousal = info?.minArousal ?? 0;
 				growthCoefficient *= info?.growthCoefficient ?? 1;
 				decayCoefficient *= info?.decayCoefficient ?? 0.2;
 			}
 			if (chastitybra) {
 				const info = chastitybratypes.find((c) => c.value == chastitybra.chastitytype);
 				minVibe += info?.minVibe ?? 0;
+				minArousal += info?.minArousal ?? 0;
 				growthCoefficient *= info?.growthCoefficient ?? 1;
 				decayCoefficient *= info?.decayCoefficient ?? 0.7;
 			}
+			// if no vibe effect, growth coefficient will be 0
 			if (!vibes && !minVibe) growthCoefficient = 0;
+			// otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
 			else growthCoefficient *= Math.max(vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, minVibe) * VIBE_SCALING;
 			const next = calcNextArousal(time, arousal.arousal, arousal.prev, growthCoefficient, decayCoefficient);
+			// set the values to the new ones
 			arousal.timestamp = now;
 			arousal.prev = arousal.arousal;
+			// mathematically it would never reach 0 so reset it to 0 if low enough here
 			arousal.arousal = next < RESET_LIMIT ? 0 : next;
-			let minArousal = 0;
-			if (chastity) {
-				minArousal = chastitytypes.find((c) => c.value == chastity.chastitytype)?.minArousal ?? 0;
-			}
-			if (chastitybra) {
-				minArousal = minArousal + (chastitybratypes.find((c) => c.value == chastitybra.chastitytype)?.minArousal ?? 0);
-			}
+			// if it drops below minimum arousal, set it to the minimum
 			if (arousal.arousal < minArousal) arousal.arousal = minArousal;
 		}
 		if (process.readytosave == undefined) {
@@ -1176,7 +1181,9 @@ function clearArousal(user) {
 }
 
 function calcNextArousal(time, arousal, prev, growthCoefficient, decayCoefficient) {
+	// first increase it due to vibe effect
 	const noDecay = arousal + ((getBotOption("bot-timetickrate") / 60000) * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1);
+	// then reduce it based on decay
 	const next = noDecay - (getBotOption("bot-timetickrate") / 60000) * decayCoefficient * Math.max(arousal + prev / 2, 0.1);
 	return next;
 }
@@ -1244,20 +1251,28 @@ function calcFrustration(user) {
 	let baseFrustration;
 
 	if (hoursBelted <= FRUSTRATION_BREAKPOINT_TIME) {
+		// for low time locked, the frustratio grows exponentially
 		baseFrustration = Math.pow(FRUSTRATION_COEFFICIENT, hoursBelted);
 	} else {
+		// for longer time beyond that it grows slower
 		const unbounded = MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT + FRUSTRATION_MAX_COEFFICIENT * Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
+		// ... until a hard cap
 		baseFrustration = Math.min(unbounded, MAX_FRUSTRATION);
 	}
 
+	// add frustration from temporary decaying penalties such as from failed orgasms
 	let penalties = frustrationPenalties.get(user);
 	if (!penalties) return baseFrustration;
+	// calculate the current frustration caused and remove ones that reach 0
 	penalties = penalties.map((current) => [current, current.value - (current.decay * (now - current.timestamp)) / 60000]).filter(([_, remaining]) => remaining > 0);
+	// remove ones at 0 from the saved list
 	frustrationPenalties.set(
 		user,
 		penalties.map(([penalty, _]) => penalty),
 	);
 
+	// return the sum of the other penalties plus the base frustration from hours locked
+	// also, multiple concurrent penalties make it even more frustrating
 	return baseFrustration + Math.pow(PENALTY_MULTIPLIER, penalties.length - 1) * penalties.reduce((acc, [_, remaining]) => acc + remaining, 0);
 }
 
