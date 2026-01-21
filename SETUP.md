@@ -60,3 +60,5 @@ This can be pasted into a new stack in Portainer or any other Docker container m
 - While the bot can setup webhooks for you, the webhook will not be able to use external emoji. To get around this issue, you *must* create a Webhook inside the channel the bot will be running in and call it **Gagbot**. Once created, the bot should be able to pick it up and use it in the next step.
 #### Step 2 - Configure the Bot for the Server
 - Type **/config** to bring up the Bot's configuration menu. Server moderators (those with a role that has **Manage Messages**) can see the Server Settings menu. In there, click the button to setup an initial configuration. This will also deploy all of the other commands.
+- Select the channel you want the bot to function in. It will save only if it has the required permissions above.
+- Use the bot! 
