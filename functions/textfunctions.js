@@ -347,6 +347,26 @@ const texts_gag = {
 			},
 		},
 	},
+	gagreflect: {
+		noheavy: {
+			nomitten: {
+				other: {
+					gag: {
+						changetightness: [
+							`TARGET_TAG is cheeky and tries to gag USER_TAG, but USER_TAG gets the upper hand and adjusts the tightness on the VAR_C4 that TARGET_THEY TARGET_ISARE wearing, pulling the straps VAR_C2.`,
+							//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
+						],
+						newgag: [`USER_TAG looks at TARGET_TAG flatly as it instead takes the VAR_C3 and puts it on TARGET_THEM over top of the VAR_C4.`],
+					},
+					nogag: {
+						gentle: [`USER_TAG grabs the VAR_C3 and then uses a robotic arm to gently caress TARGET_TAG's cheek, before putting it on TARGET_THEM, pulling the straps VAR_C2 and buckling them.`],
+						forceful: [`TARGET_TAG tries to gag USER_TAG, but USER_TAG's deft agility allows it to wrestle the gag out of TARGET_THEIR hands before shoving it into TARGET_THEIR mouth instead.`],
+						requesting: [`TARGET_TAG presents a gag to USER_TAG. It is somewhat unamused and points at TARGET_THEM to wear it instead. TARGET_THEY_CAP feelTARGET_S compelled to obey the order.`],
+					},
+				},
+			},
+		},
+	},
 };
 
 // Headwear stuff
@@ -1000,12 +1020,18 @@ const texts_ungag = {
 		},
 		nomitten: {
 			self: {
-				gag: [`USER_TAG has taken USER_THEIR gag out!`, `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR gag out!`, `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR gag!`, `USER_TAG takes USER_THEIR gag out, stretching USER_THEIR jaw slightly!`],
+				gag: {
+					single: [`USER_TAG has taken USER_THEIR VAR_C2 out!`, `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR VAR_C2 out!`, `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR VAR_C2!`, `USER_TAG takes USER_THEIR VAR_C2 out, stretching USER_THEIR jaw slightly!`],
+					multiple: [`USER_TAG undoes all the straps holding USER_THEIR gags in USER_THEIR mouth, letting them fall into USER_THEIR lap.`, `USER_TAG lets out a "pleh~" as USER_THEY undoUSER_ES the straps holding the gags in USER_THEIR mouth.`, `USER_TAG's gags are covered in drool as USER_THEY gently pullUSER_S them out from between USER_THEIR teeth.`],
+				},
 				// Ephemeral
 				nogag: [`You aren't currently gagged right now!`],
 			},
 			other: {
-				gag: [`USER_TAG undoes the straps holding TARGET_TAG's gag on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, `USER_TAG unclasps the buckle for TARGET_TAG's gag, then carefully pops it out.`, `USER_TAG carefully unbuckle's TARGET_TAG's gag, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`],
+				gag: {
+					single: [`USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, `USER_TAG unclasps the buckle for TARGET_TAG's VAR_C2, then carefully pops it out.`, `USER_TAG carefully unbuckles TARGET_TAG's VAR_C2, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`],
+					multiple: [`USER_TAG undoes all the straps holding TARGET_TAG's gags in TARGET_THEIR mouth, letting them fall into TARGET_THEIR lap.`, `TARGET_TAG lets out a "pleh~" as USER_TAG undoes the straps holding the gags in TARGET_THEIR mouth.`, `TARGET_TAG's gags are covered in drool as USER_TAG gently pulls them out from between TARGET_THEIR teeth.`],
+				},
 				// Ephemeral
 				nogag: [`TARGET_TAG is not currently gagged right now!`],
 			},
@@ -1730,7 +1756,7 @@ const texts_eventfunctions = {
 			removeclothing: {
 				// It is a good doll, all the clothing removed at proper stage
 				stage1: [
-					`The Doll Processing Facility uses a moderately corrosive substance to eat away at the VAR_C1 that USER_TAG is wearing!`,
+					`The Doll Processing Facility uses some nanomaterial to eat away at the VAR_C1 that USER_TAG is wearing!`,
 					`The Doll Processing Facility's arms rip off the VAR_C1 that was on USER_TAG!`,
 					`The Doll Processing Facility's arms carefully remove the VAR_C1 that was on USER_TAG!`,
 					`The Doll Processing Facility's arms use scissors to cut off the VAR_C1 that USER_TAG is wearing!`,
@@ -1743,7 +1769,7 @@ const texts_eventfunctions = {
 				],
 				// Added before the restraint phase after the facility deemed it was ready to put restraints on the doll!
 				stage2: [
-					`The Doll Processing Facility realizes that there was also a VAR_C1 on USER_TAG. It removes the item with a mildly corrosive substance!`,
+					`The Doll Processing Facility realizes that there was also a VAR_C1 on USER_TAG. It removes the item using some nanomaterial!`,
 					`The Doll Processing Facility's belt stops for a second, and a set of arms rip off the VAR_C1 on USER_TAG.`,
 					`The Doll Processing Facility appears to make an "oops" sound as it realizes USER_TAG is still wearing a VAR_C1. It removes the item posthaste!`,
 					{
@@ -1797,11 +1823,29 @@ const texts_eventfunctions = {
 		costumer_mimic: {
 			removeclothing: [
 				// OMNOMNOMNOM
-				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_THEY USER_ISARE wearing!`,
-				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_THEY USER_ISARE wearing, stuffing it into its gaping maw and storing it away!`,
-				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_THEY USER_ISARE wearing, dissolving it away before absorbing the remains!`,
+				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
+				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
+				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
+				{
+					only: (t) => {
+						return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+					},
+					text: `The Mimic realizes USER_TAG is wearing VAR_C1. It wipes it off it with a damp rag!`,
+				},
+				{
+					only: (t) => {
+						return t.c1.includes("Womb Tattoo") || t.c1.includes("Doll Barcode");
+					},
+					text: `The Mimic senses a VAR_C1 on USER_TAG, and erases it with a burst of magic!`,
+				},
+				{
+					only: (t) => {
+						return t.c1.includes("Polish");
+					},
+					text: `The Costumer Mimic's tentacles secrete some liquid that washes away USER_TAG's VAR_C1!`,
+				},
 			],
-			donestripping: [`Having finished consuming all of their current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`, `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`, `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`],
+			donestripping: [`Having finished consuming all of USER_TAG's current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`, `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`, `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`],
 			applyingOutfit: {
 				wearable: { add: [`The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`, `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`, `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },
@@ -1875,14 +1919,14 @@ order as specified on the relevant texts string, which should
 be referenced in the beginning of the data function. 
 For example, to retrieve the chastity text with no heavy bondage,
 chastity, held by self, you should construct the data like this:
-    data: {
-        textarray: "texts_chastity", // the array to retrieve from
-        textdata: { interactionuser, targetuser, ...c1, c2, etc } // see convertPronounsText function
+	data: {
+		textarray: "texts_chastity", // the array to retrieve from
+		textdata: { interactionuser, targetuser, ...c1, c2, etc } // see convertPronounsText function
 
-        noheavy: true,
-        chastity: true,
-        key_self: true
-    }
+		noheavy: true,
+		chastity: true,
+		key_self: true
+	}
 These properties are constructed dynamically with a for... in loop 
 and then retrieved from the array using texts_chastity["noheavy"]["chastity"]["key_self"] 
 to get the particular array of texts for that condition. 
@@ -1907,9 +1951,9 @@ const getText = (data) => {
 			return prev[curr];
 		}, textarrays[textarray]);
 		/* so what is this thing doing? 
-            It is iterating over each property and then returning the object at the named property.
-            This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
-            EXACTLY THE WAY THE TREE IS SET UP */
+			It is iterating over each property and then returning the object at the named property.
+			This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
+			EXACTLY THE WAY THE TREE IS SET UP */
 		if (Array.isArray(sentencearr)) {
 			// Within the array, we want to handle the following cases:
 			// - Standard strings

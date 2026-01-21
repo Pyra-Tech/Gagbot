@@ -155,11 +155,22 @@ const getGagIntensity = (userID) => {
 	}
 };
 
-const deleteGag = (userID) => {
+const deleteGag = (userID, specificgag) => {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
-	delete process.gags[userID];
+	// Remove all gags if none is specified.
+	if (!specificgag && process.gags[userID]) {
+		delete process.gags[userID];
+	} else if (process.gags[userID]) {
+		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
+		if (loc > -1) {
+			process.gags[userID].splice(loc, 1);
+		}
+		if (process.gags[userID].length == 0) {
+			delete process.gags[userID];
+		}
+	}
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -460,10 +471,16 @@ function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {
 				let gaggarble = require(path.join(commandsPath, `${gag.gagtype}.js`));
 				let intensity = gag.intensity ? gag.intensity : 5;
 				if (gaggarble.messagebegin) {
-					msgpartsbegin.push(gaggarble.messagebegin(msg.content, intensity));
+					let out = gaggarble.messagebegin(msg.content, intensity, msgparts);
+					if (typeof out == "string") {
+						msgpartsbegin.push(out);
+					} else {
+						// Do further changes here I guess if necessary.
+						msgparts = out.msgparts;
+					}
 				}
 				for (let i = 0; i < msgparts.length; i++) {
-					if (msgparts[i].garble) {
+					if (msgparts[i].garble && gaggarble.garbleText) {
 						let garbled = gaggarble.garbleText(msgparts[i].text, intensity);
 						if (typeof garbled == "string") {
 							msgparts[i].text = garbled;
