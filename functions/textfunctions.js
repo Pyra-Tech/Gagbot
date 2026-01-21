@@ -1824,8 +1824,8 @@ const texts_eventfunctions = {
 			removeclothing: [
 				// OMNOMNOMNOM
 				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
-				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
-				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
+				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
 				{
 					only: (t) => {
 						return t.c1.includes("ipstick") || t.c1.includes("yeshadow");
@@ -1846,9 +1846,9 @@ const texts_eventfunctions = {
 				},
 			],
 			donestripping: [
-				`As the Costumer Mimic finishes consuming the VAR_C1, USER_TAG is left completely bare and it can begin to dress USER_THEM in its chosen costume!`,
-				`Now that the Costumer Mimic has finished removing their VAR_C1 USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
-				`With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's VAR_C1 and begins to dress USER_THEM in the costume it has chosen!`,
+				`As the Costumer Mimic finishes consuming their clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
+				`Now that the Costumer Mimic has finished removing their outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+				`With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`,
 				{
 					only: (t) => {
 						return t.c1 == "Naked";
@@ -1857,9 +1857,9 @@ const texts_eventfunctions = {
 				},
 				{
 					only: (t) => {
-						return t.c1 == "";
+						return t.c1 != "";
 					},
-					text: `With a satisfied hum, the Costumer Mimic finishes consuming the last of USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`,
+					text: `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's VAR_C1 and begins to dress USER_THEM in the costume it has chosen!`,
 				},
 			],
 			applyingOutfit: {

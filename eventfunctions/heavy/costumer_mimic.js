@@ -220,7 +220,6 @@ const angel_outfit = [
     { category: "headwear", itemtowear: "blindfold_cloth", color: null },
     { category: "wearable", itemtowear: "halo", color: "Angelic" },
     { category: "wearable", itemtowear: "wings", color: "Angelic" },
-    { category: "wearable", itemtowear: "wingbinders", color: "White" },
     { category: "wearable", itemtowear: "armbands", color: "Platinum" },
     { category: "wearable", itemtowear: "anklets", color: "Platinum" },
     { category: "wearable", itemtowear: "headchain", color: "Platinum" },
@@ -232,6 +231,7 @@ const angel_outfit = [
     { category: "gag", itemtowear: "politeSub", color: null },
     { category: "collar", itemtowear: "collar_star", color: null },
     { category: "wearable", itemtowear: "tome", color: "Angelic Tome" },
+    { category: "wearable", itemtowear: "wingbinders", color: "White" },
     { category: "wearable", itemtowear: "leash", color: "White" },
     { category: "heavy", itemtowear: "scavengersdaughter", color: null },
 ];
@@ -310,8 +310,8 @@ let functiontick = async (userID) => {
 
     // Only update a max of once every 20 seconds. 
     if ((process.userevents[userID].costumermimic.nextupdate ?? 0) < Date.now()) {
-        process.userevents[userID].costumermimic.nextupdate = Date.now() + 5000; // Test Speed
-        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
+        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 3000; // Test Speed
+        process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
     }
     else { return };
 
@@ -379,44 +379,20 @@ let functiontick = async (userID) => {
 
     if (process.userevents[userID].costumermimic.stage == 3) {
 
-        if (shuffledclothes.lenght == 0) {  // Check for single remaining Wearable and handle
-            console.log("1 Remains");
-            let itemconsumed = getWearableName(undefined, shuffledclothes[0]);
-            deleteWearable(userID, shuffledclothes[0]);
-
-            data.textdata.c1 = itemconsumed;
-            console.log(itemconsumed);
-            data.donestripping = true;
-
-            messageSendChannel(getText(data), process.recentmessages[userID])
-            process.userevents[userID].costumermimic.stage++
-            return;
-        } else if (shuffledclothes.lenght == 1) {    // Check for two remaining Wearables and handle   
-            console.log("2 Remain");
-            let itemconsumed = "";
-            itemconsumed += getWearableName(undefined, shuffledclothes[0]), ", ";
-            deleteWearable(userID, shuffledclothes[0]);
-            itemconsumed += "and ", getWearableName(undefined, shuffledclothes[1]);
-            deleteWearable(userID, shuffledclothes[1]);
-
-            data.textdata.c1 = itemconsumed;
-            data.donestripping = true;
-
-            messageSendChannel(getText(data), process.recentmessages[userID])
-            process.userevents[userID].costumermimic.stage++
-            return;
-        }
-
-        // Else handle all remaining Wearables
-        console.log("3+ Remain");
+        // Handle all remaining Wearables
         while (nom_idx < shuffledclothes.length) {
-            if (nom_idx == 2 || nom_idx == shuffledclothes.lenght - 2) {
-                // Log 3th or last item in array
-                itemsconsumed += "and " + getWearableName(undefined, shuffledclothes[nom_idx]);
-            } else if (nom_idx < 2) {
-                // Log the first 2 items
-                itemsconsumed += getWearableName(undefined, shuffledclothes[nom_idx]) + ", ";
+            /*/Text with items consumed? Cannot locate issue blocking concatenation of strings to the output string. Texts have been changed to be generic.
+            if (nom_idx < 4 && shuffledclothes.lenght >= 2) {
+                if (nom_idx == 3 || nom_idx == (shuffledclothes.lenght - 1)) {
+                    // Log 4th or last item in array
+                    itemsconsumed += ("and " + getWearableName(undefined, shuffledclothes[nom_idx]));
+                } else if (nom_idx < 3 && nom_idx != (shuffledclothes.lenght - 1)) {
+                    // Log the first 3 items
+                    itemsconsumed += (getWearableName(undefined, shuffledclothes[nom_idx]) + ", ");
+                }
             }
+            //*/
+            // Consume Item
             deleteWearable(userID, shuffledclothes[nom_idx]);
             nom_idx++;
         }
