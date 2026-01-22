@@ -306,9 +306,9 @@ const modifymessage = async (msg, threadId) => {
 		console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
 
 		// TODO - remove this var
-		let outtext = ``									// Message to send.
-		let messageTree = new MessageAST(msg.content);		// Build AST from message
-		let messageTreeModified = {"modified":false}		// Store a boolean in an object to allow pass by reference.
+		let outtext = ``												// Message to send.
+		let messageTree = new MessageAST(msg.content);					// Build AST from message
+		let messageTreeModified = {"modified":false, "corseted":false}	// Store a boolean in an object to allow pass by reference.
 
 		processHeadwearEmoji(msg.author.id, messageTree, messageTreeModified, getOption(msg.author.id, "dollvisorname"))
 
@@ -324,13 +324,9 @@ const modifymessage = async (msg, threadId) => {
 		// Text garbling due to Arousal
 		textGarbleVibrator(msg, messageTree, messageTreeModified);
 
-		// // Text limiting and modifying due to Corset
-		//let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
-		// if (corsetreturned.corseted) {
-		// 	return;
-		// }
-		// messageparts = corsetreturned.messageparts;
-		// modifiedmessage = corsetreturned.modifiedmessage;
+		// Text limiting and modifying due to Corset
+		let corsetreturned = textGarbleCorset(msg, messageTree, messageTreeModified, threadId);
+		if (messageTreeModified.corseted) {return;}
 
 		// // Text garbling due to Gag
 		// let gagreturned = textGarbleGag(messageparts, msg, modifiedmessage, outtext);
@@ -401,37 +397,28 @@ function textGarbleVibrator(msg, msgTree, msgModified) {
 	}
 }
 
-function textGarbleCorset(messagein, msg, modifiedmessage, threadId) {
+function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	// Now corset any words, using an amount to start with.
-	let messageparts = messagein;
-	let modified = modifiedmessage;
-	let corseted = false;
 	if (getCorset(msg.author.id)) {
-		const hadParts = messageparts.length > 0;
-		const toRemove = [];
-		for (let i = 0; i < messageparts.length; i++) {
-			try {
-				if (messageparts[i].garble) {
-					const newText = corsetLimitWords(msg.author.id, messageparts[i].text);
-					if (messageparts[i].text != newText) modified = true;
-					messageparts[i].text = newText;
-					if (messageparts[i].text.length == 0) toRemove.push(i);
-					messageparts[i].text = `${messageparts[i].text}\n`;
-				}
-			} catch (err) {
-				console.log(err);
-			}
+
+		const hadParts = msgTree.toString() != ""
+		msgTree.callFunc(corsetLimitWords, true, "rawText", [msg.author.id, msgModified])
+
+		console.log(hadParts)
+		console.log("POST-CORSET - \"" + msgTree.toString()+ "\"")
+
+		if (hadParts && msgTree.toString() == "") {
+			messageSend(msg, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName, threadId, msgModified.modified).then(() => msg.delete());
+			msgModified.corseted = true;
+			return;
 		}
-		for (let i = toRemove.length - 1; i >= 0; i--) {
-			messageparts.splice(toRemove[i], 1);
-		}
-		if (hadParts && messageparts.length == 0) {
-			messageSend(msg, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName, threadId, modified).then(() => msg.delete());
-			corseted = true;
-			return { corseted: corseted };
-		}
+
+
+		// TODO - Subscript ALL if corset tightness >= 7
+
+
 	}
-	return { messageparts: messageparts, modifiedmessage: modified, corseted: corseted };
+	return;
 }
 
 function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {

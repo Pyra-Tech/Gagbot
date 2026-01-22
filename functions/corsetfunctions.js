@@ -66,22 +66,22 @@ const removeCorset = (user) => {
 };
 
 // Consumes breath and returns possibly modified text
-function corsetLimitWords(user, text) {
+function corsetLimitWords(text, user, msgModified) {
 	// just do nothing if no text
-	if (text.length == 0 || text.match(/^\s*$/)) return text;
+	if (text.length == 0 || text.match(/^\s*$/)) return "";//text;
 
+	// TODO - Need subscript property of parent line to implement this.
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
 	let globalMultiplier = text.match(/^\s*#+\s/) ? 2 : 1;
 	const corset = calcBreath(user);
+
+
+	// TODO - Need subscript property of parent line
 	// Tightlaced bottoms must only whisper
 	if (corset.tightness >= 7 && !text.match(/^\s*\-#\s/)) globalMultiplier *= 2;
-	// Bottoms cannot shout!
-	text = text.replace(/^\s*#+\s/, "");
-	text = text.replaceAll(/\n\s*#+\s/g, "\n");
-	if (corset.tightness >= 7) {
-		text = text.replace(/^\s*\-#\s/, "");
-		text = text.replaceAll(/\n\s*\-#\s/g, "\n");
-	}
+
+
+
 	let silence = false;
 	let wordsinmessage = text.split(" ");
 	let newwordsinmessage = [];
@@ -122,13 +122,13 @@ function corsetLimitWords(user, text) {
 		process.readytosave = {};
 	}
 	process.readytosave.corset = true;
-	if (newwordsinmessage.length == 0) return "";
-	let outtext = newwordsinmessage.join(" ");
-	// Replace other instances of small speak so we only have one.
-	if (corset.tightness >= 7) {
-		outtext = outtext.replaceAll(/\n\s*/g, "\n-# ");
-		if (outtext.length > 0) outtext = `-# ${outtext}`;
+	if (newwordsinmessage.length == 0){
+		msgModified.modified = true;
+		return "";
 	}
+	let outtext = newwordsinmessage.join(" ");
+
+	if(text != outtext){msgModified.modified = true;}
 	return outtext;
 }
 

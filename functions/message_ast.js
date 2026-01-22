@@ -484,6 +484,10 @@ const test_callFunc = () => {
 		}
 	}
 
+	const purgeText = (text) => {
+		return ""
+	}
+
 	testSTR_1 = "Test meowssage <:vanillaBlush:395448030003855360>"
 
 	testAST_1 = new MessageAST(testSTR_1)
@@ -494,9 +498,16 @@ const test_callFunc = () => {
 	console.log(testAST_1.toString())
 	console.log(matchFound.modified)
 
+
+	let testSTR_2 = "Test meowssage >////< Gonna test that meowssage!  >////<\nMeow!"
+	let testAST_2 = new MessageAST(testSTR_2)
+	console.log(testAST_2)
+	testAST_2.callFunc(purgeText)
+	console.log(testAST_2.toString())
+	console.log(testAST_2)
 }
 
 //testClass_MessageAST();
-test_callFunc();
+//test_callFunc();
 
 exports.MessageAST = MessageAST;
