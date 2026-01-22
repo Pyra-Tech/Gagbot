@@ -1,3 +1,5 @@
+const { MessageAST } = require(`./../functions/message_ast.js`);
+
 const fs = require("fs");
 const path = require("path");
 
@@ -223,11 +225,21 @@ const getHeadwearRestrictions = (userID) => {
 	return allowedperms;
 };
 
-// Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
-const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
-	//if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
 
-	let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g;
+const replaceEmoji = (text, replaceEmoji, matchFound) => {
+	console.log("OLD: "+text)
+	console.log("NEW: "+replaceEmoji)
+	if(text !== replaceEmoji){
+		console.log("we got here")
+		matchFound.modified = true;
+		return replaceEmoji;
+	}
+}
+// Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
+const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) => {
+	// Do nothing if no headwear blocks.
+	if (getHeadwearRestrictions(userID).canEmote) {return;}
+
 	let replaceemote = "";
 	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
@@ -239,26 +251,26 @@ const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
 			}
 		}
 	}
+	// Replace all instances of the emoji
+	msgTree.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],[replaceemote,msgModified])
 
-	let outtext = text.replaceAll(regex, replaceemote);
-
-	if (replaceemote && !outtext.includes(replaceemote)) {
-		outtext = `${outtext} ${replaceemote}`;
+	if (replaceemote && !msgModified.modified) {
+		msgTree.rebuild(`${msgTree.toString()} ${replaceemote}`)
+		msgModified.modified = true;
 	}
 
-	if (outtext.length == 0) {
+	if (msgTree.toString().length == 0) {
 		let dollIDOverride = dollvisoroverride ?? "Unknown";
 
 		// Handle Doll Visors
 		if (getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))) {
 			// Below is a stylistic choice it's uncertain about.
 			//let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
-			outtext = `*(${dollIDOverride}'s face shows no emotion...)*`;
+			msgTree.rebuild(`*(${dollIDOverride}'s face shows no emotion...)*`)
 		} else {
-			outtext = `*(<@${userID}>'s face shows no emotion...)*`;
+			msgTree.rebuild(`*(<@${userID}>'s face shows no emotion...)*`)
 		}
 	}
-	return outtext;
 };
 
 exports.headweartypes = headweartypes;

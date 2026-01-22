@@ -1,11 +1,13 @@
+const { Message } = require("discord.js");
+
 // Regex used to separate OOC text from IC text, AND encapsulate linebreaks.
 const REGEX_OOC = /(?<OOC>(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))|(?<linebreak>\n)/g;
 
 // Regex used when splitting IC or OOC text.
 // > Named capture groups identify what the regex matches.
 // > NOTE - REGEX_SENTENCE must *NEVER* match more than one named capture group at a time.
-//                       |----  Tags ---| |-Text Emotes >///<-| |------ Match code block -----| |---------------- ANSI Color Username Block -------------------| |-------ANSI Colors -------| |-----------------------------  Match website URLs     ---------------------------------------------------------| |-------- Emojis --------| |----------------- Unicode Emoji -----------------------------------------------| |--- \n -------|
-const REGEX_SENTENCE = /(?<tag><@[0-9]+>)|(?<textEmote>(>\/+<))|(?<codeBlock>```((ansi|js))?)|(?<ANSIUsername>\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(?<ANSIColor>\u001b\[.+?m) ?|(?<websiteURL><?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(?<emoji><a?:[^:]+:[^>]+>)|(?<uncodeEmoji>\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|(?<linebreak>\n)/g;
+//                      |----  Tags ----| |-Text Emotes >///<-| |------ Match code block ---| |---------------- ANSI Color Username Block -------------------| |-------ANSI Colors -------| |-----------------------------  Match website URLs     ---------------------------------------------------------| |-------- Emojis --------| |----------------- Unicode Emoji ------------------------------------------------| |--- \n -------|
+const REGEX_SENTENCE = /(?<tag><@[0-9]+>)|(?<textEmote>(>\/+<))|(?<codeBlock>```((ansi|js))?)|(?<ANSIUsername>\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(?<ANSIColor>\u001b\[.+?m) ?|(?<websiteURL><?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(?<emoji><a?:[^:]+:[^>]+>)|(?<unicodeEmoji>\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|(?<linebreak>\n)/g;
 
 // Regex to isolate a VALID subscript tag. Identifies if subscript or superscript.
 // > NOTE: A message that is just " -# " is not a valid subscript - discord treats it as plaintext.
@@ -24,10 +26,13 @@ class MessageAST {
 	constructor(text) {
 		this.data = messageSplit_AST(text);
 	}
+	rebuild(text){
+		this.data = messageSplit_AST(text);
+	}
 	// Run a function on the specified type of segment
-	callFunc(inFunction, icOnly = true, type = "rawText") {
+	callFunc(inFunction, icOnly = true, type = "rawText", args = []) {
 		// Call a helper due to scope issues with recursive functions
-		modifyMessage(this.data, inFunction, icOnly, type);
+		modifyMessage(this.data, inFunction, icOnly, type, args);
 		return this; // Allow chaining
 	}
 	// Remove all triple-backtick codeblocks
@@ -321,14 +326,18 @@ const unpackMessage = (message) => {
  * @param icOnly - Run on only IC parts? Default true.
  * @param type - rawText, but can be emoji, etc.
  *************************************************/
-const modifyMessage = (message, inFunction, icOnly = true, type = "rawText") => {
+const modifyMessage = (message, inFunction, icOnly = true, type = "rawText", args) => {
 	// For each line
 	for (x in message) {
 		if (message[x].data && (!icOnly || message[x].type != "OOC")) {
-			modifyMessage(message[x].data, inFunction, icOnly, type);
+			modifyMessage(message[x].data, inFunction, icOnly, type, args);
 		} else {
-			if (message[x].type == type) {
-				message[x].text = inFunction(message[x].text);
+			// Do we edit this message?
+			let modify = Array.isArray(type) ? (type.includes(message[x].type)) : (type == message[x].type)
+			if (modify) {
+				console.log(args)
+				message[x].text = inFunction(message[x].text, ...args);
+				//if(ret){message[x].text = inFunction(message[x].text, ...args)}
 			}
 		}
 	}
@@ -446,5 +455,29 @@ const testClass_MessageAST = () => {
 	console.log("Original: " + testSTR_4);
 	console.log("Modified: " + testAST_4.subscript(3).toString());
 };
+
+
+const test_callFunc = () => {
+
+	let matchFound = {"modified": false,}
+	const replaceEmoji = (text, replaceEmoji, matchFound) => {
+		if(text != replaceEmoji){
+			matchFound.modified = true;
+			return replaceEmoji;
+		}
+	}
+
+	testSTR_1 = "Aaaaaaaaaaaaa!!  <:vanillaBlush:395448030003855360> 😀"
+
+	testAST_1 = new MessageAST(testSTR_1)
+	testAST_1.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],["<:Smirk:1462969765835313192>",matchFound])
+	
+	console.log(testAST_1)
+	console.log(testAST_1.toString())
+	console.log(matchFound.modified)
+
+}
+
+test_callFunc();
 
 exports.MessageAST = MessageAST;

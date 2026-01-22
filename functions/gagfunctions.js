@@ -305,50 +305,53 @@ const modifymessage = async (msg, threadId) => {
 	try {
 		console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
 
-		let messageTree = new MessageAST(msg.content);
+		// TODO - remove this var
+		let outtext = ``									// Message to send.
+		let messageTree = new MessageAST(msg.content);		// Build AST from message
+		let messageTreeModified = {"modified":false}		// Store a boolean in an object to allow pass by reference.
 
-		// Mark modified message or not
-		let modifiedmessage = false;
-		let outtext = ``;
-		let replacingtext = msg.content;
-		// replace all emoji if the wearer is wearing something with emoji
-		let replaceemojireturn = replaceEmoji(msg, replacingtext, modifiedmessage);
-		modifiedmessage = replaceemojireturn.modifiedmessage;
-		replacingtext = replaceemojireturn.replacingtext;
-		let replacedemoji = modifiedmessage; // Only true if no emoji allowed or bot emoji
+		processHeadwearEmoji(msg.author.id, messageTree, messageTreeModified, getOption(msg.author.id, "dollvisorname"))
+
+		let replacedemoji = messageTreeModified.modified; // Only true if no emoji allowed or bot emoji
+
+		console.log("AFTER PROCESS: "+messageTree.toString())
 
 		// See if this message can be skipped. Messages containing only emoji do NOT need to be processed,
 		// But only if NOT wearing a headwear that replaces it in previous step.
-		if (!modifiedmessage && msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
+		if (!messageTreeModified.modified && msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
 
 		// At this point, generate all of the parts for the message
-		let messageparts = splitMessage(replacingtext);
+		//let messageparts = splitMessage(replacingtext);
 
 		// Handle weird exceptions for links
-		messageparts = handleLinkExceptions(messageparts);
+		//messageparts = handleLinkExceptions(messageparts);
 
-		// Text garbling due to Arousal
-		let vibereturned = textGarbleVibrator(messageparts, msg, modifiedmessage);
-		messageparts = vibereturned.messageparts;
-		modifiedmessage = vibereturned.modifiedmessage;
+		// // Text garbling due to Arousal
+		// let vibereturned = textGarbleVibrator(messageparts, msg, modifiedmessage);
+		// messageparts = vibereturned.messageparts;
+		// modifiedmessage = vibereturned.modifiedmessage;
 
-		// Text limiting and modifying due to Corset
-		let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
-		if (corsetreturned.corseted) {
-			return;
-		}
-		messageparts = corsetreturned.messageparts;
-		modifiedmessage = corsetreturned.modifiedmessage;
+		// // Text limiting and modifying due to Corset
+		// let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
+		// if (corsetreturned.corseted) {
+		// 	return;
+		// }
+		// messageparts = corsetreturned.messageparts;
+		// modifiedmessage = corsetreturned.modifiedmessage;
 
-		// Text garbling due to Gag
-		let gagreturned = textGarbleGag(messageparts, msg, modifiedmessage, outtext);
-		messageparts = gagreturned.messageparts;
-		modifiedmessage = gagreturned.modifiedmessage;
-		outtext = gagreturned.outtext;
+		// // Text garbling due to Gag
+		// let gagreturned = textGarbleGag(messageparts, msg, modifiedmessage, outtext);
+		// messageparts = gagreturned.messageparts;
+		// modifiedmessage = gagreturned.modifiedmessage;
+		// outtext = gagreturned.outtext;
+
+
+		// Convert the AST back to a string.
+		outtext = messageTree.toString()
 
 		// Text garbling due to Doll visors
-		let dolltreturned = await textGarbleDOLL(msg, modifiedmessage, outtext);
-		modifiedmessage = dolltreturned.modifiedmessage;
+		let dolltreturned = await textGarbleDOLL(msg, messageTreeModified.modified, outtext);
+		messageTreeModified.modified = dolltreturned.modifiedmessage;
 		outtext = dolltreturned.outtext;
 		let dollIDDisplay = dolltreturned.dollIDDisplay;
 		let dollProtocol = dolltreturned.dollProtocolViolations;
@@ -357,27 +360,13 @@ const modifymessage = async (msg, threadId) => {
 		outtext = outtext.replaceAll(/[]/g, "");
 
 		// Finally, send it if we modified the message.
-		if (modifiedmessage) {
+		if (messageTreeModified.modified) {
 			await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol, replacedemoji);
 		}
 	} catch (err) {
 		console.log(err);
 	}
 };
-
-function replaceEmoji(msg, replacein, modifiedmessage) {
-	let replacingtext = replacein;
-	let modified = modifiedmessage;
-	// replace all emoji if the wearer is wearing something with emoji
-	if (!getHeadwearRestrictions(msg.author.id).canEmote) {
-		replacingtext = processHeadwearEmoji(msg.author.id, msg.content, getOption(msg.author.id, "dollvisorname"));
-		// If we actually modified the text, then change modifed message to true.
-		if (replacingtext != msg.content) {
-			modified = true;
-		}
-	}
-	return { replacingtext: replacingtext, modifiedmessage: modified };
-}
 
 function handleLinkExceptions(messagein) {
 	//Weird exception for links
