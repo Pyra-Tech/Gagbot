@@ -684,24 +684,28 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
 		new ButtonBuilder()
 			.setCustomId(`inspect_overview_${inspectuserID}_1`)
 			.setLabel("Overview")
+            .setEmoji({ name: "📋" })
 			.setStyle(menu == "overview" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "overview" ? true : false),
 		// Restraints
 		new ButtonBuilder()
 			.setCustomId(`inspect_restraints_${inspectuserID}_1`)
 			.setLabel("Restraints")
+            .setEmoji({ name: "armbinder", id: process.emojis["armbinder"].match(/(?:<:[\w:\d]+:)(\d+)(?:>)/)[1] })
 			.setStyle(menu == "restraints" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "restraints" ? true : false),
 		// Restraints
 		new ButtonBuilder()
 			.setCustomId(`inspect_wearable_${inspectuserID}_1`)
 			.setLabel("Apparel")
+            .setEmoji({ name: "👗" })
 			.setStyle(menu == "wearable" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "wearable" ? true : false),
         // Restraints
 		new ButtonBuilder()
 			.setCustomId(`inspect_keys_${inspectuserID}_1`)
 			.setLabel("Keys")
+            .setEmoji({ name: "🔑" })
 			.setStyle(menu == "keys" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "keys" ? true : false),
 	];
