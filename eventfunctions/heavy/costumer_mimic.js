@@ -296,7 +296,7 @@ let functiontick = async (userID) => {
     // Randomly select an outfit from mimicCostumes.js
     if (process.userevents[userID].costumermimic.outfit == undefined) { process.userevents[userID].costumermimic.outfit = Object.keys(mimicCostumes)[Math.floor(Math.random() * Object.keys(mimicCostumes).length)]; }
     let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))); // Current clothes that can be removed
-    let shuffledclothes = shuffleWearables(currclothes);
+    let shuffledclothes = shuffleWearables(currclothes); // I admittedly dont think a big shuffler's necessary but its fine
     // Capture length of initial Removable Wearables array
     if (process.userevents[userID].costumermimic.removableclothes == undefined) { process.userevents[userID].costumermimic.removableclothes = shuffledclothes.length }
     let consumeperpass = Math.round(process.userevents[userID].costumermimic.removableclothes / 4);
@@ -333,7 +333,7 @@ let functiontick = async (userID) => {
     let nom_idx = 0;
     let itemsconsumed = "";
 
-    console.log("Consume: ", consumeperpass, ", Total: ", getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))).lenght, ", Stage: ", process.userevents[userID].costumermimic.stage);
+    console.log("Consume: ", consumeperpass, ", Total: ", getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))).length, ", Stage: ", process.userevents[userID].costumermimic.stage);
 
     // Initial Text Formatting
     data.heavy = true;
@@ -379,29 +379,29 @@ let functiontick = async (userID) => {
     }
 
     if (process.userevents[userID].costumermimic.stage == 3) {
-
         // Handle all remaining Wearables
-        while (nom_idx < shuffledclothes.length) {
-            /*/Text with items consumed? Cannot locate issue blocking concatenation of strings to the output string. Texts have been changed to be generic.
-            if (nom_idx < 4 && shuffledclothes.lenght >= 2) {
-                if (nom_idx == 3 || nom_idx == (shuffledclothes.lenght - 1)) {
-                    // Log 4th or last item in array
-                    itemsconsumed += ("and " + getWearableName(undefined, shuffledclothes[nom_idx]));
-                } else if (nom_idx < 3 && nom_idx != (shuffledclothes.lenght - 1)) {
-                    // Log the first 3 items
-                    itemsconsumed += (getWearableName(undefined, shuffledclothes[nom_idx]) + ", ");
-                }
+        data.donestripping = true;
+        let remainingwearables = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)))
+        let concat = []
+        remainingwearables.forEach((w) => {
+            concat.push(getWearableName(undefined, w));
+            deleteWearable(userID, w);
+        })
+        if (concat.length > 0) {
+            data.textdata.c1 = concat.join(", ")
+            data.remainingitems = true;
+            if (concat.length > 1) {
+                data.multiple = true;
             }
-            //*/
-            // Consume Item
-            deleteWearable(userID, shuffledclothes[nom_idx]);
-            nom_idx++;
+            else {
+                data.single = true;
+            }
+        }
+        else {
+            data.textdata.c1 = "Nothing Worn!"
+            data.noneremaining = true;
         }
 
-        data.textdata.c1 = itemsconsumed;
-        console.log(itemsconsumed);
-
-        data.donestripping = true;
         // Send a message saying it has consumed all remaining wearables
         messageSendChannel(getText(data), process.recentmessages[userID])
 

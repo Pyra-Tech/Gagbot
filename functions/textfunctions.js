@@ -1948,7 +1948,7 @@ const texts_eventfunctions = {
 		costumer_mimic: {
 			removeclothing: [
 				// OMNOMNOMNOM
-				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
+				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_THEY USER_ISARE wearing!`,
 				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
 				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
 				{
@@ -1970,23 +1970,21 @@ const texts_eventfunctions = {
 					text: `The Costumer Mimic's tentacles secrete some liquid that washes away USER_TAG's VAR_C1 leaving bare skin and nails behind!`,
 				},
 			],
-			donestripping: [
-				`As the Costumer Mimic finishes consuming their clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
-				`Now that the Costumer Mimic has finished removing their outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
-				`With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`,
-				{
-					only: (t) => {
-						return t.c1 == "Naked";
-					},
-					text: `The Costumer Mimic realises that USER_TAG is already naked, and immediately moves to dress USER_THEIR helpless form in a costume it thinks will suit USER_THEM!`,
-				},
-				{
-					only: (t) => {
-						return t.c1 != "";
-					},
-					text: `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's VAR_C1 and begins to dress USER_THEM in the costume it has chosen!`,
-				},
-			],
+			donestripping: {
+                remainingitems: {
+                    multiple: [
+                        `The Costumer Mimic lets out a satisfied hum as USER_TAG's VAR_C1 are all removed, leaving USER_THEM completely naked! The mimic begins dressing USER_THEM promptly.`
+                    ],
+                    single: [
+                        `The Costumer Mimic lets out a satisfied hum as USER_TAG's VAR_C1 is removed, leaving USER_THEM completely naked! The mimic begins dressing USER_THEM promptly.`
+                    ]
+                },
+                noneremaining: [
+                    `As the Costumer Mimic finishes consuming their clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
+				    `Now that the Costumer Mimic has finished removing their outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+				    `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`,
+                ]
+            },
 			applyingOutfit: {
 				wearable: { add: [`The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`, `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`, `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },
