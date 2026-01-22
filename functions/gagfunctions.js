@@ -325,7 +325,7 @@ const modifymessage = async (msg, threadId) => {
 		textGarbleVibrator(msg, messageTree, messageTreeModified);
 
 		// // Text limiting and modifying due to Corset
-		// let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
+		//let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
 		// if (corsetreturned.corseted) {
 		// 	return;
 		// }

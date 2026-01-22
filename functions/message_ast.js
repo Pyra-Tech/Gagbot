@@ -25,6 +25,7 @@ const HIGHESTLEVELNODES = ["IC", "OOC"];
 class MessageAST {
 	constructor(text) {
 		this.data = messageSplit_AST(text);
+		this.type = "root";
 	}
 	rebuild(text){
 		this.data = messageSplit_AST(text);
@@ -32,7 +33,7 @@ class MessageAST {
 	// Run a function on the specified type of segment
 	callFunc(inFunction, icOnly = true, type = "rawText", args = []) {
 		// Call a helper due to scope issues with recursive functions
-		modifyMessage(this.data, inFunction, icOnly, type, args);
+		modifyMessage(this, inFunction, icOnly, type, args);
 		return this; // Allow chaining
 	}
 	// Remove all triple-backtick codeblocks
@@ -321,27 +322,43 @@ const unpackMessage = (message) => {
 
 /**************************************************
  * Run a function on the AST.
+ * Automatically removes empty objects.
  * @param message - AST
  * @param inFunction - Function to run on the text
  * @param icOnly - Run on only IC parts? Default true.
  * @param type - rawText, but can be emoji, etc.
  *************************************************/
 const modifyMessage = (message, inFunction, icOnly = true, type = "rawText", args) => {
-	// For each line
-	for (x in message) {
-		if (message[x].data && ((message[x].type == "line") || (!icOnly && message[x].type == "OOC") || message[x].type == "IC")) {
-			modifyMessage(message[x].data, inFunction, icOnly, type, args);
-		} else {
-			// Do we edit this message?
-			let modify = Array.isArray(type) ? (type.includes(message[x].type)) : (type == message[x].type)
-			if (modify) {
-				//console.log(args)
-				let ret = inFunction(message[x].text, ...args);
-				if(ret !== undefined){message[x].text = ret}
+	// Handle lowest-level node by modifying text.
+	if(message.text && !message.data){
+		// Do we edit this message?
+		let modify = Array.isArray(type) ? (type.includes(message.type)) : (type == message.type)
+		if (modify) {
+			//console.log(args)
+			let ret = inFunction(message.text, ...args);
+			if(ret !== undefined){message.text = ret}
+		}
+	// Drop into lower levels.
+	}else{
+		// For each line
+		for (x in message.data) {
+			if (message.data[x].text || message.data[x].type == "IC" || message.data[x].type == "line"  || (!icOnly && message.data[x].type == "OOC")) {
+				modifyMessage(message.data[x], inFunction, icOnly, type, args);
 			}
 		}
+		// Filter out empty stuff
+		message.data = message.data.filter((e) => {return checkEmpty(e)})
 	}
 };
+
+const checkEmpty = (node) => {
+	if(node.data){
+		if(node.data.length == 0){return false;}
+	}else{
+		if(node.text == ""){return false}
+	}
+	return true;
+}
 
 // region Unit Testing
 ////////////////////////////////////////////////////////
@@ -467,11 +484,11 @@ const test_callFunc = () => {
 		}
 	}
 
-	testSTR_1 = "Meow"
+	testSTR_1 = "Test meowssage <:vanillaBlush:395448030003855360>"
 
 	testAST_1 = new MessageAST(testSTR_1)
 	console.log(testAST_1)
-	testAST_1.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],["<:Smirk:1462969765835313192>",matchFound])
+	testAST_1.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],["",matchFound])
 	
 	console.log(testAST_1)
 	console.log(testAST_1.toString())
@@ -479,7 +496,7 @@ const test_callFunc = () => {
 
 }
 
-testClass_MessageAST();
+//testClass_MessageAST();
 test_callFunc();
 
 exports.MessageAST = MessageAST;
