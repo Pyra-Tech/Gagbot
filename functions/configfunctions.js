@@ -149,7 +149,7 @@ const configoptions = {
 				return getOption(userID, "fumbling") == "disabled";
 			},
 		},
-        frustration: {
+		frustration: {
 			name: "Frustration",
 			desc: "Should time worn with chastity cause frustation? This will add additional chance to fumble and change arousal effects on speech.",
 			choices: [
@@ -173,7 +173,7 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 					uname: "Frustration05",
 				},
-                {
+				{
 					name: "1x",
 					helptext: "Frustration adds up to 50% over 1 month",
 					select_function: (userID) => {
@@ -183,7 +183,7 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 					uname: "Frustration1",
 				},
-                {
+				{
 					name: "2x",
 					helptext: "Frustration adds up to 50% over 2 weeks",
 					select_function: (userID) => {
@@ -193,7 +193,7 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 					uname: "Frustration2",
 				},
-                {
+				{
 					name: "4x",
 					helptext: "Frustration adds up to 50% over 1 week",
 					select_function: (userID) => {
@@ -203,7 +203,7 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 					uname: "Frustration4",
 				},
-                {
+				{
 					name: "10x",
 					helptext: "Frustration adds up to 50% over 3 days",
 					select_function: (userID) => {
@@ -213,7 +213,7 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 					uname: "Frustration10",
 				},
-                {
+				{
 					name: "20x",
 					helptext: "Frustration adds up to 50% over 1.5 days",
 					select_function: (userID) => {
