@@ -1244,10 +1244,12 @@ function calcDenialCoefficient(user) {
 }
 
 function calcFrustration(user) {
+    let frustrationmult = getOption(user, "frustration");
+    if (frustrationmult == 0) { return 0 };
 	const chastity = getChastity(user);
 	if (!chastity) return 0;
 	const now = Date.now();
-	const hoursBelted = (now - chastity.timestamp) / (60 * 60 * 1000);
+	const hoursBelted = ((now - chastity.timestamp) / (60 * 60 * 1000) * frustrationmult);
 	let baseFrustration;
 
 	if (hoursBelted <= FRUSTRATION_BREAKPOINT_TIME) {
