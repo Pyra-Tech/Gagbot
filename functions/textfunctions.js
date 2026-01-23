@@ -239,7 +239,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("X-Frame");
 							},
-							text: `USER_TAG presses TARGET_TAG up against the VAR_C3, reaching up and locking TARGET_THEIR arms into the upper cuffs. Then after trapping TARGET_TAG, USER_THEM bends down to lock TARGET_THEIR legs to the frame, leaving TARGET_THEMSELF completely exposed!`,
+							text: `USER_TAG presses TARGET_TAG up against the VAR_C3, reaching up and locking TARGET_THEIR arms into the upper cuffs. Then after trapping TARGET_THEM, bends down to lock TARGET_THEIR legs to the frame, leaving TARGET_THEM completely exposed!`,
 						},
 						{
 							only: (t) => {
@@ -257,7 +257,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Dancer's Pole");
 							},
-							text: `USER_TAG helps TARGET_TAG climb onto the stage and cuffs TARGET_THEMSELF to the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for their enjoyment~!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the stage before cuffing TARGET_THEMSELF to the VAR_C3! Swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for their enjoyment~!`,
 						},
 						{
 							only: (t) => {
@@ -308,7 +308,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Bandage");
 							},
-							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY are completely mummified by the VAR_C3!`,
+							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY is completely mummified by the VAR_C3!`,
 						},
 						// Comfy
 						{
@@ -340,7 +340,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Magic Mirror");
 							},
-							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touch it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!`,
+							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touches it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!`,
 						},
 						{
 							only: (t) => {
