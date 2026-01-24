@@ -42,7 +42,7 @@ const honorifictitles = [
 	"(\\w|\\d)+-senpai",
 ];
 
-const silenttitles = [`\n*looks down silently*\n`, `\n*tries to speak, but no words come out*\n`, `\n*nods without a word*\n`, `\n*looks down and to the side*\n`, `\n*twiddles thumbs meekly*\n`, `\n*pouts as the gag stops impolite speech*\n`, `\n*goes mute without an honorific*\n`, `\n*meeps but produces no audible words*\n`, `\n*casts eyes downward, like a good sub*\n`, `\n*blushes and mumbles something*\n`];
+const silenttitles = [`*looks down silently*`, `*tries to speak, but no words come out*`, `*nods without a word*`, `*looks down and to the side*`, `*twiddles thumbs meekly*`, `*pouts as the gag stops impolite speech*`, `*goes mute without an honorific*`, `*meeps but produces no audible words*`, `*casts eyes downward, like a good sub*`, `*blushes and mumbles something*`];
 
 const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 
@@ -57,7 +57,7 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 		return;
 	} else {
 		let silenced = {"isSilenced": false}					// Store a bool in an object to pass by reference.
-		msgTree.callFunc(impoliteSub,true,"rawText",[silenced])	// Run a function on the tree.
+		msgTree.callFunc(impoliteSub,true,["rawText","moan"],[silenced])	// Run a function on the tree.
 		if(silenced.isSilenced){msgTreeMods.modified = true;}	// If the function caught anything, the message is modified.
 		return;
 	}
