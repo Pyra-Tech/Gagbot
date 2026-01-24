@@ -5,7 +5,7 @@ const garbleText = (text, parent, intensity) => {
 	let regexpattern = new RegExp(`\\b(${cursemap})\\b`, "gi");
 	let textout = text.replaceAll(regexpattern, "🧼".repeat(Math.floor(intensity / 2)));
 
-	return { text: textout, garble: true };
+	return textout;
 };
 
 exports.garbleText = garbleText;
