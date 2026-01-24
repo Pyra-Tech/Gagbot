@@ -239,7 +239,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("X-Frame");
 							},
-							text: `USER_TAG presses TARGET_TAG up against the VAR_C3, reaching up and locking TARGET_THEIR arms into the upper cuffs. Then after trapping TARGET_THEM, bends down to lock TARGET_THEIR legs to the frame, leaving TARGET_THEM completely exposed!`,
+							text: `USER_TAG presses TARGET_TAG up against the VAR_C3, reaching up and locking TARGET_THEIR arms into the upper cuffs. Then after trapping TARGET_THEM, USER_THEY bendUSER_S down to lock TARGET_THEIR legs to the frame, leaving TARGET_THEM completely exposed!`,
 						},
 						{
 							only: (t) => {
@@ -257,7 +257,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Dancer's Pole");
 							},
-							text: `USER_TAG helps TARGET_TAG climb onto the stage before cuffing TARGET_THEMSELF to the VAR_C3! Swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for their enjoyment~!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the stage and cuffs TARGET_THEMSELF to the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for USER_THEIR enjoyment~!`,
 						},
 						{
 							only: (t) => {
@@ -308,7 +308,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Bandage");
 							},
-							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY is completely mummified by the VAR_C3!`,
+							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY TARGET_ISARE completely mummified by the VAR_C3!`,
 						},
 						// Comfy
 						{
@@ -734,7 +734,7 @@ const texts_heavy = {
 			only: (t) => {
 				return t.c2.includes("Leashing Post");
 			},
-			text: `USER_TAG walks over to the VAR_C2, clipping on a leash and blushing as USER_THEY kneels down and ties the other end to the VAR_C2!`,
+			text: `USER_TAG walks over to the VAR_C2, clipping on a leash and blushing as USER_THEY kneelUSER_S down and tieUSER_S the other end to the VAR_C2!`,
 		},
 		// Latex
 		{
@@ -899,7 +899,7 @@ const texts_struggle = {
 			only: (t) => {
 				return t.c1 == "Doll Processing Facility";
 			},
-			text: `USER_TAG fights against the VAR_C1 as USER_THEY USER_ISARE moved along the belt, but it refuses to acknowledge USER_THEIR struggle! After all, USER_THEY_CAP USER_ISARE just a Doll.`,
+			text: `USER_TAG fights against the VAR_C1 as USER_THEY USER_ISARE moved along the belt, but it refuses to acknowledge USER_THEIR struggle! After all, USER_THEY USER_ISARE just a Doll.`,
 		},
 		// General Types
 		{
@@ -950,7 +950,7 @@ const texts_struggle = {
 			required: (t) => {
 				return t.c1.includes("Latex");
 			},
-			text: `USER_TAG strains against the VAR_C1, the latex stretching and squeaking as they do so! But no matter how far USER_THEY twists or bends the latex always drags USER_THEM back into position`,
+			text: `USER_TAG strains against the VAR_C1, the latex stretching and squeaking as USER_THEY doUSER_ES so! But no matter how far USER_THEY twistUSER_S or bendUSER_S the latex, it always pulls USER_THEM back into position`,
 		},
 		// Furniture
 		{
@@ -970,7 +970,7 @@ const texts_struggle = {
 			required: (t) => {
 				return t.c1.includes("Bandage");
 			},
-			text: `USER_TAG squirms in the VAR_C1, but USER_THEY makes no progress in escaping USER_THEIR mummification!!`,
+			text: `USER_TAG squirms in the VAR_C1, but USER_THEY makeUSER_S no progress in escaping USER_THEIR mummification!!`,
 		},
 		// Comfy
 		{
@@ -989,7 +989,7 @@ const texts_struggle = {
 			required: (t) => {
 				return t.c1.includes("Toasty Kotatsu");
 			},
-			text: `As USER_THEY relax under the VAR_C1, USER_TAG realise USER_THEY can't bring USER_THEMSELF to leave the comfortable warmth!`,
+			text: `As USER_THEY relaxUSER_ES under the VAR_C1, USER_TAG realises USER_THEY can't bring USER_THEMSELF to leave the comfortable warmth!`,
 		},
 		{
 			only: (t) => {
