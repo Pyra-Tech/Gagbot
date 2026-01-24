@@ -11,7 +11,7 @@ const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 const { arousedtexts } = require("../vibes/aroused/aroused_texts.js");
 const { config } = require("./configfunctions.js");
 const { getOption, getBotOption } = require(`./configfunctions.js`);
-const { getUserVar } = require("./usercontext.js");
+const { getUserVar, setUserVar } = require("./usercontext.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -111,6 +111,21 @@ const chastitytypes = [
 	{ name: "Queensbelt", value: "belt_queen", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 10 },
 	{ name: "Starmetal Belt", value: "belt_starmetal", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
 	{ name: "Timekeeper's Belt", value: "belt_timekeeper", growthCoefficient: 0.1, decayCoefficient: 0.1, denialCoefficient: 10, timescale: 0.1, minDecay: -0.1, maxDecay: 0.1 },
+	{
+		name: "Stasis Prison",
+		value: "belt_stasis",
+		growthCoefficient: 0.5,
+		decayCoefficient: 0.2,
+		denialCoefficient: 5,
+		onOrgasm(user, prevArousal) {
+			addArousal(user, prevArousal);
+			const current = getUserVar(user, "chastityoverrides") ?? 5;
+			setUserVar(user, "chastityoverrides", { denialCoefficient: current * 1.2 });
+		},
+		onUnequip(user) {
+			setUserVar(user, "chastityoverrides", {});
+		},
+	},
 ];
 
 const chastitybratypes = [
