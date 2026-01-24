@@ -1332,11 +1332,13 @@ function clearArousal(user) {
 }
 
 function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCoefficient) {
+	const tickScale = getBotOption("bot-timetickrate") / 60000;
+
 	// first increase it due to vibe effect
-	const growth = bounded(traits.minGrowth, (traits.timescale * ((getBotOption("bot-timetickrate") / 60000) * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(traits.timescale * time * AROUSAL_PERIOD_A) * Math.cos(traits.timescale * time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random()))) / (RANDOM_BIAS + 1), traits.maxGrowth);
+	const growth = tickScale * bounded(traits.minGrowth, traits.timescale * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(traits.timescale * time * AROUSAL_PERIOD_A) * Math.cos(traits.timescale * time * AROUSAL_PERIOD_B)) * growthCoefficient * ((RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1)), traits.maxGrowth);
 	const noDecay = arousal + growth;
 	// then reduce it based on decay
-	const decay = bounded(traits.minDecay, traits.timescale * (getBotOption("bot-timetickrate") / 60000) * decayCoefficient * Math.max(arousal + prev / 2, 0.1), traits.maxDecay);
+	const decay = tickScale * bounded(traits.minDecay, traits.timescale * decayCoefficient * Math.max(arousal + prev / 2, 0.1), traits.maxDecay);
 	return bounded(traits.minArousal, noDecay - decay, traits.maxArousal);
 }
 
