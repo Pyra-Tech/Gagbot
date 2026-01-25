@@ -144,7 +144,7 @@ let wearabletypes = [
 	{ name: "Pencil Skirt", value: "pencil_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Cheerleader"] },
 	{ name: "Side Split Skirt", value: "split_skirt", colorable: true, category: "Lower Body" },
 	{ name: "Skirt", value: "skirt", colorable: true, category: "Lower Body" },
-	{ name: "Pareo", value: "pareo", colorable: true, category: "Lower Body" },
+	{ name: "Pareo", value: "pareo", colorable: true, category: "Lower Body", uniqueColors: ["Leafy"]  },
 	{ name: "Leather Skirt", value: "skirt_leather", colorable: true, category: "Lower Body" },
 	{ name: "Latex Skirt", value: "skirt_latex", colorable: true, category: "Lower Body", uniqueColors: ["Starry", "Shadow"] },
 	{ name: "Suit Pants", value: "pants", colorable: true, category: "Lower Body" },

@@ -2280,7 +2280,17 @@ const texts_eventfunctions = {
 				gag: { add: [`The Costumer Mimic pulls a VAR_C1 from its storage and secures it into USER_TAG's mouth.`] },
 				unknown: [`The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from their storage. Perhaps it ran out of space?`],
 			},
-			spitout: { add: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but not before securing USER_THEM into a VAR_C1 first~.`], none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
+			spitout: { 
+				add: [
+					`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but not before securing USER_THEM into a VAR_C1 first~.`,
+					{
+						only: (t) => {
+							return t.c1.includes("Vines");
+						},
+						text: `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but before USER_THEY get far, the VAR_C1 from USER_THEIR costume take root~.`,
+					},
+				], 
+				none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
 		},
 	},
 };

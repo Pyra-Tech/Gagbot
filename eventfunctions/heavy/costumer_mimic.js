@@ -280,40 +280,39 @@ const cheerleader_outfit = [
 const dryad_outfit = [
     { category: "wearable", itemtowear: "anklets", color: "Floral" },
     { category: "wearable", itemtowear: "bracelets", color: "Floral" },
-    { category: "mittens", itemtowear: "mittens_leather", color: null },
     { category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "Green" },
+    { category: "mittens", itemtowear: "mittens_leather", color: null },
     { category: "wearable", itemtowear: "armbands", color: "Livingwood" },
+    { category: "chastitybra", itemtowear: "bra_livingwood", color: null },
     { category: "chastitybelt", itemtowear: "belt_livingwood", color: null },
-    { category: "chastitybra", itemtowear: "bra_featherlight", color: null },
-    { category: "wearable", itemtowear: "bikini", color: "Leaf" },
-    { category: "wearable", itemtowear: "bandeau", color: "Floral" },
-    { category: "wearable", itemtowear: "sandals_strappy", color: "Leafy" },
-    { category: "wearable", itemtowear: "armour", color: "Bark" },
     { category: "collar", itemtowear: "collar_livingwood", color: null },
     { category: "gag", itemtowear: "ball", color: null },
     { category: "headwear", itemtowear: "blindfold_floral", color: null },
+    { category: "wearable", itemtowear: "bikini", color: "Leaf" },
+    { category: "wearable", itemtowear: "pareo", color: "Leafy" },
+    { category: "wearable", itemtowear: "sandals_strappy", color: "Leafy" },
     { category: "heavy", itemtowear: "entangling_vines", color: null },
 ];
 
 
 const mimicCostumes = {
-    //maid_outfit: maid_outfit,
-    //ponygirl_outfit: ponygirl_outfit,
-    //bunnygirl_outfit: bunnygirl_outfit,
-    //princess_outfit: princess_outfit,
-    //lewd_princess_outfit: lewd_princess_outfit,
-    //kitsune_outfit: kitsune_outfit,
-    //librarian_outfit: librarian_outfit,
-    //rogue_outfit: rogue_outfit,
-    //dancer_outfit: dancer_outfit,
-    //paladin_outfit: paladin_outfit,
-    //ranger_outfit: ranger_outfit,
-    //healer_outfit: healer_outfit,
-    //witch_outfit: witch_outfit,
-    //angel_outfit: angel_outfit,
-    //mermaid_outfit: mermaid_outfit,
-    //mer_maid_outfit: mer_maid_outfit,
-    //cheerleader_outfit: cheerleader_outfit,
+    maid_outfit: maid_outfit,
+    ponygirl_outfit: ponygirl_outfit,
+    bunnygirl_outfit: bunnygirl_outfit,
+    princess_outfit: princess_outfit,
+    lewd_princess_outfit: lewd_princess_outfit,
+    kitsune_outfit: kitsune_outfit,
+    librarian_outfit: librarian_outfit,
+    rogue_outfit: rogue_outfit,
+    dancer_outfit: dancer_outfit,
+    paladin_outfit: paladin_outfit,
+    ranger_outfit: ranger_outfit,
+    healer_outfit: healer_outfit,
+    witch_outfit: witch_outfit,
+    angel_outfit: angel_outfit,
+    mermaid_outfit: mermaid_outfit,
+    mer_maid_outfit: mer_maid_outfit,
+    cheerleader_outfit: cheerleader_outfit,
     dryad_outfit: dryad_outfit,
 };
 
@@ -359,8 +358,8 @@ let functiontick = async (userID) => {
 
     // Only update a max of once every 20 seconds. 
     if ((process.userevents[userID].costumermimic.nextupdate ?? 0) < Date.now()) {
-        process.userevents[userID].costumermimic.nextupdate = Date.now() + 3000; // Test Speed
-        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
+        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 3000; // Test Speed
+        process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
     }
     else { return };
 
