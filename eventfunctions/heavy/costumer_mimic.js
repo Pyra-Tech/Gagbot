@@ -99,7 +99,7 @@ const kitsune_outfit = [
     { category: "wearable", itemtowear: "mask_kitsune", color: null },
     { category: "mittens", itemtowear: "mittens_leather", color: null },
     { category: "gag", itemtowear: "ball", color: null },
-    { category: "collar", itemtowear: "collar_runic", color: null },
+    { category: "collar", itemtowear: "collar_inari", color: null },
     { category: "heavy", itemtowear: "ribbons", color: null },
 ];
 
@@ -249,23 +249,38 @@ const mermaid_outfit = [
     { category: "heavy", itemtowear: "armbinder_latex", color: null },
 ];
 
+const cheerleader_outfit = [
+    { category: "wearable", itemtowear: "thighhighs", color: "White" },
+    { category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "White" },
+    { category: "wearable", itemtowear: "panties_sidetie", color: "Red" },
+    { category: "wearable", itemtowear: "nipple_pasties", color: "Red" },
+    { category: "wearable", itemtowear: "mini_skirt", color: "White" },
+    { category: "wearable", itemtowear: "top_halter", color: "Red" },
+    { category: "wearable", itemtowear: "pumps", color: "White" },
+    { category: "mittens", itemtowear: "mittens_pompom", color: null },
+    { category: "collar", itemtowear: "collar_moon", color: null },
+    { category: "gag", itemtowear: "goodSub", color: null },
+    { category: "headwear", itemtowear: "mask_kigu_teto", color: null },
+];
+
 
 const mimicCostumes = {
-    maid_outfit: maid_outfit,
-    ponygirl_outfit: ponygirl_outfit,
-    bunnygirl_outfit: bunnygirl_outfit,
-    princess_outfit: princess_outfit,
-    lewd_princess_outfit: lewd_princess_outfit,
-    kitsune_outfit: kitsune_outfit,
-    librarian_outfit: librarian_outfit,
-    rogue_outfit: rogue_outfit,
-    dancer_outfit: dancer_outfit,
-    paladin_outfit: paladin_outfit,
-    ranger_outfit: ranger_outfit,
-    healer_outfit: healer_outfit,
-    witch_outfit: witch_outfit,
-    angel_outfit: angel_outfit,
-    mermaid_outfit: mermaid_outfit,
+    //maid_outfit: maid_outfit,
+    //ponygirl_outfit: ponygirl_outfit,
+    //bunnygirl_outfit: bunnygirl_outfit,
+    //princess_outfit: princess_outfit,
+    //lewd_princess_outfit: lewd_princess_outfit,
+    //kitsune_outfit: kitsune_outfit,
+    //librarian_outfit: librarian_outfit,
+    //rogue_outfit: rogue_outfit,
+    //dancer_outfit: dancer_outfit,
+    //paladin_outfit: paladin_outfit,
+    //ranger_outfit: ranger_outfit,
+    //healer_outfit: healer_outfit,
+    //witch_outfit: witch_outfit,
+    //angel_outfit: angel_outfit,
+    //mermaid_outfit: mermaid_outfit,
+    cheerleader_outfit: cheerleader_outfit,
 };
 
 //*/ Shuffler Application
@@ -310,8 +325,8 @@ let functiontick = async (userID) => {
 
     // Only update a max of once every 20 seconds. 
     if ((process.userevents[userID].costumermimic.nextupdate ?? 0) < Date.now()) {
-        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 3000; // Test Speed
-        process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
+        process.userevents[userID].costumermimic.nextupdate = Date.now() + 3000; // Test Speed
+        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
     }
     else { return };
 
@@ -410,7 +425,7 @@ let functiontick = async (userID) => {
     }
 
     // Apply Outfit Items once stripped until last index of array is reached or a heavy item is found
-    if (process.userevents[userID].costumermimic.stage >= 4 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length && nextitem.category != "heavy") {
+    if (process.userevents[userID].costumermimic.stage >= 4 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
 
         data.applyingOutfit = true;
         switch (nextitem.category) {
@@ -565,6 +580,24 @@ let functiontick = async (userID) => {
                 process.userevents[userID].costumermimic.costumeidx++;
                 break;
         }
+
+        if (process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
+            // Remove Current Heavy (Mimic) if end of Costume Array Reached Without Heavy
+            let data = {
+                textarray: "texts_eventfunctions",
+                textdata: {
+                    interactionuser: userobject,
+                    targetuser: targetobject,
+                }
+            }
+            data.heavy = true;
+            data.costumer_mimic = true;
+            removeHeavy(userID);
+            data.spitout = true;
+            data.none = true;
+            messageSendChannel(getText(data), process.recentmessages[userID]);
+        }
+
 
     } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
         // Final Stage - Remove Mimic Heavy and spit them out, then apply Outfit Heavy!
