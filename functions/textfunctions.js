@@ -282,7 +282,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Latex Vaccube");
 							},
-							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneel within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
+							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneelUSER_S within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
 						},
 						// Furniture
 						{
@@ -295,7 +295,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Chair with Cuffs");
 							},
-							text: `Sitting TARGET_TAG down in the VAR_C3, USER_TAG kneels and slips TARGET_THEIR ankles into the ankle cuffs, before standing up and walking around to slip TARGET_THEIR arms into cuffs behind TARGET_THEM and snaping them shut!`,
+							text: `Sitting TARGET_TAG down in the VAR_C3, USER_TAG kneels and slips TARGET_THEIR ankles into the ankle cuffs, before standing up and walking around to slip TARGET_THEIR arms into cuffs behind TARGET_THEM and snapping them shut!`,
 						},
 						// Encasement or Wrappings
 						{
@@ -315,13 +315,13 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Weighted Blanket");
 							},
-							text: `USER_TAG tosses a VAR_C3 over TARGET_TAG! It is so comfy that TARGET_THEY can't bring themselves to wriggle out from under the extremely heavy blanket!`,
+							text: `USER_TAG tosses a VAR_C3 over TARGET_TAG! It is so comfy that TARGET_THEY can't bring TARGET_THEMSELF to wriggle out from under the extremely heavy blanket!`,
 						},
 						{
 							only: (t) => {
 								return t.c3.includes("Blanket Burrito");
 							},
-							text: `USER_TAG wraps TARGET_TAG up into a VAR_C3! It doesn't take TARGET_TAG long before TARGET_THEY realise USER_TAG has trapped TARGET_THEM in a warm comfy prison!`,
+							text: `USER_TAG wraps TARGET_TAG up into a VAR_C3! It doesn't take TARGET_TAG long before TARGET_THEY realiseUSER_S USER_TAG has trapped TARGET_THEM in a warm comfy prison!`,
 						},
 						{
 							only: (t) => {
@@ -334,13 +334,13 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Festive Ribbons") || t.c3.includes("Wrapping Paper");
 							},
-							text: `USER_TAG carefully wraps TARGET_TAG in VAR_C3! Who are they planning to gift such a present too~?`,
+							text: `USER_TAG carefully wraps TARGET_TAG in VAR_C3! Who USER_ISARE USER_THEY planning to gift such a present to~?`,
 						},
 						{
 							only: (t) => {
 								return t.c3.includes("Magic Mirror");
 							},
-							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touches it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!`,
+							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touchUSER_ES it the Mirror emits a bright flash of light, and TARGET_TAG finds TARGET_THEMSELF trapped within the reflection!`,
 						},
 						{
 							only: (t) => {
