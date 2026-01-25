@@ -25,10 +25,10 @@ function Toy() {
     // Condition to force unequip on refresh
     this.forceUnequip = (data) => { return false }
 
-    // Calculation for effective arousal
+    // Calculation for effective arousal change
     // Note, this should be used for checks more focused around the vibe - it will be
     // further multiplied by the chastity's checks for this, if applicable. 
-    this.calcArousal = function (data) { return data.arousal * this.vibescale() }
+    this.calcVibeEffect = function (data) { return 0 }
 
     // Name for the toy
     this.toyname = "Default Toy"

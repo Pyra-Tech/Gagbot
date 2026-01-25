@@ -67,4 +67,6 @@ function canRemoveToy(userID, placerID, toy) {
     return (process.toytypes && process.toytypes[toy] && process.toytypes[toy].canUnequip({ userID: userID, placerID: placerID }))
 }
 
+
+
 exports.setUpToys = setUpToys;

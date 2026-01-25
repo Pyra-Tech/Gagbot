@@ -1278,7 +1278,11 @@ function updateArousalValues() {
 			const vibes = getVibe(user);
 			// if no vibe effect, growth coefficient will be 0
 			// otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
-			const growthCoefficient = !vibes && !traits.minVibe ? 0 : traits.growthCoefficient * bounded(traits.minVibe, vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, traits.maxVibe) * VIBE_SCALING;
+            let vibegains = vibes.reduce((prev, currVibe) => { 
+                let vibedata = { intensity: currVibe.intensity }
+                return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
+            })
+			const growthCoefficient = !vibes && (!traits.minVibe ? 0 : traits.growthCoefficient) * bounded(traits.minVibe * VIBE_SCALING, vibegains, traits.maxVibe * VIBE_SCALING);
 			const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, growthCoefficient, traits.decayCoefficient * UNBELTED_DECAY);
 			// set the values to the new ones
 			arousal.timestamp = now;
@@ -1412,7 +1416,10 @@ function setArousalCooldown(user, cooldownModifier = 1, arousalLeft = 0) {
 function calcStaticVibeIntensity(user) {
 	const vibes = getVibe(user);
 	if (!vibes) return 0;
-	return vibes.reduce((a, b) => a + b.intensity, 0) * 0.7;
+	return vibes.reduce((prev, currVibe) => {
+        let vibedata = { intensity: currVibe.intensity }
+        return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
+    })
 }
 
 // modify when more things affect it
