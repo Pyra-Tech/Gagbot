@@ -1196,6 +1196,7 @@ const texts_struggle = {
 		`USER_TAG starts mumbling, counting sheep to USER_THEMSELF. USER_THEY_CAP might be a little sleepy...`,
 		`USER_TAG starts scrolling on YourSpace, and comes across a post titled, 'rawr XD' with a girl with too much eyeshadow and a terrible webcam in the dark.`,
 		`USER_TAG wants to take a selfie. In bondage, of course. Who wouldn't want to take beautiful pictures wearing a ball gag?`,
+		`USER_TAG is daydreaming about hosting a photoshoot. Maybe a nice bit of Shibari with USER_THEM as the model?`,
 		`USER_TAG's breathing accelerates a little as USER_THEY fantasizeUSER_S about being in chains, kneeling at the feet of someone here... Who will give USER_THEM that fantasy?`,
 		`USER_TAG might have had some water recently, but it's good to remember to get more. Can never have too much, afterall.`,
 		`All this talk about servitude and the moans from the dungeon's denizens makes it impossible for USER_TAG to focus...`,
