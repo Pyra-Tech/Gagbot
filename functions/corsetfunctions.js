@@ -93,11 +93,11 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				corset.breath -= (globalMultiplier * capitals) / 2;
 
 				// Shouting is not fitting for a bottom
-				if (corset.tightness >= 9 && capitals > 0) newsyllables = newsyllables.toLowerCase();
-				else if (corset.tightness >= 7 && capitals > 1) newsyllables = newsyllables.toLowerCase();
-				else if (corset.tightness >= 5 && capitals > 2) newsyllables = newsyllables.toLowerCase();
-				else if (corset.tightness >= 4 && capitals > 3) newsyllables = newsyllables.toLowerCase();
-				else if (corset.tightness >= 3 && capitals > 4) newsyllables = newsyllables.toLowerCase();
+				if (corset.tightness >= 9 && capitals > 0) syllable = syllable.toLowerCase();
+				else if (corset.tightness >= 7 && capitals > 1) syllable = syllable.toLowerCase();
+				else if (corset.tightness >= 5 && capitals > 2) syllable = syllable.toLowerCase();
+				else if (corset.tightness >= 4 && capitals > 3) syllable = syllable.toLowerCase();
+				else if (corset.tightness >= 3 && capitals > 4) syllable = syllable.toLowerCase();
 
 				if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) {
 					if (!silence) ended = true;
