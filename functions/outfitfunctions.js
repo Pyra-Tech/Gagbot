@@ -734,7 +734,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
-        if (getToys(inspectuserID)) {
+        if (getToys(inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
@@ -893,7 +893,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
-        if (getToys(inspectuserID)) {
+        if (getToys(inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
