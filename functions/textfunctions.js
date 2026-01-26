@@ -220,7 +220,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Petsuit") || t.c3.includes("Piddlefours");
 							},
-							text: `USER_TAG pushes TARGET_TAG to their knees before kneeling down USER_THEMSELF and slipping TARGET_THEIR limbs into a VAR_C3, forcing TARGET_THEM to crawl around like a pet!`,
+							text: `USER_TAG pushes TARGET_TAG to TARGET_THEIR knees before kneeling down USER_THEMSELF and slipping TARGET_THEIR limbs into a VAR_C3, forcing TARGET_THEM to crawl around like a pet!`,
 						},
 						// Stationary
 						{
@@ -876,7 +876,7 @@ const texts_mitten = {
 	mitten: [`You are already wearing mittens!`],
 	nomitten: {
 		namedmitten: {
-			gag: [`USER_TAG puts on a set of VAR_C2. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`, `USER_TAG wriggles their fingers into some VAR_C2. USER_THEIR_CAP gag will be impossible to remove!`, `As if USER_THEY wantUSER_S to stay gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`],
+			gag: [`USER_TAG puts on a set of VAR_C2. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`, `USER_TAG wriggles USER_THEIR fingers into some VAR_C2. USER_THEIR_CAP gag will be impossible to remove!`, `As if USER_THEY wantUSER_S to stay gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`],
 			nogag: [`USER_TAG slips USER_THEIR hands into some VAR_C2! USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`, `USER_TAG wriggles USER_THEIR fingers into some VAR_C2. Gags will be impossible to remove!`, `As if USER_THEY wantUSER_S to be gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`],
 		},
 		nonamedmitten: {
@@ -1144,7 +1144,7 @@ const texts_struggle = {
 			// In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
 			mitten: [`USER_TAG paws at USER_THEIR face cutely to knock some of the things off of USER_THEIR head. The things barely hang on!`, `USER_TAG uses the balled fists inside USER_THEIR VAR_C3 to try to peel some of the things off of USER_THEIR head. Unsuccessfully, of course.`, `USER_TAG prods at USER_THEIR head gear to try to loosen it and pull something off. The head gear is quite secure though.`],
 			// Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
-			nomitten: [`USER_TAG runs USER_THEIR fingers over USER_THEIR head gear. It all feels so nice on USER_THEIR head... USER_THEY_CAP should keep wearing it!`, `USER_TAG tries to use a finger to get some leverage and knock some head wear off of USER_THEIR head. It's not falling off anytime soon though.`, `USER_TAG dextrously slips USER_THEIR fingers under some of their head gear! USER_THEY_CAP *could* take it off, but USER_THEIR head looks pretty with it on.`],
+			nomitten: [`USER_TAG runs USER_THEIR fingers over USER_THEIR head gear. It all feels so nice on USER_THEIR head... USER_THEY_CAP should keep wearing it!`, `USER_TAG tries to use a finger to get some leverage and knock some head wear off of USER_THEIR head. It's not falling off anytime soon though.`, `USER_TAG dextrously slips USER_THEIR fingers under some of USER_THEIR head gear! USER_THEY_CAP *could* take it off, but USER_THEIR head looks pretty with it on.`],
 		},
 	},
 	corset: {
@@ -1196,7 +1196,7 @@ const texts_struggle = {
 		`USER_TAG is considering announcing to everyone that USER_THEY lost The Game!`,
 		`USER_TAG wants a new pair of handcuffs. Where? On who? Who knows!`,
 		`USER_TAG wants a new pair of handcuffs. Probably on USER_THEMSELF. Someone should bind USER_THEM!`,
-		`USER_TAG rubs their wrists. They wonder what it would feel like to be wearing cuffs.`,
+		`USER_TAG rubs USER_THEIR wrists. They wonder what it would feel like to be wearing cuffs.`,
 		`USER_TAG blushes slightly as they glance around at all the restraints. Maybe someone will use them on USER_THEM!`,
 		`USER_TAG nods as USER_THEY USER_ISARE reminded by USER_THEIR subconscious brain to drink some water!`,
 		`USER_TAG tries to imagine how best to adjust USER_THEIR speech when gagged. Perhaps with practice, USER_THEY can figure it out!`,
@@ -1989,7 +1989,7 @@ const texts_unheavy = {
 };
 
 const texts_unmitten = {
-	heavy: { self: [`USER_TAG wriggles USER_THEIR hands in their VAR_C1, but can't get good leverage to take USER_THEIR mittens off!`], other: [`USER_TAG uses USER_THEIR nose to help TARGET_TAG but can't help TARGET_THEM out of TARGET_THEIR mittens!`] },
+	heavy: { self: [`USER_TAG wriggles USER_THEIR hands in USER_THEIR VAR_C1, but can't get good leverage to take USER_THEIR mittens off!`], other: [`USER_TAG uses USER_THEIR nose to help TARGET_TAG but can't help TARGET_THEM out of TARGET_THEIR mittens!`] },
 	noheavy: { other: { gag: [`USER_TAG takes off TARGET_TAG's mittens so TARGET_THEY can take off TARGET_THEIR gag!`], nogag: [`USER_TAG takes off TARGET_TAG's mittens. Now TARGET_THEY could take off any gag someone wants to put on TARGET_THEM!`] }, self: [`USER_TAG tries to pull off USER_THEIR mittens, but the straps and locks hold them firmly on USER_THEIR wrists!`] },
 	// Idk why the structure was like this - Ephemeral
 	otherother: [`USER_TAG is not wearing mittens!`],
@@ -2066,7 +2066,7 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
-                                `USER_TAG puts the key in USER_THEIR bra, unlocking it and removing their VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
+                                `USER_TAG puts the key in USER_THEIR bra, unlocking it and removing USER_THEIR VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
                         "Vibrator": {
@@ -2084,7 +2084,7 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
-                                `USER_TAG puts the key in USER_THEIR belt, unlocking it removing their VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
+                                `USER_TAG puts the key in USER_THEIR belt, unlocking it removing USER_THEIR VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
                         default: {
@@ -2910,8 +2910,8 @@ const texts_eventfunctions = {
 					single: [ `The Costumer Mimic lets out a satisfied hum as USER_TAG's VAR_C1 is removed, leaving USER_THEM completely naked! The mimic begins dressing USER_THEM promptly.`]
 				},
 				noneremaining: [
-					`As the Costumer Mimic finishes consuming their clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
-					`Now that the Costumer Mimic has finished removing their outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+					`As the Costumer Mimic finishes consuming USER_THEIR clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
+					`Now that the Costumer Mimic has finished removing USER_THEIR outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
 					`With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`,
 					{
 						only: (t) => {
@@ -2928,10 +2928,10 @@ const texts_eventfunctions = {
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },
 				chastitybelt: { replace: [`The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`], add: [`The Costumer Mimic locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`] },
 				chastitybra: { replace: [`The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
-				collar: { replace: [`The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the Costumer Mimic moves their hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
+				collar: { replace: [`The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the Costumer Mimic moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
 				headwear: { add: [`The Costumer Mimic produces a VAR_C1 from within itself and secures it onto USER_TAG's head.`] },
 				gag: { add: [`The Costumer Mimic pulls a VAR_C1 from its storage and secures it into USER_TAG's mouth.`] },
-				unknown: [`The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from their storage. Perhaps it ran out of space?`],
+				unknown: [`The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from its storage. Perhaps it ran out of space?`],
 			},
 			spitout: { add: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but not before securing USER_THEM into a VAR_C1 first~.`], none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
 		},
