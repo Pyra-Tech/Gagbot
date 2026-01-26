@@ -186,15 +186,9 @@ const chastitybratypes = [
 		name: "Livingwood Bra",
 		value: "bra_livingwood",
 		growthCoefficient: 1,
-		decayCoefficient: 0.6,
+		decayCoefficient: 0.3,
 		denialCoefficient: 3,
-		minVibeFn: (user) => (minVibe = min(Round(Date.now() - (getUserVar(user, "livingwoodbelt") ?? Date.now()) / 9000000), 20)),
-		onOrgasm(user, prevArousal) {
-			setUserVar(user, "livingwoodbelt", Date.now())
-		},
-		onUnequip(user) {
-			setUserVar(user, "livingwoodbelt", {});
-		},
+		minVibe: 0,
 	},
 ];
 
