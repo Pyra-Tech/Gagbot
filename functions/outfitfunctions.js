@@ -837,6 +837,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             else {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(inspectuserID).keyholder}>**`
             }
+            if (!getCollar(inspectuserID).keyholder_only) {
+                wearingtext = `${wearingtext}, **Free Use!**`
+            }
             wearingtext = `${wearingtext}\n-# Mittens: ${getCollarPerm(inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(inspectuserID, "mask") ? "✅" : "⛔"}`
         }
 
@@ -1008,6 +1011,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             }
             else {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(inspectuserID).keyholder}>**`
+            }
+            if (!getCollar(inspectuserID).keyholder_only) {
+                keyedrestraints = `${keyedrestraints}, **Free Use!**`
             }
             if (!headwearrestrictions.canInspect && getCollar(inspectuserID).clonedKeyholders && (getCollar(inspectuserID).clonedKeyholders.length > 0)) {
                 keyedrestraints = `${keyedrestraints}\nCloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`

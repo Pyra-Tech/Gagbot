@@ -1325,7 +1325,7 @@ function updateArousalValues() {
 			// if no vibe effect, growth coefficient will be 0
 			// otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
             let vibegains = vibes.reduce((prev, currVibe) => { 
-                let vibedata = { intensity: currVibe.intensity }
+                let vibedata = { intensity: currVibe.intensity, userID: user }
                 return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
             }, 0)
             let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0

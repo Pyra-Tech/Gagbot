@@ -1,6 +1,10 @@
 const { WebhookClient, AttachmentBuilder, PermissionsBitField } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
+const { getToys } = require("./toyfunctions");
+const { getWearable } = require("./wearablefunctions");
+const { getHeavy } = require("./heavyfunctions");
+const { getHeadwear } = require("./headwearfunctions");
 
 // Load all .png files into the bot as emoji, then assign them to process.emojis.
 // This can be used to allow the bot's emojis to function elsewhere.
@@ -167,6 +171,69 @@ const splitMessage = (text, inputRegex = null) => {
 	return output;
 };
 
+function runMessageEvents(data) {
+	// Gags
+	/*if (process.gags) {
+		Object.keys(process.gags).forEach((userid) => {
+			getGags(userid).forEach((g) => {
+				if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
+					process.msgfunctions.gags[g.gagtype](userid, data);
+				}
+			});
+		});
+	}*/ // This will cause a circular to have it. 
+	// Headwear
+	if (process.headwear) {
+		Object.keys(process.headwear).forEach((userid) => {
+			getHeadwear(userid).forEach((h) => {
+				if (process.msgfunctions.headwear && process.msgfunctions.headwear[h]) {
+					process.msgfunctions.headwear[h](userid, data);
+				}
+			});
+		});
+	}
+	// Mittens
+	/*if (process.mitten) {
+		Object.keys(process.mitten).forEach((userid) => {
+			if (getMitten(userid)) {
+				if (process.msgfunctions.mitten && process.msgfunctions.mitten[getMitten(userid).mittenname]) {
+					process.msgfunctions.mitten[getMitten(userid).mittenname](userid, data);
+				}
+			}
+		});
+	}*/ // This will cause a circular to have it. 
+	// Heavy Bondage
+	if (process.heavy) {
+		Object.keys(process.heavy).forEach((userid) => {
+			if (getHeavy(userid)) {
+				if (process.msgfunctions.heavy && process.msgfunctions.heavy[getHeavy(userid).typeval]) {
+					process.msgfunctions.heavy[getHeavy(userid).typeval](userid, data);
+				}
+			}
+		});
+	}
+	// Wearables
+	if (process.wearable) {
+		Object.keys(process.wearable).forEach((userid) => {
+			getWearable(userid).forEach((h) => {
+				if (process.msgfunctions.wearable && process.msgfunctions.wearable[h]) {
+					process.msgfunctions.wearable[h](userid, data);
+				}
+			});
+		});
+	}
+    // Toys
+    if (process.toys) {
+		Object.keys(process.toys).forEach((userid) => {
+			getToys(userid).forEach((h) => {
+				if (process.msgfunctions.toys && process.msgfunctions.toys[h.type]) {
+					process.msgfunctions.toys[h.type](userid, data);
+				}
+			});
+		});
+	}
+}
+
 exports.splitMessage = splitMessage;
 
 exports.messageSend = messageSend;
@@ -177,3 +244,5 @@ exports.loadEmoji = loadEmoji;
 exports.splitMessage = splitMessage;
 
 exports.messageSendChannel = messageSendChannel;
+
+exports.runMessageEvents = runMessageEvents;

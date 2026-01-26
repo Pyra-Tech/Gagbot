@@ -8,6 +8,7 @@ const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
 const { getHeavy } = require("./heavyfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
+const { getToys } = require("./toyfunctions.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -197,15 +198,20 @@ const saveFiles = () => {
 // Assigns each function to a process variable for reference later.
 function importFileNames() {
 	process.eventfunctions = {};
+    process.msgfunctions = {};
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
 		process.eventfunctions[f] = {};
+        process.msgfunctions[f] = {};
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
 			if (typeof functionfile.functiontick === "function") {
 				process.eventfunctions[f][file.replace(".js", "")] = functionfile.functiontick;
 			}
+            if (typeof functionfile.msgfunction === "function") {
+                process.msgfunctions[f][file.replace(".js", "")] = functionfile.msgfunction;
+            }
 		});
 	});
 }
@@ -288,6 +294,16 @@ function runProcessedEvents() {
 			getWearable(userid).forEach((h) => {
 				if (process.eventfunctions.wearable && process.eventfunctions.wearable[h]) {
 					process.eventfunctions.wearable[h](userid);
+				}
+			});
+		});
+	}
+    // Toys
+    if (process.toys) {
+		Object.keys(process.toys).forEach((userid) => {
+			getToys(userid).forEach((h) => {
+				if (process.eventfunctions.toys && process.eventfunctions.toys[h.type]) {
+					process.eventfunctions.toys[h.type](userid);
 				}
 			});
 		});
