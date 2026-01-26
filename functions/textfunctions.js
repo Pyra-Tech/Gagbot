@@ -888,16 +888,26 @@ const texts_mitten = {
 
 const texts_struggle = {
 	heavy: [
-		// Generic
-		`Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
-		`The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
+		// True Generics
 		`USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
 		// Blacklisted Generics - Filter Out Messages that will not read smoothly with some types
 		{
 			required: (t) => {
-				return !t.c1.includes("Doll Processing") && !t.c1.includes("Mimic");
+				return !t.c1.includes("Doll Processing") && !t.c1.includes("Mimic") && !t.c1.includes("Dancer") && !t.c1.includes("Horse");
 			},
 			text: `USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
+		},
+		{
+			required: (t) => {
+				return !t.c1.includes("One Bar Prison") && !t.c1.includes("Pet Cage") && !t.c1.includes("Dancer");
+			},
+			text: `Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
+		},
+		{
+			required: (t) => {
+				return !t.c1.includes("One Bar Prison") && !t.c1.includes("Weighted Blanket") && !t.c1.includes("Toasty Kotatsu");
+			},
+			text: `The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
 		},
 		{
 			required: (t) => {
@@ -945,13 +955,13 @@ const texts_struggle = {
 			text: `USER_TAG squirms atop the VAR_C1, every attempt to tug at USER_THEIR cuffs grinding USER_THEIR crotch into the ridge!`,
 		},
 		{
-			only: (t) => {
+			required: (t) => {
 				return t.c1.includes("Dancer's Pole");
 			},
 			text: `USER_TAG tugs on USER_THEIR cuffs but the VAR_C1 holds firm, leaving USER_THEM no choice but to continue dancing for USER_THEIR audience!`,
 		},
 		{
-			only: (t) => {
+			required: (t) => {
 				return t.c1.includes("Pet Cage");
 			},
 			text: `USER_TAG squirms inside the VAR_C1, knowing that there is nothing USER_THEY can do to release the lock from inside!`,
