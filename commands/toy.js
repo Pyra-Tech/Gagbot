@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getBaseToy, getSpecificToy, userBlockArousingToy, assignToy } = require("../functions/toyfunctions");
 const { getText } = require("../functions/textfunctions");
@@ -120,7 +120,7 @@ module.exports = {
                 data.noheavy = true;
                 if (toyuser == interaction.user) {
                     // self
-                    data.self = true;
+                    data.other = true;
                     if (getSpecificToy(toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
