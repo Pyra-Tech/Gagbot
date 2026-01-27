@@ -23,6 +23,7 @@ const { setUpToys } = require('./functions/toyfunctions.js');
 process.stdin.resume();
 
 // I've never considered overriding this before lol
+// This catches control+C and other manual ways of killing the application.
 process.on('SIGINT', () => {
     try {
         console.log('Received SIGINT. Performing graceful shutdown...');
@@ -34,6 +35,23 @@ process.on('SIGINT', () => {
         process.abort();
     }
 });
+// This catches program crashes. Note, we're not stopping the program from
+// killing itself, but we will attempt to write out the CURRENT state
+// of all process variables to their appropriate files. 
+// This method runs immediately BEFORE an uncaughtException. Note anything we do here must be sync.
+process.on('uncaughtExceptionMonitor', (err,origin) => {
+    if (GagbotSavedFileDirectory) {
+        console.error(`Uncaught Exception. Performing "graceful" shutdown...`)
+        saveFiles();
+        if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/crashlog.txt`)) {
+            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/crashlog.txt`, "Start of Crash Log")
+        }
+        let exceptionlog = `\n${new Date().toString()} -------------------------------`
+        exceptionlog = `${exceptionlog}\nUncaught exception:\n${err.stack}`
+        fs.appendFileSync(`${process.GagbotSavedFileDirectory}/crashlog.txt`, exceptionlog)
+    }
+})
+
 // If they never changed from the default in .env.md, use base directory. 
 if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.env.GAGBOTFILEDIRECTORY = "." }
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
