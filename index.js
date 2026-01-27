@@ -32,7 +32,19 @@ process.on('SIGINT', () => {
     }
     catch (err) {
         console.log(err);
-        process.abort();
+        process.exit(1);
+    }
+});
+// This should catch a SIGTERM emitted as part of spinning down Docker
+process.on('SIGTERM', () => {
+    try {
+        console.log('Received SIGTERM. Performing graceful shutdown...');
+        saveFiles();
+        process.exit(0);
+    }
+    catch (err) {
+        console.log(err);
+        process.exit(1);
     }
 });
 // This catches program crashes. Note, we're not stopping the program from
