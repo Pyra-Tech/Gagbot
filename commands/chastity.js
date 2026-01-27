@@ -7,6 +7,7 @@ const { getConsent, handleConsent } = require("./../functions/interactivefunctio
 const { getText } = require("./../functions/textfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
 const { assignChastityBra, getChastityBraName } = require("../functions/vibefunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -81,7 +81,7 @@ function Chastity() {
     this.afterArousalChange = (data) => { return false }
 
     // Calculate Arousal change
-    this.calcVibeEffect = function (data) { return (this.vibelevel * this.vibeScaling) }
+    this.calcVibeEffect = function (data) { return (this.vibelevel() * this.vibeScaling()) }
 
     // Category
     this.category = "default"

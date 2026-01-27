@@ -44,6 +44,9 @@ const NO_CHASTITY = {
 	canUnequip(user) {
 		return true;
 	},
+    calcVibeEffect(data) {
+        return 0
+    }
 };
 /* We can probably remove these, but leaving for reference for now.
 // They have been transposed into relevant files in chastity/__/__.js
@@ -189,12 +192,12 @@ const assignChastity = (user, keyholder, namedchastity, force = false) => {
 		process.chastity = {};
 	}
     // Get the current and new bases to reference
-    let oldchastitybase = getBaseChastity(getChastity(user).chastitytype)
+    let oldchastitybase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype) : undefined;
     let newchastitybase = getBaseChastity(namedchastity ?? "belt_silver")
 
     // Stop this function immediately if the current chastity belt can't be removed. 
     // If there is none worn, no worries! 
-    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) || !force) { return false };
+    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) { return false };
 
     // Call the on unequip for existing chastity if relevant. 
     if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
@@ -225,7 +228,7 @@ const removeChastity = (user, force = false) => {
     }
     let chastitybase = getBaseChastity(getChastity(user).chastitytype ?? "belt_silver")
 
-	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) || !force) return false;
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
 
 	chastitybase.onUnequip({ userID: user });
 
@@ -243,12 +246,12 @@ const assignChastityBra = (user, keyholder, namedchastity, force = false) => {
 		process.chastitybra = {};
 	}
     // Get the current and new bases to reference
-    let oldchastitybase = getBaseChastity(getChastityBra(user).chastitytype)
+    let oldchastitybase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined
     let newchastitybase = getBaseChastity(namedchastity ?? "bra_silver")
 
     // Stop this function immediately if the current chastity belt can't be removed. 
     // If there is none worn, no worries! 
-    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) || !force) { return false };
+    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) { return false };
 
     // Call the on unequip for existing chastity if relevant. 
     if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
@@ -279,7 +282,7 @@ const removeChastityBra = (user, force = false) => {
     }
     let chastitybase = getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver")
 
-	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) || !force) return false;
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
 
 	chastitybase.onUnequip({ userID: user });
 
@@ -488,10 +491,24 @@ function getCombinedTraits(user) {
     const beltbase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype) : undefined;
     const brabase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined;
 	if (!beltbase && !brabase) return NO_CHASTITY;
-	if (!brabase) return beltbase;
-	if (!beltbase) return brabase;
     let datatopass = {
         userID: user
+    }
+    // Because the usual stuff found in return object are typically referenced NOT as functions, we're gonna
+    // parse them here. I don't think this is the best solution, admittedly, but it should suffice.
+    let singlebase;
+	if (!brabase) singlebase = Object.assign({}, beltbase);
+	if (!beltbase) singlebase = Object.assign({}, brabase);
+    if (singlebase) {
+        let props = ["growthCoefficient", "decayCoefficient", "denialCoefficient",
+                    "timescale", "minVibe", "maxVibe",
+                    "minArousal", "maxArousal", "minGrowth",
+                    "maxGrowth", "minDecay", "maxDecay",
+                    "orgasmCooldown", "orgasmArousalLeft"]
+        props.forEach((p) => {
+            singlebase[p] = singlebase[p](datatopass)
+        })
+        return singlebase;
     }
     let returnobject = {
         growthCoefficient: beltbase.growthCoefficient(datatopass) * brabase.growthCoefficient(datatopass),
@@ -510,16 +527,16 @@ function getCombinedTraits(user) {
 		orgasmArousalLeft: beltbase.orgasmArousalLeft(datatopass) + brabase.orgasmArousalLeft(datatopass),
     }
     // Add each function defined on the base object! (defaultchastity.js)
-    let props = Object.keys(beltbase)
+    let props = Object.getOwnPropertyNames(beltbase)
     props.forEach((f) => {
-        if ((typeof f === "function") && (f.startsWith("on"))) {
+        if ((typeof beltbase[f] === "function") && (f.startsWith("on"))) {
             returnobject[f] = function (data) {
                 beltbase[f](data);
                 brabase[f](data);
             }
         }
         // canEquip and canUnlock, maybe eventually add other stuff like canOrgasm :D
-        if ((typeof f === "function") && (f.startsWith("can"))) {
+        if ((typeof beltbase[f] === "function") && (f.startsWith("can"))) {
             returnobject[f] = function (data) {
                 return beltbase[f](data) && brabase[f](data)
             }
@@ -1420,6 +1437,7 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 	const noDecay = (arousal ?? 0) + growth;
 	// then reduce it based on decay
 	const decay = tickScale * bounded(traits.minDecay, traits.timescale * decayCoefficient * Math.max((arousal ?? 0) + prev / 2, 0.1), traits.maxDecay);
+    //logConsole(`calcNextArousal: ${growth}, ${noDecay}, ${decay}`, 1);
     logConsole(`calcNextArousal: ${bounded(traits.minArousal, noDecay - decay, traits.maxArousal)}`, 1);
     return bounded(traits.minArousal, noDecay - decay, traits.maxArousal);
 }

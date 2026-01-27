@@ -38,8 +38,8 @@ function setUpChastity() {
                     process.chastitytypes[t.replace(".js", "")] = newchastity;
                     // Push to autocompletes system for reference in /chastity and /unchastity
                     if (process.autocompletes == undefined) { process.autocompletes = {} }
-                    if (process.autocompletes[`chastity${t}`] == undefined) { process.autocompletes[`chastity${t}`] = [] }
-                    process.autocompletes[`chastity${t}`].push({ name: newchastity.name, value: t.replace(".js", "") })
+                    if (process.autocompletes[`chastity${foldertype}`] == undefined) { process.autocompletes[`chastity${foldertype}`] = [] }
+                    process.autocompletes[`chastity${foldertype}`].push({ name: newchastity.name, value: t.replace(".js", "") })
                 }
             })
         }
