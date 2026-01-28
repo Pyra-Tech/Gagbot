@@ -84,7 +84,7 @@ module.exports = {
                 let i = getBaseHeadwear(headwearchoice)
                 tags.forEach((t) => {
                     if (i.tags && i.tags[t] && (headwearuser != interaction.user)) {
-                        interaction.reply({ content: `${headwearuser}'s content settings forbid this item - ${i.name}!`})
+                        interaction.reply({ content: `${headwearuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
                         return;
                     }
                 })

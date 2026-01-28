@@ -85,7 +85,7 @@ module.exports = {
                 let i = getBaseWearable(wearablechoice)
                 tags.forEach((t) => {
                     if (i.tags && i.tags[t] && (wearableuser != interaction.user)) {
-                        interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`})
+                        interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
                         return;
                     }
                 })
