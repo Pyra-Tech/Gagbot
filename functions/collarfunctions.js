@@ -26,6 +26,17 @@ const collartypes = [
     { name: "Maid Training Collar", value: "collar_maidtraining" }
 ];
 
+function loadCollarTypes() {
+    if (process.autocompletes == undefined) { process.autocompletes = {} }
+    process.autocompletes.collar = collartypes.map((c) => {
+        return { name: c.name, value: c.value }
+    })
+}
+
+function getBaseCollar(type) {
+    return collartypes.find((c) => c.value == type)
+}
+
 const assignCollar = (user, keyholder, restraints, only, customcollar) => {
 	if (process.collar == undefined) {
 		process.collar = {};
@@ -471,3 +482,6 @@ exports.getClonedCollarKeysOwned = getClonedCollarKeysOwned;
 exports.getOtherKeysCollar = getOtherKeysCollar;
 
 exports.getCollarTimelock = getCollarTimelock;
+
+exports.loadCollarTypes = loadCollarTypes;
+exports.getBaseCollar = getBaseCollar;

@@ -8,6 +8,8 @@ const { getText } = require("./../functions/textfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
 const { assignChastityBra, getChastityBraName } = require("../functions/vibefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,7 +23,6 @@ module.exports = {
             const focusedValue = interaction.options.getFocused();
             let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt";
             let autocompletes = process.autocompletes[beltorbra];
-            console.log(autocompletes)
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
@@ -31,7 +32,19 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            interaction.respond(matches.slice(0,25))
+            let tags = getUserTags(interaction.user.id);
+            let newsorted = [];
+            matches.forEach((f) => {
+                let tagged = false;
+                let i = getBaseChastity(f.value)
+                tags.forEach((t) => {
+                    if (i.tags && i.tags.includes(t)) { tagged = true }
+                })
+                if (!tagged) {
+                    newsorted.push(f);
+                }
+            })
+            interaction.respond(newsorted.slice(0,25))
         }
         catch (err) {
             console.log(err);

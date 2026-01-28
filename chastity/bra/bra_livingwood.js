@@ -31,3 +31,5 @@ exports.onUnequip = (data) => {
 
 // Name
 exports.name = "Livingwood Bra"
+
+exports.tags = ["living"]

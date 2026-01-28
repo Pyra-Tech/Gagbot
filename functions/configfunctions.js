@@ -673,6 +673,236 @@ const configoptions = {
 			},
 		},
 	},
+    Content: {
+        "wearabletags-latex": {
+            name: "Latex",
+            desc: "Slick, glossy and rubbery material",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-leather": {
+            name: "Leather",
+            desc: "Durable material made of hide",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-metal": {
+            name: "Metal",
+            desc: "Unyielding and strict, smooth and rigid",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-living": {
+            name: "Living",
+            desc: "Natural or otherwise animated",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-slime": {
+            name: "Slime",
+            desc: "Goopy or otherwise a puddle, not a static object",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-makeup": {
+            name: "Makeup",
+            desc: "Cosmetics applied to the face",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Items of this tag will be omitted on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+    },
 	Extreme: {
 		"extreme-heavy-doll_processing": {
 			name: "Heavy - Doll Processing Facility",
@@ -1731,7 +1961,7 @@ function getOption(userID, option) {
 		initializeOptions(userID);
 	}
 	if (process.configs.users[userID][option] == undefined) {
-		let pages = ["Arousal", "General", "Misc", "Extreme"];
+		let pages = ["Arousal", "General", "Misc", "Extreme", "Content"];
 		pages.forEach((p) => {
 			let optionspages = Object.keys(configoptions[p]);
 			optionspages.forEach((k) => {
@@ -1779,7 +2009,7 @@ function getAllSelectedOption(option) {
 }
 
 function initializeOptions(userID) {
-	let pages = ["Arousal", "General", "Misc", "Extreme"];
+	let pages = ["Arousal", "General", "Misc", "Extreme", "Content"];
 	pages.forEach((p) => {
 		let optionspages = Object.keys(configoptions[p]);
 		optionspages.forEach((k) => {
@@ -2247,6 +2477,18 @@ function generateTextEntryModal(interaction, data, optionval) {
 	return modal;
 }
 
+// Gets all blocked or preferred tags
+function getUserTags(userID, preferred = false) {
+    let tags = [];
+    let optionstocheck = Object.keys(configoptions.Tags).map((t) => t.replace("wearabletags-", ""))
+    optionstocheck.forEach((tag) => {
+        if (getOption(userID, `wearabletags-${tag}`) == (preferred ? "preferred" : "none")) {
+            tags.push(tag)
+        }
+    })
+    return tags;
+}
+
 async function getAllJoinedGuilds(client) {
 	let allguilds = await client.guilds.fetch();
 	let guilds = [];
@@ -2273,6 +2515,8 @@ exports.setOption = setOption;
 
 exports.getUsersWithOption = getUsersWithOption;
 exports.getAllSelectedOption = getAllSelectedOption;
+
+exports.getUserTags = getUserTags;
 
 exports.getServerOption = getServerOption;
 exports.setServerOption = setServerOption;

@@ -4,6 +4,8 @@ const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseH
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,32 +15,34 @@ module.exports = {
 			opt
 				.setName("type")
 				.setDescription("What flavor of helpless restraint to wear...")
-				//.addChoices(...commandsheavy)
 				.setAutocomplete(true),
-		)
-		.addBooleanOption((opt) => opt.setName("list_all_restraints").setDescription("Set to true to list all restraints. Does not bind you if TRUE.")),
+		),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let heaviestoreturn = [
-				{ name: "Latex Armbinder", value: "armbinder_latex" },
-				{ name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
-				{ name: "Wolfbinder", value: "armbinder_wolf" },
-				{ name: "Ancient Armbinder", value: "armbinder_ancient" },
-				{ name: "High Security Armbinder", value: "armbinder_secure" },
-				{ name: "Latex Boxbinder", value: "boxbinder_latex" },
-				{ name: "Comfy Straitjacket", value: "straitjacket_comfy" },
-				{ name: "Maid Straitjacket", value: "straitjacket_maid" },
-				{ name: "Doll Straitjacket", value: "straitjacket_doll" },
-				{ name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
-			];
-			await interaction.respond(heaviestoreturn);
-		} else {
-			let heavies = process.heavytypes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-			heavies = heavies.filter((f) => !getBaseHeavy(f.value).noself);
-			await interaction.respond(heavies);
-		}
+        let autocompletes = process.heavytypes;
+        let matches = didYouMean(focusedValue, autocompletes, {
+            matchPath: ['name'], 
+            returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+            threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+        })
+        console.log(matches.slice(0,25))
+        if (matches.length == 0) {
+            matches = autocompletes;
+        }
+        let tags = getUserTags(interaction.user.id);
+        let newsorted = [];
+        matches.forEach((f) => {
+            let tagged = false;
+            let i = getBaseHeavy(f.value)
+            tags.forEach((t) => {
+                if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                else if (i.tags && (i.tags[t])) { tagged = true }
+            })
+            if (!tagged) {
+                newsorted.push(f);
+            }
+        })
+        interaction.respond(newsorted.slice(0,25))
 	},
 	async execute(interaction) {
 		try {

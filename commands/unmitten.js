@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getGag, getMitten, deleteMitten } = require("./../functions/gagfunctions.js");
+const { getGag, getMitten, deleteMitten, getMittenName } = require("./../functions/gagfunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -25,6 +25,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: mitteneduser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: getMittenName(getMitten(mitteneduser.id)?.mittenname) ?? "mittens"
 				},
 			};
 			if (getHeavy(interaction.user.id)) {
@@ -93,6 +94,12 @@ module.exports = {
 				}
 			} else {
 				data.otherother = true;
+                if (mitteneduser == interaction.user) {
+                    data.self = true
+                }
+                else {
+                    data.other = true;
+                }
 				interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 			}
 		} catch (err) {

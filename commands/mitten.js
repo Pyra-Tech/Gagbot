@@ -1,31 +1,44 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { mittentypes, getMittenName, getGag, assignMitten, getMitten } = require("./../functions/gagfunctions.js");
+const { mittentypes, getMittenName, getGag, assignMitten, getMitten, getBaseMitten } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("mitten")
 		.setDescription("Put mittens on yourself, preventing /ungag on yourself and /gag on others")
-		.addStringOption((opt) => opt.setName("type").setDescription("What flavor of helpless mittens to wear...").setAutocomplete(true))
-		.addBooleanOption((opt) => opt.setName("list_all_restraints").setDescription("Set to true to list all mittens. Does not bind you if TRUE.")),
+		.addStringOption((opt) => opt.setName("type").setDescription("What flavor of helpless mittens to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let mittenstoreturn = mittentypes.slice(0, 10);
-			await interaction.respond(mittenstoreturn);
-		} else {
-			try {
-				let mittens = mittentypes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-				await interaction.respond(mittens);
-			} catch (err) {
-				console.log(err);
-			}
-		}
+        let autocompletes = process.autocompletes.mitten;
+        let matches = didYouMean(focusedValue, autocompletes, {
+            matchPath: ['name'], 
+            returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+            threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+        })
+        console.log(matches.slice(0,25))
+        if (matches.length == 0) {
+            matches = autocompletes;
+        }
+        let tags = getUserTags(interaction.user.id);
+        let newsorted = [];
+        matches.forEach((f) => {
+            let tagged = false;
+            let i = getBaseMitten(f)
+            tags.forEach((t) => {
+                if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                else if (i.tags && (i.tags[t])) { tagged = true }
+            })
+            if (!tagged) {
+                newsorted.push(f);
+            }
+        })
+        interaction.respond(newsorted.slice(0,25))
 	},
 	async execute(interaction) {
 		try {

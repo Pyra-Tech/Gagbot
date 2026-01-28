@@ -226,7 +226,7 @@ const removeChastity = (user, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
     }
-    let chastitybase = getBaseChastity(getChastity(user).chastitytype ?? "belt_silver")
+    let chastitybase = getBaseChastity(getChastity(user)?.chastitytype ?? "belt_silver")
 
 	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
 
@@ -280,7 +280,7 @@ const removeChastityBra = (user, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
     }
-    let chastitybase = getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver")
+    let chastitybase = getBaseChastity(getChastityBra(user)?.chastitytype ?? "bra_silver")
 
 	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
 

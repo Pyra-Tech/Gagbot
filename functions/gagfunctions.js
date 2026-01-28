@@ -49,12 +49,20 @@ const mittentypes = [
 	{ name: "Oversized Fluffy Paw Mittens", value: "mittens_oversized_fluff" },
 	{ name: "Pom Pom Mittens", value: "mittens_pompom" },
 	{ name: "Cyber Doll Mittens", value: "mittens_cyberdoll" },
-	{ name: "Leather Mittens", value: "mittens_leather" },
+	{ name: "Leather Mittens", value: "mittens_leather", tags: ["leather"] },
 	{ name: "Hardlight Spheres", value: "mittens_hardlight" },
-	{ name: "Latex Mittens", value: "mittens_latex" },
+	{ name: "Latex Mittens", value: "mittens_latex", tags: ["latex"] },
 	{ name: "Taped Fists", value: "mittens_tape" },
 	{ name: "Good Maid Mittens", value: "mittens_maid" },
+    { name: "Steel Ball Fists", value: "mittens_steelball", tags: ["metal"] }
 ];
+
+function loadMittenTypes() {
+    if (process.autocompletes == undefined) { process.autocompletes = {} }
+    process.autocompletes.mitten = mittentypes.map((m) => {
+        return { name: m.name, value: m.value }
+    })
+}
 
 const convertGagText = (type) => {
 	let convertgagarr;
@@ -236,6 +244,10 @@ const getMittenName = (userID, mittenname) => {
 		return undefined;
 	}
 };
+
+function getBaseMitten(type) {
+    return mittentypes.find((m) => m.value == type)
+}
 
 /**********************************************
  * Punishes a doll.
@@ -565,6 +577,9 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 }
 
 exports.gagtypesset = gagtypesset;
+exports.loadMittenTypes = loadMittenTypes;
+
+exports.getBaseMitten = getBaseMitten;
 
 exports.assignGag = assignGag;
 exports.getGag = getGag;

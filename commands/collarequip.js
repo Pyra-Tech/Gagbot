@@ -2,12 +2,15 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
-const { getMittenName, assignMitten, getMitten, mittentypes } = require("./../functions/gagfunctions.js");
+const { getMittenName, assignMitten, getMitten, mittentypes, getBaseMitten } = require("./../functions/gagfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
 const { assignChastityBra } = require("../functions/vibefunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -37,57 +40,87 @@ module.exports = {
 				.addStringOption((opt) => opt.setName("type").setDescription("What flavor of cruel chastity to wear...").setAutocomplete(true)),
 		),
 	async autoComplete(interaction) {
-		const focusedValue = interaction.options.getFocused();
 		const subc = interaction.options.getSubcommand();
-		// /collarequip heavy .......
+		let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
 		if (subc == "heavy") {
-			if (focusedValue == "") {
-				// User hasn't entered anything, lets give them a suggested set of 10
-				let heaviestoreturn = [
-					{ name: "Latex Armbinder", value: "armbinder_latex" },
-					{ name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
-					{ name: "Wolfbinder", value: "armbinder_wolf" },
-					{ name: "Ancient Armbinder", value: "armbinder_ancient" },
-					{ name: "High Security Armbinder", value: "armbinder_secure" },
-					{ name: "Latex Boxbinder", value: "boxbinder_latex" },
-					{ name: "Comfy Straitjacket", value: "straitjacket_comfy" },
-					{ name: "Maid Straitjacket", value: "straitjacket_maid" },
-					{ name: "Doll Straitjacket", value: "straitjacket_doll" },
-					{ name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
-				];
-				await interaction.respond(heaviestoreturn);
-			} else {
-				let heavies = process.heavytypes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-				await interaction.respond(heavies);
-			}
+            const focusedValue = interaction.options.getFocused();
+            let autocompletes = process.heavytypes;
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            console.log(matches.slice(0,25))
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+            let tags = getUserTags(chosenuserid);
+            let newsorted = [];
+            matches.forEach((f) => {
+                let tagged = false;
+                let i = getBaseHeavy(f.value)
+                tags.forEach((t) => {
+                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                    else if (i.tags && (i.tags[t])) { tagged = true }
+                })
+                if (!tagged) {
+                    newsorted.push(f);
+                }
+            })
+            interaction.respond(newsorted.slice(0,25))
 		} else if (subc == "mittens") {
-			if (focusedValue == "") {
-				// User hasn't entered anything, lets give them a suggested set of 10
-				let mittenstoreturn = mittentypes.slice(0, 10);
-				await interaction.respond(mittenstoreturn);
-			} else {
-				try {
-					let mittens = mittentypes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-					await interaction.respond(mittens);
-				} catch (err) {
-					console.log(err);
-				}
-			}
+            const focusedValue = interaction.options.getFocused();
+            let autocompletes = process.autocompletes.mitten;
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            console.log(matches.slice(0,25))
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+            let tags = getUserTags(chosenuserid);
+            let newsorted = [];
+            matches.forEach((f) => {
+                let tagged = false;
+                let i = getBaseMitten(f)
+                tags.forEach((t) => {
+                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                    else if (i.tags && (i.tags[t])) { tagged = true }
+                })
+                if (!tagged) {
+                    newsorted.push(f);
+                }
+            })
+            interaction.respond(newsorted.slice(0,25))
 		} else if (subc == "chastity") {
-			let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt"; // Note we can only retrieve the user ID here!
-			let optionstouse = beltorbra == "chastitybelt" ? process.autocompletes.chastitybelt : process.autocompletes.chastitybra;
-			if (focusedValue == "") {
-				// User hasn't entered anything, lets give them a suggested set of 10
-				let chastitytoreturn = optionstouse.slice(0, 10);
-				await interaction.respond(chastitytoreturn);
-			} else {
-				try {
-					let chastitytoreturn = optionstouse.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-					await interaction.respond(chastitytoreturn);
-				} catch (err) {
-					console.log(err);
-				}
-			}
+            const focusedValue = interaction.options.getFocused();
+            let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt";
+            let autocompletes = process.autocompletes[beltorbra];
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            console.log(matches.slice(0,25))
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+            let tags = getUserTags(chosenuserid);
+            let newsorted = [];
+            matches.forEach((f) => {
+                let tagged = false;
+                let i = getBaseChastity(f.value)
+                tags.forEach((t) => {
+                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                    else if (i.tags && (i.tags[t])) { tagged = true }
+                })
+                if (!tagged) {
+                    newsorted.push(f);
+                }
+            })
+            interaction.respond(newsorted.slice(0,25))
 		}
 	},
 	async execute(interaction) {
@@ -116,6 +149,44 @@ module.exports = {
 			let bondagetype = interaction.options.getString("type");
 			let keyholderuser = interaction.options.getUser("keyholder") ? interaction.options.getUser("keyholder") : interaction.user;
 			let braorbelt = interaction.options.getString("braorbelt") ?? "chastitybelt";
+
+            // Check if the wearer is okay with it. If they aren't, error.
+            if (actiontotake == "heavy") {
+                if (bondagetype) {
+                    let tags = getUserTags(collareduser.id);
+                    let i = getBaseHeavy(bondagetype)
+                    tags.forEach((t) => {
+                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                            interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`})
+                            return;
+                        }
+                    })
+                }
+            }
+            else if (actiontotake == "mitten") {
+                if (bondagetype) {
+                    let tags = getUserTags(collareduser.id);
+                    let i = getBaseMitten(bondagetype)
+                    tags.forEach((t) => {
+                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                            interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`})
+                            return;
+                        }
+                    })
+                }
+            }
+            else if (actiontotake == "chastity") {
+                if (bondagetype) {
+                    let tags = getUserTags(collareduser.id);
+                    let i = getBaseChastity(bondagetype)
+                    tags.forEach((t) => {
+                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                            interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`})
+                            return;
+                        }
+                    })
+                }
+            }
 
 			let bondagetypenotchosen = false;
 			if (!bondagetype) {
@@ -170,11 +241,6 @@ module.exports = {
 				data.textdata.c3 = "Latex Armbinder";
 				bondagetype = "armbinder_latex";
 			}
-
-			console.log(bondagetype);
-			console.log(!bondagetype);
-			console.log(bondagetypenotchosen);
-			console.log(!bondagetypenotchosen);
 
 			if (getHeavy(interaction.user.id)) {
 				data.heavy = true;

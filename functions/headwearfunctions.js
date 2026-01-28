@@ -5,18 +5,18 @@ const path = require("path");
 
 const headweartypes = [
 	// Hoods
-	{ name: "Latex Hood (no eyes)", value: "hood_latexfull", blockinspect: true, blockemote: true },
-	{ name: "Leather Hood (no eyes)", value: "hood_leatherfull", blockinspect: true, blockemote: true },
+	{ name: "Latex Hood (no eyes)", value: "hood_latexfull", tags: ["latex"], blockinspect: true, blockemote: true },
+	{ name: "Leather Hood (no eyes)", value: "hood_leatherfull", tags: ["leather"], blockinspect: true, blockemote: true },
 	{ name: "Maid Hood (no eyes)", value: "hood_maidfull", blockinspect: true, blockemote: true },
 	{ name: "Hardlight Hood (no eyes)", value: "hood_hardlightfull", blockinspect: true, blockemote: true },
 
 	// Blindfolds
-	{ name: "Leather Blindfold", value: "blindfold_leather", blockinspect: true },
+	{ name: "Leather Blindfold", value: "blindfold_leather", tags: ["leather"], blockinspect: true },
 	{ name: "Blackout Lenses", value: "blindfold_blackout", blockinspect: true },
 	{ name: "Cloth Blindfold", value: "blindfold_cloth", blockinspect: true },
 	{ name: "Floral Blindfold", value: "blindfold_floral", blockinspect: true },
     { name: "High-Security Blindfold", value: "blindfold_highsec", blockinspect: true },
-	{ name: "Latex Blindfold", value: "blindfold_latex", blockinspect: true },
+	{ name: "Latex Blindfold", value: "blindfold_latex", tags: ["latex"], blockinspect: true },
 	{ name: "Sleep Mask", value: "blindfold_sleep", blockinspect: true },
 
 	//Kigus
@@ -227,6 +227,11 @@ const getHeadwearRestrictions = (userID) => {
 	return allowedperms;
 };
 
+// Returns the base headwear object
+function getBaseHeadwear(type) {
+    return headweartypes.find((h) => h.value == type)
+}
+
 
 const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
 	if(text !== replaceEmoji){
@@ -289,6 +294,7 @@ exports.getHeadwearBinder = getHeadwearBinder;
 exports.deleteHeadwear = deleteHeadwear;
 exports.getHeadwearName = getHeadwearName;
 exports.getHeadwearRestrictions = getHeadwearRestrictions;
+exports.getBaseHeadwear = getBaseHeadwear;
 
 exports.processHeadwearEmoji = processHeadwearEmoji;
 

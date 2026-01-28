@@ -27,5 +27,7 @@ exports.onUnequip = (data) => {
 	setUserVar(data.userID, "livingwoodbelt", Date.now());
 }
 
+exports.tags = ["living"]
+
 // Name
 exports.name = "Livingwood Belt"

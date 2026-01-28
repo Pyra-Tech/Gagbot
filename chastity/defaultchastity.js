@@ -86,6 +86,9 @@ function Chastity() {
     // Category
     this.category = "default"
 
+    // Tags
+    this.tags = [];
+
     // Name
     this.name = "Default Chastity"
 }

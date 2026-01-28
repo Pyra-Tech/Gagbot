@@ -43,7 +43,7 @@ const texts_chastity = {
 							required: (t) => {
 								return getArousal(t.interactionuser.id) > 20;
 							},
-							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`,
+							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
 						},
 					],
 				},
@@ -79,7 +79,7 @@ const texts_chastity = {
 							required: (t) => {
 								return getArousal(t.interactionuser.id) > 20;
 							},
-							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`,
+							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
 						},
 					],
 				},
@@ -126,7 +126,7 @@ const texts_chastity = {
 							required: (t) => {
 								return getArousal(t.interactionuser.id) > 20;
 							},
-							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`,
+							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
 						},
 					],
 				},
@@ -162,7 +162,7 @@ const texts_chastity = {
 							required: (t) => {
 								return getArousal(t.interactionuser.id) > 20;
 							},
-							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`,
+							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
 						},
 					],
 				},
@@ -1990,9 +1990,18 @@ const texts_unheavy = {
 
 const texts_unmitten = {
 	heavy: { self: [`USER_TAG wriggles USER_THEIR hands in USER_THEIR VAR_C1, but can't get good leverage to take USER_THEIR mittens off!`], other: [`USER_TAG uses USER_THEIR nose to help TARGET_TAG but can't help TARGET_THEM out of TARGET_THEIR mittens!`] },
-	noheavy: { other: { gag: [`USER_TAG takes off TARGET_TAG's mittens so TARGET_THEY can take off TARGET_THEIR gag!`], nogag: [`USER_TAG takes off TARGET_TAG's mittens. Now TARGET_THEY could take off any gag someone wants to put on TARGET_THEM!`] }, self: [`USER_TAG tries to pull off USER_THEIR mittens, but the straps and locks hold them firmly on USER_THEIR wrists!`] },
+	noheavy: { 
+        other: { 
+            gag: [`USER_TAG takes off TARGET_TAG's VAR_C2 so TARGET_THEY can take off TARGET_THEIR gag!`], 
+            nogag: [`USER_TAG takes off TARGET_TAG's VAR_C2. Now TARGET_THEY could take off any gag someone wants to put on TARGET_THEM!`] 
+        }, 
+        self: [`USER_TAG tries to pull off USER_THEIR VAR_C2, but the straps and locks hold them firmly on USER_THEIR wrists!`] 
+    },
 	// Idk why the structure was like this - Ephemeral
-	otherother: [`USER_TAG is not wearing mittens!`],
+	otherother: {
+        other: [`USER_TAG is not wearing mittens!`],
+        self: [`You aren't wearing mittens!`]
+    }
 };
 
 const texts_untoy = {

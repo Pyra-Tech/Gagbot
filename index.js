@@ -5,7 +5,7 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage, gagtypesset, modifymessage } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage, gagtypesset, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
@@ -19,6 +19,7 @@ const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('
 const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
 const { setUpChastity } = require('./functions/chastityfunctions.js');
+const { loadCollarTypes } = require('./functions/collarfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -133,6 +134,8 @@ try {
 gagtypesset();
 loadHeavyTypes(); 
 loadHeadwearTypes();
+loadMittenTypes();
+loadCollarTypes();
 loadWearables();
 assignMemeImages();
 

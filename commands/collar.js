@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName } = require("./../functions/collarfunctions.js");
+const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar } = require("./../functions/collarfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { getOption } = require("../functions/configfunctions.js");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,19 +16,29 @@ module.exports = {
 		.addStringOption((opt) => opt.setName("type").setDescription("What kind of collar to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
-		let optionstouse = collartypes;
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let collarstoreturn = optionstouse.slice(0, 10);
-			await interaction.respond(collarstoreturn);
-		} else {
-			try {
-				let collarstoreturn = optionstouse.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-				await interaction.respond(collarstoreturn);
-			} catch (err) {
-				console.log(err);
-			}
-		}
+        let autocompletes = process.autocompletes.collar;
+        let matches = didYouMean(focusedValue, autocompletes, {
+            matchPath: ['name'], 
+            returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+            threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+        })
+        console.log(matches.slice(0,25))
+        if (matches.length == 0) {
+            matches = autocompletes;
+        }
+        let tags = getUserTags(interaction.user.id);
+        let newsorted = [];
+        matches.forEach((f) => {
+            let tagged = false;
+            let i = getBaseCollar(f.value)
+            tags.forEach((t) => {
+                if (i.tags && i.tags.includes(t)) { tagged = true }
+            })
+            if (!tagged) {
+                newsorted.push(f);
+            }
+        })
+        interaction.respond(newsorted.slice(0,25))
 	},
 	async execute(interaction) {
 		try {

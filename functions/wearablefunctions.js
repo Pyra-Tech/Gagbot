@@ -302,6 +302,20 @@ let wearabletypes = [
 // Unless it is excluded on forbiddenColors.
 const colors = ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"];
 
+// This is a list of tags to add to the wearables, assuming they match a word here. 
+// This should NOT be used to add a bunch of random tags. Categories should be relatively
+// broad things people may have a yuck or yum for. Examples include "latex", "leather", "metal"
+// "living", "slime" and so on. 
+// This can include a regex instead of "word" - it will be doing a case-insensitive .match on the NAME value.
+const tagstoadd = [
+    { match: `latex`, tag: "latex" },
+    { match: `leather`, tag: "leather" },
+    { match: `lipstick`, tag: "makeup" },
+    { match: `eyeliner`, tag: "makeup" },
+    { match: `eyeshadow`, tag: "makeup" },
+    { match: `kissmark`, tag: "makeup" },
+]
+
 /**************
  * Discord API Requires an array of objects in form:
  * { name: "Latex Armbinder", value: "armbinder_latex" }
@@ -330,7 +344,15 @@ const loadWearables = () => {
 			wearablestoadd.push(newobject);
 		});
 	});
-
+    // Iterate through each wearablestoadd and parse the tag list 
+    wearablestoadd.forEach((wearable) => {
+        if (!wearable.tags) { wearable.tags = {} }
+        tagstoadd.forEach((tag) => {
+            if (wearable.name.toLowerCase().match(tag.match.toLowerCase())) {
+                wearable.tags[tag.tag] = true;
+            }
+        })
+    })
 	let outarr = wearablestoadd.map((item) => {
 		return { name: item.name, value: item.value };
 	});
@@ -341,8 +363,12 @@ const loadWearables = () => {
 	for (const i of outarr) {
 		outmap.set(i.value, i);
 	}
-	process.wearableslist = Array.from(outmap.values());
-	console.log(`Wearables list is ${process.wearableslist.length} entries long.`);
+    // Add the full wearables list to the process vars. 
+    process.wearabletypes = Array.from(wearablestoadd);
+    // Add to autocompletes. 
+    if (process.autocompletes == undefined) { process.autocompletes = {} }
+	process.autocompletes.wearables = Array.from(outmap.values());
+	console.log(`Wearables list is ${process.autocompletes.wearables.length} entries long.`);
 };
 
 const assignWearable = (userID, wearable) => {
@@ -449,8 +475,8 @@ const getWearableName = (userID, wearablename) => {
 		process.wearable = {};
 	}
 	let convertmittenarr = {};
-	for (let i = 0; i < process.wearableslist.length; i++) {
-		convertmittenarr[process.wearableslist[i].value] = process.wearableslist[i].name;
+	for (let i = 0; i < process.wearabletypes.length; i++) {
+		convertmittenarr[process.wearabletypes[i].value] = process.wearabletypes[i].name;
 	}
 	if (wearablename) {
 		return convertmittenarr[wearablename];

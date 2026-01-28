@@ -3,9 +3,11 @@ const { getMitten } = require("./../functions/gagfunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getHeadwear, assignHeadwear, getHeadwearName } = require("../functions/headwearfunctions.js");
+const { getHeadwear, assignHeadwear, getHeadwearName, getBaseHeadwear } = require("../functions/headwearfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("../functions/collarfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,27 +16,33 @@ module.exports = {
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to apply headwear to?"))
 		.addStringOption((opt) => opt.setName("type").setDescription("What headwear to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
-		const focusedValue = interaction.options.getFocused();
-		let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let itemsworn = getHeadwear(chosenuserid);
-
-			// Remove anything we're already wearing from the list
-			let sorted = process.headtypes.filter((f) => !itemsworn.includes(f.value));
-			await interaction.respond(sorted.slice(0, 20));
-		} else {
-			try {
-				let itemsworn = getHeadwear(chosenuserid);
-
-				// Remove anything we're already wearing from the list
-				let sorted = process.headtypes.filter((f) => !itemsworn.includes(f.value));
-				let headstoreturn = sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 20);
-				await interaction.respond(headstoreturn);
-			} catch (err) {
-				console.log(err);
-			}
-		}
+        const focusedValue = interaction.options.getFocused();
+        let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+        let itemsworn = getHeadwear(chosenuserid);
+        let autocompletes = process.headtypes.filter((f) => !itemsworn.includes(f.value));
+        let matches = didYouMean(focusedValue, autocompletes, {
+            matchPath: ['name'], 
+            returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+            threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+        })
+        console.log(matches.slice(0,25))
+        if (matches.length == 0) {
+            matches = autocompletes;
+        }
+        let tags = getUserTags(chosenuserid);
+        let newsorted = [];
+        matches.forEach((f) => {
+            let tagged = false;
+            let i = getBaseHeadwear(f.value)
+            tags.forEach((t) => {
+                if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                else if (i.tags && (i.tags[t])) { tagged = true }
+            })
+            if (!tagged) {
+                newsorted.push(f);
+            }
+        })
+        interaction.respond(newsorted.slice(0,25))
 	},
 	async execute(interaction) {
 		try {
@@ -65,6 +73,17 @@ module.exports = {
 				interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral });
 				return;
 			}
+
+            if (headwearchoice) {
+                let tags = getUserTags(headwearuser.id);
+                let i = getBaseHeadwear(headwearchoice)
+                tags.forEach((t) => {
+                    if (i.tags && i.tags[t] && (headwearuser != interaction.user)) {
+                        interaction.reply({ content: `${headwearuser}'s content settings forbid this item - ${i.name}!`})
+                        return;
+                    }
+                })
+            }
 
 			if (getHeavy(interaction.user.id)) {
 				// target is in heavy bondage
