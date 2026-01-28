@@ -28,7 +28,7 @@ module.exports = {
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
                 threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
             })
-            console.log(matches.slice(0,25))
+            
             if (matches.length == 0) {
                 matches = autocompletes;
             }
