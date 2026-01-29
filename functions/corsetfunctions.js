@@ -148,6 +148,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 
 	const idxMap = [];
 	let escaped = false;
+	let lastSpace = false;
 	text
 		.trimEnd()
 		.split("")
@@ -157,8 +158,13 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				return;
 			}
 			if (escaped) return;
-			if (char.match(/[a-zA-Z\d]/)) idxMap.push(idx);
-			else if (idxMap.length > 0 && char.match(/\s/)) idxMap.push(idx);
+			if (char.match(/[a-zA-Z\d]/)) {
+				idxMap.push(idx);
+				lastSpace = false;
+			} else if (!lastSpace && idxMap.length > 0 && char.match(/\s/)) {
+				idxMap.push(idx);
+				lastSpace = true;
+			}
 		});
 
 	let silence = false;
