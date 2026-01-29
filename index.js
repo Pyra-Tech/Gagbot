@@ -142,6 +142,53 @@ assignMemeImages();
 setUpToys();
 setUpChastity();
 
+// Build the Overview
+process.helpmodals = {
+    "Overview": (userid, page) => {
+        // This is broken down into two pages on purpose, to ensure its not a HUGE block of info.
+        // We need to handle this appropriately. 
+        let overviewtext = [`## Basic Gagbot Commands Reference:
+### Alter Speech:
+**/gag**, **/ungag**: Gag someone or yourself, garbling speech in various ways.
+**/toy**, **/untoy**: Apply a toy to someone or yourself, causing stuttered speech from arousal.
+**/corset**, **/uncorset**: Apply a tightly laced corset, limiting sentence length in each message.
+### Restrict access to commands above:
+**/mitten**, **/unmitten**: Wear mittens, preventing yourself from changing gags or masks.
+**/chastity**, **/unchastity**: Wear chastity, preventing changes to toys and corsets without the key.
+**/heavy**, **/unheavy**: Wear heavy bondage, preventing access to most commands. `,`### Others:
+**/mask**, **/unmask**: Varying effects, many of these block emotes in speech or inspect. Requires collar access if not on self.
+**/collar**, **/uncollar**: Add or remove a collar, which can be set to allow users to /collarequip you, allowing them to do the commands in the above section. 
+**/collarequip**: Apply a restraint listed in the above section to another person. Requires collar access.
+**/key**: Transfer, clone or revoke cloned keys from a restraint you have the primary key for.
+**/inspect**: Look at what a user is wearing or keys they're holding. 
+**/config**: Modify various settings about you on the bot. 
+**/struggle**: Get a fun little text. Does not have any actual effect on restraint status.
+**/letgo**: Clear arousal, with a different text if at orgasm threshold. 
+**/timelock**: Timelock a keyed restraint.
+**/wear**, **/unwear**, **/outfit**: Adjust clothing, outfits and more!
+**/item**: Protect or unprotect items from being removed with /unwear.
+**/pronouns**: Set your pronouns for the bot's text feedback.`]
+        if (!overviewtext[page]) page = 0;
+        overviewtextdisplay = new discord.TextDisplayBuilder().setContent(overviewtext[page])
+        let optionbuttons = [
+            // Page Down
+            new discord.ButtonBuilder()
+                .setCustomId(`help_Overview_0`)
+                .setLabel("← Prev Page")
+                .setStyle(discord.ButtonStyle.Secondary)
+                .setDisabled(page != 1),
+            // Page Up
+            new discord.ButtonBuilder()
+                .setCustomId(`help_Overview_1`)
+                .setLabel("Next Page →")
+                .setStyle(discord.ButtonStyle.Secondary)
+                .setDisabled(page != 0),
+        ];
+        return [overviewtextdisplay, new discord.ActionRowBuilder().addComponents(...optionbuttons)];
+    }
+}
+
+
 // Grab all the command files from the commands directory
 const commands = new Map();
 const modalHandlers = new Map();
@@ -159,6 +206,7 @@ for (const file of commandFiles) {
         componentHandlers.set(handler.key, handler);
     });
     if (cmd.autoComplete) autocompletehandlers.set(file, cmd);
+    if (cmd.help) process.helpmodals[file.slice(0,1).toUpperCase() + file.slice(1).replace(".js","")] = cmd.help;
 }
 
 // Grab any context menu interactions
@@ -300,6 +348,10 @@ client.on('interactionCreate', async (interaction) => {
             else if (interaction.customId.startsWith("inspect_")) {
                 let configfunc = require(`./commands/inspect.js`)
                 configfunc.interactionresponse(interaction);  
+            }
+            else if (interaction.customId.startsWith("help_")) {
+                let configfunc = require(`./commands/help.js`)
+                configfunc.interactionresponse(interaction); 
             }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);
