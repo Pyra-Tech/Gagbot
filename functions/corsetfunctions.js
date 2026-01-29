@@ -139,7 +139,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				// add gasping sounds once at half of max breath
 				let gasp = "";
 				if (!silence && corset.breath < MAX_BREATH_TABLE[corset.tightness] / 2 && Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2))) {
-					if (j == 0) gasp = " " + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + " ";
+					if (j == 0) gasp = gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + " ";
 					else gasp = "-" + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + "-";
 				}
 
