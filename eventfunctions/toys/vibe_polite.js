@@ -53,6 +53,10 @@ function msgfunction(userid, data) {
 		// They were polite, make them horny for 3 minutes.
         // This will be scaled HIGHLY over on the vibe side.
         // If they have a politesubvibe going and its undefined, then send a message
+        console.log(getUserVar(userid, "politeSubVibeTime"))
+        console.log(Date.now());
+        console.log(getUserVar(userid, "politeSubVibeTime") == undefined);
+        console.log(process.recentmessages[userid])
         if (getUserVar(userid, "politeSubVibeTime") == undefined) {
             if (process.recentmessages[userid]) {
                 try {
