@@ -803,43 +803,6 @@ async function promptTransferChastityKey(user, target, newKeyholder) {
 	});
 }
 
-// Called to prompt the wearer if it is okay to clone a key.
-async function promptCloneChastityBraKey(user, target, clonekeyholder) {
-	return new Promise(async (res, rej) => {
-		let buttons = [new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger), new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)];
-		let dmchannel = await target.createDM();
-		await dmchannel.send({ content: `${user} would like to give ${clonekeyholder} a copy of your chastity bra key. Do you want to allow this?`, components: [new ActionRowBuilder().addComponents(...buttons)] }).then((mess) => {
-			// Create a collector for up to 30 seconds
-			const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
-
-			collector.on("collect", async (i) => {
-				console.log(i);
-				if (i.customId == "acceptButton") {
-					await mess.delete().then(() => {
-						i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your chastity bra!`);
-					});
-					res(true);
-				} else {
-					await mess.delete().then(() => {
-						i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`);
-					});
-					rej(true);
-				}
-			});
-
-			collector.on("end", async (collected) => {
-				// timed out
-				if (collected.length == 0) {
-					await mess.delete().then(() => {
-						i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`);
-					});
-					rej(true);
-				}
-			});
-		});
-	});
-}
-
 // Called to prompt the wearer if it is okay to give a key.
 async function promptTransferChastityBraKey(user, target, newKeyholder) {
 	return new Promise(async (res, rej) => {
