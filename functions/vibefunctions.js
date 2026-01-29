@@ -803,6 +803,48 @@ async function promptTransferChastityKey(user, target, newKeyholder) {
 	});
 }
 
+// Called to prompt the wearer if it is okay to clone a key.
+async function promptCloneChastityBraKey(user, target, clonekeyholder) {
+	return new Promise(async (res, rej) => {
+        try {
+            let buttons = [new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger), new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)];
+            let dmchannel = await target.createDM();
+            await dmchannel.send({ content: `${user} would like to give ${clonekeyholder} a copy of your chastity bra key. Do you want to allow this?`, components: [new ActionRowBuilder().addComponents(...buttons)] }).then((mess) => {
+                // Create a collector for up to 30 seconds
+                const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
+
+                collector.on("collect", async (i) => {
+                    console.log(i);
+                    if (i.customId == "acceptButton") {
+                        await mess.delete().then(() => {
+                            i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your chastity bra!`);
+                        });
+                        res(true);
+                    } else {
+                        await mess.delete().then(() => {
+                            i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`);
+                        });
+                        rej(true);
+                    }
+                });
+
+                collector.on("end", async (collected) => {
+                    // timed out
+                    if (collected.length == 0) {
+                        await mess.delete().then(() => {
+                            i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`);
+                        });
+                        rej(true);
+                    }
+                });
+            });
+        } catch (err) {
+			console.log(`No DMs available for ${target}`);
+			rej("NoDM");
+		}
+	});
+}
+
 // Called to prompt the wearer if it is okay to give a key.
 async function promptTransferChastityBraKey(user, target, newKeyholder) {
 	return new Promise(async (res, rej) => {
@@ -1173,7 +1215,6 @@ function getArousedTexts(user) {
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
 // Doll Edit - Uses  characters to prevent triggering doll protocol on stutters.
 // Doll Edit - Wraps italics in  so they are not separated by the doll visor.
-// wrap all additions in  so corset can determine syllables correctly
 function stutterText(msg, text, intensity, arousedtexts) {
 	let newtextparts = text.split(" ");
 	let outtext = "";
@@ -1248,7 +1289,7 @@ function stutterText(msg, text, intensity, arousedtexts) {
 		}
 
 		// Add the full word part now
-		modifiedpart = `${modifiedpart}${parttomodify}`;
+		modifiedpart = `${modifiedpart}${parttomodify}`;
 		let postarousalchoicethresh = Math.min((intensity / (40 * overcorrected) / 3) * usermod * (modified ? 0.5 : 1.0), 0.25);
 		let postarousalmathroll = Math.random();
 		let postarousalcumulative = 0 + postarousalchoicethresh;
@@ -1258,9 +1299,9 @@ function stutterText(msg, text, intensity, arousedtexts) {
 		if (!postmodified && postarousalmathroll < postarousalcumulative && !nosyllable) {
 			stuttered = true;
 			postmodified = true;
-			modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
+			modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
 			if (Math.random() < postarousalcumulative) {
-				modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
+				modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
 			}
 		}
 		postarousalcumulative = postarousalcumulative + postarousalchoicethresh;
@@ -1268,7 +1309,7 @@ function stutterText(msg, text, intensity, arousedtexts) {
 		if (!postmodified && postarousalmathroll < postarousalcumulative && !nosyllable) {
 			stuttered = true;
 			postmodified = true;
-			modifiedpart = `${modifiedpart}...${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
+			modifiedpart = `${modifiedpart}...${stuttertextsyllables[stuttertextsyllables.length - 1]}`;
 		}
 
 		// Modifier 3 - 0.66-1.00 - Insert an arousal text, with chance scaled based on user option. Indication mmf~
@@ -1276,7 +1317,7 @@ function stutterText(msg, text, intensity, arousedtexts) {
 			stuttered = true;
 			postmodified = true;
 			let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf\\~";
-			modifiedpart = `${modifiedpart} ${arousedtext}`;
+			modifiedpart = `${modifiedpart} ${arousedtext}`;
 		}
 
 		// Finally, if its eating formatting for whatever stupid reason, don't.

@@ -21,7 +21,8 @@ module.exports = {
 			let itemslocked = getLockedWearable(chosenuserid);
 
 			// Remove anything we're already wearing from the list
-			let sorted = process.wearableslist.filter((f) => itemsworn.includes(f.value));
+            console.log(process.autocompletes.wearables)
+			let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
 			sorted = sorted.filter((f) => !itemslocked.includes(f.value));
 			await interaction.respond(sorted.slice(0, 10));
 		} else {
@@ -30,7 +31,7 @@ module.exports = {
 				let itemslocked = getLockedWearable(chosenuserid);
 
 				// Remove anything we're already wearing from the list
-				let sorted = process.wearableslist.filter((f) => itemsworn.includes(f.value));
+				let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
 				sorted = sorted.filter((f) => !itemslocked.includes(f.value));
 				let headstoreturn = sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
 				await interaction.respond(headstoreturn);
