@@ -1457,7 +1457,7 @@ const texts_toy = {
                         },
                         "Wand": {
                             nofumble: [
-                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shove it into USER_THEIR crotch!`
+                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
                             ]
                         },
                         default: {
@@ -1502,7 +1502,7 @@ const texts_toy = {
                         `USER_TAG grabs a VAR_C2 and inserts it into USER_THEMSELF at VAR_C3!`
                     ],
                     "Wand": [
-                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shove it into USER_THEIR crotch!`
+                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting on a VAR_C2 at VAR_C3 power! (This is a bug, report!)`
@@ -1645,7 +1645,7 @@ const texts_toy = {
                         },
                         "Wand": {
                             nofumble: [
-                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shove it into TARGET_TAG's crotch!`
+                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into TARGET_TAG's crotch!`
                             ]
                         },
                         default: {
@@ -1690,7 +1690,7 @@ const texts_toy = {
                         `USER_TAG grabs a VAR_C2 and inserts it into TARGET_TAG! It vibrates at VAR_C3!`
                     ],
                     "Wand": [
-                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY lustfully shove it into TARGET_TAG's crotch!`
+                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY lustfully shoveUSER_S it into TARGET_TAG's crotch!`
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG at VAR_C3! (This is a bug, report!)`
