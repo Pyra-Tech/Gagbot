@@ -55,9 +55,9 @@ function msgfunction(userid, data) {
         // If they have a politesubvibe going and its undefined, then send a message
         console.log(getUserVar(userid, "politeSubVibeTime"))
         console.log(Date.now());
-        console.log(getUserVar(userid, "politeSubVibeTime") == undefined);
+        console.log(getUserVar(userid, "politeSubVibeTime") == null);
         console.log(process.recentmessages[userid])
-        if (getUserVar(userid, "politeSubVibeTime") == undefined) {
+        if (getUserVar(userid, "politeSubVibeTime") == null) {
             if (process.recentmessages[userid]) {
                 try {
                     messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, process.recentmessages[userid])
@@ -71,7 +71,7 @@ function msgfunction(userid, data) {
         setTimeout(() => {
             // Clear the variable after 3 minutes if it has NOT been triggered again. 
             if (getUserVar(userid, "politeSubVibeTime") < Date.now()) {
-                setUserVar(userid, "politeSubVibeTime", undefined)
+                setUserVar(userid, "politeSubVibeTime", null)
             }
         }, 181000)
 		return;
