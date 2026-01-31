@@ -550,7 +550,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getCorset(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
-			texts = `${texts}${getBaseCorset(getCorset(inspectuserID).type).name} laced to Length ${getCorset(userID).tightness}`;
+			texts = `${texts}${getBaseCorset(getCorset(userID).type).name} laced to Length ${getCorset(userID).tightness}`;
 		}
 		pagecomponents.push(
 			new SectionBuilder()
