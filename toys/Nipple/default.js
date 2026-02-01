@@ -1,3 +1,4 @@
+const { getBaseChastity } = require("../../functions/chastityfunctions")
 const { getOption } = require("../../functions/configfunctions")
 const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
 const { getChastityBra, addArousal } = require("../../functions/vibefunctions")
