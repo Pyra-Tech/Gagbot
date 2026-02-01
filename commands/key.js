@@ -56,13 +56,13 @@ module.exports = {
 				.addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to give key for?").setAutocomplete(true))
 				.addStringOption((opt) => opt.setName("restrainttype").setDescription("What new restraint to put on them?").setAutocomplete(true)),
 		)
-        .addSubcommand((subcommand) =>
+        /*.addSubcommand((subcommand) =>
             subcommand
                 .setName("discardkey")
                 .setDescription("Discard a key you're holding...")
                 .addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to discard the key?"))
                 .addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to discard?").setAutocomplete(true)),
-        ),
+        )*/,
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		let subcommand = interaction.options.getSubcommand();

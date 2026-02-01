@@ -23,6 +23,9 @@ function rollKeyFumble(keyholder, locked) {
 	if (process.keyfumbling == undefined) {
 		process.keyfumbling = {};
 	}
+    // Disabled key fumbling, just don't.
+    return 0;
+    
 	// get the initial fumble chance
 	let fumbleChance = getFumbleChance(keyholder, locked);
 
