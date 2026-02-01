@@ -493,8 +493,12 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getChastity(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
+            let keyholdertext = ``;
+            if (getChastityTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getChastity(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getChastity(userID).fumbled) { keyholdertext = `Keys are missing!` }
 			texts = `${texts}${getChastityName(userID) ?? "Standard Chastity Belt"}\n`;
-			texts = `${texts}Primary Keyholder: ${getChastityTimelock(userID) ? `Timelocked` : getChastity(userID).keyholder == userID ? `Self-bound` : `<@${getChastity(userID).keyholder}>`}`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getChastity(userID).clonedKeyholders
 					? `, clones held by ${getChastity(userID)
@@ -522,8 +526,12 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getChastityBra(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
+            let keyholdertext = ``;
+            if (getChastityBraTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getChastityBra(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getChastityBra(userID).fumbled) { keyholdertext = `Keys are missing!` }
 			texts = `${texts}${getChastityBraName(userID) ?? "Standard Chastity Bra"}\n`;
-			texts = `${texts}Primary Keyholder: ${getChastityBraTimelock(userID) ? `Timelocked` : getChastityBra(userID).keyholder == userID ? `Self-bound` : `<@${getChastityBra(userID).keyholder}>`}`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getChastityBra(userID).clonedKeyholders
 					? `, clones held by ${getChastityBra(userID)
@@ -593,8 +601,12 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getCollar(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
-			texts = `${texts}${getCollarName(userID)}\n`;
-			texts = `${texts}Primary Keyholder: ${getCollarTimelock(userID) ? `Timelocked` : getCollar(userID).keyholder == userID ? `Self-bound` : `<@${getCollar(userID).keyholder}>`}`;
+            let keyholdertext = ``;
+            if (getCollarTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getCollar(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getCollar(userID).fumbled) { keyholdertext = `Keys are missing!` }
+            texts = `${texts}${getCollarName(userID)}\n`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getCollar(userID).clonedKeyholders
 					? `, clones held by ${getCollar(userID)
