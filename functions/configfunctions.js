@@ -301,6 +301,44 @@ const configoptions = {
 				return getOption(userID, "arousalsystem") == 0;
 			},
 		},
+        arousaldisplay: {
+			name: "Arousal Display in Inspect",
+			desc: "How should arousal be displayed in Inspect?",
+			choices: [
+				{
+					name: "Bar",
+					helptext: "Displays as a bar representing arousal % of orgasm threshold",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "bar",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Description",
+					helptext: "Displays as a roleplay flavor text",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "desc",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Numbers",
+					helptext: "Displays exact Arousal and Orgasm Threshold numbers",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "numbers",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "desc",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
 	},
 	General: {
 		keygiving: {

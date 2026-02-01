@@ -7,7 +7,7 @@ const { getWearable, getLockedWearable, getWearableName, getBaseWearable } = req
 const { getGags, getMitten, getGag, convertGagText, getMittenName } = require("./gagfunctions");
 const { getCollar, canAccessCollar, getCollarName, getCollarTimelock, getCollarPerm, getCollarKeys, getClonedCollarKeysOwned } = require("./collarfunctions");
 const { getCorset, getBaseCorset } = require("./corsetfunctions");
-const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys } = require("./vibefunctions");
+const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys, getArousalDescription, getArousalChangeDescription } = require("./vibefunctions");
 const { getChastityBra } = require("./vibefunctions");
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
 const { getHeavy, convertheavy } = require("./heavyfunctions");
@@ -27,6 +27,7 @@ const { getClonedChastityKeysOwned } = require("./vibefunctions");
 const { getClonedChastityBraKeysOwned } = require("./vibefunctions");
 const { calcDenialCoefficient } = require("./vibefunctions");
 const { getToys, getBaseToy } = require("./toyfunctions");
+const { getOption } = require("./configfunctions");
 
 function getOutfits(userID) {
 	if (process.outfits == undefined) {
@@ -861,10 +862,22 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         clothingtext = `${clothingtext}\n`
 
         let bartext = ``;
-        if (getArousal(inspectuserID) > 2.0) {
-            bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-            if (calcDenialCoefficient(inspectuserID) > 1) {
-                bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+        if (getOption(userID, "arousaldisplay") == "bar") {
+            if (getArousal(inspectuserID) > 2.0) {
+                bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
+                if (calcDenialCoefficient(inspectuserID) > 1) {
+                    bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+                }
+            }
+        }
+        if (getOption(userID, "arousaldisplay") == "desc") {
+            arousaltext = getArousalDescription(inspectuserID);
+            arousalchangetext = getArousalChangeDescription(inspectuserID)
+            bartext = `\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
+        }
+        if (getOption(userID, "arousaldisplay") == "numbers") {
+            if (getArousal(inspectuserID) > 2.0) {
+                bartext = `\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
             }
         }
 
