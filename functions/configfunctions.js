@@ -718,7 +718,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -756,7 +756,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -794,7 +794,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -832,7 +832,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -870,7 +870,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -908,7 +908,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},

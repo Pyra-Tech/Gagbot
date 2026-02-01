@@ -42,6 +42,9 @@ module.exports = {
                 if (!tagged) {
                     newsorted.push(f);
                 }
+                else {
+                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                }
             })
             interaction.respond(newsorted.slice(0,25))
         }

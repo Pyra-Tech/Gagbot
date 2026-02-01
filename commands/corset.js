@@ -44,6 +44,9 @@ module.exports = {
                 if (!tagged) {
                     newsorted.push(f);
                 }
+                else {
+                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                }
             })
             interaction.respond(newsorted.slice(0,25))
         }
@@ -87,6 +90,16 @@ module.exports = {
 				interaction.reply({ content: `Gagbot recognizes what you're attempting to do. Cheeky.`, flags: MessageFlags.Ephemeral });
 				return;
 			}
+            if (type) {
+                let tags = getUserTags(corsetuser.id);
+                let i = getBaseCorset(type)
+                tags.forEach((t) => {
+                    if (i && i.tags && i.tags.includes(t) && (wearableuser != interaction.user)) {
+                        interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                        return;
+                    }
+                })
+            }
 			if (getHeavy(interaction.user.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;

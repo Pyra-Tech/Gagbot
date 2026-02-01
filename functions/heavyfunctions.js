@@ -66,6 +66,7 @@ const heavytypes = [
 	{ name: "Pet Cage", value: "pet_cage", denialCoefficient: 4 },
 	{ name: "Chair with Cuffs", value: "chaircuffs", denialCoefficient: 3.5 },
 	{ name: "Resin Coating", value: "resin_coated", denialCoefficient: 4 },
+    { name: "Pillory", value: "pillory", denialCoefficient: 8 },
 
 	// Metal Restraints
 	{ name: "Scavenger's Daughter", value: "scavengersdaughter", tags: ["metal"], denialCoefficient: 4 },
