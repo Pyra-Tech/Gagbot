@@ -30,7 +30,6 @@ process.on('SIGINT', () => {
     try {
         console.log('Received SIGINT. Performing graceful shutdown...');
         saveFiles();
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/SIGINT.txt`, "WRITING SIGINT")
         process.exit(0);
     }
     catch (err) {
