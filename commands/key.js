@@ -230,9 +230,9 @@ module.exports = {
 			} else if (subcommand == "discardkey") {
                 // We need to know if we're holding the primary keys to throw them away. 
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id)
-                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id)
-                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id)
+                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid).fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
+                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid).fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
+                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid).fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
 
                 let choices = [];
                 if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
