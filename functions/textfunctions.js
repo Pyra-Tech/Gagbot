@@ -355,6 +355,12 @@ const texts_collarequip = {
 							},
 							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Hands-off Blouse");
+                            },
+                            text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -817,6 +823,12 @@ const texts_heavy = {
 				return t.c2.includes("Mimic");
 			},
 			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
+		},
+        {
+			only: (t) => {
+				return t.c2.includes("Hands-off Blouse");
+			},
+			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
 		},
 	],
 };
