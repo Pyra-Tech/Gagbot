@@ -230,9 +230,9 @@ module.exports = {
 			} else if (subcommand == "discardkey") {
                 // We need to know if we're holding the primary keys to throw them away. 
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid).fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
-                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid).fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
-                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid).fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
+                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid)?.fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
+                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid)?.fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
+                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid)?.fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
 
                 let choices = [];
                 if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -809,16 +809,16 @@ module.exports = {
                 let discardedhelp = "collar";
                 let permitted = false;
 				if (restrainttype == "collar") {
-					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id).fumbled) {
+					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id)?.fumbled) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybelt") {
-					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id).fumbled) {
+					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id)?.fumbled) {
                         discardedhelp = "chastity belt"
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybra") {
-					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id).fumbled) {
+					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id)?.fumbled) {
                         discardedhelp = "chastity bra"
 						permitted = true;
 					}
