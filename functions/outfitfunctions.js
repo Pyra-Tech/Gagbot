@@ -494,6 +494,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 			texts = `${texts}Not worn`;
 		} else {
             let keyholdertext = ``;
+            keyholdertext = `<@${getChastity(userID).keyholder}>`
             if (getChastityTimelock(userID)) { keyholdertext = `Timelocked` }
 			if (getChastity(userID).keyholder == userID) { keyholdertext = `Self-bound` }
             if (getChastity(userID)?.fumbled) { keyholdertext = `Keys are missing!` }
@@ -527,6 +528,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 			texts = `${texts}Not worn`;
 		} else {
             let keyholdertext = ``;
+            keyholdertext = `<@${getChastityBra(userID).keyholder}>`
             if (getChastityBraTimelock(userID)) { keyholdertext = `Timelocked` }
 			if (getChastityBra(userID).keyholder == userID) { keyholdertext = `Self-bound` }
             if (getChastityBra(userID)?.fumbled) { keyholdertext = `Keys are missing!` }
@@ -602,6 +604,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 			texts = `${texts}Not worn`;
 		} else {
             let keyholdertext = ``;
+            keyholdertext = `<@${getCollar(userID).keyholder}>`
             if (getCollarTimelock(userID)) { keyholdertext = `Timelocked` }
 			if (getCollar(userID).keyholder == userID) { keyholdertext = `Self-bound` }
             if (getCollar(userID)?.fumbled) { keyholdertext = `Keys are missing!` }

@@ -246,7 +246,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Wooden Horse");
 							},
-							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
 						},
 						{
 							only: (t) => {
@@ -2252,7 +2252,7 @@ const texts_unmitten = {
     },
 	// Idk why the structure was like this - Ephemeral
 	otherother: {
-        other: [`USER_TAG is not wearing mittens!`],
+        other: [`TARGET_TAG is not wearing mittens!`],
         self: [`You aren't wearing mittens!`]
     }
 };
@@ -2578,7 +2578,7 @@ const texts_untoy = {
                         `USER_TAG gently removes the VAR_C2 from inside TARGET_TAG and puts it away. `
                     ],
                     "Wand": [
-                        `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                        `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
                     ],
                     "Misc": [
                         {
