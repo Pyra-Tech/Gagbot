@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { getChastity, getVibe, assignVibe, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -10,6 +10,7 @@ const { checkBondageRemoval, handleBondageRemoval } = require("../functions/inte
 const { config } = require("../functions/configfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -42,6 +43,9 @@ module.exports = {
                 })
                 if (!tagged) {
                     newsorted.push(f);
+                }
+                else {
+                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
                 }
             })
             interaction.respond(newsorted.slice(0,25))
@@ -78,6 +82,10 @@ module.exports = {
 					c4: getBaseCorset(type)?.name ?? "Leather Corset", // new corset
 				},
 			};
+            if (data.textdata.c4 == undefined) {
+                interaction.reply({ content: `Something went wrong with your corset selection. Please try again and choose a corset option.`, flags: MessageFlags.Ephemeral });
+				return;
+            }
 			// REFLECT
 			if (corsetuser.id == process.client.user.id) {
 				data.gagreflect = true;
@@ -86,6 +94,21 @@ module.exports = {
 				interaction.reply({ content: `Gagbot recognizes what you're attempting to do. Cheeky.`, flags: MessageFlags.Ephemeral });
 				return;
 			}
+            let blocked = false;
+            if (type) {
+                let tags = getUserTags(corsetuser.id);
+                let i = getBaseCorset(type)
+                tags.forEach((t) => {
+                    if (i && i.tags && i.tags.includes(t) && (wearableuser != interaction.user)) {
+                        interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                        blocked = true;
+                        return;
+                    }
+                })
+            }
+            if (blocked) {
+                return;
+            }
 			if (getHeavy(interaction.user.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;
@@ -117,7 +140,7 @@ module.exports = {
 				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
-					const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 					if (fumbleResult > 0) {
 						// User fumbles with the key due to their arousal and frustration
 						data.fumble = true;
@@ -130,27 +153,28 @@ module.exports = {
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
 							} else {
+                                data.other = true;
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}

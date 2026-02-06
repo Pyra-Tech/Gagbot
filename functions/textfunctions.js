@@ -1,6 +1,7 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getChastity, getArousal } = require("./vibefunctions.js");
+const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 
 const texts_chastity = {
 	chastitybelt: {
@@ -245,7 +246,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Wooden Horse");
 							},
-							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
 						},
 						{
 							only: (t) => {
@@ -354,6 +355,12 @@ const texts_collarequip = {
 							},
 							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Hands-off Blouse");
+                            },
+                            text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -817,6 +824,12 @@ const texts_heavy = {
 			},
 			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
 		},
+        {
+			only: (t) => {
+				return t.c2.includes("Hands-off Blouse");
+			},
+			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
+		},
 	],
 };
 
@@ -849,6 +862,53 @@ const texts_key = {
 			chastitybra: [`USER_TAG unlocks the little lock on the front of TARGET_TAG's VAR_C1. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`],
 		},
 	},
+    discardkey: {
+        self: {
+            keyholder: [
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) < 20;
+                    },
+                    text: `USER_TAG looks one last time at USER_THEIR key to USER_THEIR VAR_C1 and tosses it without a second thought.`,
+                },
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.interactionuser.id).canInspect;
+                    },
+                    text: `USER_TAG is unable to see, so USER_THEY toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 10;
+                    },
+                    text: `USER_TAG shudders slightly as USER_THEY stareUSER_S at USER_THEIR VAR_C1 key before flinging it off into the void!`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 20;
+                    },
+                    text: `Desperate to stay helpless and horny, USER_TAG throws USER_THEIR VAR_C1 key off into the distance!`,
+                },
+            ],
+            none: [
+                `USER_TAG tries to throw away USER_THEIR key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        },
+        other: {
+            keyholder: [
+                `USER_TAG smirks at TARGET_TAG before tossing TARGET_THEIR VAR_C1 key off into the nether.`,
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.targetuser.id).canInspect;
+                    },
+                    text: `USER_TAG taunts TARGET_TAG with the key for a moment, dangling it in front of TARGET_THEIR eyes before flinging it away.`,
+                }
+            ],
+            none: [
+                `USER_TAG tries to throw away TARGET_TAG's key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        }
+    }
 };
 
 // This follows an inconsistent flat structure - consider reworking in the future.
@@ -1135,6 +1195,31 @@ const texts_struggle = {
 			],
 		},
 	},
+    chastitybra: {
+        heavy: [
+            `USER_TAG wriggles USER_THEIR chest, but *obviously* USER_THEY USER_ISARE not going to be able to slip off USER_THEIR VAR_C6 while in a VAR_C1.`,
+            `Sighing to USER_THEMSELF, USER_TAG gives up on the hopes of ever fighting the VAR_C4 USER_THEY USER_ISARE wearing.`,
+            `Unfortunately, USER_TAG's breasts will have to remain bound because USER_TAG is stuck in a VAR_C1.`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG uses USER_THEIR wrists to push USER_THEIR VAR_C6 back and forth on USER_THEIR breasts. It succeeds only in making USER_THEM feel hornier in USER_THEIR chastity!`,
+                `USER_TAG fidgets with USER_THEIR VAR_C6 absentmindedly, but is unable to pull USER_THEIR breasts free from the prison!`,
+                `USER_TAG uses one wrist to squish against the top of USER_THEIR breast in the VAR_C6, but it's still just as inaccessible as before...`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `Thinking only of freedom, if at all, USER_TAG bats at the locking mechanism on USER_THEIR VAR_C6, but cannot do much without fingers.`,
+                `USER_TAG imagines having the key to USER_THEIR VAR_C6. Of course, having mittens might make it hard to use but USER_THEIR imagination ran wild anyway.`
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch...`,
+                `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
+            ]
+        }
+    },
 	headwear: {
 		heavy: [`USER_TAG rubs USER_THEIR face against the wall, trying to scoot the things on USER_THEIR head off, but can't without arms.`, `USER_TAG tugs against USER_THEIR VAR_C1 so USER_THEY can take off USER_THEIR head gear, but the restraint holds firm!`, `USER_TAG kneels and tries to rub USER_THEIR head gear off on the floor. It looks cute, but the head gear stays on as if nothing happened.`],
 		noheavy: {
@@ -2179,7 +2264,7 @@ const texts_unmitten = {
     },
 	// Idk why the structure was like this - Ephemeral
 	otherother: {
-        other: [`USER_TAG is not wearing mittens!`],
+        other: [`TARGET_TAG is not wearing mittens!`],
         self: [`You aren't wearing mittens!`]
     }
 };
@@ -2505,7 +2590,7 @@ const texts_untoy = {
                         `USER_TAG gently removes the VAR_C2 from inside TARGET_TAG and puts it away. `
                     ],
                     "Wand": [
-                        `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                        `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
                     ],
                     "Misc": [
                         {
@@ -3285,23 +3370,65 @@ const textarrays = {
 // Get generic text and spit out a pronoun respecting version YAY
 const getTextGeneric = (type, data_in) => {
 	let generics = {
-		unbind: "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-		unbind_decline: "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
-		unbind_accept: "TARGET_TAG has accepted your offer to help with TARGET_THEIR VAR_C1!",
-		unbind_timeout: "The request to help TARGET_TAG timed out!",
-		changebind: "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-		changebind_decline: "TARGET_TAG has declined allowing you to change TARGET_THEIR bindings.",
-		changebind_accept: "TARGET_TAG has allowed you to change TARGET_THEIR bindings.",
-		clone_accept: "TARGET_TAG has allowed you to make a clone of TARGET_THEIR VAR_C1 key, giving it to VAR_C2!",
-		clone_accept_self: "Cloning your key...",
-		clone_decline: "TARGET_TAG has forbidden you from making a clone of TARGET_THEIR VAR_C1 key for VAR_C2!",
-		give_accept: "TARGET_TAG has allowed you to give TARGET_THEIR VAR_C1 key to VAR_C2!",
-		give_accept_self: "Giving your key...",
-		give_decline: "TARGET_TAG has forbidden you from giving TARGET_THEIR VAR_C1 key to VAR_C2!",
-		revoke_accept: "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
+		unbind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
+		unbind_decline: ["TARGET_TAG has declined your help with USER_THEIR VAR_C1."],
+		unbind_accept: ["TARGET_TAG has accepted your offer to help with TARGET_THEIR VAR_C1!"],
+		unbind_timeout: ["The request to help TARGET_TAG timed out!"],
+		changebind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
+		changebind_decline: ["TARGET_TAG has declined allowing you to change TARGET_THEIR bindings."],
+		changebind_accept: ["TARGET_TAG has allowed you to change TARGET_THEIR bindings."],
+		clone_accept: ["TARGET_TAG has allowed you to make a clone of TARGET_THEIR VAR_C1 key, giving it to VAR_C2!"],
+		clone_accept_self: ["Cloning your key..."],
+		clone_decline: ["TARGET_TAG has forbidden you from making a clone of TARGET_THEIR VAR_C1 key for VAR_C2!"],
+		give_accept: ["TARGET_TAG has allowed you to give TARGET_THEIR VAR_C1 key to VAR_C2!"],
+		give_accept_self: ["Giving your key..."],
+		give_decline: ["TARGET_TAG has forbidden you from giving TARGET_THEIR VAR_C1 key to VAR_C2!"],
+		revoke_accept: ["You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1."],
+        find_key_self: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! Lucky find!`,
+            `USER_TAG spots a shiny glint and picks it up. It turns out to be the key to USER_THEIR VAR_C1!`,
+            `USER_TAG steps on something weird and picks it up. Fortunately, it's USER_THEIR VAR_C1 key!`
+        ],
+        find_key_other: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! What will TARGET_THEY have to do to get it back?`,
+            `As USER_TAG is chatting, USER_THEY spotUSER_S a shiny key that seems to match TARGET_TAG's VAR_C1!`
+        ],
+        find_key_self_mitten: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up... and just BARELY grasps it.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Despite having no fingers, USER_THEY still somehow manageUSER_S to pick it up.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in relief as USER_THEY just barely pick it up.`
+        ],
+        find_key_other_mitten: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had fingers... But! Despite no fingers, USER_THEY still manageUSER_S to pick it up!`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! USER_TAG_CAP bats it around a little bit, but in the end, manages to pick it up using both mittens!`
+        ],
+        find_keyfail_self: [
+            `USER_TAG paws around in the dark, but just barely misses the key to USER_THEIR VAR_C1...`
+        ],
+        find_keyfail_other: [
+            `USER_TAG paws around in the dark, but just barely misses the key to TARGET_TAG's VAR_C1...`
+        ],
+        find_keyfail_self_mitten: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up... and fails.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Unhelpfully, USER_THEY bat it because USER_THEY USER_HAVE no fingers.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in frustration as USER_THEY can't pick it up.`
+        ],
+        find_keyfail_other_mitten: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had fingers...`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
+        ],
+        find_keyfail_self_heavy: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up, but obviously fails because USER_THEIR arms are tightly bound.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Unhelpfully, USER_THEY bat it because USER_THEY USER_HAVE no arms.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in frustration as USER_THEY can't pick it up.`
+        ],
+        find_keyfail_other_heavy: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had arms to pick it up...`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
+        ],
 	};
 
-	let chosentext = generics[type];
+	let chosentext = generics[type][Math.floor(generics[type].length * Math.random())];
 	return convertPronounsText(chosentext, data_in);
 };
 

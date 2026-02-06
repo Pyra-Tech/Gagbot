@@ -43,6 +43,11 @@ let wearabletypes = [
 	{ name: "Eyeshadow", value: "eyeshadow", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Lipstick", value: "lipstick", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Kissmark", value: "kissmark", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
+    { name: "Eyeliner", value: "eyeliner", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
+    { name: "Foundation", value: "foundation", category: "Head/Hair Accessories", colorable: true},
+    { name: "Cateye Eyeliner", value: "eyeliner_cateye", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
+    { name: "Mascara", value: "mascara", category: "Head/Hair Accessories"},
+    { name: "Blush", value: "makeupblush", category: "Head/Hair Accessories", colorable: true },
 
 	// Bunnygirls
 	{ name: "Playbunny Headband", value: "outfit_playbunny_headwear", category: "Cosplay",  },
@@ -314,6 +319,10 @@ const tagstoadd = [
     { match: `eyeliner`, tag: "makeup" },
     { match: `eyeshadow`, tag: "makeup" },
     { match: `kissmark`, tag: "makeup" },
+    { match: `foundation`, tag: "makeup" },
+    { match: `eyeliner_cateye`, tag: "makeup" },
+    { match: `mascara`, tag: "makeup" },
+    { match: `makeupblush`, tag: "makeup" },
 ]
 
 /**************

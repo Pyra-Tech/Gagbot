@@ -15,7 +15,7 @@ const { assignMemeImages, generateListTexts } = require('./functions/interactive
 const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
-const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
+const { knownServer, setGlobalCommands, loadWebhooks, getBotOption, getOption } = require('./functions/configfunctions.js');
 const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
 const { setUpChastity } = require('./functions/chastityfunctions.js');
@@ -294,8 +294,9 @@ client.on("messageCreate", async (msg) => {
             channelid = msg.channel.parentId
         }
         if (process.webhook[channelid]) {
-            // FUCK THIS SYSTEM
-            // handleKeyFinding(msg); 
+            if ((getBotOption("bot-allowkeyfinding") == "Enabled") && (getOption(msg.author.id, "canfindkeys") == "enabled")) {
+                handleKeyFinding(msg);
+            }
             process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }

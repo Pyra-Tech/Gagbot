@@ -20,6 +20,7 @@ const { swapChastity, swapChastityBra } = require("../functions/vibefunctions.js
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
 const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { discardKey } = require("../functions/keyfindingfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -54,7 +55,14 @@ module.exports = {
 				.addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to give key for?"))
 				.addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to give key for?").setAutocomplete(true))
 				.addStringOption((opt) => opt.setName("restrainttype").setDescription("What new restraint to put on them?").setAutocomplete(true)),
-		),
+		)
+        /*.addSubcommand((subcommand) =>
+            subcommand
+                .setName("discardkey")
+                .setDescription("Discard a key you're holding...")
+                .addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to discard the key?"))
+                .addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to discard?").setAutocomplete(true)),
+        )*/,
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		let subcommand = interaction.options.getSubcommand();
@@ -210,7 +218,7 @@ module.exports = {
                         let tagged = false;
                         let i = choicefunc(f.value)
                         tags.forEach((t) => {
-                            if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                            if (i && i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
                             else if (i.tags && (i.tags[t])) { tagged = true }
                         })
                         if (!tagged) {
@@ -219,7 +227,29 @@ module.exports = {
                     })
                     interaction.respond(newsorted.slice(0,25))
 				}
-			}
+			} else if (subcommand == "discardkey") {
+                // We need to know if we're holding the primary keys to throw them away. 
+                let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid)?.fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
+                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid)?.fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
+                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid)?.fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
+
+                let choices = [];
+                if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
+                    choices = [{ name: "No Keys Available", value: "nokeys" }];
+                }
+                if (collarkeyholder) {
+                    choices.push({ name: "Collar", value: "collar" });
+                }
+                if (chastitykeyholder) {
+                    choices.push({ name: "Chastity Belt", value: "chastitybelt" });
+                }
+                if (chastitybrakeyholder) {
+                    choices.push({ name: "Chastity Bra", value: "chastitybra" });
+                }
+
+                await interaction.respond(choices);
+            }
 		} catch (err) {
 			console.log(err);
 		}
@@ -767,7 +797,58 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
-			}
+			} else if (subcommand == "discardkey") {
+                let wearer = interaction.options.getUser("wearer") ?? interaction.user;
+				let restrainttype = interaction.options.getString("restraint");
+
+				if (!wearer || !restrainttype) {
+					interaction.reply({ content: `Something went wrong. The command was parsed as:\nDiscard ${wearer}'s ${restrainttype} key!`, flags: MessageFlags.Ephemeral });
+					return;
+				}
+
+                let discardedhelp = "collar";
+                let permitted = false;
+				if (restrainttype == "collar") {
+					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id)?.fumbled) {
+						permitted = true;
+					}
+				} else if (restrainttype == "chastitybelt") {
+					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id)?.fumbled) {
+                        discardedhelp = "chastity belt"
+						permitted = true;
+					}
+				} else if (restrainttype == "chastitybra") {
+					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id)?.fumbled) {
+                        discardedhelp = "chastity bra"
+						permitted = true;
+					}
+				}
+
+				// Catch if they ARE NOT ALLOWED
+				if (!permitted) {
+					interaction.reply({ content: `You don't have the primary keys to ${wearer}'s ${restrainttype}!`, flags: MessageFlags.Ephemeral });
+					return;
+				}
+
+                // Okay they're probably allowed lol
+				let data = { 
+                    textarray: "texts_key", textdata: { 
+                        interactionuser: interaction.user, 
+                        targetuser: wearer,
+                        c1: discardedhelp
+                    },
+                };
+                data.discardkey = true;
+                let discardedkey = discardKey(wearer.id, interaction.user.id, discardedhelp);
+                if (wearer.id == interaction.user.id) {
+                    data.self = true
+                }
+                else {
+                    data.other = true
+                }
+                data[discardedkey] = true;
+                interaction.reply(getText(data));
+            }
 		} catch (err) {
 			console.log(err);
 		}

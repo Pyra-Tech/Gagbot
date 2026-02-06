@@ -67,6 +67,9 @@ module.exports = {
                     if (!tagged) {
                         newsorted.push(f);
                     }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                    }
                 })
                 interaction.respond(newsorted.slice(0,25))
             } else if (subc == "mittens") {
@@ -92,6 +95,9 @@ module.exports = {
                     })
                     if (!tagged) {
                         newsorted.push(f);
+                    }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
                     }
                 })
                 interaction.respond(newsorted.slice(0,25))
@@ -119,6 +125,9 @@ module.exports = {
                     })
                     if (!tagged) {
                         newsorted.push(f);
+                    }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
                     }
                 })
                 interaction.respond(newsorted.slice(0,25))
@@ -156,6 +165,7 @@ module.exports = {
 			let braorbelt = interaction.options.getString("braorbelt") ?? "chastitybelt";
 
             // Check if the wearer is okay with it. If they aren't, error.
+            let blocked = false;
             if (actiontotake == "heavy") {
                 if (bondagetype) {
                     let tags = getUserTags(collareduser.id);
@@ -163,6 +173,7 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
@@ -175,6 +186,7 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
@@ -187,10 +199,14 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
                 }
+            }
+            if (blocked) {
+                return;
             }
 
 			let bondagetypenotchosen = false;
@@ -257,7 +273,7 @@ module.exports = {
 				        bondagetype = "belt_silver";
                     } else {
                         data.textdata.c3 = "chastity bra";
-				        bondagetype = "bra_chastity";
+				        bondagetype = "bra_silver";
                     }
                 }
 			}

@@ -313,8 +313,8 @@ function runProcessedEvents() {
     if (process.collar) {
 		Object.keys(process.collar).forEach((userid) => {
 			if (getCollar(userid)) {
-                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).type]) {
-					process.eventfunctions.collar[getCollar(userid).collartype](userid, data);
+                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype]) {
+					process.eventfunctions.collar[getCollar(userid).collartype](userid);
 				}
             }
 		});

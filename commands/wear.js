@@ -42,6 +42,9 @@ module.exports = {
                 if (!tagged) {
                     newsorted.push(f);
                 }
+                else {
+                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                }
             })
             interaction.respond(newsorted.slice(0,25))
         }
@@ -79,15 +82,20 @@ module.exports = {
 				return;
 			}
 
+            let blocked = false;
             if (wearablechoice) {
                 let tags = getUserTags(wearableuser.id);
                 let i = getBaseWearable(wearablechoice)
                 tags.forEach((t) => {
                     if (i && i.tags && i.tags[t] && (wearableuser != interaction.user)) {
                         interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                        blocked = true;
                         return;
                     }
                 })
+            }
+            if (blocked) {
+                return;
             }
 
 			if (getHeavy(interaction.user.id)) {
