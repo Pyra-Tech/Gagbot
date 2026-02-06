@@ -860,13 +860,13 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
     let giveclonecap = `${giveclone.slice(0,1).toUpperCase()}${giveclone.slice(1)}`
 
     // Reset any keybits we became ineligible for
-    if ((getChastity(wearerid)?.keyholder != wearerid) || (getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastity(wearerid)?.fumbled)) {
+    if ((getChastity(wearerid)?.keyholder != userid) || (getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastity(wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,1)}0${keybit.slice(2)}`
     }
-    if ((getChastityBra(wearerid)?.keyholder != wearerid) || (getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid)?.fumbled)) {
+    if ((getChastityBra(wearerid)?.keyholder != userid) || (getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,2)}0${keybit.slice(3)}`
     }
-    if ((getCollar(wearerid)?.keyholder != wearerid) || (getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid)) || (getCollar(wearerid)?.fumbled)) {
+    if ((getCollar(wearerid)?.keyholder != userid) || (getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid)) || (getCollar(wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,3)}0`
     }
 
@@ -907,7 +907,7 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
         let clonetext = (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastity(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
         let notholding = (!(getChastity(wearerid).keyholder == userid) || getChastity(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getChastity(wearerid).keyholder != wearerid) || (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.includes(targetid)) || (getChastity(wearerid).fumbled)) {
+        if ((getChastity(wearerid).keyholder != userid) || (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.includes(targetid)) || (getChastity(wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
@@ -930,7 +930,7 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
         let clonetext = (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastityBra(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
         let notholding = (!(getChastityBra(wearerid).keyholder == userid) || getChastityBra(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getChastityBra(wearerid).keyholder != wearerid) || (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid).fumbled)) {
+        if ((getChastityBra(wearerid).keyholder != userid) || (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
@@ -953,7 +953,7 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
         let clonetext = (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getCollar(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
         let notholding = (!(getCollar(wearerid).keyholder == userid) || getCollar(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getCollar(wearerid).keyholder != wearerid) || (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.includes(targetid)) || (getCollar(wearerid).fumbled)) {
+        if ((getCollar(wearerid).keyholder != userid) || (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.includes(targetid)) || (getCollar(wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
