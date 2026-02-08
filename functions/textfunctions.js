@@ -943,7 +943,7 @@ const texts_letgo = {
 			required: (t) => {
 				return getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
 			},
-			text: `USER_TAG struggles fruitlessly with USER_THEIR livingwood chastity, aggitating it and causing it to squirm more insistently~!`,
+			text: `USER_TAG struggles fruitlessly to get over the edge, aggitating USER_THEIR livingwood chastity and causing its tendrils to squirm more insistently~!`,
 		}
 	],
 	heavy: [
@@ -1190,7 +1190,7 @@ const texts_struggle = {
 				`USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
 				{
 					required: (t) => {
-						getChastity(t.interactionuser.id).chastitytype.includes("livingwood")
+						!getChastity(t.interactionuser.id).chastitytype.includes("livingwood")
 					},
 					text: `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
 				},
@@ -1240,8 +1240,14 @@ const texts_struggle = {
             ],
             // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
             nomitten: [
-                `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch...`,
-                `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
+                `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch....`,
+                `USER_TAG runs USER_THEIR hands over the VAR_C6 on USER_THEIR chest, whining softly as USER_THEY struggle to get any sensation on USER_THEIR breasts~.`,
+				{
+					required: (t) => {
+						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
+					},
+					text: `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
+				}
             ]
         }
     },
