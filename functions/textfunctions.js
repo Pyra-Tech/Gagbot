@@ -924,15 +924,13 @@ const texts_letgo = {
 		`USER_TAG frantically *claws* at USER_THEIR chastity belt, but it offers no sensation!`,
 		{
 					required: (t) => {
-						let blacklistTypes = ["Livingwood"]
-						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG tries to get over the edge but is denied by USER_THEIR steel prison!`,
 		},
 		{
 					required: (t) => {
-						let blacklistTypes = ["Livingwood"]
-						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG tries to rub the cold steel of USER_THEIR chastity belt, but USER_THEY can't feel anything!`,
 		},
@@ -943,9 +941,9 @@ const texts_letgo = {
 		`USER_TAG attempts to get relief, but **good USER_PRAISEOBJECTs** don't get to touch there.`,
 		{
 			required: (t) => {
-				return t.c1.includes("Livingwood");
+				return getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
 			},
-			text: `USER_TAG struggles fruitlessly with USER_THEIR livingwood chastity, aggitating it and causing it to squirm more insistently~.*`,
+			text: `USER_TAG struggles fruitlessly with USER_THEIR livingwood chastity, aggitating it and causing it to squirm more insistently~!`,
 		}
 	],
 	heavy: [
@@ -1192,8 +1190,7 @@ const texts_struggle = {
 				`USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
 				{
 					required: (t) => {
-						let blacklistTypes = ["Livingwood"]
-						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+						getChastity(t.interactionuser.id).chastitytype.includes("livingwood")
 					},
 					text: `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
 				},
