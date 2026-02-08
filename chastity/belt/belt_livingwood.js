@@ -7,16 +7,17 @@ const { getChastityBra } = require("../../functions/vibefunctions.js");
 // or every 15 minutes, until the wearer successfully orgasms. 
 exports.growthCoefficient = (data) => { return 1 }
 exports.decayCoefficient = (data) => { return 0.1 }
+// Never Fully Clear Arousal
+exports.minArousal = (data) => { return 0.5 }
 exports.minVibe = (data) => {
     return Math.max(Math.min(Math.floor((Date.now() - (getUserVar(data.userID, "livingwood_chastity") ?? Date.now())) / 900000), 20), getUserVar(data.userID, "livingwood_vibe"))
 }
-// Note, we must use a regular function context to retrieve a this correctly. 
 exports.onOrgasm = (data) => {
     setUserVar(data.userID, "livingwood_vibe", Math.max((this.minVibe(data) - 10), 0))
     setUserVar(data.userID, "livingwood_chastity", Date.now());
 }
 exports.onFailedOrgasm = (data) => {
-    console.log(this);
+    //console.log(this);
     setUserVar(data.userID, "livingwood_vibe", Math.min((this.minVibe(data) + 1), 20));
 }
 exports.onEquip = (data) => {
