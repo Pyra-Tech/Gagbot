@@ -16,6 +16,9 @@ function msgfunction(userid, data) {
     intensity = volumetest(data.msgcontent)
     //console.log(intensity);
 
+    // Escape if purely OOC message
+    if (intensity == 0) return;
+
     //Update End Time and Increment Vibe Intensity    
     if(getUserVar(userid, "reverbEndTime") == undefined) {
         // Set initial 3 minute timer
