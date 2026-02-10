@@ -467,6 +467,7 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtocol, modified) {
 	try {
 		// If this is a reply, we want to create a reply in-line because webhooks can't reply.
+        let isreply = false;
 		if (msg.type == "19") {
 			const replied = await msg.fetchReference();
 			const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
@@ -476,6 +477,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			} else {
 				outtext = `${replied.author.displayName} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			}
+            isreply = first?.id;
 		}
 
 		// Truncate the text if it's too long
@@ -518,7 +520,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			}
 			Promise.all(promisearr).then(async (v) => {
 				// Send it!
-				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified).then(() => {
+				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply).then(() => {
 					// Cleanup after sending
 					msg.delete().then(() => {
 						attachments.forEach((attach) => {
@@ -547,7 +549,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 				outtext = "Something went wrong. Ping <@125093095405518850> and let her know!";
 			}
 			// Finally send it!
-			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified).then(() => {
+			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply).then(() => {
 				// Cleanup after sending.
 				msg.delete().then(() => {
 					// If the user violates Doll Protocol, do STUFF
