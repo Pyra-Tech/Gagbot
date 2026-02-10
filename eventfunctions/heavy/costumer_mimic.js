@@ -10,6 +10,7 @@ const { getChastityBraName } = require("../../functions/vibefunctions.js");
 const { getChastityName, assignChastity } = require("../../functions/vibefunctions.js");
 const { getChastity } = require("../../functions/vibefunctions.js");
 const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignWearable } = require("../../functions/wearablefunctions.js");
+const { addArousal } = require("../../functions/vibefunctions")
 //const { mimicCostumes } = require('./mimic/mimicCostumes.js')
 
 // File Containing Costumer Mimic Outfits - Wearables, Headwear, Mittens, Gags, Heavy. Only one Heavy item per outfit, and always at the end.
@@ -373,6 +374,9 @@ let functiontick = async (userID) => {
         }
     }
 
+    // The Mimic is teasing the Victim during the entire event~ (Arousal Gain can be increased or decreased as desired)
+    addArousal(userID, 3);
+
     console.log(process.userevents[userID].costumermimic)
 
     // Select Item from Chosen Outfit based in index
@@ -414,8 +418,7 @@ let functiontick = async (userID) => {
             console.log("Not enough Clothes remaining for a full cycle! Skipping to stage 3!")
             // Skip to Stage 4 and consume all remaining items
             process.userevents[userID].costumermimic.stage = 3
-        }
-        else {
+        } else if (shuffledclothes.length == 0){
             // Victim Stripped of all unprotected clothing unexpectedly, progress to next stage
             console.log("Unexpectedly Naked! Skipping to Dress Up!")
             process.userevents[userID].costumermimic.stage = 4;
@@ -424,10 +427,15 @@ let functiontick = async (userID) => {
             data.noneremaining = true;
             messageSendChannel(getText(data), process.recentmessages[userID])
             return;
+        } else {
+            console.log("Initial Clothes count less than 4! Skipping to stage 3!")
+            // Skip to Stage 4 and consume all remaining items
+            process.userevents[userID].costumermimic.stage = 3
         }
     }
 
     if (process.userevents[userID].costumermimic.stage == 3) {
+        console.log("Entering Final Consumption!")
         // Handle all remaining Wearables
         data.donestripping = true;
         let remainingwearables = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)))
