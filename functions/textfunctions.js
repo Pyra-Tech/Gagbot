@@ -924,13 +924,13 @@ const texts_letgo = {
 		`USER_TAG frantically *claws* at USER_THEIR chastity belt, but it offers no sensation!`,
 		{
 					required: (t) => {
-						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
+						return !getChastity(t.interactionuser.id)?.chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG tries to get over the edge but is denied by USER_THEIR steel prison!`,
 		},
 		{
 					required: (t) => {
-						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
+						return !getChastity(t.interactionuser.id)?.chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG tries to rub the cold steel of USER_THEIR chastity belt, but USER_THEY can't feel anything!`,
 		},
@@ -941,7 +941,7 @@ const texts_letgo = {
 		`USER_TAG attempts to get relief, but **good USER_PRAISEOBJECTs** don't get to touch there.`,
 		{
 			required: (t) => {
-				return getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
+				return getChastity(t.interactionuser.id)?.chastitytype.includes("livingwood");
 			},
 			text: `USER_TAG struggles fruitlessly to get over the edge, aggitating USER_THEIR livingwood chastity and causing its tendrils to squirm more insistently~!`,
 		}
@@ -1191,13 +1191,13 @@ const texts_struggle = {
 				`USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
 				{
 					required: (t) => {
-						!getChastity(t.interactionuser.id).chastitytype.includes("livingwood")
+						!getChastity(t.interactionuser.id)?.chastitytype.includes("livingwood")
 					},
 					text: `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
 				},
 				{
 					required: (t) => {
-						return getChastity(t.interactionuser.id).timestamp + 7200000 < Date.now();
+						return getChastity(t.interactionuser.id)?.timestamp + 7200000 < Date.now();
 					},
 					text: `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`,
 				},
@@ -1245,7 +1245,7 @@ const texts_struggle = {
                 `USER_TAG runs USER_THEIR hands over the VAR_C6 on USER_THEIR chest, whining softly as USER_THEY struggles to get any sensation on USER_THEIR breasts~.`,
 				{
 					required: (t) => {
-						return !getChastityBra(t.interactionuser.id).chastitytype.includes("livingwood");
+						return !getChastityBra(t.interactionuser.id)?.chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
 				}
