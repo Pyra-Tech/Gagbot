@@ -1385,7 +1385,7 @@ function updateSharedBreath() {
         let minadjustment = 0.1 * (getBotOption("bot-timetickrate") / 60000)
         for (const user in process.headwear) {
             if (process.headwear && process.headwear[user] && process.headwear[user].sharedbreathhose && !processed.includes(process.headwear[user].sharedbreathhose) && !processed.includes(user)) {
-                console.log(`Adjusting horniness for ${user} to ${process.headwear[user].sharedbreathhose}`)
+                //console.log(`Adjusting horniness for ${user} to ${process.headwear[user].sharedbreathhose}`)
                 // If both people are wearing the linked gasmask AND have each other designated to share breath...
                 if (getHeadwear(user).includes("gasmasklinked") && getHeadwear(process.headwear[user].sharedbreathhose).includes("gasmasklinked") && 
                     (user == process.headwear[process.headwear[user].sharedbreathhose].sharedbreathhose)) {
