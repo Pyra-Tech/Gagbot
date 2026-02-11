@@ -375,7 +375,7 @@ let functiontick = async (userID) => {
     }
 
     // The Mimic is teasing the Victim during the entire event~ (Arousal Gain can be increased or decreased as desired)
-    addArousal(userID, 3);
+    addArousal(userID, 1);
 
     console.log(process.userevents[userID].costumermimic)
 
