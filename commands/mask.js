@@ -170,7 +170,14 @@ module.exports = {
 						} else {
 							// Not wearing it!
 							data.noworn = true;
-							interaction.reply(getText(data));
+                            console.log(process.modalfunctions?.headwear)
+							if (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]) {
+                                await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                                interaction.followUp(getText(data));
+                            }
+                            else {
+                                interaction.reply(getText(data));
+                            }
 							assignHeadwear(headwearuser.id, headwearchoice);
 						}
 					} else {
@@ -187,7 +194,13 @@ module.exports = {
 								} else {
 									// Not wearing it!
 									data.noworn = true;
-									interaction.reply(getText(data));
+                                    if (process.eventfunctions?.headwear && process.eventfunctions.headwear[headwearchoice] && process.eventfunctions.headwear[headwearchoice].modal) {
+                                        await interaction.showModal(process.eventfunctions.headwear[headwearchoice].modal(interaction, headwearuser.id))
+                                        interaction.update(getText(data));
+                                    }
+                                    else {
+                                        interaction.reply(getText(data));
+                                    }
 									assignHeadwear(headwearuser.id, headwearchoice);
 								}
 							} else {

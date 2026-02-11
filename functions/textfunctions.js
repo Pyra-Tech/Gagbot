@@ -669,6 +669,12 @@ const texts_headwear = {
                             return t.c2 == "Gasmask";
                         },
                         text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the filter as USER_THEY look through glass lenses. `,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2 == "Gasmask (Linked)";
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to give it to...`,
                     }
                 ],
 			},
@@ -690,6 +696,12 @@ const texts_headwear = {
                                     return t.c2 == "Gasmask";
                                 },
                                 text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the filter as TARGET_THEY look through glass lenses. `,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2 == "Gasmask (Linked)";
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to hand it to...`,
                             }
                         ],
 					},

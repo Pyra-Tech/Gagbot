@@ -53,6 +53,7 @@ const headweartypes = [
     // Gasmasks
     { name: "Gasmask", value: "gasmask", tags: ["latex"] },
     { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
+    { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
 
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },

@@ -1378,6 +1378,42 @@ function updateArousalValues() {
 	}
 }
 
+function updateSharedBreath() {
+    try {
+        processed = [];
+        let arousalscale = (getBotOption("bot-timetickrate") / 60000) * 0.4
+        let minadjustment = 0.1 * (getBotOption("bot-timetickrate") / 60000)
+        for (const user in process.headwear) {
+            if (process.headwear && process.headwear[user] && process.headwear[user].sharedbreathhose && !processed.includes(process.headwear[user].sharedbreathhose) && !processed.includes(user)) {
+                // If both people are wearing the linked gasmask AND have each other designated to share breath...
+                if (getHeadwear(user).includes("gasmasklinked") && getHeadwear(process.headwear[user].sharedbreathhose).includes("gasmasklinked") && (process.headwear[user].sharedbreathhose == process.headwear[process.headwear[user].sharedbreathhose].sharedbreathhose)) {
+                    let personA = getArousal(user)
+                    let personB = getArousal(process.headwear[user].sharedbreathhose)
+                    let diff = personA - personB;
+                    let delta = Math.max(arousalscale * Math.abs(diff), minadjustment);
+                    if (diff < 0) {
+                        // Person B is hornier, so person A should gain, person B should lose. 
+                        addArousal(user, delta);
+                        addArousal(process.headwear[user].sharedbreathhose, -delta)
+                        console.log(`${process.headwear[user].sharedbreathhose} sharing ${delta} arousal to ${user}`)
+                    }
+                    else {
+                        // Person A is hornier, so person B should gain, person A should lose. 
+                        addArousal(process.headwear[user].sharedbreathhose, delta);
+                        addArousal(user, -delta)
+                        console.log(`${user} sharing ${delta} arousal to ${process.headwear[user].sharedbreathhose}`)
+                    }
+                    processed.push(user)
+                    processed.push(process.headwear[user].sharedbreathhose)
+                }
+            }
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 function getVibeEquivalent(user) {
 	if (!config.getDynamicArousal(user)) return calcStaticVibeIntensity(user) * 2;
 
@@ -1664,3 +1700,5 @@ exports.getChastityBraTimelock = getChastityBraTimelock;
 
 exports.swapChastity = swapChastity;
 exports.swapChastityBra = swapChastityBra
+
+exports.updateSharedBreath = updateSharedBreath;
