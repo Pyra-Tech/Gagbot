@@ -4,7 +4,7 @@ const { getArousal, addArousal } = require("../../functions/vibefunctions")
 // Seal of the Unmoving Stone
 // This Seal locks the user's arousal to within a small range of their current level. The Range shifts gradually as they remain above or below the median. Also doubles the Orgasm Cooldown
 exports.growthCoefficient = (data) => { return 1 }
-exports.decayCoefficient = (data) => { return 0.2 }
+exports.decayCoefficient = (data) => { return 1 }
 exports.orgasmCooldown = (data) => { return 2 }
 exports.denialCoefficient = (data) => { return 1 }
 
@@ -21,8 +21,8 @@ exports.onOrgasm = (data) => {
 }
 exports.afterArousalChange = (data) => {
     // Earth only allows slow shifts in the arousal values regardless of vibe strength
-    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 1.03)
-    else if(getArousal(data.userID) < getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 0.97)
+    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 1.02)
+    else if(getArousal(data.userID) < getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 0.98)
     console.log(`Base: ${getUserVar(data.userID, "base_arousal")}, Current: ${getArousal(data.userID)}`)
 }
 exports.onEquip = (data) => {
