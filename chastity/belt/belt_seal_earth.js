@@ -21,9 +21,8 @@ exports.onOrgasm = (data) => {
 }
 exports.afterArousalChange = (data) => {
     // Earth only allows slow shifts in the arousal values regardless of vibe strength
-    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 1.02)
-    else if(getArousal(data.userID) < getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 0.98)
-    console.log(`Base: ${getUserVar(data.userID, "base_arousal")}, Current: ${getArousal(data.userID)}`)
+    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", Math.max(getUserVar(data.userID, "base_arousal") * 1.02, getUserVar(data.userID, "base_arousal") + 0.01))
+    else if(getArousal(data.userID) < getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", Math.max(Math.min(getUserVar(data.userID, "base_arousal") * 0.98, getUserVar(data.userID, "base_arousal") - 0.01), 0))
 }
 exports.onEquip = (data) => {
     // Configure base arousal value
