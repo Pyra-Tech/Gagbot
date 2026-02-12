@@ -184,7 +184,7 @@ module.exports = {
 						data.other = true;
 						if (getCollar(headwearuser.id)) {
 							data.collar = true;
-							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id)) {
+							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id).access) {
 								data.maskperm = true;
 								if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
 									// Wearing the headgear already, Ephemeral

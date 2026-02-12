@@ -575,17 +575,17 @@ module.exports = {
 				// Check if the interaction user has access to give the key for the target restraint.
 				let cangive = false;
 				let chosenrestraintreadable;
-				if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
