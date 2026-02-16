@@ -246,7 +246,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Wooden Horse");
 							},
-							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
 						},
 						{
 							only: (t) => {
@@ -355,6 +355,12 @@ const texts_collarequip = {
 							},
 							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Hands-off Blouse");
+                            },
+                            text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -650,14 +656,54 @@ const texts_headwear = {
 			self: {
 				// Ephemeral
 				worn: [`You are already wearing a VAR_C2!`],
-				noworn: [`USER_TAG places a VAR_C2 on USER_THEIR lovely head, securing the straps on snugly!`],
+				noworn: [
+                    `USER_TAG places a VAR_C2 on USER_THEIR lovely head, securing the straps on snugly!`,
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Aphrodisiacs");
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEY_CAP feelUSER_S USER_THEIR heart race as USER_THEIR nostrils are bombarded with a sensual, sweet smell that makes it nearly impossible to think about anything besides horny thoughts...`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2 == "Gasmask";
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the filter as USER_THEY look through glass lenses. `,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2 == "Gasmask (Linked)";
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to give it to...`,
+                    }
+                ],
 			},
 			other: {
 				collar: {
 					maskperm: {
 						// Ephemeral
 						worn: [`You are already wearing a VAR_C2!`],
-						noworn: [`USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`],
+						noworn: [
+                            `USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("Aphrodisiacs");
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP eyes roll backward as the aphrodisiacs assault TARGET_THEIR senses, rendering TARGET_THEM unable to think clearly!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2 == "Gasmask";
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the filter as TARGET_THEY look through glass lenses. `,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2 == "Gasmask (Linked)";
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to hand it to...`,
+                            }
+                        ],
 					},
 					nomaskperm: [
 						// Ephemeral
@@ -818,6 +864,12 @@ const texts_heavy = {
 			},
 			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
 		},
+        {
+			only: (t) => {
+				return t.c2.includes("Hands-off Blouse");
+			},
+			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
+		},
 	],
 };
 
@@ -918,7 +970,7 @@ const texts_letgo = {
 		`USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and failUSER_S miserably) to get release!`,
 		`USER_TAG attempts to get relief, but **good USER_PRAISEOBJECTs** don't get to touch there.`,
 	],
-	heavy: [`USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`, `USER_TAG bucks USER_THEIR midsection, trying to climax, but without arms, USER_THEY USER_ISARE not getting anywhere!`, `USER_TAG squirms helplessly in USER_THEIR VAR_C1, trying to let go! USER_THEY needUSER_S some more help from vibrators!`],
+	heavy: [`USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`, `USER_TAG bucks USER_THEIR midsection, trying to climax, but without arms, USER_THEY USER_ISARE not getting anywhere!`, `USER_TAG squirms helplessly in USER_THEIR VAR_C1, trying to let go! USER_THEY_CAP needUSER_S some more help from vibrators!`],
 	free: [`USER_TAG takes a deep breath and calms USER_THEIR nerves, the hot feelings *slowly* going away...`, `USER_TAG takes some ice and holds it to USER_THEIR crotch. The sensation is unpleasant, but effective in clearing USER_THEIR mind!`, `USER_TAG fans USER_THEMSELF and closes USER_THEIR eyes, taking deep breaths.`, `USER_TAG carefully uncorks a frigid potion and chugs it. It tastes foul, but USER_THEY feelUSER_S a little more coherent now!`],
 };
 
@@ -2254,7 +2306,7 @@ const texts_unmitten = {
     },
 	// Idk why the structure was like this - Ephemeral
 	otherother: {
-        other: [`USER_TAG is not wearing mittens!`],
+        other: [`TARGET_TAG is not wearing mittens!`],
         self: [`You aren't wearing mittens!`]
     }
 };
@@ -2580,7 +2632,7 @@ const texts_untoy = {
                         `USER_TAG gently removes the VAR_C2 from inside TARGET_TAG and puts it away. `
                     ],
                     "Wand": [
-                        `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                        `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
                     ],
                     "Misc": [
                         {
