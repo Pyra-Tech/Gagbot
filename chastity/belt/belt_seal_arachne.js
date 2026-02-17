@@ -1,7 +1,7 @@
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
 const { addArousal } = require("../../functions/vibefunctions")
 
-// Seal of the Arachne's Kiss
+// Seal of the Pleasurable Descent (Arachne's Kiss)
 // This Seal gradually increases the wearer's sensitivity (growthCoefficient), and raises the min arousal level for every successful orgasm while wearing it~
 exports.growthCoefficient = function(data) { 
     return Math.min(2 + ((Date.now() - getUserVar(data.userID, "arachne_kiss") ?? Date.now()) / 900000), 10)
@@ -36,4 +36,4 @@ exports.onUnequip = (data) => {
 // Tags
 exports.tags = ["seal"]
 // Name
-exports.name = "Seal of the Arachne's Kiss"
+exports.name = "Seal of the Pleasurable Descent"
