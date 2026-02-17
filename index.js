@@ -108,18 +108,18 @@ processdatatoload.forEach((s) => {
     }
 })
   
-try {
-    // return lost keys since keyfinding changed
-    for (const key in process.chastity) {
-        if (process.chastity[key].oldKeyholder) process.chastity[key].keyholder = process.chastity[key].oldKeyholder;
-    }
-    for (const key in process.collar) {
-        if (process.collar[key].oldKeyholder) process.collar[key].keyholder = process.collar[key].oldKeyholder;
+/*try {
+    // remove empty arrays in process.gag
+    for (const key in process.gags) {
+        if (process.gags[key].length == 0) {
+            delete process.gags[key];
+            console.log(`Deleting process.gag entry for ${key}`);
+        }
     }
 }
 catch (err) { 
     console.log(err);
-}
+}*/
 
 // Later loaders for autocompletes
 setUpGags();

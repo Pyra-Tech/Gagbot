@@ -5,7 +5,7 @@ const { messageSend, messageSendImg, messageSendChannel, runMessageEvents } = re
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require("./vibefunctions.js");
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require("./headwearfunctions.js");
+const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
 const { getOption } = require(`./../functions/configfunctions.js`);
 const { getText } = require(`./../functions/textfunctions.js`);
 const { DOLLMAXPUNISHMENT, textGarbleDOLL } = require(`./../functions/dollfunctions.js`);
@@ -119,7 +119,7 @@ const getGag = (userID, gagbyname) => {
 		process.gags = {};
 	}
 	if (process.gags[userID] == undefined) {
-		process.gags[userID] = [];
+		return undefined;
 	}
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
@@ -142,7 +142,7 @@ const getGagLast = (userID) => {
 		process.gags = {};
 	}
 	if (process.gags[userID] == undefined) {
-		process.gags[userID] = [];
+		return undefined;
 	}
 
 	if (process.gags[userID].length > 0) {
@@ -333,6 +333,7 @@ const modifymessage = async (msg, threadId, messageonly) => {
 		let msgTreeMods = {"modified":false, "emojiModified":false, "corseted":false}	// Store a boolean in an object to allow pass by reference.
 
 		processHeadwearEmoji(msg.author.id, msgTree, msgTreeMods, getOption(msg.author.id, "dollvisorname"))
+        processHeadwearTruthgas(msg.author.id, msgTree, msgTreeMods)
 
 		// See if this message can be skipped. Messages containing only emoji do NOT need to be processed,
 		// But only if NOT wearing a headwear that replaces it in previous step.
