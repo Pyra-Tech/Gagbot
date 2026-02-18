@@ -405,6 +405,12 @@ const texts_collarequip = {
                             },
                             text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
                         },
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Sphere");
+                            },
+                            text: `USER_TAG throws a VAR_C3 at TARGET_TAG! It clunks off of TARGET_THEIR body before activating and pulling TARGET_THEM inside!`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -913,6 +919,12 @@ const texts_heavy = {
 				return t.c2.includes("Hands-off Blouse");
 			},
 			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
+		},
+        {
+			only: (t) => {
+				return t.c2.includes("Sphere");
+			},
+			text: `USER_TAG tosses a VAR_C2 in the air and lets it hit USER_THEIR head, activating its capture function and sealing USER_THEM inside!`,
 		},
 	],
 };
@@ -3672,6 +3684,24 @@ const texts_eventfunctions = {
 				], 
 				none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
 		},
+        capturesphere: {
+            wigglefail0: [
+                `*TARGET_TAG breaks free...*\nOh no! TARGET_THEY_CAP broke free!`
+            ],
+            wigglefail1: [
+                `*TARGET_TAG breaks free...*\nAww! TARGET_THEY_CAP appeared to be caught!`
+            ],
+            wigglefail2: [
+                `*TARGET_TAG breaks free...*\nAargh! Almost had it!`,
+                `*TARGET_TAG breaks free...*\nShoot! It was so close, too!`
+            ],
+            capturesuccess_other: [
+                `Gotcha! TARGET_TAG was caught!`
+            ],
+            capturesuccess_self: [
+                `Gotcha! TARGET_TAG... captured TARGET_THEMSELF!`
+            ]
+        }
 	},
 };
 
