@@ -3686,20 +3686,20 @@ const texts_eventfunctions = {
 		},
         capturesphere: {
             wigglefail0: [
-                `*TARGET_TAG breaks free...*\nOh no! TARGET_THEY_CAP broke free!`
+                `*USER_TAG breaks free...*\nOh no! USER_THEY_CAP broke free!`
             ],
             wigglefail1: [
-                `*TARGET_TAG breaks free...*\nAww! TARGET_THEY_CAP appeared to be caught!`
+                `*USER_TAG breaks free...*\nAww! USER_THEY_CAP appeared to be caught!`
             ],
             wigglefail2: [
-                `*TARGET_TAG breaks free...*\nAargh! Almost had it!`,
-                `*TARGET_TAG breaks free...*\nShoot! It was so close, too!`
+                `*USER_TAG breaks free...*\nAargh! Almost had it!`,
+                `*USER_TAG breaks free...*\nShoot! It was so close, too!`
             ],
             capturesuccess_other: [
-                `Gotcha! TARGET_TAG was caught!`
+                `Gotcha! USER_TAG was caught!`
             ],
             capturesuccess_self: [
-                `Gotcha! TARGET_TAG... captured TARGET_THEMSELF!`
+                `Gotcha! USER_TAG... captured USER_THEMSELF!`
             ]
         }
 	},
