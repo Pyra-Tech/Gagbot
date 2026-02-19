@@ -3,7 +3,7 @@ let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
 const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
-const { updateArousalValues } = require("./vibefunctions.js");
+const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
 const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
 const { getHeavy } = require("./heavyfunctions.js");
@@ -203,12 +203,14 @@ function importFileNames() {
     process.msgfunctions = {};
     process.modalfunctions = {};
     process.modalexecutefunctions = {};
+    process.onremovefunctions = {};
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
 		process.eventfunctions[f] = {};
         process.msgfunctions[f] = {};
         process.modalfunctions[f] = {};
         process.modalexecutefunctions[f] = {};
+        process.onremovefunctions[f] = {};
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
@@ -223,6 +225,9 @@ function importFileNames() {
             }
             if (typeof functionfile.modalexecute === "function") {
                 process.modalexecutefunctions[f][file.replace(".js", "")] = functionfile.modalexecute;
+            }
+            if (typeof functionfile.functiononremove === "function") {
+                process.onremovefunctions[f][file.replace(".js","")] = functionfile.functiononremove;
             }
 		});
 	});
@@ -297,6 +302,26 @@ function runProcessedEvents() {
 			if (getHeavy(userid)) {
 				if (process.eventfunctions.heavy && process.eventfunctions.heavy[getHeavy(userid).typeval]) {
 					process.eventfunctions.heavy[getHeavy(userid).typeval](userid);
+				}
+			}
+		});
+	}
+    // Chastity Belts
+	if (process.chastity) {
+		Object.keys(process.chastity).forEach((userid) => {
+			if (getChastity(userid)) {
+				if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype]) {
+					process.eventfunctions.chastity[getChastity(userid).chastitytype](userid);
+				}
+			}
+		});
+	}
+    // Chastity Bras
+	if (process.chastitybra) {
+		Object.keys(process.chastitybra).forEach((userid) => {
+			if (getChastityBra(userid)) {
+				if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype]) {
+					process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype](userid);
 				}
 			}
 		});
