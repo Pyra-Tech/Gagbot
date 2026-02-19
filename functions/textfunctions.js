@@ -1230,6 +1230,12 @@ const texts_struggle = {
 			},
 			text: `USER_TAG wiggles a little bit in VAR_C1, but a stern look quickly keeps USER_THEM in check.`,
 		},
+        {
+			only: (t) => {
+				return t.c1.endsWith("Sphere");
+			},
+			text: `USER_TAG squirms in USER_THEIR VAR_C1, enough to cause it to shake a bit on the outside! It's such a tiny digitized space USER_THEY USER_ISARE trapped in...`,
+		},
 	],
 	gag: {
 		heavy: [`Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`, `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`, `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`],
@@ -2462,6 +2468,12 @@ const texts_unheavy = {
 					return t.c2.endsWith("'s Lap");
 				},
 				text: `USER_TAG helps TARGET_TAG off of the warm lap TARGET_THEY TARGET_WERE laying on!`,
+			},
+            {
+				only: (t) => {
+					return t.c2.includes("Sphere");
+				},
+				text: `USER_TAG throws the VAR_C2 and out comes the captured TARGET_TAG!`,
 			},
 		],
 		noheavyequipped: { self: [`You aren't in any kind of heavy bondage!`], other: [`TARGET_TAG is not in any kind of heavy bondage!`] },

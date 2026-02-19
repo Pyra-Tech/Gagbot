@@ -207,6 +207,9 @@ const removeHeavy = (user) => {
 	if (process.heavy == undefined) {
 		process.heavy = {};
 	}
+    if (process.heavy[user] && process.heavy[user].typeval && process.onremovefunctions && process.onremovefunctions.heavy && process.onremovefunctions.heavy[process.heavy[user].typeval]) {
+        process.onremovefunctions.heavy[process.heavy[user].typeval](user);
+    }
 	delete process.heavy[user];
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
