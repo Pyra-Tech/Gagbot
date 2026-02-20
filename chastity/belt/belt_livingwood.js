@@ -12,6 +12,7 @@ exports.minArousal = (data) => { return 0.5 }
 exports.minVibe = function(data) {
     return Math.max(Math.min(Math.floor((Date.now() - (getUserVar(data.userID, "livingwood_chastity") ?? Date.now())) / 900000), 20), getUserVar(data.userID, "livingwood_vibe"))
 }
+
 exports.onOrgasm = (data) => {
     setUserVar(data.userID, "livingwood_vibe", Math.max((this.minVibe(data) - 10), 0))
     setUserVar(data.userID, "livingwood_chastity", Date.now());
