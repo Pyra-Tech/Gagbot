@@ -879,58 +879,65 @@ async function handleMajorRestraint(user, target, type, restraint) {
                 .setLabel("Allow (Wait...)")
                 .setStyle(ButtonStyle.Success)
                 .setDisabled(true)]
-		let dmchannel = await target.createDM();
-		await dmchannel
-			.send({ content: `${prompttext}\n-# You must wait 15 seconds for this button to activate...`, components: [new ActionRowBuilder().addComponents(...buttons)] })
-			.then(async (mess) => {
-				// Create a collector for up to 5 minutes
-				const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
 
-				collector.on("collect", async (i) => {
-					console.log(i);
-					if (i.customId == "acceptButton") {
-						await mess.delete().then(() => {
-							i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
-						});
-						res(true);
-					} else {
-						await mess.delete().then(() => {
-							i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
-						});
-						rej(true);
-					}
-				});
+        try {
+            let dmchannel = await target.createDM();
+            await dmchannel
+                .send({ content: `${prompttext}\n-# You must wait 15 seconds for this button to activate...`, components: [new ActionRowBuilder().addComponents(...buttons)] })
+                .then(async (mess) => {
+                    // Create a collector for up to 5 minutes
+                    const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
 
-				collector.on("end", async (collected) => {
-					// timed out
-					if (collected.length == 0) {
-						await mess.delete().then(() => {
-							i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
-						});
-						rej(true);
-					}
-				});
+                    collector.on("collect", async (i) => {
+                        console.log(i);
+                        if (i.customId == "acceptButton") {
+                            await mess.delete().then(() => {
+                                i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
+                            });
+                            res(true);
+                        } else {
+                            await mess.delete().then(() => {
+                                i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
 
-                // Wait 15 seconds before editing the message with the new components
-                await new Promise(resolve => setTimeout(resolve, 15000));
+                    collector.on("end", async (collected) => {
+                        // timed out
+                        if (collected.length == 0) {
+                            await mess.delete().then(() => {
+                                i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
 
-                let editedbuttons = [
-                    new ButtonBuilder()
-                        .setCustomId("denyButton")
-                        .setLabel("Deny")
-                        .setStyle(ButtonStyle.Danger), 
-                    new ButtonBuilder()
-                        .setCustomId("acceptButton")
-                        .setLabel("Allow")
-                        .setStyle(ButtonStyle.Success)
-                ]
+                    // Wait 15 seconds before editing the message with the new components
+                    await new Promise(resolve => setTimeout(resolve, 15000));
 
-                mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
-            })
-			.catch((err) => {
-				console.log(`Error sending message to major bind ${user}.`);
-				rej("NoDM");
-			});
+                    let editedbuttons = [
+                        new ButtonBuilder()
+                            .setCustomId("denyButton")
+                            .setLabel("Deny")
+                            .setStyle(ButtonStyle.Danger), 
+                        new ButtonBuilder()
+                            .setCustomId("acceptButton")
+                            .setLabel("Allow")
+                            .setStyle(ButtonStyle.Success)
+                    ]
+
+                    mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
+                })
+                .catch((err) => {
+                    console.log(`Error sending message to major bind ${user}.`);
+                    rej("NoDM");
+                });
+        }
+        catch (err) {
+            console.log(err);
+            rej("NoDM")
+        }
 	});
 }
 
