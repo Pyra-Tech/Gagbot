@@ -12,13 +12,9 @@ exports.growthCoefficient = (data) => { return 1.5 }
 
 // Edge Control Functions
 // Vibe Level
-exports.vibelevel = (data) => { return 0
-}
+exports.vibelevel = (data) => { return 0 }
 exports.minVibe = function(data) {
-    threshold = fetchArousalThreshold(data.userID);
-    arousal = getArousal(data.userID);
-    console.log(arousal/threshold)
-    if(getUserVar(data.userID, "edgeBeltMode") == "Go2Edge" || getUserVar(data.userID, "edgeBeltMode") == "Edging" && arousal/threshold < 1) { return 20; }
+    if(getUserVar(data.userID, "edgeBeltMode") == "Go2Edge" || getUserVar(data.userID, "edgeBeltMode") == "Edging" && fetchEdgeThreshold(data.userID) < 1) { return 20; }
     return 0;
 }
 
@@ -53,6 +49,13 @@ function fetchArousalThreshold(userID) {
     orgasmLimit = ORGASM_LIMIT;
 
     return targetorgasmthresh = orgasmLimit * denialCoefficient;
+}
+
+function fetchEdgeThreshold(userID) {
+    threshold = fetchArousalThreshold(userID);
+    arousal = getArousal(userID);
+    console.log(arousal/threshold)
+    return getArousal(userID) / fetchArousalThreshold(userID)
 }
 
 // Name
