@@ -1,10 +1,9 @@
-const { data } = require("../../commands/letgo")
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
 const { getArousal, addArousal } = require("../../functions/vibefunctions")
 
 
 // Edge Training Belt 
-exports.functiontick = async (userID) => {
+let functiontick = async function(userID) {
     try 
     {
         // Cancel until the user has said AT LEAST 3 things then set flag for next message to print and reset counter
@@ -15,22 +14,22 @@ exports.functiontick = async (userID) => {
         }
 
         // Trigger Edging Belt to bring user to Edge when timer expires. Then Set 10min default cooldown
-        if(getUserVar(data.userID, "edgeBeltTimer") < Date.now()){
-            setUserVar(data.userID, "edgeBeltMode", "Go2Edge")
-            setUserVar(data.userID, "edgeBeltTimer", Date.now() + 600000)
+        if(getUserVar(userID, "edgeBeltTimer") < Date.now()){
+            setUserVar(userID, "edgeBeltMode", "Go2Edge")
+            setUserVar(userID, "edgeBeltTimer", Date.now() + 600000)
         }
 
         // When Wearer Reaches Edge Range, Start Timer and Edge for 2 mins
-        if(getUserVar(data.userID, "edgeBeltMode") == "Go2Edge" && getUserVar(data.userID, "edgeSessionTimer") < Date.now() && edgeCheck(data.userID)){
-            setUserVar(data.userID, "edgeBeltMode", "Edging")
-            setUserVar(data.userID, "edgeSessionTimer", Date.now() + 120000)
+        if(getUserVar(userID, "edgeBeltMode") == "Go2Edge" && getUserVar(userID, "edgeSessionTimer") < Date.now() && edgeCheck(userID)){
+            setUserVar(userID, "edgeBeltMode", "Edging")
+            setUserVar(userID, "edgeSessionTimer", Date.now() + 120000)
         }
 
         // When Wearer Finishes Edging, Increment Count and update Main Timer Cooldown to 10 mins before setting the Belt in Sleep Mode
-        if(getUserVar(data.userID, "edgeBeltMode") == "Edging" && getUserVar(data.userID, "edgeSessionTimer") < Date.now()){
-            setUserVar(data.userID, "edgeCount", getUserVar(data.userID, "edgeCount") + 1);
-            setUserVar(data.userID, "edgeBeltTimer", Date.now() + 600000)
-            setUserVar(data.userID, "edgeBeltMode", "Sleep")
+        if(getUserVar(userID, "edgeBeltMode") == "Edging" && getUserVar(userID, "edgeSessionTimer") < Date.now()){
+            setUserVar(userID, "edgeCount", getUserVar(userID, "edgeCount") + 1);
+            setUserVar(userID, "edgeBeltTimer", Date.now() + 600000)
+            setUserVar(userID, "edgeBeltMode", "Sleep")
         }
             
     }catch (err) {
@@ -57,3 +56,5 @@ function edgeCheck(userID){
 exports.msgfunction = (userid, data) => {
     setUserVar(userid, "edgeBeltMsgs", (getUserVar(userid, "edgeBeltMsgs") ?? 1) + 1); 
 }
+
+exports.functiontick = functiontick;
