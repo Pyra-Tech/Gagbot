@@ -9,19 +9,15 @@ async function functiontick(userID) {
     // Init Countdown Variable on First Run if not already present
     if (getUserVar(userID, "confectionaryDissolveTimer") == undefined) {
         setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
-        console.log(getGag(userID, "jawbreaker"), ": ", getGag(userID, "jawbreaker").intensity)
-        messageSendChannel(`<@${userID}> starts to suck on their jawbreaker gag... this won't take long~`, process.recentmessages[userID])
     }
 
     // Decrement Intensity every timer interval
     if (getUserVar(userID, "confectionaryDissolveTimer") < Date.now() && getGag(userID, "jawbreaker")) {
-        console.log(getGag(userID, "jawbreaker"), ": ",getGag(userID), ": ", getGag(userID, "jawbreaker").intensity)
         if(getGag(userID, "jawbreaker").intensity > 1){
             setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
             // Get Intensity and push decremented version
             let oldIntensity = getGag(userID, "jawbreaker").intensity
             assignGag(userID, "jawbreaker", oldIntensity - 1)
-
             messageSendChannel(`<@${userID}>'s jawbreaker gag has shrunk~`, process.recentmessages[userID])
         }
         else {
