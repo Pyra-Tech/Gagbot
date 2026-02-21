@@ -3,7 +3,7 @@ const { messageSendChannel } = require("../../functions/messagefunctions")
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
 const { getGag, assignGag, deleteGag} = require("../../functions/gagfunctions.js");
 
-const DISSOLVE_RATE_MS = 1800000;
+const DISSOLVE_RATE_MS = 1200000;
 
 async function functiontick(userID) {
     // Init Countdown Variable on First Run if not already present
