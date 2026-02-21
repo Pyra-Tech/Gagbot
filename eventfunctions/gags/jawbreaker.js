@@ -1,0 +1,35 @@
+const { getOption } = require("../../functions/configfunctions")
+const { messageSendChannel } = require("../../functions/messagefunctions")
+const { getUserVar, setUserVar } = require("../../functions/usercontext")
+const { getGag, assignGag, deleteGag} = require("../../functions/gagfunctions.js");
+
+const DISSOLVE_RATE_MS = 1800000;
+
+async function functiontick(userID) {
+    // Init Countdown Variable on First Run if not already present
+    if (getUserVar(userID, "confectionaryDissolveTimer") == undefined) {
+        setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
+        messageSendChannel(`<@${userID}> starts to suck on their jawbreaker gag... this may take some time~`, process.recentmessages[userID])
+    }
+
+    // Decrement Intensity every timer interval
+    if (getUserVar(userID, "confectionaryDissolveTimer") < Date.now() && getGag(userID, "jawbreaker")) {
+        console.log(`Clearing silence timer for ${userID}`)
+        if(getGag(userID, "jawbreaker").intensity > 1){
+            setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
+            // Get Intensity and push decremented version
+            let oldIntensity = getGag(userID, "jawbreaker").intensity
+            assignGag(userID, "jawbreaker", oldIntensity - 1)
+
+            messageSendChannel(`<@${userID}>'s jawbreaker gag has shrunk~`, process.recentmessages[userID])
+        }
+        else {
+            // Clear Gag and Dissolve Timer
+            setUserVar(userID, "confectionaryDissolveTimer", undefined)
+            deleteGag(userID, "jawbreaker")
+            messageSendChannel(`<@${userID}>'s jawbreaker gag has dissolved away~`, process.recentmessages[userID])
+        }
+    }
+}
+
+exports.functiontick = functiontick;
