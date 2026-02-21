@@ -116,6 +116,7 @@ const heavytypes = [
 	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["latex"], denialCoefficient: 5 },
     { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", denialCoefficient: 5 },
     { name: "Capture Sphere", value: "capture_sphere", denialCoefficient: 3 },
+    { name: "Love Sphere", value: "capture_sphere_love", denialCoefficient: 3 },
     { name: "Great Sphere", value: "capture_sphere_great", denialCoefficient: 5 },
     { name: "Ultra Sphere", value: "capture_sphere_ultra", denialCoefficient: 7 },
     { name: "Master Sphere", value: "capture_sphere_master", denialCoefficient: 9 },
