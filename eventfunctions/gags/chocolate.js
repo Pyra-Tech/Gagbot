@@ -10,7 +10,7 @@ async function functiontick(userID) {
     if (getUserVar(userID, "confectionaryDissolveTimer") == undefined) {
         setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
         console.log(getGag(userID, "chocolate"), ": ", getGag(userID, "chocolate").intensity)
-        //messageSendChannel(`<@${userID}> starts to suck on their chocolate gag... this won't take long~`, process.recentmessages[userID])
+        messageSendChannel(`<@${userID}> starts to suck on their chocolate gag... this won't take long~`, process.recentmessages[userID])
     }
 
     // Decrement Intensity every timer interval
@@ -22,13 +22,13 @@ async function functiontick(userID) {
             let oldIntensity = getGag(userID, "chocolate").intensity
             assignGag(userID, "chocolate", oldIntensity - 1)
 
-            //messageSendChannel(`<@${userID}>'s chocolate gag has shrunk~`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s chocolate gag has shrunk~`, process.recentmessages[userID])
         }
         else {
             // Clear Gag and Dissolve Timer
             setUserVar(userID, "confectionaryDissolveTimer", undefined)
             deleteGag(userID, "chocolate")
-            //messageSendChannel(`<@${userID}>'s chocolate gag has dissolved away~`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s chocolate gag has dissolved away~`, process.recentmessages[userID])
         }
     }
 }
