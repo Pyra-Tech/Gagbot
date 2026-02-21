@@ -22,9 +22,9 @@ let functiontick = async (userID) => {
             if (getChastity(userID)?.keyholder == origbinder) { capturerate = 8.0 }
             if (getChastityBra(userID)?.keyholder == origbinder) { capturerate = 8.0 }
             if (getCollar(userID)?.keyholder == origbinder) { capturerate = 8.0 }
-            if (getClonedChastityKey(userID).includes(userID)) { capturerate = 8.0 }
-            if (getClonedChastityBraKey(userID).includes(userID)) { capturerate = 8.0 }
-            if (getClonedCollarKey(userID).includes(userID)) { capturerate = 8.0 }
+            if (getClonedChastityKey(userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedChastityBraKey(userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedCollarKey(userID).includes(origbinder)) { capturerate = 8.0 }
         }
         process.userevents[userID].capturesphere = { 
             capture: calculatecapture(userID, capturerate), 
