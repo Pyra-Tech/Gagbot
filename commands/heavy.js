@@ -67,6 +67,16 @@ module.exports = {
 				return;
 			}
 			let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
+            let tags = getUserTags(targetuser.id);
+            let i = getBaseHeavy(heavychoice)
+            tags.forEach((t) => {
+                if (i && i.tags && i.tags.includes(t) && (targetuser.id != interaction.user.id)) {
+                    interaction.reply({ content: `${targetuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                    blocked = true;
+                    return;
+                }
+            })
+            if (blocked) { return } // GO AWAY
 			// Build data tree:
 			let data = {
 				textarray: "texts_heavy",
@@ -100,7 +110,7 @@ module.exports = {
                     // Someone else!
                     data.other = true;
                     await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
-                        await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
+                        await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
                             async (success) => {
                                 await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
                                 await interaction.followUp(getText(data));
@@ -137,7 +147,7 @@ module.exports = {
                 }
                 else {
                     data.self = true;
-                    await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
+                    await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
                         async (success) => {
                             await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
                             await interaction.followUp(getText(data));
