@@ -460,7 +460,7 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 					}
                 }
                 if(process.gagtypes[gag.gagtype].garbleText){
-					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5])		// Run garble on all IC segments.
+					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5, msg.author.id])		// Run garble on all IC segments.
 					msgTreeMods.modified = true;
 				}
                 if (process.gagtypes[gag.gagtype].messageend) {												// Run messageEnd

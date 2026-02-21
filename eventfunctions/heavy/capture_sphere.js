@@ -23,8 +23,9 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
 
     // Catch rate will be a base of 150, minus 10 for each held key, down to 3 (the catch rate for Articuno!)
     let heldkeysnum = [...getClonedChastityBraKeysOwned(userid), ...getClonedChastityKeysOwned(userid), ...getClonedCollarKeysOwned(userid),
-                    ...getChastityKeys(userid), ...getChastityBraKeys(userid), ...getCollarKeys(userid)].length
-    let catchrate = Math.max(150 - (heldkeysnum * 10), 3)
+                    ...getChastityKeys(userid), ...getChastityBraKeys(userid), ...getCollarKeys(userid)]
+    console.log(`${userid} Catchrate: ${Math.max(150 - (heldkeysnum.length * 10), 3)}`)
+    let catchrate = Math.max(150 - (heldkeysnum.length * 10), 3)
     let ballbonus = ballbonusnum;
 
     // Bonus if the target is bound!
@@ -46,12 +47,16 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     let modifiedcatchrate = hpnum * 4096 * darkgrass * catchrate * ballbonus * statusbonus;
 
     // If the modifiedcatchrate is higher than 1044480, then we can just return set of 3 trues, as this is guaranteed catch
-    if (modifiedcatchrate >= 1044480) { return [true, true, true] }
+    if (modifiedcatchrate >= 1044480) { 
+        console.log(`Guaranteed Capture! ${modifiedcatchrate} higher than 1044480!`)
+        return [true, true, true] 
+    }
     
     // Otherwise, we need to calculate shakes. We'll do 3 shakes. 
     else {
         let brokenfree = false;
         let shake_b = Math.floor(65536 / Math.sqrt(Math.sqrt(16711680 / modifiedcatchrate))); // fourth root
+        console.log(`Chance to capture: ${(Math.floor(Math.pow((65535 - shake_b) / 65535, 3)* 100))}%`)
         for (let i = 0; i < 3; i++) {
             // Random number
             let randomnum = Math.floor(Math.random() * 65535)
