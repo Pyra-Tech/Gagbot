@@ -377,6 +377,9 @@ const modifymessage = async (msg, threadId, messageonly) => {
 
         // Get the user's current display name based on worn restraints
         let userdisplayName = getAlternateName(msg.member);
+        if (userdisplayName != msg.member.displayName) {
+            msgTreeMods.modified = true;
+        }
 
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
