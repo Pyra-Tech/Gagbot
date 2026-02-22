@@ -807,6 +807,39 @@ const configoptions = {
 				return false;
 			},
 		},
+        engravedcollarname: {
+			name: "Engraved Collar Name",
+			desc: "Name while wearing engraved collar",
+			descmodal: "What should your name be while collared with the Engraved Collar?",
+			choices: [
+				{
+					name: "Set Name",
+					helptext: "Engraved Collar Name set to: ",
+					helptextnone: "*No Engraved Collar Name*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Your name...`;
+			},
+			placeholder: (userID) => {
+				return `Your name...`;
+			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
 	},
     Content: {
         "wearabletags-latex": {

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName } = require(`./../functions/messagefunctions.js`);
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require("./vibefunctions.js");
@@ -375,11 +375,14 @@ const modifymessage = async (msg, threadId, messageonly) => {
             return outtext;
         }
 
+        // Get the user's current display name based on worn restraints
+        let userdisplayName = getAlternateName(msg.member);
+
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
             // If the message content is *exactly* the same as the input, return
             if (msg.content === outtext) { return }
-			await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol, msgTreeMods.emojiModified );
+			await sendTheMessage(msg, outtext, userdisplayName, threadId, dollProtocol, msgTreeMods.emojiModified );
 		}
 	} catch (err) {
 		console.log(err);
