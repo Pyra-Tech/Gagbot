@@ -69,6 +69,7 @@ module.exports = {
 			let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
             let tags = getUserTags(targetuser.id);
             let i = getBaseHeavy(heavychoice)
+            let blocked = false;
             tags.forEach((t) => {
                 if (i && i.tags && i.tags.includes(t) && (targetuser.id != interaction.user.id)) {
                     interaction.reply({ content: `${targetuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
