@@ -265,7 +265,7 @@ function runMessageEvents(data) {
 function getAlternateName(user) {
     let outname = user.displayName // We're putting a member object in here
     // Handle pet collar name
-    if (getCollar(user.id).collartype == "collarengraved") {
+    if (getCollar(user.id)?.collartype == "collarengraved") {
         if (getOption(user.id, "engravedcollarname") && getOption(user.id, "engravedcollarname").length > 0) {
             outname = getOption(user.id, "engravedcollarname");
         }
