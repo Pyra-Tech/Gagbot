@@ -36,6 +36,7 @@ module.exports = {
                             Object.keys(engravedpettags).forEach((k) => {
                                 // If the visor matches, then we found our doll!
                                 if (message.author.username.startsWith(engravedpettags[k])) {
+                                    console.log(`Matched ${k}`);
                                     founduserid = k
                                 }
                             })
