@@ -22,8 +22,8 @@ module.exports = {
                 await interaction.reply({ content: `Resetting ${resetuser}`, flags: MessageFlags.Ephemeral });
                 deleteGag(resetuser.id);
                 deleteMitten(resetuser.id);
-                removeChastity(resetuser.id, true);
-                removeChastityBra(resetuser.id, true);
+                removeChastity(resetuser.id, undefined, true);
+                removeChastityBra(resetuser.id, undefined, true);
                 if (process.toys) {
                     delete process.toys[resetuser.id];
                 }
@@ -42,8 +42,8 @@ module.exports = {
                     await interaction.reply({ content: "Resetting all of your restraints because you are safeworded.", flags: MessageFlags.Ephemeral });
                     deleteGag(interaction.user.id);
                     deleteMitten(interaction.user.id);
-                    removeChastity(interaction.user.id);
-                    removeChastityBra(interaction.user.id);
+                    removeChastity(interaction.user.id, undefined, true);
+                    removeChastityBra(interaction.user.id, undefined, true);
                     if (process.toys) {
                         delete process.toys[interaction.user.id];
                     }

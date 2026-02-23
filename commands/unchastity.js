@@ -193,7 +193,7 @@ module.exports = {
 						if (getChastityBra(chastitywearer.id)) {
 							// We are in chastity
 							data.chastity = true;
-							if (getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "bra_silver").canUnequip({ userID: chastitywearer.id, keyholderID: interaction.user.id })) {
+							if (getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").canUnequip({ userID: chastitywearer.id, keyholderID: interaction.user.id })) {
 								// We have the key to our belt
 								data.key = true;
 								const fumbleResult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
@@ -232,7 +232,7 @@ module.exports = {
 						if (getChastityBra(chastitywearer.id)) {
 							// They are in chastity
 							data.chastity = true;
-							if (getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "bra_silver").canUnequip({ userID: chastitywearer.id, keyholderID: interaction.user.id })) {
+							if (getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").canUnequip({ userID: chastitywearer.id, keyholderID: interaction.user.id })) {
 								// We have their chastity key or otherwise have access
 								data.key = true;
 								const fumbleResult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
