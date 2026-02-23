@@ -245,7 +245,6 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 ]
                 // If the Doll has configured forbidden words, add those to the array. 
                 if (getOption(msg.author.id, "dollpunishwords")) {
-                    console.log(getOption(msg.author.id, "dollpunishwords"))
                     getOption(msg.author.id, "dollpunishwords").forEach((r) => {
                         // Each of these is a regexp already, so adding them is easy!
                         uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${r})(?:\\w|\\d)*\\b`, "gi"), value: 2, type: "redact", string: r } )

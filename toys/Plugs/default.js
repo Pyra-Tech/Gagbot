@@ -1,0 +1,61 @@
+const { getBaseChastity } = require("../../functions/chastityfunctions")
+const { getOption } = require("../../functions/configfunctions")
+const { canAccessChastity, addArousal, getChastity } = require("../../functions/vibefunctions")
+
+// These values are used whenever they're unspecified on the plug in this folder.
+// Arousal gain per intensity for this plug type
+// We PROBABLY should add some form of having the plugs be unique
+// Arousal will typically have a much larger gain on adding, but weaker gain overall. 
+exports.vibescale = (data) => { return 0.3 }
+
+// Intensity change for this plug type
+exports.intensitychange = (data) => { return 0 }
+
+// Post Letgo
+exports.postLetGo = (data) => { return false }
+
+// Condition for allowing equip
+exports.canEquip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
+
+// Condition for allowing unequip
+exports.canUnequip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
+
+// Condition to force unequip on refresh
+exports.forceUnequip = (data) => { return false }
+
+// Condition to check if wearer is wearing a potential blocker
+exports.blocker = (data) => { return getChastity(data.userID) }
+
+// Condition to allow modification
+exports.canModify = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) };
+
+// Condition that rolls a fumble function from the blocking device, returning it's results
+// 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
+exports.fumble = (data) => {
+    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").fumble(data);
+};
+
+// Discard function if the .fumble causes it
+exports.discard = (data) => {
+    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").discard(data);
+}
+
+// Action when equipping
+exports.onEquip = (data) => { addArousal(data.userID, data.intensity) };
+
+// Action when unequipping - The relief is so good, arouse them again. 
+// Since data.intensity is gone, lets just add a flat 5
+exports.onUnequip = (data) => { addArousal(data.userID, 5) };
+
+// Calculation for effective arousal
+// Note, this should be used for checks more focused around the plug - it will be
+// further multiplied by the chastity's checks for this, if applicable. 
+exports.calcVibeEffect = function (data) { 
+    return data.intensity * this.vibescale()
+}
+
+// Name for the toy!
+exports.toyname = "Default Plug"
+
+// Category Name for the toy
+exports.category = "Plug"
