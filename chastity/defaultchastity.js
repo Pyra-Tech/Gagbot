@@ -62,6 +62,12 @@ function Chastity() {
     // Can Unequip. Returns true if the wearer can remove this. 
     this.canUnequip = (data) => { return true }
 
+    // Can Access Toys. Returns true if the person can access the toys this chastity might block
+    this.canAccessToys = (data) => { return false }
+
+    // Can Access Corset. Returns true if the person can access their corset. Only used for belts probably. 
+    this.canAccessCorset = (data) => { return false }
+
     // Event: On Orgasm. Fired when the wearer successfully orgasms. 
     this.onOrgasm = (data) => { return false }
 
@@ -79,6 +85,12 @@ function Chastity() {
 
     // Event: After Arousal Change. Fired when the wearer's arousal changes
     this.afterArousalChange = (data) => { return false }
+
+    // Event: Fired after toys are changed.
+    this.onToyChange = (data) => { return true }
+
+    // Event: Fired after corset is changed. Needs further Implementation. 
+    this.onCorsetChange = (data) => { return true }
 
     // Calculate Arousal change
     this.calcVibeEffect = function (data) { return (this.vibelevel() * this.vibeScaling()) }

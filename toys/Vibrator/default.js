@@ -13,10 +13,10 @@ exports.intensitychange = (data) => { return 0 }
 exports.postLetGo = (data) => { return false }
 
 // Condition for allowing equip
-exports.canEquip = (data) => { return (!canAccessChastity(data.userID, data.keyholderID).hasbelt || canAccessChastity(data.userID, data.keyholderID).access) }
+exports.canEquip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
 
 // Condition for allowing unequip
-exports.canUnequip = (data) => { return (!canAccessChastity(data.userID, data.keyholderID).hasbelt || canAccessChastity(data.userID, data.keyholderID).access) }
+exports.canUnequip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
 
 // Condition to force unequip on refresh
 exports.forceUnequip = (data) => { return false }
@@ -25,17 +25,17 @@ exports.forceUnequip = (data) => { return false }
 exports.blocker = (data) => { return getChastity(data.userID) }
 
 // Condition to allow modification
-exports.canModify = (data) => { return (!canAccessChastity(data.userID, data.keyholderID).hasbelt || canAccessChastity(data.userID, data.keyholderID).access) };
+exports.canModify = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) };
 
 // Condition that rolls a fumble function from the blocking device, returning it's results
 // 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
 exports.fumble = (data) => {
-    return getBaseChastity(getChastity(data.userID).chastitytype).fumble(data);
+    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").fumble(data);
 };
 
 // Discard function if the .fumble causes it
 exports.discard = (data) => {
-    return getBaseChastity(getChastity(data.userID).chastitytype).discard(data);
+    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").discard(data);
 }
 
 // Action when equipping

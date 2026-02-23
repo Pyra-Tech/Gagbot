@@ -100,8 +100,8 @@ module.exports = {
 				let tags = getUserTags(corsetuser.id);
 				let i = getBaseCorset(type);
 				tags.forEach((t) => {
-					if (i && i.tags && i.tags.includes(t) && wearableuser != interaction.user) {
-						interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
+					if (i && i.tags && i.tags.includes(t) && corsetuser != interaction.user) {
+						interaction.reply({ content: `${corsetuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
 						blocked = true;
 						return;
 					}
@@ -138,7 +138,7 @@ module.exports = {
 				data.noheavy = true;
 				data.chastity = true;
 				// The target is in a chastity belt
-				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
+				if (getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").canAccessCorset({ userID: corsetuser.id, keyholderID: interaction.user.id })) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
 					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id });

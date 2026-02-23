@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { getOption } = require("./configfunctions");
+const { getBaseChastity } = require("./chastityfunctions");
 
 // Imports each toy in ./toys and makes them accessible as objects
 // in process.toyslist mapped to their respective ids.
@@ -77,6 +78,9 @@ function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbin
     // Toy already exists, modify it to the new intensity, if allowed. 
     if (toy) {
         if (vibe.canModify({ userID: user, keyholderID: keyholder ?? user })) {
+            if (vibe.blocker({ userID: user }) && getBaseChastity(vibe.blocker({ userID: user }).chastitytype)) {
+                getBaseChastity(vibe.blocker({ userID: user }).chastitytype).onToyChange({ userID: user, keyholderID: keyholder ?? user, currentToys: process.toys[user], newToy: { type: toytype, intensity: intensity, origbinder: origbinder }, action: "modify" })
+            } 
             toy.intensity = intensity
             if (process.readytosave == undefined) {
                 process.readytosave = {};
@@ -91,6 +95,9 @@ function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbin
     // Toy does not exist, add it! 
     else {
         if (vibe.canEquip({ userID: user, keyholderID: keyholder ?? user })) {
+            if (vibe.blocker({ userID: user }) && getBaseChastity(vibe.blocker({ userID: user }).chastitytype)) {
+                getBaseChastity(vibe.blocker({ userID: user }).chastitytype).onToyChange({ userID: user, keyholderID: keyholder ?? user, currentToys: process.toys[user], newToy: { type: toytype, intensity: intensity, origbinder: origbinder }, action: "add" })
+            } 
             process.toys[user].push({
                 type: toytype,
                 intensity: intensity,
@@ -132,6 +139,9 @@ function removeToy(user, toytype) {
     let index = process.toys[user].findIndex((toy) => toy.type == toytype)
     if (index > -1) {
         let vibe = process.toytypes[toytype];
+        if (vibe && vibe.blocker({ userID: user }) && getBaseChastity(vibe.blocker({ userID: user }).chastitytype)) {
+            getBaseChastity(vibe.blocker({ userID: user }).chastitytype).onToyChange({ userID: user, keyholderID: keyholder ?? user, currentToys: process.toys[user], newToy: { type: toytype, intensity: vibe.intensity, origbinder: vibe.origbinder }, action: "remove"})
+        } 
         if (vibe && vibe.onUnequip) {
             vibe.onUnequip({ userID: user });
         }
