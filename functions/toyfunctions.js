@@ -133,7 +133,7 @@ function getBaseToy(toytype) {
     return process.toytypes[toytype];
 }
 
-function removeToy(user, toytype) {
+function removeToy(user, keyholder, toytype) {
     if (process.toys == undefined) { process.toys = {} }
     if (process.toys[user] == undefined) { process.toys[user] = [] }
     let index = process.toys[user].findIndex((toy) => toy.type == toytype)

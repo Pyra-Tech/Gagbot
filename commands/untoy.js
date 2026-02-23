@@ -154,7 +154,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, toytype)
+                                    removeToy(toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -169,7 +169,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, toytype)
+                            removeToy(toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }
@@ -211,7 +211,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, toytype)
+                                    removeToy(toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -226,7 +226,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, toytype)
+                            removeToy(toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }
