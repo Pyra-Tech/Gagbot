@@ -186,7 +186,7 @@ const deleteGag = (userID, specificgag) => {
 		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
 		if (loc > -1) {
             if (process.gagtypes[process.gags[userID][loc].gagtype] && process.gagtypes[process.gags[userID][loc].gagtype].onUnlock) {
-                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock(userID);
+                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock({ userID: userID });
             }
 			process.gags[userID].splice(loc, 1);
 		}

@@ -88,7 +88,7 @@ exports.choicename = "Jawbreaker Gag";
 
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
-	setUserVar(userID, "confectionaryDissolveTimer", undefined)
+	setUserVar(data.userID, "confectionaryDissolveTimer", undefined)
 }
 
 // Unit Tests
