@@ -105,7 +105,7 @@ let wearabletypes = [
 	{ name: "Shock Module", value: "shock_module", category: "Bondage" },
 	{ name: "Crop", value: "crop", category: "Bondage" },
 	{ name: "Leather Paddle", value: "paddle_leather", colorable: true, category: "Bondage", uniqueColors: ["Studded"] },
-	{ name: "Leash", value: "leash", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic"] },
+	{ name: "Leash", value: "leash", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic", "Silk"] },
 	{ name: "Nipple Clamps", value: "nippleclamps", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic", "Crystal"] },
 	{ name: "Wingbinders", value: "wingbinders", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 	{ name: "Tail Bindings", value: "tail_bind", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
