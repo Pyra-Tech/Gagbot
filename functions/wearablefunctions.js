@@ -140,6 +140,7 @@ let wearabletypes = [
 	{ name: "Tube Top", value: "top_tube", colorable: true, category: "Upper Body", uniqueColors: ["Latex"] },
 	{ name: "Bandeau", value: "bandeau", colorable: true, category: "Upper Body", uniqueColors: ["Floral", "Leafy"] },
 	{ name: "Floaty Silk Top", value: "top_floatysilk", colorable: true, category: "Upper Body" },
+	{ name: "Silk Shawl", value: "shawl_silk", colorable: true, category: "Upper Body" },
 	{ name: "Mesh Top", value: "top_mesh", colorable: true, category: "Upper Body" },
 	{ name: "Lycra Top", value: "top_lycra", colorable: true, category: "Upper Body" },
 	{ name: "Checked Shirt", value: "shirt_checked", colorable: true, category: "Upper Body" },
