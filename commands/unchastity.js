@@ -41,7 +41,7 @@ module.exports = {
 			data[braorbelt] = true;
 			if (braorbelt == "chastitybelt") {
 				// Trying to take off a chastity belt
-				if (getHeavy(interaction.user.id)) {
+				if (!getHeavyBound(interaction.user.id, chastitywearer.id)) {
 					// In heavy bondage, cannot take off the belt anyway
 					data.heavy = true;
 					if (chastitywearer == interaction.user) {
@@ -155,7 +155,7 @@ module.exports = {
 				}
 			} else {
 				// Trying to take off a chastity bra
-				if (getHeavy(interaction.user.id)) {
+				if (!getHeavyBound(interaction.user.id, chastitywearer.id)) {
 					// In heavy bondage, cannot take off the belt anyway
 					data.heavy = true;
 					if (chastitywearer == interaction.user) {

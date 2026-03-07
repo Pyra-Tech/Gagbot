@@ -278,7 +278,7 @@ module.exports = {
                 }
 			}
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, collareduser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
 			} else if (collareduser == interaction.user) {

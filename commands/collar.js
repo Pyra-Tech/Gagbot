@@ -80,7 +80,7 @@ module.exports = {
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
 				if (getCollar(interaction.user.id)) {
 					data.collar = true;
@@ -138,7 +138,7 @@ module.exports = {
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
 				if (getCollar(interaction.user.id)) {
 					data.collar = true;

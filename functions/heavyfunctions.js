@@ -239,35 +239,41 @@ const assignHeavy = (user, type, origbinder, customname) => {
 /*************
  * Get Heavy Bondage worn by user ID. Check for falsy values to determine if they're free. Returns the most RELEVANT heavy bondage in the list (arms -> legs -> container). See getHeavyList to retrieve all of them.
  * - **(user id) user** to retrieve bondage for
+ * - **(string) type** to retrieve a specific bondage, if worn. 
  *************/
-const getHeavy = (user) => { 
+const getHeavy = (user, type) => { 
 	if (process.heavy == undefined) {
 		process.heavy = {};
 	}
+    let returnedval;
     if (process.heavy[user]) {
-        let mapped = process.heavy[user].map((h) => getBaseHeavy(h.type))
-        // return arms first
-        mapped.forEach((h) => {
-            if (h.heavytags.includes("arms")) {
-                return process.heavy[user].find((heavy) => heavy.type === h.value)
-            }
-        })
-        // return legs next
-        mapped.forEach((h) => {
-            if (h.heavytags.includes("legs")) {
-                return process.heavy[user].find((heavy) => heavy.type === h.value)
-            }
-        })
-        // return container last
-        mapped.forEach((h) => {
-            if (h.heavytags.includes("container")) {
-                return process.heavy[user].find((heavy) => heavy.type === h.value)
-            }
-        })
+        if (!type) {
+            let mapped = process.heavy[user].map((h) => getBaseHeavy(h.type))
+        
+            // return arms first
+            mapped.forEach((h) => {
+                if (h.heavytags.includes("arms")) {
+                    returnedval = process.heavy[user].find((heavy) => heavy.type === h.value)
+                }
+            })
+            // return legs next
+            mapped.forEach((h) => {
+                if (h.heavytags.includes("legs")) {
+                    returnedval = process.heavy[user].find((heavy) => heavy.type === h.value)
+                }
+            })
+            // return container last
+            mapped.forEach((h) => {
+                if (h.heavytags.includes("container")) {
+                    returnedval = process.heavy[user].find((heavy) => heavy.type === h.value)
+                }
+            })
+        }
+        else {
+            returnedval = process.heavy[user].find((h) => h.type === type);
+        }
     }
-	else {
-        return undefined;
-    }
+    return returnedval
 };
 
 /*************

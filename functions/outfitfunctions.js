@@ -10,7 +10,7 @@ const { getCorset, getBaseCorset } = require("./corsetfunctions");
 const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys, getArousalDescription, getArousalChangeDescription } = require("./vibefunctions");
 const { getChastityBra } = require("./vibefunctions");
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
-const { getHeavy, convertheavy, getBaseHeavy, getHeavyList } = require("./heavyfunctions");
+const { getHeavy, convertheavy, getBaseHeavy, getHeavyList, getHeavyRestrictions } = require("./heavyfunctions");
 const { canAccessChastity } = require("./vibefunctions");
 const { canAccessChastityBra } = require("./vibefunctions");
 const { getChastityName } = require("./vibefunctions");
@@ -756,6 +756,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
             wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
+            let heavyrestrictions = getHeavyRestrictions(inspectuserID);
+            wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Arms: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Legs: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
         }
 
         // Chastity Belt

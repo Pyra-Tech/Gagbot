@@ -28,7 +28,7 @@ module.exports = {
                     c2: getMittenName(getMitten(mitteneduser.id)?.mittenname) ?? "mittens"
 				},
 			};
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, mitteneduser.id)) {
 				data.heavy = true;
 				if (interaction.options.getUser("user") == interaction.user) {
 					data.self = true;

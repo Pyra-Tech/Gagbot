@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, removeHeavy, convertheavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, removeHeavy, convertheavy, getHeavyList, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
@@ -9,8 +9,35 @@ const { checkBondageRemoval, handleBondageRemoval } = require("../functions/inte
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("unheavy")
-		.setDescription(`Free someone else from their heavy bondage`)
-		.addUserOption((opt) => opt.setName("user").setDescription("Who to free from their predicament...")),
+		.setDescription(`Free someone from their heavy bondage`)
+		.addUserOption((opt) => opt.setName("user").setDescription("Who to free from their predicament..."))
+        .addStringOption((opt) =>
+			opt
+				.setName("type")
+				.setDescription("Which heavy restraint to remove?")
+				.setAutocomplete(true),
+		),
+    async autoComplete(interaction) {
+        try {
+            const focusedValue = interaction.options.getFocused();
+            let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+            let autocompletes = getHeavyList(chosenuserid).map((h) => { return { name: getBaseHeavy(h.type).name, value: h.type }})
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+
+            interaction.respond(matches.slice(0,25))
+        }
+		catch (err) {
+            console.log(err);
+        }
+	},
 	async execute(interaction) {
 		try {
 			let heavyuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
@@ -38,7 +65,7 @@ module.exports = {
 				return;
 			}
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, heavyuser.id)) {
 				// user IS in heavy bondage
 				data.heavy = true;
 				if (interaction.user == heavyuser) {
@@ -53,7 +80,7 @@ module.exports = {
 			} else {
 				// Not in heavy bondage
 				data.noheavy = true;
-				if (getHeavy(heavyuser.id)) {
+				if (getHeavyList(heavyuser.id).find((h) => h.type == )) {
 					data.heavyequipped = true;
 					// Now lets make sure the wearer wants that.
 					if (checkBondageRemoval(interaction.user.id, heavyuser.id, "heavy") == true) {

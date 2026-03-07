@@ -97,7 +97,7 @@ module.exports = {
                 return;
             }
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, targetuser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
 			} else if (getMitten(interaction.user.id)) {

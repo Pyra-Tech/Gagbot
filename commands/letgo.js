@@ -37,7 +37,7 @@ module.exports = {
 					return;
 				}
 
-				const heavy = getHeavy(interaction.user.id);
+				const heavy = !getHeavyBound(interaction.user.id, interaction.user.id);
 				if (heavy) {
 					data.heavy = true;
 					interaction.reply(getText(data));

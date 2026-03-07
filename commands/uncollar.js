@@ -23,7 +23,7 @@ module.exports = {
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				// in heavy bondage, can't
 				data.heavy = true;
 				if (interaction.user == collaruser) {

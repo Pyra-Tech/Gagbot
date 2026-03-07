@@ -110,7 +110,7 @@ module.exports = {
 			if (blocked) {
 				return;
 			}
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, corsetuser.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;
 				if (corsetuser == interaction.user) {
