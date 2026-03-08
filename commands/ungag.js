@@ -22,6 +22,12 @@ module.exports = {
                     return { name: process.autocompletes.gag.find((t) => t.value == g.gagtype).name, value: g.gagtype };
                 }
             });
+            for(let i = 0; i < worngags.length; i++) {
+                if ((!worngags[i].name) || (!worngags[i].value)) {
+                    worngags.splice(i,1);
+                    i--;
+                }
+            }
 
             let matches = didYouMean(focusedValue, worngags, {
                 matchPath: ['name'], 

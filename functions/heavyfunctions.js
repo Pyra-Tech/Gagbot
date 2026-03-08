@@ -74,7 +74,6 @@ const heavytypes = [
 	{ name: "Wooden Horse", value: "wooden_horse", denialCoefficient: 3, heavytags: ["arms", "legs"] },
 	{ name: "X-Frame", value: "x_frame", denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
-	{ name: "Leashing Post", value: "leashing_post", denialCoefficient: 2.5, heavytags: ["container"] },
 	{ name: "Latex Vacbed", value: "vacbed_latex", tags: ["latex"], denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Latex Vaccube", value: "vaccube_latex", tags: ["latex"], denialCoefficient: 4.5, heavytags: ["arms", "legs"] },
 	{ name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5, heavytags: ["arms", "legs"] },
@@ -147,6 +146,7 @@ const heavytypes = [
     { name: "Sarcophagus", value: "sarco_mummy", tags: ["confined"], denialCoefficient: 3, heavytags: ["container"] },
     { name: "Asylum Room", value: "asylum_room", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
     { name: "Under-bed Cage", value: "underbed_cage", tags: ["confined"], denialCoefficient: 4, heavytags: ["container"] },
+    { name: "Leashing Post", value: "leashing_post", denialCoefficient: 2.5, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{

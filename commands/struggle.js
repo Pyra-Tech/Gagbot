@@ -71,7 +71,7 @@ module.exports = {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			let heavybondage = getHeavy(interaction.user.id)?.type;
+			let heavybondage = getHeavy(interaction.user.id)?.displayname;
 			let gagbondage = getGagLast(interaction.user.id);
 			let mittenbondage = getMitten(interaction.user.id);
 			let chastitybondage = getChastity(interaction.user.id);

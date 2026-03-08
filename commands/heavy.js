@@ -141,6 +141,9 @@ module.exports = {
                     data.other = true;
                     if (canwear) {
                         data.canwear = true
+                        if (getBaseHeavy(heavychoice).heavytags) {
+                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                        }
                         await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
                             await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
                                 async (success) => {
@@ -192,6 +195,9 @@ module.exports = {
                     data.self = true;
                     if (canwear) {
                         data.canwear = true
+                        if (getBaseHeavy(heavychoice).heavytags) {
+                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                        }
                         await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
                             async (success) => {
                                 await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
