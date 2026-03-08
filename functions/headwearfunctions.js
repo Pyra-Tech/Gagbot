@@ -32,6 +32,8 @@ const headweartypes = [
 	{ name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "EMOJI_happymaid" },
 	{ name: "Kigu Mask (Shy)", value: "mask_kigu_shy", blockinspect: true, blockemote: true, replaceemote: "EMOJI_shyumm" },
 	{ name: "Kigu Mask (Cursed Epicenter)", value: "mask_kigu_epicenter", blockinspect: true, blockemote: true, replaceemote: "EMOJI_epicentercursed" },
+    { name: "Kigu Mask (Tunarific)", value: "mask_kigu_tunarific", blockinspect: true, blockemote: true, replaceemote: "EMOJI_tunarific" },
+    { name: "Kigu Mask (Uwu)", value: "mask_kigu_uwu", blockinspect: true, blockemote: true, replaceemote: "EMOJI_uwu" },
 
 	// Masks
 	{ name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
@@ -55,7 +57,7 @@ const headweartypes = [
     { name: "Gasmask (Rebreather)", value: "gasmask_rebreather", tags: ["latex"] },
     { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
     //{ name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
-    { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
+    //{ name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] }, // Need to fix link modals to work with public masking.
 
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },

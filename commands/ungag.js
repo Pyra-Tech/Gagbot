@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { getGag, deleteGag, getMitten, getGags } = require("./../functions/gagfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,18 +23,20 @@ module.exports = {
                 }
             });
 
-            if (focusedValue == "") {
-                // User hasn't entered anything, lets give them a suggested set of 10
-                let gagtoreturn = worngags.slice(0, 10);
-                await interaction.respond(gagtoreturn);
-            } else {
-                try {
-                    let gagtoreturn = worngags.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-                    await interaction.respond(gagtoreturn);
-                } catch (err) {
-                    console.log(err);
-                }
+            let matches = didYouMean(focusedValue, worngags, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            if (matches.length == 0) {
+                matches = worngags;
             }
+            // They aren't wearing any lol
+            if (matches.length == 0) {
+                matches = [{ name: "Not Wearing Any Gags", value: "ball" }]
+            }
+
+            await interaction.respond(matches.slice(0,25));
         }
         catch (err) {
             console.log(err);
@@ -62,7 +65,7 @@ module.exports = {
 			};
 
 			// Fuck it, I'm just gonna redo the code path because I've been redoing all the removals anyway.
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, gaggeduser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (gaggeduser == interaction.user) {

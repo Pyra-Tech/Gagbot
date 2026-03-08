@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { getConsent, handleConsent, handleMajorRestraint, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getHeadwear, assignHeadwear, getHeadwearName, getBaseHeadwear } = require("../functions/headwearfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("../functions/collarfunctions.js");
@@ -55,6 +55,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			let headwearuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
+            let targetuser = headwearuser; // I dont feel like changing all the headwearusers right now. 
 			let headwearchoice = interaction.options.getString("type") ? interaction.options.getString("type") : "hood_latex";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(headwearuser.id)?.mainconsent) {
@@ -98,7 +99,7 @@ module.exports = {
                 return;
             }
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, targetuser.id)) {
 				// target is in heavy bondage
 				data.heavy = true;
 				if (headwearuser.id == interaction.user.id) {
@@ -182,34 +183,59 @@ module.exports = {
 					} else {
 						// Them
 						data.other = true;
-						if (getCollar(headwearuser.id)) {
-							data.collar = true;
-							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id).access) {
-								data.maskperm = true;
-								if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
-									// Wearing the headgear already, Ephemeral
-									data.worn = true;
-									interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
-								} else {
-									// Not wearing it!
-									data.noworn = true;
-                                    if (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]) {
-                                        await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
-                                        interaction.followUp(getText(data));
-                                    }
-                                    else {
-                                        interaction.reply(getText(data));
-                                    }
-									assignHeadwear(headwearuser.id, headwearchoice);
-								}
-							} else {
-								data.nomaskperm = true;
-								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
-							}
-						} else {
-							data.nocollar = true;
-							interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
-						}
+                        if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
+                            // Wearing the headgear already, Ephemeral
+                            data.worn = true;
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
+                        }
+                        else {
+                            data.noworn = true;
+                            let canmodal = (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]);
+                            if (!canmodal) {
+                                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                            }
+                            else {
+                                await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                            }
+                            await handleMajorRestraint(interaction.user, targetuser, "mask", headwearchoice).then(async () => {
+                                await handleExtremeRestraint(interaction.user, targetuser, "mask", headwearchoice).then(
+                                    async (success) => {
+                                        await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                        await interaction.followUp(getText(data));
+                                        assignHeadwear(headwearuser.id, headwearchoice);
+                                    },
+                                    async (reject) => {
+                                        let nomessage = `${targetuser} rejected the ${getHeadwearName(headwearuser.id, headwearchoice)}.`;
+                                        if (reject == "Disabled") {
+                                            nomessage = `${getHeadwearName(headwearuser.id, headwearchoice)} is currently disabled in ${targetuser}'s Extreme options.`;
+                                        }
+                                        if (reject == "Error") {
+                                            nomessage = `Something went wrong - Submit a bug report!`;
+                                        }
+                                        if (reject == "NoDM") {
+                                            nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                        }
+                                        await interaction.followUp({ content: nomessage });
+                                    },
+                                );
+                            },
+                            async (reject) => {
+                                let nomessage = `${targetuser} rejected the ${getHeadwearName(headwearuser.id, headwearchoice)}.`;
+                                if (reject == "Disabled") {
+                                    nomessage = `${targetuser} has disabled being bound in major restraints without a collar.`;
+                                }
+                                if (reject == "Error") {
+                                    nomessage = `Something went wrong - Submit a bug report!`;
+                                }
+                                if (reject == "NoDM") {
+                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                }
+                                if (reject == "Cooldown") {
+                                    nomessage = `${targetuser} has blocked major bondage restraints for now. Please try again in the future.`;
+                                }
+                                await interaction.followUp({ content: nomessage });
+                            })
+                        }
 					}
 				}
 			}
