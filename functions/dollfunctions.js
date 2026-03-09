@@ -14,9 +14,9 @@ const DOLLPROTOCOL = [
 	// Banned words
 	{ regex: /(?<![\u0005A-Za-z])i(?!((\.+i)|(-i)|['A-Za-z]))/i, value: 1, type: "1pp", string: "I" }, // "I"
 	{ regex: /(?<![\u0005A-Za-z])i'd(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'd" }, // "I'd"
-	{ regex: /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'm" }, // "I'm"
+	{ regex: /(?<![\u0005A-Za-z])i'?m(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'm" }, // "I'm"
 	{ regex: /(?<![\u0005A-Za-z])i'll(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'll" }, // "I'll"
-	{ regex: /(?<![\u0005A-Za-z])i've(?![A-Za-z])/i, value: 1, type: "1pp", string: "I've" }, // "I've"
+	{ regex: /(?<![\u0005A-Za-z])i'?ve(?![A-Za-z])/i, value: 1, type: "1pp", string: "I've" }, // "I've"
 	{ regex: /(?<![\u0005A-Za-z])my(?![A-Za-z])/i, value: 1, type: "1pp", string: "My" }, // "My"
 	{ regex: /(?<![\u0005A-Za-z])me(?![A-Za-z])/i, value: 1, type: "1pp", string: "Me" }, // "Me"
 	{ regex: /(?<![\u0005A-Za-z])myself(?![A-Za-z])/i, value: 1, type: "1pp", string: "Myself" }, // "Myself"
