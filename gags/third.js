@@ -4,14 +4,14 @@ const { getPronouns } = require("../functions/pronounfunctions");
 const selfreplacements = [
     { regex: "i am", replace: `this SUBJECT is`}, // "I am"
     { regex: "i have", replace: `this SUBJECT has`}, // "I am"
-    { regex: "i", replace: `this SUBJECT`}, // "I"
     { regex: "i'd", replace: `this SUBJECT'd`}, // "I'd"
     { regex: "i'?ve", replace: `this SUBJECT has`}, // "I've"
     { regex: "i'?ll", replace: `this SUBJECT'll`}, // "I've"
     { regex: "i'?m", replace: `this SUBJECT is`}, // "I'm"
-    { regex: "my", replace: `this SUBJECT's`}, // "my"
+    { regex: "i", replace: `this SUBJECT`}, // "I"
     { regex: "me", replace: `this SUBJECT`}, // "me"
     { regex: "myself", replace: `this SUBJECT's self`}, // "myself"
+    { regex: "my", replace: `this SUBJECT's`}, // "my"
     { regex: "gimmie", replace: `give this SUBJECT`}, // "me"
 ];
 
