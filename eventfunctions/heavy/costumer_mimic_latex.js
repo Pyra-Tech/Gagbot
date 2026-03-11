@@ -403,7 +403,7 @@ let functiontick = async (userID) => {
             }
             data.heavy = true;
             data.costumer_mimic = true;
-            removeHeavy(userID);
+            removeHeavy(userID, "costumer_mimic_latex");
             data.spitout = true;
             data.none = true;
             messageSendChannel(getText(data), process.recentmessages[userID]);
@@ -415,7 +415,7 @@ let functiontick = async (userID) => {
         // heavy item reached or end of outfit reached        
 
         // Remove Current Heavy (Mimic)
-        removeHeavy(userID);
+        removeHeavy(userID, "costumer_mimic_latex");
         data.spitout = true;
 
         // Apply New Heavy

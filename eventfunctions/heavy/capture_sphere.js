@@ -134,7 +134,7 @@ let functiontick = async (userID) => {
             else {
                 data[`wigglefail${process.userevents[userID].capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), process.recentmessages[userID])
-                removeHeavy(userID);
+                removeHeavy(userID, "capture_sphere");
                 return;
             }
         }
@@ -171,7 +171,7 @@ let functiontick = async (userID) => {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), process.recentmessages[userID]);
-                removeHeavy(userID);
+                removeHeavy(userID, "capture_sphere");
                 return;
             }
         }
