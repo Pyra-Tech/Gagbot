@@ -2,7 +2,7 @@ const garbleText = (text, parent, intensity) => {
 	let newtextparts = text.split(" ");
 	let outtext = "";
 	for (let i = 0; i < newtextparts.length; i++) {
-		if (Math.random() > 0.5 - 0.05 * intensity) {
+		if (Math.random() > 0.5 - 0.05 * intensity && !iscatnoise(newtextparts[i]) ) {
 			// 55-100% chance to replace
 
 			if (newtextparts[i].length < 3) {
@@ -55,6 +55,26 @@ function replacer(text, ogText, startWord, repeatWord, endWord) {
 		}
 	}
 	return text;
+}
+
+const catnoisepatterns = [
+	/nya+h/,
+	/meo+w/,
+	/pur+/,
+	/gr+/,
+	/mew/,
+	/mr+p/,
+	/mr+l/,
+]
+// Allows any of the above cat noises above at the beginning of the word, not case sensitive,
+// followed by any sequence of ! ? . ~ <3
+const fullcatnoisepatterns = catnoisepatterns.map(pattern => {
+	return new RegExp(`^${pattern.source}([!?.~]|<3)*$`, "i");
+});
+function iscatnoise(word) {
+	return fullcatnoisepatterns.some((pattern) => {
+		return word.match(pattern);
+	});
 }
 
 exports.garbleText = garbleText;
