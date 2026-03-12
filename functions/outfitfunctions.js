@@ -877,26 +877,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             clothingtext = `${clothingtext}\nNothing is worn at the moment`
         }
         clothingtext = `${clothingtext}\n`
-
-        let bartext = ``;
-        if (getOption(userID, "arousaldisplay") == "bar") {
-            if (getArousal(inspectuserID) > 2.0) {
-                bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-                if (calcDenialCoefficient(inspectuserID) > 1) {
-                    bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
-                }
-            }
-        }
-        if (getOption(userID, "arousaldisplay") == "desc") {
-            arousaltext = getArousalDescription(inspectuserID);
-            arousalchangetext = getArousalChangeDescription(inspectuserID)
-            bartext = `\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
-        }
-        if (getOption(userID, "arousaldisplay") == "numbers") {
-            if (getArousal(inspectuserID) > 2.0) {
-                bartext = `\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
-            }
-        }
+        let bartext = await getDisplayTexts(userID, inspectuserID);
 
         let collated = `${wearingtext}${clothingtext}${bartext}`;
 
@@ -1195,6 +1176,53 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
     }
 
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
+}
+
+/*************
+ * Get the user's additional display texts, ordered and only viewable if necessary. 
+ * 
+ * - **userID** - User ID of the person viewing
+ * - **inspectuserID** - User ID of the person we're checking
+ ************/
+async function getDisplayTexts(userID, inspectuserID) {
+    let bartext = ``;
+    // Arousal Display
+    if (getArousal(inspectuserID) > 2.0) {
+        if (getOption(userID, "arousaldisplay") == "bar") {
+            bartext = `\n\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
+            if (calcDenialCoefficient(inspectuserID) > 1) {
+                bartext = `${bartext}\n\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+            }
+        }
+        if (getOption(userID, "arousaldisplay") == "desc") {
+            arousaltext = getArousalDescription(inspectuserID);
+            arousalchangetext = getArousalChangeDescription(inspectuserID)
+            bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
+        }
+        if (getOption(userID, "arousaldisplay") == "numbers") {
+            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
+        }
+    }
+    // People in lap
+    let lappeople = [];
+    // Attempt to get the current guild member object for the user. This might have unintended consequences
+    // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
+    let inspectusername = (process.client.guilds.cache.map(guild => guild.members.cache.get(inspectuserID)).find(m => m !== undefined))?.displayName;
+    Object.keys(process.heavy).forEach((k) => {
+        let lapped = false;
+        process.heavy[k].forEach((h) => {
+            // If its a lap and starts with the inspect user's name, then it's OURS
+            if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
+                lappeople.push(k)
+            }
+        })
+    })
+    if (lappeople.length > 0) {
+        bartext = `${bartext}\n\n🫂 Users in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
+    }
+
+
+    return bartext.slice(2); // Cut the first linebreak for better look
 }
 
 exports.generateOutfitModal = generateOutfitModal;

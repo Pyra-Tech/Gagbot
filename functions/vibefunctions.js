@@ -1425,7 +1425,7 @@ function getVibeEquivalent(user) {
 }
 
 function getArousalDescription(user) {
-	if (!config.getDynamicArousal(user)) return null;
+	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
 	const arousal = getArousal(user);
 	const denialCoefficient = calcDenialCoefficient(user);
