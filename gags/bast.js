@@ -29,7 +29,7 @@ const garbleText = (text, parent, intensity) => {
 
 			outtext = `${outtext} `;
 		} else {
-			outtext = `${outtext} ${newtextparts[i]}`;
+			outtext = `${outtext}${newtextparts[i]} `;
 		}
 	}
 	return outtext;
@@ -58,14 +58,15 @@ function replacer(text, ogText, startWord, repeatWord, endWord) {
 }
 
 const catnoisepatterns = [
-	/nya+h/,
+	/nya+h?/,
 	/meo+w/,
 	/pur+/,
 	/gr+/,
 	/mew/,
+	/mrao/,
 	/mr+p/,
 	/mr+l/,
-]
+];
 // Allows any of the above cat noises above at the beginning of the word, not case sensitive,
 // followed by any sequence of ! ? . ~ <3
 const fullcatnoisepatterns = catnoisepatterns.map(pattern => {
