@@ -1201,7 +1201,7 @@ async function getDisplayTexts(userID, inspectuserID) {
             bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
         }
         if (getOption(userID, "arousaldisplay") == "numbers") {
-            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
+            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(inspectuserID) * 10)}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
         }
     }
     // ****************** 
