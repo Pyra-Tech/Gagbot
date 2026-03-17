@@ -33,7 +33,7 @@ module.exports = {
                             // Check for engraved pet tag
                             let engravedpettags = getAllSelectedOption("engravedcollarname")
                             Object.keys(engravedpettags).forEach((k) => {
-                                // If the visor matches, then we found our doll!
+                                // If the visor matches, then we found our pet!
                                 if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
                                     console.log(`Matched ${k}`);
                                     founduserid = k
