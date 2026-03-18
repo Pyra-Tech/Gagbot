@@ -77,7 +77,6 @@ let processdatatoload = [
     { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
     { textname: "chastityusers.txt", processvar: "chastity", default: {} },
     { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
-    //{ textname: "vibeusers.txt", processvar: "vibe", default: {} },
     { textname: "toyusers.txt", processvar: "toys", default: {} },
     { textname: "collarusers.txt", processvar: "collar", default: {} },
     { textname: "heavyusers.txt", processvar: "heavy", default: {} },
@@ -107,28 +106,6 @@ processdatatoload.forEach((s) => {
         console.log(err)
     }
 })
-  
-try {
-    // Remove existing heavies for new system in outfits
-    for (const key in process.outfits) {
-        if (process.outfits[key]) {
-            for (let i = 0; i < process.outfits[key].length; i++) {
-                if (process.outfits[key][i] && process.outfits[key][i].heavy) {
-                    console.log(`Deleting process.outfits.heavy entry for ${key} for outfit ${i+1}`);
-                    console.log(process.outfits[key][i])
-                    process.outfits[key][i].heavy = undefined;
-                    if (process.readytosave == undefined) {
-                        process.readytosave = {};
-                    }
-                    process.readytosave.outfits = true;
-                }
-            }
-        }
-    }
-}
-catch (err) { 
-    console.log(err);
-}
 
 // Later loaders for autocompletes
 setUpGags();
