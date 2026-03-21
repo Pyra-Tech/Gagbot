@@ -360,6 +360,7 @@ const messageReplaceEmojiWithText = async (msg) => {
         "😈": { text: "]:)", emoji: "😈", name: "smiling_imp" },
         "👿": { text: "]:(", emoji: "👿", name: "imp" },
         "❤️": { text: "<3", emoji: "❤️", name: "heart" },
+        "💜": { text: "<3", emoji: "💜", name: "purpleheart" },
         "💔": { text: "</3", emoji: "💔", name: "broken_heart" }
     };
 
@@ -378,7 +379,6 @@ const modifymessage = async (msg, threadId, messageonly) => {
         }
         let text = await messageReplaceEmojiWithText(msg);
         msg.content = text;
-        console.log(msg.content);
 		
 		// TODO - remove this var
 		let outtext = ``											// Message to send.

@@ -1077,8 +1077,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 Other: []
             }
             getWearable(inspectuserID).map((w) => { return { base: getBaseWearable(w), item: w } }).forEach((basewearable) => {
-                if (basewearable.base.category && Object.keys(wearablescategories).includes(basewearable.base.category)) {
-                    wearablescategories[basewearable.base.category].push(basewearable.item)
+                if (basewearable?.base?.category && Object.keys(wearablescategories).includes(basewearable?.base?.category)) {
+                    wearablescategories[basewearable?.base?.category].push(basewearable.item)
                 }
                 else {
                     wearablescategories.Other.push(basewearable.item)

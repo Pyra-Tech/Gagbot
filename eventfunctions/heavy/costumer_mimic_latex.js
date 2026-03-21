@@ -421,7 +421,7 @@ let functiontick = async (userID) => {
         // Apply New Heavy
         if (nextitem.itemtowear && nextitem.category == "heavy") {
             assignHeavy(userID, nextitem.itemtowear, process.userevents[userID].costumermimic.origbinder);
-            data.textdata.c1 = getHeavy(userID).type; // heavy name
+            data.textdata.c1 = getHeavy(userID).displayname; // heavy name
             data.add = true;
             messageSendChannel(getText(data), process.recentmessages[userID]);
         } else {

@@ -17,7 +17,7 @@ const pregarble = (text, parent, intensity, msg) => {
             if (Math.random() < ((intensity * 0.06) + 0.4)) { // 40-100% chance to flip
                 // Compromise library can be used here to solve this!
                 // I'm learning more about the shenanigans of this library than I ever expected. 
-                doc.sentences().forEach((s) => {
+                doc.verbs().forEach((s) => {
                     if (s.has('#Negative')) {
                         // This is negative, make it positive. 
                         s.toPositive()
