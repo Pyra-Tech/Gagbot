@@ -2,7 +2,9 @@ const { MessageAST } = require(`./../functions/message_ast.js`);
 
 const fs = require("fs");
 const path = require("path");
+const { forcedtextemoji } = require("../headwear/doll_visor.js");
 
+/* // This can probably be retired - leaving here for reference
 const headweartypes = [
 	// Hoods
 	{ name: "Latex Hood (no eyes)", value: "hood_latexfull", tags: ["latex"], blockinspect: true, blockemote: true },
@@ -32,6 +34,8 @@ const headweartypes = [
 	{ name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "EMOJI_happymaid" },
 	{ name: "Kigu Mask (Shy)", value: "mask_kigu_shy", blockinspect: true, blockemote: true, replaceemote: "EMOJI_shyumm" },
 	{ name: "Kigu Mask (Cursed Epicenter)", value: "mask_kigu_epicenter", blockinspect: true, blockemote: true, replaceemote: "EMOJI_epicentercursed" },
+    { name: "Kigu Mask (Tunarific)", value: "mask_kigu_tunarific", blockinspect: true, blockemote: true, replaceemote: "EMOJI_tunarific" },
+    { name: "Kigu Mask (Uwu)", value: "mask_kigu_uwu", blockinspect: true, blockemote: true, replaceemote: "EMOJI_uwu" },
 
 	// Masks
 	{ name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
@@ -55,11 +59,11 @@ const headweartypes = [
     { name: "Gasmask (Rebreather)", value: "gasmask_rebreather", tags: ["latex"] },
     { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
     //{ name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
-    { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
+    //{ name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] }, // Need to fix link modals to work with public masking.
 
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
-];
+];*/
 
 const DOLLVISORS = ["doll_visor", "doll_visor_blind", "dollmaker_visor"];
 
@@ -68,9 +72,22 @@ const DOLLVISORS = ["doll_visor", "doll_visor_blind", "dollmaker_visor"];
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
 const loadHeadwearTypes = () => {
-	process.headtypes = headweartypes.map((item) => {
-		return { name: item.name, value: item.value };
-	});
+    // Grab all the command files from the commands directory
+    const headwearautocompletes = [];
+    const headweartypes = [];
+    const commandsPath = path.join(__dirname, "..", "headwear");
+    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+
+    // Push the gag name over to the choice array.
+    for (const file of commandFiles) {
+        const head = require(`./../headwear/${file}`);
+        headweartypes[file.replace(".js", "")] = head;
+        if (!head.hidden) { headwearautocompletes.push({ name: head.name, value: file.replace(".js", "") }) };
+    }
+
+    process.headtypes = headweartypes;
+    if (process.autocompletes == undefined) { process.autocompletes = {} }
+    process.autocompletes.headtypes = headwearautocompletes;
 };
 
 const assignHeadwear = (userID, headwear, origbinder) => {
@@ -157,6 +174,9 @@ const deleteHeadwear = (userID, headwear) => {
 		return false;
 	}
 	if (headwear && process.headwear[userID].wornheadwear.includes(headwear) && !getLockedHeadgear(userID).includes(headwear)) {
+        if (process.headtypes[headwear] && process.headtypes[headwear].onUnlock) {
+            process.headtypes[headwear].onUnlock({ userID: userID });
+        }
 		process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1);
 		if (process.headwear[userID].wornheadwear.length == 0) {
 			delete process.headwear[userID];
@@ -184,17 +204,9 @@ const getHeadwearName = (userID, headnname) => {
 	if (process.headwear == undefined) {
 		process.headwear = {};
 	}
-	let convertmittenarr = {};
-	for (let i = 0; i < headweartypes.length; i++) {
-		convertmittenarr[headweartypes[i].value] = headweartypes[i].name;
-	}
 	if (headnname) {
-		return convertmittenarr[headnname];
+		return getBaseHeadwear(headnname).name
 	}
-	/*
-    else if (process.headwear[userID]?.wornheadwear) {
-        return convertmittenarr[process.mitten[userID]?.mittenname]
-    }*/ // I honestly dont have a clean way to represent this.
 	else {
 		return undefined;
 	}
@@ -205,12 +217,8 @@ const getHeadwearName = (userID, headnname) => {
 // I didnt feel like doing some kind of .some condition checking.
 // Plz simplify.
 const getHeadwearBlocks = (headnname) => {
-	let convertmittenarr = {};
-	for (let i = 0; i < headweartypes.length; i++) {
-		convertmittenarr[headweartypes[i].value] = headweartypes[i];
-	}
 	if (headnname) {
-		return convertmittenarr[headnname];
+		return getBaseHeadwear(headnname)
 	} else {
 		return undefined;
 	}
@@ -220,7 +228,7 @@ const getHeadwearBlocks = (headnname) => {
 // blocks a given function.
 // { canEmote: true, canInspect: true }
 const getHeadwearRestrictions = (userID) => {
-	let allowedperms = { canEmote: true, canInspect: true };
+	let allowedperms = { canEmote: true, canInspect: true, forcedtextemoji: false };
 	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockemote) {
@@ -229,6 +237,9 @@ const getHeadwearRestrictions = (userID) => {
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockinspect) {
 			allowedperms.canInspect = false;
 		}
+        if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).forcedtextemoji) {
+			allowedperms.forcedtextemoji = true;
+		}
 	}
 
 	return allowedperms;
@@ -236,7 +247,7 @@ const getHeadwearRestrictions = (userID) => {
 
 // Returns the base headwear object
 function getBaseHeadwear(type) {
-    return headweartypes.find((h) => h.value == type)
+    return process.headtypes[type];
 }
 
 
@@ -257,7 +268,7 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 	let replaceemote = "";
 	let wornheadwear = getHeadwear(userID);
 	let isDoll = getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))
-	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting.
+	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting
 		for (let i = 0; i < wornheadwear.length; i++) {
 			if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
 				if (getHeadwearBlocks(wornheadwear[i]).replaceemote.startsWith("EMOJI_")) {
@@ -442,7 +453,6 @@ const processHeadwearTruthgas = (userID, msgTree, msgModified) => {
     msgTree.callFunc(truthgasopposites, true, undefined, [msgModified])
 };
 
-exports.headweartypes = headweartypes;
 exports.loadHeadwearTypes = loadHeadwearTypes;
 exports.assignHeadwear = assignHeadwear;
 exports.getHeadwear = getHeadwear;

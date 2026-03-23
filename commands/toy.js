@@ -3,7 +3,7 @@ const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getBaseToy, getSpecificToy, userBlockArousingToy, assignToy } = require("../functions/toyfunctions");
 const { getText } = require("../functions/textfunctions");
 const { getConsent } = require("../functions/interactivefunctions");
-const { getHeavy } = require("../functions/heavyfunctions");
+const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions");
 
 
 module.exports = {
@@ -67,7 +67,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: toyuser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getBaseToy(toytype).toyname, // the chosen vibe type
 					c3: toyintensity,
 				},
@@ -82,7 +82,7 @@ module.exports = {
                 return;
             }
 
-            if (getHeavy(interaction.user.id)) {
+            if (!getHeavyBound(interaction.user.id, toyuser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (toyuser == interaction.user) {

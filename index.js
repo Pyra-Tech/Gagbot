@@ -77,7 +77,6 @@ let processdatatoload = [
     { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
     { textname: "chastityusers.txt", processvar: "chastity", default: {} },
     { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
-    //{ textname: "vibeusers.txt", processvar: "vibe", default: {} },
     { textname: "toyusers.txt", processvar: "toys", default: {} },
     { textname: "collarusers.txt", processvar: "collar", default: {} },
     { textname: "heavyusers.txt", processvar: "heavy", default: {} },
@@ -107,19 +106,6 @@ processdatatoload.forEach((s) => {
         console.log(err)
     }
 })
-  
-/*try {
-    // remove empty arrays in process.gag
-    for (const key in process.gags) {
-        if (process.gags[key].length == 0) {
-            delete process.gags[key];
-            console.log(`Deleting process.gag entry for ${key}`);
-        }
-    }
-}
-catch (err) { 
-    console.log(err);
-}*/
 
 // Later loaders for autocompletes
 setUpGags();
@@ -372,6 +358,35 @@ client.on('interactionCreate', async (interaction) => {
             else if (interaction.customId.startsWith("key_")) {
                 let configfunc = require(`./commands/key.js`)
                 configfunc.interactionresponse(interaction); 
+            }
+            else if (interaction.customId.startsWith("extraconfig_")) {
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.gags && process.extraconfigresponsefunctions.gags[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.gags[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.headwear && process.extraconfigresponsefunctions.headwear[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.headwear[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.mitten && process.extraconfigresponsefunctions.mitten[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.mitten[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.heavy && process.extraconfigresponsefunctions.heavy[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.heavy[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.chastity && process.extraconfigresponsefunctions.chastity[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.chastity[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.chastitybra && process.extraconfigresponsefunctions.chastitybra[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.chastitybra[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.wearable && process.extraconfigresponsefunctions.wearable[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.wearable[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.toys && process.extraconfigresponsefunctions.toys[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.toys[interaction.customId.split("_")[1]](interaction);
+                }
+                if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.collar && process.extraconfigresponsefunctions.collar[interaction.customId.split("_")[1]]) {
+                    process.extraconfigresponsefunctions.collar[interaction.customId.split("_")[1]](interaction);
+                }
             }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);

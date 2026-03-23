@@ -2,7 +2,7 @@ const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { their } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { tryOrgasm, getChastity, setArousalCooldown } = require("../functions/vibefunctions.js");
-const { getHeavy } = require("../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: interaction.user, // Not needed, but required for function parsing anyway.
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 				},
 			};
 
@@ -37,7 +37,7 @@ module.exports = {
 					return;
 				}
 
-				const heavy = getHeavy(interaction.user.id);
+				const heavy = !getHeavyBound(interaction.user.id, interaction.user.id);
 				if (heavy) {
 					data.heavy = true;
 					interaction.reply(getText(data));

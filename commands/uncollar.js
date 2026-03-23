@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getCollar, removeCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -19,11 +19,11 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: collaruser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				// in heavy bondage, can't
 				data.heavy = true;
 				if (interaction.user == collaruser) {

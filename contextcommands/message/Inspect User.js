@@ -17,6 +17,15 @@ module.exports = {
                     }
                     else {
                         let founduserid;
+                        // Check for engraved pet tag
+                        let engravedpettags = getAllSelectedOption("engravedcollarname")
+                        Object.keys(engravedpettags).forEach((k) => {
+                            // If the visor matches, then we found our pet!
+                            if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
+                                console.log(`Matched ${k}`);
+                                founduserid = k
+                            }
+                        })
                         let dollvisorids = getAllSelectedOption("dollvisorname")
                         Object.keys(dollvisorids).forEach((k) => {
                             // If the visor matches, then we found our doll!
@@ -28,7 +37,7 @@ module.exports = {
                         // them in the guild list. 
                         if (!founduserid) {
                             let membername = await message.guild.members.search({ query: message.author.username, limit: 1 });
-                            if (membername) {
+                            if (membername && membername.first() && membername.first().user) {
                                 founduserid = membername.first().user.id
                             }
                         }

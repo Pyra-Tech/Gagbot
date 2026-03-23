@@ -219,7 +219,7 @@ let functiontick = async (userID) => {
         if (process.userevents[userID].dollprocessing.stage == 3) {
             data.processingcomplete = true;
             delete process.userevents[userID].dollprocessing;
-            removeHeavy(userID);
+            removeHeavy(userID, "doll_processing");
             messageSendChannel(getText(data), process.recentmessages[userID])
         }
     }

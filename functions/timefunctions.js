@@ -2,11 +2,11 @@
 let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
-const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
+const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar, gagbotHeldKeyTime, checkGagbotKeys } = require(`./timelockfunctions.js`);
 const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
 const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
-const { getHeavy } = require("./heavyfunctions.js");
+const { getHeavy, getHeavyList } = require("./heavyfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getToys } = require("./toyfunctions.js");
 const { getCollar } = require("./collarfunctions.js");
@@ -204,6 +204,8 @@ function importFileNames() {
     process.modalfunctions = {};
     process.modalexecutefunctions = {};
     process.onremovefunctions = {};
+    process.extraconfigfunctions = {};
+    process.extraconfigresponsefunctions = {};
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
 		process.eventfunctions[f] = {};
@@ -211,6 +213,8 @@ function importFileNames() {
         process.modalfunctions[f] = {};
         process.modalexecutefunctions[f] = {};
         process.onremovefunctions[f] = {};
+        process.extraconfigfunctions[f] = {};
+        process.extraconfigresponsefunctions[f] = {};
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
@@ -229,6 +233,12 @@ function importFileNames() {
             if (typeof functionfile.functiononremove === "function") {
                 process.onremovefunctions[f][file.replace(".js","")] = functionfile.functiononremove;
             }
+            if (typeof functionfile.extraconfig === "function") {
+                process.extraconfigfunctions[f][file.replace(".js","")] = functionfile.extraconfig;
+            }
+            if (typeof functionfile.extraconfigresponse === "function") {
+                process.extraconfigresponsefunctions[f][file.replace(".js","")] = functionfile.extraconfigresponse;
+            }
 		});
 	});
 }
@@ -238,6 +248,7 @@ function processTimedEvents() {
     updateSharedBreath();
 	processUnlockTimes(process.client);
 	runProcessedEvents();
+    checkGagbotKeys();
 }
 
 function processUnlockTimes(client) {
@@ -299,10 +310,12 @@ function runProcessedEvents() {
 	// Heavy Bondage
 	if (process.heavy) {
 		Object.keys(process.heavy).forEach((userid) => {
-			if (getHeavy(userid)) {
-				if (process.eventfunctions.heavy && process.eventfunctions.heavy[getHeavy(userid).typeval]) {
-					process.eventfunctions.heavy[getHeavy(userid).typeval](userid);
-				}
+			if (getHeavyList(userid).length > 0) {
+                getHeavyList(userid).forEach((h) => {
+                    if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type]) {
+                        process.eventfunctions.heavy[h.type](userid);
+                    }
+                })
 			}
 		});
 	}

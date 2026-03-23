@@ -3,6 +3,7 @@
 const { getOption } = require("../../functions/configfunctions")
 const { discardKey } = require("../../functions/keyfindingfunctions")
 const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
+const { canAccessChastityBra } = require("../../functions/vibefunctions")
 
 // Growth Coefficient. Higher = more growth, this is a multiplier(?) on arousal gains
 exports.growthCoefficient = (data) => { return 1 }
@@ -30,6 +31,10 @@ exports.fumble = (data) => {
 exports.discard = (data) => {
     return discardKey(data.userID, data.keyholderID, "chastitybra")
 }
+
+exports.canUnequip = (data) => { return canAccessChastityBra(data.userID, data.keyholderID, true).access }
+
+exports.canAccessToys = (data) => { return (canAccessChastityBra(data.userID, data.keyholderID).access) }
 
 // Category
 exports.category = "Chastity Bra"

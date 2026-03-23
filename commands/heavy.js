@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy, getHeavyRestrictions, getHeavyBound, getHeavyList } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
+const { getConsent, handleConsent, handleExtremeRestraint, handleMajorRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
@@ -11,6 +11,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("heavy")
 		.setDescription(`Put heavy bondage on, preventing the use of any command`)
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage..."))
 		.addStringOption((opt) =>
 			opt
 				.setName("type")
@@ -20,7 +21,8 @@ module.exports = {
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
-            let autocompletes = process.heavytypes.filter((f) => !getBaseHeavy(f.value).noself);
+            let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+            let autocompletes = process.heavytypes/*.filter((f) => !getBaseHeavy(f.value).noself);*/
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
@@ -30,7 +32,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.user.id);
+            let tags = getUserTags(chosenuserid);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -54,40 +56,49 @@ module.exports = {
 	},
 	async execute(interaction) {
 		try {
+            let targetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
+            let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
+            if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice).noself)) {
+                interaction.reply({ content: `You can't bind yourself with that item!`, flags: MessageFlags.Ephemeral })
+                return;
+            }
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			// List all heavy restraints if set.
-			if (interaction.options.getBoolean("list_all_restraints")) {
-				let restraints = heavytypes
-					.map((h) => {
-						return h.name;
-					})
-					.sort();
-				let outtext = "## Full list of Heavy Restraints:\n\n";
-				for (let i = 0; i < restraints.length; i++) {
-					outtext = `${outtext}${restraints[i]}\n`;
-				}
-				await interaction.reply({ content: `${outtext}`, flags: MessageFlags.Ephemeral });
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+			if (!getConsent(targetuser.id)?.mainconsent) {
+				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
+			
+            let tags = getUserTags(targetuser.id);
+            let i = getBaseHeavy(heavychoice)
+            let blocked = false;
+            tags.forEach((t) => {
+                if (i && i.tags && i.tags.includes(t) && (targetuser.id != interaction.user.id)) {
+                    interaction.reply({ content: `${targetuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                    blocked = true;
+                    return;
+                }
+            })
+            if (blocked) { return } // GO AWAY
 			// Build data tree:
 			let data = {
 				textarray: "texts_heavy",
 				textdata: {
 					interactionuser: interaction.user,
-					targetuser: interaction.user,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-					c2: convertheavy(heavychoice), // New heavy bondage
+					targetuser: targetuser,
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c2: i.name, // New heavy bondage
+                    c3: i.name // Compatibility with original collarequiptexts
 				},
 			};
 
 			// This SHOULD retrieve a custom name if any.
 			if (getBaseHeavy(heavychoice) && getBaseHeavy(heavychoice).namefunction) {
-				data = getBaseHeavy(heavychoice).namefunction(interaction, data);
+				data = await getBaseHeavy(heavychoice).namefunction(interaction, data);
 			}
 
 			if (data.textdata.c2 == undefined) {
@@ -96,32 +107,126 @@ module.exports = {
 				return;
 			}
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, targetuser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
 			} else {
 				data.noheavy = true;
-				await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-				await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
-					async (success) => {
-						await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
-						await interaction.followUp(getText(data));
-						assignHeavy(interaction.user.id, heavychoice, interaction.user.id);
-					},
-					async (reject) => {
-						let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
-						if (reject == "Disabled") {
-							nomessage = `${convertheavy(heavychoice)} is currently disabled in your Extreme options - **/config**`;
-						}
-						if (reject == "Error") {
-							nomessage = `Something went wrong - Submit a bug report!`;
-						}
-						if (reject == "NoDM") {
-							nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`;
-						}
-						await interaction.followUp(nomessage);
-					},
-				);
+                // REFLECT
+                if (targetuser.id == process.client.user.id) {
+                    data.reflect = true;
+                    data.textdata.interactionuser = process.client.user;
+                    data.textdata.targetuser = interaction.user;
+                    interactionuser = process.client.user;
+                    targetuser = interaction.user;
+                }
+                // This disaster of a function lol
+                let canwear = true;
+                let blocker;
+                let blockertype;
+                console.log(getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)))
+                getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)).forEach((h) => {
+                    h.heavytags.forEach((t) => {
+                        if (getBaseHeavy(heavychoice).heavytags.includes(t)) {
+                            canwear = false
+                            blocker = h
+                            blockertype = t
+                        }
+                    })
+                })
+                canwear = true; // I'll regret this I'm sure
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                if ((interaction.user.id != targetuser.id) || (data.textdata.interactionuser == process.client.user)) {
+                    // Someone else!
+                    data.other = true;
+                    if (canwear) {
+                        data.canwear = true
+                        if (getBaseHeavy(heavychoice).heavytags) {
+                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                        }
+                        await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
+                            await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
+                                async (success) => {
+                                    await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                    await interaction.followUp(getText(data));
+                                    assignHeavy(targetuser.id, heavychoice, interaction.user.id, data.textdata.c3);
+                                },
+                                async (reject) => {
+                                    let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
+                                    if (reject == "Disabled") {
+                                        nomessage = `${convertheavy(heavychoice)} is currently disabled in ${targetuser}'s Extreme options.`;
+                                    }
+                                    if (reject == "Error") {
+                                        nomessage = `Something went wrong - Submit a bug report!`;
+                                    }
+                                    if (reject == "NoDM") {
+                                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                    }
+                                    await interaction.followUp({ content: nomessage });
+                                },
+                            );
+                        },
+                        async (reject) => {
+                            let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
+                            if (reject == "Disabled") {
+                                nomessage = `${targetuser} has disabled being bound in major restraints without a collar.`;
+                            }
+                            if (reject == "Error") {
+                                nomessage = `Something went wrong - Submit a bug report!`;
+                            }
+                            if (reject == "NoDM") {
+                                nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                            }
+                            if (reject == "Cooldown") {
+                                nomessage = `${targetuser} has blocked major bondage restraints for now. Please try again in the future.`;
+                            }
+                            await interaction.followUp({ content: nomessage });
+                        })
+                    }
+                    else {
+                        data.nocanwear = true
+                        data[blockertype] = true
+                        data.textdata.c4 = blocker.name
+                        await interaction.followUp(`Attempting to equip a ${convertheavy(heavychoice)}...`)
+                        await interaction.followUp(getText(data));
+                    }
+                }
+                else {
+                    data.self = true;
+                    if (canwear) {
+                        data.canwear = true
+                        if (getBaseHeavy(heavychoice).heavytags) {
+                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                        }
+                        await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
+                            async (success) => {
+                                await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
+                                await interaction.followUp(getText(data));
+                                assignHeavy(interaction.user.id, heavychoice, interaction.user.id, data.textdata.c3);
+                            },
+                            async (reject) => {
+                                let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
+                                if (reject == "Disabled") {
+                                    nomessage = `${convertheavy(heavychoice)} is currently disabled in your Extreme options - **/config**`;
+                                }
+                                if (reject == "Error") {
+                                    nomessage = `Something went wrong - Submit a bug report!`;
+                                }
+                                if (reject == "NoDM") {
+                                    nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                }
+                                await interaction.followUp(nomessage);
+                            },
+                        );
+                    }
+                    else {
+                        data.nocanwear = true
+                        data[blockertype] = true
+                        data.textdata.c4 = blocker.name
+                        await interaction.followUp(`Attempting to equip a ${convertheavy(heavychoice)}...`)
+                        await interaction.followUp(getText(data));
+                    }
+                }
 			}
 		} catch (err) {
 			console.log(err);

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
@@ -76,11 +76,11 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: interaction.options.getUser("keyholder") ? interaction.options.getUser("keyholder") : interaction.user,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
 				if (getCollar(interaction.user.id)) {
 					data.collar = true;
@@ -98,6 +98,9 @@ module.exports = {
 				await interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 				return;
 			}
+
+            if (process.recentinteractions == undefined) { process.recentinteractions = {} }
+            process.recentinteractions[interaction.user.id] = interaction;
 
 			if (collarkeyholder && collarkeyholder.id != undefined) {
 				//interaction.deferReply();
@@ -120,6 +123,9 @@ module.exports = {
 			let choice_mask = interaction.fields.getStringSelectValues("mask") == "mask_yes" ? true : false;
 			// lol consistency with naming scheme is hard
 			let choice_collartype = interaction.customId.split("_")[3].length > 0 ? `${interaction.customId.split("_")[3]}_${interaction.customId.split("_")[4]}` : undefined;
+            if (choice_collartype.endsWith("_undefined")) { // This is an ugly workaround
+                choice_collartype = choice_collartype.replace("_undefined", "");
+            }
 
 			// Build data tree:
 			let data = {
@@ -127,12 +133,12 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: await interaction.client.users.fetch(collarkeyholder), // To fetch the target user object
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getCollarName(interaction.user.id, choice_collartype) ?? "collar",
 				},
 			};
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
 				if (getCollar(interaction.user.id)) {
 					data.collar = true;
@@ -155,7 +161,14 @@ module.exports = {
 						if (choice_collartype) {
 							// Custom named collar declared
 							data.namedcollar = true;
-							interaction.reply(getText(data));
+							/* Okay WHY Discord. Cannot have chaining followup modals. Limited user experience. :< 
+                            if (process.modalfunctions?.collar && process.modalfunctions.collar[choice_collartype]) {
+                                await interaction.reply(getText(data));
+                                await process.recentinteractions[interaction.user.id].showModal(await process.modalfunctions.collar[choice_collartype](interaction, interaction.user.id))
+                            }
+                            else {*/
+                                interaction.reply(getText(data));
+                            //}
 							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
 						} else {
 							data.nonamedcollar = true;

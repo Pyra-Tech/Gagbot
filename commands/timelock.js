@@ -3,7 +3,7 @@ const { timelockChastityModal, timelockChastityBraModal, timelockCollarModal, ti
 const { getChastity, getChastityBra, canAccessChastity, canAccessChastityBra } = require("../functions/vibefunctions.js");
 const { getCollar, canAccessCollar } = require("../functions/collarfunctions.js");
 const { their } = require("../functions/pronounfunctions.js");
-const { getHeavy } = require("../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions.js");
 const { timelockChastity, timelockChastityBra, timelockCollar } = require("./../functions/timelockfunctions.js");
 const { parseTime } = require("./../functions/timefunctions.js");
 const { getText } = require("../functions/textfunctions.js");
@@ -61,12 +61,12 @@ module.exports = {
 					return;
 				}
 
-				if (getHeavy(interaction.user.id)) {
+				if (!getHeavyBound(interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${their(wearer.id)} chastity belt, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} chastity belt, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${wearer}'s chastity belt, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity belt, but is completely stuck!`);
 						return;
 					}
 				}
@@ -91,12 +91,12 @@ module.exports = {
 					return;
 				}
 
-				if (getHeavy(interaction.user.id)) {
+				if (!getHeavyBound(interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${their(wearer.id)} chastity bra, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} chastity bra, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${wearer}'s chastity bra, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity bra, but is completely stuck!`);
 						return;
 					}
 				}
@@ -121,12 +121,12 @@ module.exports = {
 					return;
 				}
 
-				if (getHeavy(interaction.user.id)) {
+				if (!getHeavyBound(interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${their(wearer.id)} collar, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} collar, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${wearer}'s collar, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s collar, but is completely stuck!`);
 						return;
 					}
 				}

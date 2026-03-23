@@ -3,7 +3,7 @@ const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getBaseToy, getSpecificToy, getToys, removeToy } = require("../functions/toyfunctions");
 const { getText } = require("../functions/textfunctions");
 const { getConsent } = require("../functions/interactivefunctions");
-const { getHeavy } = require("../functions/heavyfunctions");
+const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions");
 
 
 module.exports = {
@@ -47,11 +47,12 @@ module.exports = {
             let toyuser = interaction.options.getUser("user") ?? interaction.user;
             let toyintensity = interaction.options.getNumber("intensity") ?? 5;
             let toytype = interaction.options.getString("type");
-            if ((toytype == undefined) && (getToys(toyuser)) && (getToys(toyuser)[0] != undefined)) {
+            if ((toytype == undefined) && (getToys(toyuser.id)) && (getToys(toyuser.id).length > 0)) {
                 toytype = getToys(toyuser.id)[0]?.type
             }
             if (toytype == undefined) {
-                toytype = "vibe_bullet"
+                interaction.reply({ content: `${toyuser} is not wearing any toys!`, flags: MessageFlags.Ephemeral })
+                return;
             }
             let toybase = getBaseToy(toytype);
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
@@ -70,7 +71,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: toyuser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getBaseToy(toytype)?.toyname, // the chosen vibe type
 					c3: toyintensity,
 				},
@@ -85,7 +86,7 @@ module.exports = {
                 return;
             }*/
 
-            if (getHeavy(interaction.user.id)) {
+            if (!getHeavyBound(interaction.user.id, toyuser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (toyuser == interaction.user) {
@@ -153,7 +154,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, toytype)
+                                    removeToy(toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -168,7 +169,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, toytype)
+                            removeToy(toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }
@@ -210,7 +211,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, toytype)
+                                    removeToy(toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -225,7 +226,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, toytype)
+                            removeToy(toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }

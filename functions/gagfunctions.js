@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName } = require(`./../functions/messagefunctions.js`);
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require("./vibefunctions.js");
@@ -49,8 +49,8 @@ const setUpGags = () => {
 const gagtypesout = [{ name: "Ball Gag" }, { name: "Bast Gag" }, { name: "Bweh Gag" }, { name: "Cat Gag" }, { name: "Code Gag" }, { name: "Enchanted Dog Gag" }, { name: "Donald Gag" }, { name: "Good Sub Gag" }, { name: "Polite Sub Gag" }, { name: "Ring Gag" }, { name: "Silent Panel Gag" }, { name: "Stuff Gag" }, { name: "Tape Gag" }, { name: "UwU Gag" }, { name: "Enchanted Wolf Gag" }, { name: "L337 Gag" }, { name: "Enigma Gag" }];
 
 const mittentypes = [
-	{ name: "Kitty Paws", value: "mittens_kitty" },
-	{ name: "Oversized Fluffy Paw Mittens", value: "mittens_oversized_fluff" },
+	{ name: "Kitty Paws", value: "mittens_kitty", tags: ["pet"] },
+	{ name: "Oversized Fluffy Paw Mittens", value: "mittens_oversized_fluff", tags: ["pet"] },
 	{ name: "Pom Pom Mittens", value: "mittens_pompom" },
 	{ name: "Cyber Doll Mittens", value: "mittens_cyberdoll" },
 	{ name: "Leather Mittens", value: "mittens_leather", tags: ["leather"] },
@@ -123,7 +123,7 @@ const getGag = (userID, gagbyname) => {
 	}
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
-		return foundgag?.gagtype;
+		return foundgag;
 	} else if (process.gags[userID].length > 0) {
 		return process.gags[userID][0].gagtype;
 	}
@@ -176,10 +176,18 @@ const deleteGag = (userID, specificgag) => {
 	}
 	// Remove all gags if none is specified.
 	if (!specificgag && process.gags[userID]) {
+        process.gags[userID].forEach((g) => {
+            if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
+                process.gagtypes[g.gagtype].onUnlock(userID);
+            }
+        })
 		delete process.gags[userID];
 	} else if (process.gags[userID]) {
 		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
 		if (loc > -1) {
+            if (process.gagtypes[process.gags[userID][loc].gagtype] && process.gagtypes[process.gags[userID][loc].gagtype].onUnlock) {
+                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock({ userID: userID });
+            }
 			process.gags[userID].splice(loc, 1);
 		}
 		if (process.gags[userID].length == 0) {
@@ -321,11 +329,55 @@ function punishDoll(userID, amount) {
 	}
 }
 
+const messageReplaceEmojiWithText = async (msg) => {
+    if (!getHeadwearRestrictions(msg.author.id).forcedtextemoji) {return msg.content;}
+
+    let text = msg.content;
+
+    const emojiMap = {
+        "🙂": { text: ":)", emoji: "🙂", name: "slight_smile" },
+        "😄": { text: ":D", emoji: "😄", name: "smile" },
+        "😆": { text: "x-)", emoji: "😆", name: "laughing" },
+        "😅": { text: ",:)", emoji: "😅", name: "sweat_smile" },
+        "😂": { text: ":'D", emoji: "😂", name: "joy" },
+        "🥲": { text: ":')", emoji: "🥲", name: "smiling_face_with_tear" },
+        "😊": { text: ':" )'.replace(" ", ""), emoji: "😊", name: "blush" },
+        "😇": { text: "o:)", emoji: "😇", name: "innocent" },
+        "😉": { text: ";)", emoji: "😉", name: "wink" },
+        "😘": { text: ":*", emoji: "😘", name: "kissing" },
+        "😛": { text: ":P", emoji: "😛", name: "stuck_out_tongue" },
+        "😎": { text: "8-)", emoji: "😎", name: "sunglasses" },
+        "😒": { text: ":s", emoji: "😒", name: "unamused" },
+        "😕": { text: ":-\\", emoji: "😕", name: "confused" },
+        "😢": { text: ":'(", emoji: "😢", name: "cry" },
+        "😭": { text: ":,'(", emoji: "😭", name: "sob" },
+        "😠": { text: ">:(", emoji: "😠", name: "angry" },
+        "😡": { text: ":@", emoji: "😡", name: "rage" },
+        "😓": { text: ",:(", emoji: "😓", name: "sweat" },
+        "😐": { text: ":|", emoji: "😐", name: "neutral_face" },
+        "🙁": { text: ":(", emoji: "🙁", name: "frowning" },
+        "😮": { text: ":o", emoji: "😮", name: "open_mouth" },
+        "😈": { text: "]:)", emoji: "😈", name: "smiling_imp" },
+        "👿": { text: "]:(", emoji: "👿", name: "imp" },
+        "❤️": { text: "<3", emoji: "❤️", name: "heart" },
+        "💜": { text: "<3", emoji: "💜", name: "purpleheart" },
+        "💔": { text: "</3", emoji: "💔", name: "broken_heart" }
+    };
+
+    Object.keys(emojiMap).forEach((k) => {
+        text = text.replaceAll(k, emojiMap[k].text)
+    })
+    
+    return text;
+}
+
 const modifymessage = async (msg, threadId, messageonly) => {
 	try {
         if (!messageonly) {
             console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
         }
+        let text = await messageReplaceEmojiWithText(msg);
+        msg.content = text;
 		
 		// TODO - remove this var
 		let outtext = ``											// Message to send.
@@ -334,6 +386,7 @@ const modifymessage = async (msg, threadId, messageonly) => {
 
 		processHeadwearEmoji(msg.author.id, msgTree, msgTreeMods, getOption(msg.author.id, "dollvisorname"))
         processHeadwearTruthgas(msg.author.id, msgTree, msgTreeMods)
+        await processPregarbleGags(msg, msgTree, msgTreeMods)       // Perform early garbles before arousal and corset effects. 
 
 		// See if this message can be skipped. Messages containing only emoji do NOT need to be processed,
 		// But only if NOT wearing a headwear that replaces it in previous step.
@@ -367,11 +420,17 @@ const modifymessage = async (msg, threadId, messageonly) => {
             return outtext;
         }
 
+        // Get the user's current display name based on worn restraints
+        let userdisplayName = getAlternateName(msg.member);
+        if (userdisplayName != msg.member.displayName) {
+            msgTreeMods.modified = true;
+        }
+
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
             // If the message content is *exactly* the same as the input, return
-            if (msg.content === outtext) { return }
-			await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol, msgTreeMods.emojiModified );
+            if ((msg.content === outtext) && (userdisplayName == msg.member.displayName)) { return }
+			await sendTheMessage(msg, outtext, userdisplayName, threadId, dollProtocol, msgTreeMods.emojiModified );
 		}
 	} catch (err) {
 		console.log(err);
@@ -440,7 +499,7 @@ function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	return;
 }
 
-function textGarbleGag(msg, msgTree, msgTreeMods) {
+async function textGarbleGag(msg, msgTree, msgTreeMods) {
 	// Gags now
 	if (process.gags == undefined) {
 		process.gags = {};
@@ -460,7 +519,7 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 					}
                 }
                 if(process.gagtypes[gag.gagtype].garbleText){
-					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5])		// Run garble on all IC segments.
+					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
 					msgTreeMods.modified = true;
 				}
                 if (process.gagtypes[gag.gagtype].messageend) {												// Run messageEnd
@@ -472,18 +531,37 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 	}
 }
 
+async function processPregarbleGags(msg, msgTree, msgTreeMods) {
+    // Gags now
+	if (process.gags == undefined) {
+		process.gags = {};
+	}
+    if (process.gags[msg.author.id] && process.gags[msg.author.id].length > 0) {
+        // Go over each gag and if there's a gag file loaded for it, run the messagebegin, garbletext and messageend functions if they exist.
+		process.gags[msg.author.id].forEach(async (gag) => {
+            if (process.gagtypes && process.gagtypes[gag.gagtype]) {
+                if (process.gagtypes[gag.gagtype].pregarble) {
+                    await msgTree.callFunc(process.gagtypes[gag.gagtype].pregarble,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
+                    msgTreeMods.modified = true;
+                }
+            }
+        })
+    }
+}
+
 async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtocol, modified) {
 	try {
 		// If this is a reply, we want to create a reply in-line because webhooks can't reply.
         let isreply = false;
 		if (msg.type == "19") {
 			const replied = await msg.fetchReference();
-			const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
+            let displayname = replied.member ? replied.member.displayName : replied.author.displayName
+			const replyauthorobject = await replied.guild.members.search({ query: displayname, limit: 1 });
 			const first = replyauthorobject.first();
 			if (first) {
 				outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			} else {
-				outtext = `${replied.author.displayName} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
+				outtext = `${displayname} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			}
             isreply = first?.id;
 		}

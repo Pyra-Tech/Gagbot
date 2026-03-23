@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
 const { getMittenName, assignMitten, getMitten, mittentypes, getBaseMitten } = require("./../functions/gagfunctions.js");
@@ -15,8 +15,8 @@ const { getUserTags } = require("../functions/configfunctions.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("collarequip")
-		.setDescription(`Put chastity, mittens or heavy bondage on someone with a collar`)
-		.addSubcommand((subcommand) =>
+		.setDescription(`Put chastity someone with a collar`)
+		/*.addSubcommand((subcommand) =>
 			subcommand
 				.setName("mittens")
 				.setDescription("Apply Mittens...")
@@ -29,7 +29,7 @@ module.exports = {
 				.setDescription("Apply Heavy Bondage...")
 				.addUserOption((opt) => opt.setName("user").setDescription("To who?").setRequired(true))
 				.addStringOption((opt) => opt.setName("type").setDescription("Which Restraint?").setAutocomplete(true)),
-		)
+		)*/
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("chastity")
@@ -231,7 +231,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: collareduser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getHeavy(collareduser.id)?.type, // collar wearer's heavy bondage type
 					c3: "", // New heavy bondage
 					c4: `<@${getChastity(collareduser.id)?.keyholder}>`, // collar wearer's chastity keyholder
@@ -278,7 +278,7 @@ module.exports = {
                 }
 			}
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, collareduser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
 			} else if (collareduser == interaction.user) {

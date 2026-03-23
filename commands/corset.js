@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getChastity, getVibe, assignVibe, canAccessChastity } = require("./../functions/vibefunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getCorset, assignCorset, getBaseCorset } = require("./../functions/corsetfunctions.js");
@@ -77,7 +77,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: corsetuser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: tightness, // corset tightness
 					c3: getBaseCorset(current?.type)?.name ?? "Leather Corset", // current corset
 					c4: getBaseCorset(type)?.name, // new corset
@@ -100,8 +100,8 @@ module.exports = {
 				let tags = getUserTags(corsetuser.id);
 				let i = getBaseCorset(type);
 				tags.forEach((t) => {
-					if (i && i.tags && i.tags.includes(t) && wearableuser != interaction.user) {
-						interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
+					if (i && i.tags && i.tags.includes(t) && corsetuser != interaction.user) {
+						interaction.reply({ content: `${corsetuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
 						blocked = true;
 						return;
 					}
@@ -110,7 +110,7 @@ module.exports = {
 			if (blocked) {
 				return;
 			}
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, corsetuser.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;
 				if (corsetuser == interaction.user) {
@@ -138,7 +138,7 @@ module.exports = {
 				data.noheavy = true;
 				data.chastity = true;
 				// The target is in a chastity belt
-				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
+				if (getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").canAccessCorset({ userID: corsetuser.id, keyholderID: interaction.user.id })) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
 					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id });

@@ -223,13 +223,13 @@ const getChastity = (user) => {
 	return process.chastity[user];
 };
 
-const removeChastity = (user, force = false) => {
+const removeChastity = (user, keyholder, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
     }
     let chastitybase = getBaseChastity(getChastity(user)?.chastitytype ?? "belt_silver")
 
-	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) return false;
 
 	chastitybase.onUnequip({ userID: user });
 
@@ -277,13 +277,13 @@ const getChastityBra = (user) => {
 	return process.chastitybra[user];
 };
 
-const removeChastityBra = (user, force = false) => {
+const removeChastityBra = (user, keyholder, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
     }
     let chastitybase = getBaseChastity(getChastityBra(user)?.chastitytype ?? "bra_silver")
 
-	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) return false;
 
 	chastitybase.onUnequip({ userID: user });
 
@@ -296,12 +296,12 @@ const removeChastityBra = (user, force = false) => {
 	return true;
 };
 
-function swapChastity(user, namedchastity) {
+function swapChastity(user, keyholder, namedchastity) {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
     let chastitybase = getBaseChastity(getChastity(user).chastitytype ?? "belt_silver")
-	if (chastitybase && !chastitybase.canUnequip({ userID: user })) return false;
+	if (chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) return false;
 	chastitybase.onUnequip({ userID: user });
 	process.chastity[user].chastitytype = namedchastity;
 	let newchastitybase = getBaseChastity(namedchastity)
@@ -313,12 +313,12 @@ function swapChastity(user, namedchastity) {
 	return true;
 }
 
-function swapChastityBra(user, namedchastity) {
+function swapChastityBra(user, keyholder, namedchastity) {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
 	let chastitybase = getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver")
-	if (chastitybase && !chastitybase.canUnequip({ userID: user })) return false;
+	if (chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) return false;
 	chastitybase.onUnequip({ userID: user });
 	process.chastitybra[user].chastitytype = namedchastity;
 	let newchastitybase = getBaseChastity(namedchastity)
@@ -1425,7 +1425,7 @@ function getVibeEquivalent(user) {
 }
 
 function getArousalDescription(user) {
-	if (!config.getDynamicArousal(user)) return null;
+	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
 	const arousal = getArousal(user);
 	const denialCoefficient = calcDenialCoefficient(user);
@@ -1544,8 +1544,8 @@ function calcStaticVibeIntensity(user) {
 function calcDenialCoefficient(user) {
 	const heavy = getHeavy(user);
 	const chastity = getChastity(user);
-	if (chastity) return (heavy ? heavyDenialCoefficient(heavy.typeval) : 0) / 2 + getCombinedTraits(user).denialCoefficient;
-	return heavy ? heavyDenialCoefficient(heavy.typeval) : 1;
+	if (chastity) return (heavy ? heavyDenialCoefficient(heavy.type) : 0) / 2 + getCombinedTraits(user).denialCoefficient;
+	return heavy ? heavyDenialCoefficient(heavy.type) : 1;
 }
 
 function calcFrustration(user) {

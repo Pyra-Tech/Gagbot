@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getHeadwear, getHeadwearName, deleteHeadwear, getLockedHeadgear } = require("../functions/headwearfunctions.js");
@@ -23,7 +23,7 @@ module.exports = {
                 let itemslocked = getLockedHeadgear(chosenuserid);
 
                 // Remove anything we're already wearing from the list
-                let sorted = process.headtypes.filter((f) => itemsworn.includes(f.value));
+                let sorted = process.autocompletes.headtypes.filter((f) => itemsworn.includes(f.value));
                 sorted = sorted.filter((f) => !itemslocked.includes(f.value));
                 await interaction.respond(sorted.slice(0, 10));
             }
@@ -64,7 +64,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: headwearuser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getHeadwearName(headwearuser.id, headwearchoice),
 				},
 			};
@@ -75,7 +75,7 @@ module.exports = {
 				return;
 			}
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, headwearuser.id)) {
 				// target is in heavy bondage
 				data.heavy = true;
 				if (headwearuser.id == interaction.user.id) {

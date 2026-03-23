@@ -10,7 +10,7 @@ const { getCorset, getBaseCorset } = require("./corsetfunctions");
 const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys, getArousalDescription, getArousalChangeDescription } = require("./vibefunctions");
 const { getChastityBra } = require("./vibefunctions");
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
-const { getHeavy, convertheavy } = require("./heavyfunctions");
+const { getHeavy, convertheavy, getBaseHeavy, getHeavyList, getHeavyRestrictions } = require("./heavyfunctions");
 const { canAccessChastity } = require("./vibefunctions");
 const { canAccessChastityBra } = require("./vibefunctions");
 const { getChastityName } = require("./vibefunctions");
@@ -55,7 +55,7 @@ function assignOutfit(userID, slot, options) {
 		}
 		optionbit++;
 		if (options.charAt(optionbit) == 1) {
-			storedobject.headwear = getHeadwear(userID).length > 0 ? getHeadwear(userID) : undefined;
+			storedobject.headwear = process.headwear[userID]; // Oops.
 		}
 		optionbit++;
 		if (options.charAt(optionbit) == 1) {
@@ -271,7 +271,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 					}
 					if (k == "headwear") {
 						let emoji = getHeavy(userID) || getMitten(userID) ? "⚠️" : "✅";
-						textdisplay = `${textdisplay}👤 Headwear: ${emoji}, `;
+						textdisplay = `${textdisplay}${process.emojis.gasmask} Headwear: ${emoji}, `;
 					}
 					if (k == "collar") {
 						let emoji = getHeavy(userID) || (!canAccessCollar(userID, userID, true).access && canAccessCollar(userID, userID, true).hascollar) ? "⚠️" : "✅";
@@ -739,7 +739,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
         }
         // Mittens
         if (getMitten(inspectuserID)) {
@@ -755,7 +755,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavy(inspectuserID).type}**`
+            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
+            let heavyrestrictions = getHeavyRestrictions(inspectuserID);
+            wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Arms: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Legs: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
         }
 
         // Chastity Belt
@@ -875,26 +877,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             clothingtext = `${clothingtext}\nNothing is worn at the moment`
         }
         clothingtext = `${clothingtext}\n`
-
-        let bartext = ``;
-        if (getOption(userID, "arousaldisplay") == "bar") {
-            if (getArousal(inspectuserID) > 2.0) {
-                bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-                if (calcDenialCoefficient(inspectuserID) > 1) {
-                    bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
-                }
-            }
-        }
-        if (getOption(userID, "arousaldisplay") == "desc") {
-            arousaltext = getArousalDescription(inspectuserID);
-            arousalchangetext = getArousalChangeDescription(inspectuserID)
-            bartext = `\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
-        }
-        if (getOption(userID, "arousaldisplay") == "numbers") {
-            if (getArousal(inspectuserID) > 2.0) {
-                bartext = `\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
-            }
-        }
+        let bartext = await getDisplayTexts(userID, inspectuserID);
 
         let collated = `${wearingtext}${clothingtext}${bartext}`;
 
@@ -913,7 +896,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
         }
         // Mittens
         if (getMitten(inspectuserID)) {
@@ -929,7 +912,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavy(inspectuserID).type}**`
+            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
+            let heavyrestrictions = getHeavyRestrictions(inspectuserID);
+            wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Touch Self: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Touch Others: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
         }
 
         let keyedrestraints = `## Keyed Restraints:`
@@ -1092,8 +1077,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 Other: []
             }
             getWearable(inspectuserID).map((w) => { return { base: getBaseWearable(w), item: w } }).forEach((basewearable) => {
-                if (basewearable.base.category && Object.keys(wearablescategories).includes(basewearable.base.category)) {
-                    wearablescategories[basewearable.base.category].push(basewearable.item)
+                if (basewearable?.base?.category && Object.keys(wearablescategories).includes(basewearable?.base?.category)) {
+                    wearablescategories[basewearable?.base?.category].push(basewearable.item)
                 }
                 else {
                     wearablescategories.Other.push(basewearable.item)
@@ -1191,6 +1176,62 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
     }
 
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
+}
+
+/*************
+ * Get the user's additional display texts, ordered and only viewable if necessary. 
+ * 
+ * - **userID** - User ID of the person viewing
+ * - **inspectuserID** - User ID of the person we're checking
+ ************/
+async function getDisplayTexts(userID, inspectuserID) {
+    let bartext = ``;
+
+    // ******************** Arousal Display
+    if (getArousal(inspectuserID) > 2.0) {
+        if (getOption(userID, "arousaldisplay") == "bar") {
+            bartext = `\n\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
+            if (calcDenialCoefficient(inspectuserID) > 1) {
+                bartext = `${bartext}\n\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+            }
+        }
+        if (getOption(userID, "arousaldisplay") == "desc") {
+            arousaltext = getArousalDescription(inspectuserID);
+            arousalchangetext = getArousalChangeDescription(inspectuserID)
+            bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
+        }
+        if (getOption(userID, "arousaldisplay") == "numbers") {
+            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(inspectuserID) * 10)}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
+        }
+    }
+    // ****************** 
+
+    // ****************** People in lap
+    let lappeople = [];
+    // Attempt to get the current guild member object for the user. This might have unintended consequences
+    // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
+    let inspectusername = (process.client.guilds.cache.map(guild => guild.members.cache.get(inspectuserID)).find(m => m !== undefined))?.displayName;
+    Object.keys(process.heavy).forEach((k) => {
+        let lapped = false;
+        process.heavy[k].forEach((h) => {
+            // If its a lap and starts with the inspect user's name, then it's OURS
+            if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
+                lappeople.push(k)
+            }
+        })
+    })
+    if (lappeople.length > 0) {
+        bartext = `${bartext}\n\n🫂 Subs in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
+    }
+    // ****************** 
+
+    // ****************** Shared Gasmask --- Can't currently test this because linked was disabled for now. 
+    if (process.headwear && process.headwear[inspectuserID] && process.headwear[inspectuserID].sharedbreathhose) {
+        bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${process.headwear[inspectuserID].sharedbreathhose}>`
+    } 
+    // ****************** 
+
+    return bartext.slice(1); // Cut the first linebreak for better look
 }
 
 exports.generateOutfitModal = generateOutfitModal;

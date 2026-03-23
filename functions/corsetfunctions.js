@@ -3,6 +3,8 @@ const path = require("path");
 const nlp = require("compromise");
 const nlpSpeech = require("compromise-speech");
 const { getHeadwear } = require("./headwearfunctions");
+const { getChastity } = require("./vibefunctions");
+const { getBaseChastity } = require("./chastityfunctions");
 nlp.extend(nlpSpeech);
 
 const TRAITS = ["name", "maxBreath", "minBreath", "breathRecovery", "gaspCoefficient", "gaspLimit", "silenceLimit", "minWords", "afterUsingBreath"];
@@ -150,6 +152,9 @@ const assignCorset = (user, type, tightness, origbinder) => {
 	if (old.type == type) {
 		getBaseCorset(old?.type)?.onAdjustTightness({ userID: user, oldTightness: old.tightness, newTightness: tightness });
 	}
+    if (getChastity(user) && getBaseChastity(getChastity(user).chastitytype)) {
+        getBaseChastity(getChastity(user).chastitytype).onCorsetChange({ userID: user, keyholderID: origbinder, oldcorset: old })
+    }
 	if (old.type != type) {
 		getBaseCorset(type)?.onEquip({ userID: user });
 	}

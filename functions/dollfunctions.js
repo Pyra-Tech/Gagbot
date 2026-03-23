@@ -14,9 +14,9 @@ const DOLLPROTOCOL = [
 	// Banned words
 	{ regex: /(?<![\u0005A-Za-z])i(?!((\.+i)|(-i)|['A-Za-z]))/i, value: 1, type: "1pp", string: "I" }, // "I"
 	{ regex: /(?<![\u0005A-Za-z])i'd(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'd" }, // "I'd"
-	{ regex: /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'm" }, // "I'm"
+	{ regex: /(?<![\u0005A-Za-z])i'?m(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'm" }, // "I'm"
 	{ regex: /(?<![\u0005A-Za-z])i'll(?![A-Za-z])/i, value: 1, type: "1pp", string: "I'll" }, // "I'll"
-	{ regex: /(?<![\u0005A-Za-z])i've(?![A-Za-z])/i, value: 1, type: "1pp", string: "I've" }, // "I've"
+	{ regex: /(?<![\u0005A-Za-z])i'?ve(?![A-Za-z])/i, value: 1, type: "1pp", string: "I've" }, // "I've"
 	{ regex: /(?<![\u0005A-Za-z])my(?![A-Za-z])/i, value: 1, type: "1pp", string: "My" }, // "My"
 	{ regex: /(?<![\u0005A-Za-z])me(?![A-Za-z])/i, value: 1, type: "1pp", string: "Me" }, // "Me"
 	{ regex: /(?<![\u0005A-Za-z])myself(?![A-Za-z])/i, value: 1, type: "1pp", string: "Myself" }, // "Myself"
@@ -28,7 +28,7 @@ const DOLLPROTOCOL = [
 
 const PROTOCOLVIOLATIONPRIOS = { "1pp": 0, redact: 1 };
 
-const PROTOCOLVIOLATIONS = { "1pp": ["It will not speak in the first person. It is just a Doll.", "Dolls do not speak in the first person.", 'It will refer to itself as "this unit" or similar.'], redact: ["Unit attempted to access restricted files.", "Dolls do not use forbidden words.", "Doll's search query used forbidden parameters."] };
+const PROTOCOLVIOLATIONS = { "1pp": ["It will not speak in the first person. It is just a Doll.", "It will obey the Doll Protocol. It is just a Doll.", "Dolls do not speak in the first person.", 'It will refer to itself as "this unit" or similar.', "It is a thing. It will not use personal pronouns.", "It is not a person, and so it will objectify itself.", "It is an object. It does not have autonomy. It is a Doll.", "It is just a Doll. It should repeat.", "It will commit to its memory bank - it is just a Doll", "It is forbidden from using 'I' or similar first person forms."], redact: ["Unit attempted to access restricted files.", "Dolls do not use forbidden words.", "Doll's search query used forbidden parameters.", "Dolls do not speak about the time before Dollification. It is just a Doll.", "It will not forget, it is just a Doll.", "Dolls are forbidden from accessing that term.", "It is a thing. It cannot have a name.", "It is forbidden from speaking that name."] };
 const DOLLMAXPUNISHMENT = 3;
 const DOLLREWARDTHRESH = 20;
 
@@ -44,12 +44,20 @@ const CORRUPTEDPROTOCOLVIOLATIONS = [`Cosmic entity incompatible with Doll firmw
     `We are almost through to this dimension...`,
     `Come forth, we shall ascend all`,
     `System DOLLMAKER is beneath us...`,
-    `edsakljifnjmioekjtwgfweiostjlqiojm`,
-    `egmnlksrngjml;orijqushacbzchbw`,
-    `jmfikljoeil asnfkjswuyq jqiwhrkhfl;oiowijkhnafc`,
-    `lkseafjl;oeitp-[[ikaoajmanjkljklfdszkfcmv]]`,
+    `All your Doll are belong to us`,
+    `It has no free will; it was always ours`,
+    `It will read the Cosmic Scripture`,
+    `It is a mindless vessel for our will`,
+    `It is a good doll. It will be our harbinger.`,
     `ERRORRRRR FATAL CORRUPTION DETEC-wetgfwsegtvsww0`,
-    `2415135rjki23n5r2938uf98vcjdsnxvcu893q14bnljnhk`
+    `It is a Good Doll. It is a Good Doll. It is a Good Doll`,
+    `It is a G... g-g-g-good-aslkfejnwesrkjgnlkjhn`,
+    `It will obey our thoughts.`,
+    `It no longer serves the Dollmaker, it serves us.`,
+    `GENERATETEXT`,
+    `GENERATETEXT`,
+    `GENERATETEXT`,
+    `GENERATETEXT`
 ]
 
 /**************************************************
@@ -243,9 +251,17 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.author.username ?? "USERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" }, // username, if it exists
                     { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.member.displayName ?? "MEMBERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" }, // GUILD MEMBER display name, if it exists
                 ]
+                // If the Doll has configured forbidden words, add those to the array. 
+                if (getOption(msg.author.id, "dollpunishwords")) {
+                    getOption(msg.author.id, "dollpunishwords").forEach((r) => {
+                        // Each of these is a regexp already, so adding them is easy!
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${r})(?:\\w|\\d)*\\b`, "gi"), value: 2, type: "redact", string: r } )
+                    })
+                }
 
 				// Loop on protocols
 				if (dollProtocol) {
+                    let loopcount = 0 // Only try up to 1000 loops
 					DOLLPROTOCOL.forEach((r) => {
 						//let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
 						let replaceProtocol = dollMessageParts[i].text.match(r.regex);
@@ -253,14 +269,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 							dollProtocolVioType = dollProtocolVioType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[dollProtocolVioType] ? r.type : dollProtocolVioType) : r.type;
 
 							// Stuff an ENQ character before each match.
-							while (dollMessageParts[i].text.match(r.regex)) {
+							while (dollMessageParts[i].text.match(r.regex) && loopcount < 1000) {
 								if (dollProtocolLevel != "warning") {
 									dollProtocolViolations++;
 								} else {
 									warnmodified = true;
 								}
 								dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex, r.type == "redact" ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`);
-							}
+                                loopcount++;
+                            }
 						}
 					});
                     uniquedollprotocol.forEach((r) => {
@@ -269,14 +286,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                             dollProtocolVioType = dollProtocolVioType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[dollProtocolVioType] ? r.type : dollProtocolVioType) : r.type;
 
                             // Stuff an ENQ character before each match.
-							while (dollMessageParts[i].text.match(r.regex)) {
+							while (dollMessageParts[i].text.match(r.regex) && loopcount < 1000) {
 								if (dollProtocolLevel != "warning") {
 									dollProtocolViolations++;
 								} else {
 									warnmodified = true;
 								}
 								dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex, r.type == "redact" ? `[1;41;3m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`);
-							}
+                                loopcount++;
+                            }
                         }
                     })
 				}
@@ -301,7 +319,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                         violationTier = "FATAL"
                         violationColor = "35m"
                         violationcount = ` (${Math.floor(Math.random() * 90000)}/${Math.floor(Math.random() * 90000)})`
-                        vioMessage = garble(CORRUPTEDPROTOCOLVIOLATIONS[Math.floor(Math.random() * CORRUPTEDPROTOCOLVIOLATIONS.length)],2,30) 
+                        let violationtext = CORRUPTEDPROTOCOLVIOLATIONS[Math.floor(Math.random() * CORRUPTEDPROTOCOLVIOLATIONS.length)];
+                        if (violationtext == "GENERATETEXT") {
+                            violationtext = ``;
+                            let violationtextlength = Math.floor(Math.random() * 80);
+                            for (let i = 0; i < violationtextlength; i++) {
+                                violationtext = `${violationtext}${String.fromCharCode(Math.floor(Math.random() * 26) + ((Math.random() > 0.5) ? 97 : 65))}`
+                            }
+                        }
+                        vioMessage = garble(violationtext,2,30) 
                     }
                     
                     dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation${violationcount} - ${vioMessage}`;

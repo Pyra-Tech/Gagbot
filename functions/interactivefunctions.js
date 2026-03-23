@@ -6,22 +6,24 @@ const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { collartypes, getCollarKeyholder, canAccessCollar, getCollar, getCollarTimelock, getCollarName } = require("./collarfunctions.js");
 const { getOption } = require("./../functions/configfunctions.js");
 const { getChastityKeyholder, getChastity, getChastityTimelock } = require("./../functions/vibefunctions.js");
-const { getHeavyBinder, convertheavy, heavytypes } = require("./../functions/heavyfunctions.js");
-const { getGagBinder, getMittenBinder, mittentypes, gagtypes } = require("./../functions/gagfunctions.js");
+const { getHeavyBinder, convertheavy, heavytypes, getHeavyList } = require("./../functions/heavyfunctions.js");
+const { getGagBinder, getMittenBinder, mittentypes, gagtypes, getMittenName, getGags, getMitten } = require("./../functions/gagfunctions.js");
 const { getCorsetBinder } = require("./../functions/corsetfunctions.js");
-const { getHeadwearBinder, headweartypes } = require("./../functions/headwearfunctions.js");
+const { getHeadwearBinder, headweartypes, getHeadwearName, getHeadwear } = require("./../functions/headwearfunctions.js");
 const { configoptions } = require("./configfunctions.js");
 const { canAccessChastity } = require("./vibefunctions.js");
-const { wearabletypes } = require("./wearablefunctions.js");
+const { wearabletypes, getWearable } = require("./wearablefunctions.js");
 const { getChastityName } = require("./vibefunctions.js");
 const { getChastityBra } = require("./vibefunctions.js");
 const { getChastityBraTimelock } = require("./vibefunctions.js");
 const { getChastityBraName } = require("./vibefunctions.js");
+const { getBaseChastity } = require("./chastityfunctions.js");
+const { getToys } = require("./toyfunctions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
 	let outtext = `# Consent to being Bound
-<@${process.env.CLIENTID}> is a bot which facilitates restraints in this channel, which have certain effects on you as you wear them, primarily centered around some form of speech impairment. Effects will only apply within this channel. 
+<@${process.client.user.id}> is a bot which facilitates restraints in this channel, which have certain effects on you as you wear them, primarily centered around some form of speech impairment. Effects will only apply within this channel. 
 Restraints and toys used include the following:
 - Gags, Corsets and Toys: Impair and modify speech in various ways
 - Mittens and Chastity: Restrict modifying these settings
@@ -631,11 +633,6 @@ const assignMemeImages = () => {
 function checkBondageRemoval(userID, targetID, type) {
 	let useroption = getOption(targetID, "removebondage");
 
-	console.log(`PERMS`);
-	console.log(useroption == "all_binder_and_keyholder");
-	console.log(canAccessCollar(userID, targetID, true));
-	console.log(useroption == "all_binder_and_keyholder" && (canAccessChastity(targetID, userID, true).access || canAccessCollar(targetID, userID, true).access));
-
 	// Return true immediately if it's accepted without question
 	if (useroption == "accept") {
 		return true;
@@ -656,7 +653,7 @@ function checkBondageRemoval(userID, targetID, type) {
 	if (useroption == "all_binder" || useroption == "all_binder_and_keyholder") {
 		let restraintobject;
 		if (type == "heavy") {
-			restraintobject = getHeavyBinder(targetID);
+			restraintobject = getHeavyBinder(targetID, type);
 		}
 		if (type == "gag") {
 			restraintobject = getGagBinder(targetID);
@@ -750,7 +747,10 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 				restraintfullname = convertheavy(restraint);
 				break;
 			case "gag":
-				restraintfullname = process.gagtypes.find((f) => f.value == restraint)?.name;
+				restraintfullname = process.autocompletes.gag.find((f) => f.value == restraint)?.name;
+				break;
+            case "mask":
+				restraintfullname = process.autocompletes.headtypes.find((f) => f.value == restraint)?.name;
 				break;
 			default:
 				console.log(`Could not find a restraint by that type.`);
@@ -804,6 +804,190 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 	});
 }
 
+// Prompts the target to put on a restraint such as a chastity belt or armbinder. 
+// Will never be available for collars.
+// Will ALWAYS nag the user unless they're collared for that respective restraint.
+async function handleMajorRestraint(user, target, type, restraint) {
+	return new Promise(async (res, rej) => {
+		let hasOption = getOption(target.id, `majorrestraint`);
+		if (canAccessCollar(target.id, user.id).access) {
+            let bondagetype = type;
+            if (type == "chastitybra") { bondagetype = "chastity" }
+            if (getCollar(target.id) && getCollar(target.id)[bondagetype]) {
+                // User is able to access the collar of the user *and* it has the permission. 
+                res(true);
+			    return;
+            }
+		} 
+
+		if (hasOption == "disabled") {
+			rej("Disabled");
+			return;
+		} // NOPE
+
+        if (process.recentlypromptedmajor && process.recentlypromptedmajor[target.id] && process.recentlypromptedmajor[target.id] > Date.now()) {
+            rej("Cooldown")
+            return;
+        }
+
+		let restraintfullname = ``;
+        let prettytype = ``;
+        let emoji = ``;
+        let limitationstext = ``;
+		switch (type) {
+			case "heavy":
+				restraintfullname = convertheavy(restraint);
+                prettytype = "Heavy Bondage"
+                emoji = `${process.emojis.armbinder}`;
+                limitationstext = `This will prevent you from using most commands in the bot, including **/unheavy** to free yourself!`
+				break;
+			case "chastity":
+				restraintfullname = getBaseChastity(restraint)?.name;
+                prettytype = "Chastity Belt"
+                emoji = `${process.emojis.chastity}`;
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+				break;
+            case "chastitybra":
+				restraintfullname = getBaseChastity(restraint)?.name;
+                prettytype = "Chastity Bra"
+                emoji = `${process.emojis.chastitybra}`;
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+				break;
+            case "mitten":
+                restraintfullname = getMittenName(undefined, restraint);
+                prettytype = "Mittens"
+                emoji = `${process.emojis.mitten}`;
+                limitationstext = `This will prevent you from adding or removing gags with **/gag** or masks with **/mask** until someone else unmittens you!`
+                break;
+            case "mask":
+                restraintfullname = getHeadwearName(undefined, restraint);
+                prettytype = "Mask"
+                emoji = `${process.emojis.gasmask}`;
+                limitationstext = `This may have a major effect on your speech or emoji, as well as blinding you in **/inspect**!`
+                break;
+			default:
+				console.log(`Could not find a restraint by that type.`);
+				rej("Error");
+				break;
+		}
+
+		// We need to ASK
+		let prompttext = `## ${user} would like to place a ${emoji}**${prettytype}** restraint on you: **${restraintfullname}**\n\n${limitationstext}\n\nDo you wish to allow this action?`;
+		let buttons = [
+            new ButtonBuilder()
+                .setCustomId("denyButton")
+                .setLabel("Deny")
+                .setStyle(ButtonStyle.Danger), 
+            new ButtonBuilder()
+                .setCustomId("acceptButton")
+                .setLabel("Allow (Wait...)")
+                .setStyle(ButtonStyle.Success)
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId("cooldown15")
+                .setLabel("Block Requests for 15m")
+                .setStyle(ButtonStyle.Danger),
+            /*new ButtonBuilder()
+                .setCustomId("cooldown60")
+                .setLabel("Block Requests for 1h")
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId("cooldown1440")
+                .setLabel("Block Requests for 24h")
+                .setStyle(ButtonStyle.Danger)*/
+        ]
+
+        try {
+            let dmchannel = await target.createDM();
+            await dmchannel
+                .send({ content: `${prompttext}\n-# You must wait 15 seconds for this button to activate...`, components: [new ActionRowBuilder().addComponents(...buttons)] })
+                .then(async (mess) => {
+                    // Create a collector for up to 5 minutes
+                    const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
+
+                    collector.on("collect", async (i) => {
+                        console.log(i);
+                        if (i.customId == "cooldown15") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 900000
+                        }
+                        if (i.customId == "cooldown60") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 3600000
+                        }
+                        if (i.customId == "cooldown1440") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 86400000
+                        }
+                        if (i.customId == "acceptButton") {
+                            await mess.delete().then(() => {
+                                i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
+                            });
+                            res(true);
+                        } else {
+                            await mess.delete().then(() => {
+                                i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
+
+                    collector.on("end", async (collected) => {
+                        // timed out
+                        if (collected.length == 0) {
+                            await mess.delete().then(() => {
+                                i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
+
+                    // Wait 15 seconds before editing the message with the new components
+                    await new Promise(resolve => setTimeout(resolve, 15000));
+
+                    let editedbuttons = [
+                        new ButtonBuilder()
+                            .setCustomId("denyButton")
+                            .setLabel("Deny")
+                            .setStyle(ButtonStyle.Danger), 
+                        new ButtonBuilder()
+                            .setCustomId("acceptButton")
+                            .setLabel("Allow")
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown15")
+                            .setLabel("Block Requests for 15m")
+                            .setStyle(ButtonStyle.Danger),
+                        /*new ButtonBuilder()
+                            .setCustomId("cooldown60")
+                            .setLabel("Block Requests for 1h")
+                            .setStyle(ButtonStyle.Danger),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown1440")
+                            .setLabel("Block Requests for 24h")
+                            .setStyle(ButtonStyle.Danger)*/
+                    ]
+
+                    mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
+                })
+                .catch((err) => {
+                    console.log(`Error sending message to major bind ${user}.`);
+                    rej("NoDM");
+                });
+        }
+        catch (err) {
+            console.log(err);
+            rej("NoDM")
+        }
+	});
+}
+
 async function generateHelpModal(userid, section, page) {
     let pagecomponents = [];
     // This should only ever exist but lol
@@ -843,7 +1027,7 @@ function generateListTexts() {
         "Chastity Belt": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Belt").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
         "Chastity Bra": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Bra").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
         Corset: Object.entries(process.corsettypes).map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
-        Mask: headweartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `` })),
+        Mask: Object.entries(process.headtypes).filter((f) => !f[1].hidden).map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `` })),
         Collar: collartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
         Toys: Object.entries(process.toytypes).map((f) => f[1]).sort((a, b) => a.toyname.localeCompare(b.toyname)).map((heavy) => ({ name: heavy.toyname, value: heavy.category })),
         Wearable: wearabletypes.filter((f) => (f.name.length > 0)).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.colorable ? `Colorable` : `` })),
@@ -1069,6 +1253,176 @@ async function generateEditMessageModal(messagecontent, messageid, channelid, hu
     return modal;
 }
 
+/*******
+ * Generate a config modal for extra things to configure on the item when worn.  
+ * - **(interaction) interaction**: Which interaction to respond to
+ * - **(string) userid**: Which user to retrieve this for
+ * - **(string) type**: (optional) Which item to output, if it exists
+ * - **(boolean) force**: (optional) Forcibly retrieve the config for an item, must have itemname
+ * 
+ * Returns undefined if nothing can be generated 
+*********/
+async function generateExtraConfig(interaction, userid, itemname, force) {
+    let interactionoutput = [];
+    if (itemname) {
+        if (force) {
+            if (process.extraconfigfunctions.gags && process.extraconfigfunctions.gags[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.gags[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.headwear && process.extraconfigfunctions.headwear[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.headwear[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.mitten && process.extraconfigfunctions.mitten[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.mitten[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.heavy && process.extraconfigfunctions.heavy[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.heavy[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.chastity && process.extraconfigfunctions.chastity[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.chastity[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.chastitybra && process.extraconfigfunctions.chastitybra[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.chastitybra[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.wearable && process.extraconfigfunctions.wearable[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.wearable[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.toys && process.extraconfigfunctions.toys[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.toys[itemname](interaction, userid, itemname));
+            }
+            if (process.extraconfigfunctions.collar && process.extraconfigfunctions.collar[itemname]) {
+                interactionoutput.push(await process.extraconfigfunctions.collar[itemname](interaction, userid, itemname));
+            }
+        }
+        else {
+            // Gags
+            getGags(userid).forEach(async (g) => {
+                if ((g.gagtype == itemname) && process.extraconfigfunctions.gags && process.extraconfigfunctions.gags[g.gagtype]) {
+                    interactionoutput.push(await process.extraconfigfunctions.gags[g.gagtype](interaction, userid, itemname));
+                }
+            });
+            // Headwear
+            getHeadwear(userid).forEach(async (h) => {
+                console.log(itemname)
+                if ((h == itemname) && process.extraconfigfunctions.headwear && process.extraconfigfunctions.headwear[h]) {
+                    interactionoutput.push(await process.extraconfigfunctions.headwear[h](interaction, userid, itemname));
+                }
+            });
+            // Mittens
+            if (getMitten(userid)) {
+                if ((getMitten(userid).mittenname == itemname) && process.extraconfigfunctions.mitten && process.extraconfigfunctions.mitten[getMitten(userid).mittenname]) {
+                    interactionoutput.push(await process.extraconfigfunctions.mitten[getMitten(userid).mittenname](interaction, userid, itemname));
+                }
+            }
+            // Heavy Bondage
+            if (getHeavyList(userid).length > 0) {
+                getHeavyList(userid).forEach(async (h) => {
+                    if ((h.type == itemname) && process.extraconfigfunctions.heavy && process.extraconfigfunctions.heavy[h.type]) {
+                        interactionoutput.push(await process.extraconfigfunctions.heavy[h.type](interaction, userid, itemname));
+                    }
+                })
+            }
+            // Chastity Belts
+            if (getChastity(userid)) {
+                if ((getChastity(userid).chastitytype == itemname) && process.extraconfigfunctions.chastity && process.extraconfigfunctions.chastity[getChastity(userid).chastitytype]) {
+                    interactionoutput.push(await process.extraconfigfunctions.chastity[getChastity(userid).chastitytype](interaction, userid, itemname));
+                }
+            }
+            // Chastity Bras
+            if (getChastityBra(userid)) {
+                if ((getChastityBra(userid).chastitytype == itemname) && process.extraconfigfunctions.chastitybra && process.extraconfigfunctions.chastitybra[getChastityBra(userid).chastitytype]) {
+                    interactionoutput.push(await process.extraconfigfunctions.chastitybra[getChastityBra(userid).chastitytype](interaction, userid, itemname));
+                }
+            }
+            // Wearables
+            getWearable(userid).forEach(async (h) => {
+                if ((h == itemname) && process.extraconfigfunctions.wearable && process.extraconfigfunctions.wearable[h]) {
+                    interactionoutput.push(await process.extraconfigfunctions.wearable[h](interaction, userid, itemname));
+                }
+            });
+            // Toys
+            getToys(userid).forEach(async (h) => {
+                if ((h.type == itemname) && process.extraconfigfunctions.toys && process.extraconfigfunctions.toys[h.type]) {
+                    interactionoutput.push(await process.extraconfigfunctions.toys[h.type](interaction, userid, itemname));
+                }
+            });
+            // Collars
+            if (getCollar(userid)) {
+                if ((getCollar(userid).collartype == itemname) && process.extraconfigfunctions.collar && process.extraconfigfunctions.collar[getCollar(userid).collartype]) {
+                    interactionoutput.push(await process.extraconfigfunctions.collar[getCollar(userid).collartype](interaction, userid, itemname));
+                }
+            }
+        }
+    }
+    else {
+        // Gags
+        getGags(userid).forEach(async (g) => {
+            if (process.extraconfigfunctions.gags && process.extraconfigfunctions.gags[g.gagtype]) {
+                interactionoutput.push(await process.extraconfigfunctions.gags[g.gagtype](interaction, userid, itemname));
+            }
+        });
+        // Headwear
+        getHeadwear(userid).forEach(async (h) => {
+            if (process.extraconfigfunctions.headwear && process.extraconfigfunctions.headwear[h]) {
+                interactionoutput.push(await process.extraconfigfunctions.headwear[h](interaction, userid, itemname));
+            }
+        });
+        // Mittens
+        if (getMitten(userid)) {
+            if (process.extraconfigfunctions.mitten && process.extraconfigfunctions.mitten[getMitten(userid).mittenname]) {
+                interactionoutput.push(await process.extraconfigfunctions.mitten[getMitten(userid).mittenname](interaction, userid, itemname));
+            }
+        }
+        // Heavy Bondage
+        if (getHeavyList(userid).length > 0) {
+            getHeavyList(userid).forEach(async (h) => {
+                if (process.extraconfigfunctions.heavy && process.extraconfigfunctions.heavy[h.type]) {
+                    interactionoutput.push(await process.extraconfigfunctions.heavy[h.type](interaction, userid, itemname));
+                }
+            })
+        }
+        // Chastity Belts
+        if (getChastity(userid)) {
+            if (process.extraconfigfunctions.chastity && process.extraconfigfunctions.chastity[getChastity(userid).chastitytype]) {
+                interactionoutput.push(await process.extraconfigfunctions.chastity[getChastity(userid).chastitytype](interaction, userid, itemname));
+            }
+        }
+        // Chastity Bras
+        if (getChastityBra(userid)) {
+            if (process.extraconfigfunctions.chastitybra && process.extraconfigfunctions.chastitybra[getChastityBra(userid).chastitytype]) {
+                interactionoutput.push(await process.extraconfigfunctions.chastitybra[getChastityBra(userid).chastitytype](interaction, userid, itemname));
+            }
+        }
+        // Wearables
+        getWearable(userid).forEach(async (h) => {
+            if (process.extraconfigfunctions.wearable && process.extraconfigfunctions.wearable[h]) {
+                interactionoutput.push(await process.extraconfigfunctions.wearable[h](interaction, userid, itemname));
+            }
+        });
+        // Toys
+        getToys(userid).forEach(async (h) => {
+            if (process.extraconfigfunctions.toys && process.extraconfigfunctions.toys[h.type]) {
+                interactionoutput.push(await process.extraconfigfunctions.toys[h.type](interaction, userid, itemname));
+            }
+        });
+        // Collars
+        if (getCollar(userid)) {
+            if (process.extraconfigfunctions.collar && process.extraconfigfunctions.collar[getCollar(userid).collartype]) {
+                interactionoutput.push(await process.extraconfigfunctions.collar[getCollar(userid).collartype](interaction, userid, itemname));
+            }
+        }
+    }
+    console.log(interactionoutput);
+    
+    if (interactionoutput.length <= 0) {
+        return undefined;
+    }
+    else {
+        // Flatten the top level component. This inherently spreads each output component given back
+        return { components: interactionoutput.flat(), flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] }
+    }
+}
+
 exports.consentMessage = consentMessage;
 exports.getConsent = getConsent;
 exports.handleConsent = handleConsent;
@@ -1082,6 +1436,8 @@ exports.handleBondageRemoval = handleBondageRemoval;
 exports.checkBondageRemoval = checkBondageRemoval;
 exports.handleExtremeRestraint = handleExtremeRestraint;
 
+exports.handleMajorRestraint = handleMajorRestraint;
+
 exports.generateHelpModal = generateHelpModal;
 
 exports.generateKeyGivingModal = generateKeyGivingModal;
@@ -1091,3 +1447,5 @@ exports.generateEditMessageModal = generateEditMessageModal;
 exports.assignMemeImages = assignMemeImages;
 
 exports.generateListTexts = generateListTexts;
+
+exports.generateExtraConfig = generateExtraConfig;

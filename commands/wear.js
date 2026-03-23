@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
+const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getWearable, assignWearable, getWearableName, getBaseWearable } = require("../functions/wearablefunctions.js");
@@ -71,7 +71,7 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: wearableuser,
-					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getWearableName(wearableuser.id, wearablechoice),
 				},
 			};
@@ -98,7 +98,7 @@ module.exports = {
                 return;
             }
 
-			if (getHeavy(interaction.user.id)) {
+			if (!getHeavyBound(interaction.user.id, wearableuser.id)) {
 				// target is in heavy bondage
 				data.heavy = true;
 				if (wearableuser.id == interaction.user.id) {

@@ -1,0 +1,28 @@
+const { messageSendChannel } = require("../../functions/messagefunctions");
+const { getPronouns } = require("../../functions/pronounfunctions");
+const { setUserVar, getUserVar } = require("../../functions/usercontext");
+
+function msgfunction(userid, data) {
+    if (getUserVar(userid, "motionplugtime") == undefined) {
+        if (process.recentmessages[userid]) {
+            try {
+                messageSendChannel(`<@${userid}>'s movement turns on ${getPronouns(userid, "possessiveDeterminer")} Motion Sensitive Plug!`, process.recentmessages[userid])
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    setUserVar(userid, "motionplugtime", Date.now() + 180000)
+    return;
+}
+
+async function functiontick(userID) {
+    if (getUserVar(userID, "motionplugtime") < Date.now()) {
+        console.log(`Ending Motion Sensitive plug for ${userID}`)
+        setUserVar(userID, "motionplugtime", undefined)
+    }
+}
+
+exports.functiontick = functiontick;
+exports.msgfunction = msgfunction;
