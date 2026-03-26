@@ -246,11 +246,27 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 // Create a unique Doll protocol list
                 // This will initially include the wearer's display name and their username
                 // More can be eventually added with a config option
-                let uniquedollprotocol = [
-                    { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.author.displayName ?? "DISPLAYNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "DISPLAYNAME" }, // USER display name, if it exists
-                    { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.author.username ?? "USERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" }, // username, if it exists
-                    { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.member.displayName ?? "MEMBERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" }, // GUILD MEMBER display name, if it exists
-                ]
+                let uniquedollprotocol = []
+
+                // Capture the displayname of the user.
+                if (msg.author.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
+                    msg.author.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "DISPLAYNAME" })
+                    })
+                }
+                // Capture the username of the user.
+                if (msg.author.username.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
+                    msg.author.username.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" })
+                    })
+                }
+                // Capture the member displayname of the user.
+                if (msg.member.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
+                    msg.member.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" })
+                    })
+                }
+
                 // If the Doll has configured forbidden words, add those to the array. 
                 if (getOption(msg.author.id, "dollpunishwords")) {
                     getOption(msg.author.id, "dollpunishwords").forEach((r) => {

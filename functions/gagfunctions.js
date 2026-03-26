@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName, recordMessage } = require(`./../functions/messagefunctions.js`);
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require("./vibefunctions.js");
@@ -606,8 +606,8 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			}
 			Promise.all(promisearr).then(async (v) => {
 				// Send it!
-				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply).then(() => {
-					// Cleanup after sending
+				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply).then((modifiedmsg) => {
+                    // Cleanup after sending
 					msg.delete().then(() => {
 						attachments.forEach((attach) => {
 							try {
@@ -635,7 +635,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 				outtext = "Something went wrong. Ping <@125093095405518850> and let her know!";
 			}
 			// Finally send it!
-			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply).then(() => {
+			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply).then((modifiedmsg) => {
 				// Cleanup after sending.
 				msg.delete().then(() => {
 					// If the user violates Doll Protocol, do STUFF

@@ -568,6 +568,37 @@ const configoptions = {
 				return false;
 			},
 		},
+        recordmessages: {
+			name: "Record Messages",
+			desc: "When modifying messages, can the bot temporarily record the original message contents?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Editing messages will use the edited contents*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "RecordMessagesDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "Editing Bot messages will use original contents",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "RecordMessages",
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
 		revokeconsent: {
 			name: "Revoke Consent",
 			desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",

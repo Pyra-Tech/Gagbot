@@ -329,7 +329,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Latex Vaccube");
 							},
-							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneelUSER_S within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
+							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneelTARGET_S within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
 						},
 						// Furniture
 						{
