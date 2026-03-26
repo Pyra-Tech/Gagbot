@@ -1346,14 +1346,14 @@ const texts_mitten = {
                 `USER_TAG wriggles USER_THEIR fingers into some VAR_C2. USER_THEIR_CAP gag will be impossible to remove!`,
                 `As if USER_THEY wantUSER_S to stay gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`,
                 `USER_TAG puts on a pair of VAR_C2 with a pair of padlocks. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`,
-                `USER_TAG balls up USER_THEIR fist as USER_THEY slip USER_THEIR hands into a pair of VAR_C2 and secures them!`
+                `USER_TAG balls up USER_THEIR fist as USER_THEY slipUSER_S USER_THEIR hands into a pair of VAR_C2 and secures them!`
             ],
             nogag: [
                 `USER_TAG slips USER_THEIR hands into some VAR_C2! USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`,
                 `USER_TAG wriggles USER_THEIR fingers into some VAR_C2. Gags will be impossible to remove!`,
                 `As if USER_THEY wantUSER_S to be gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`,
                 `USER_TAG puts on a pair of VAR_C2 with a pair of padlocks. USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`,
-                `USER_TAG balls up USER_THEIR fist as USER_THEY slip USER_THEIR hands into a pair of bondage mittens and secure them!`
+                `USER_TAG balls up USER_THEIR fist as USER_THEY slipUSER_S USER_THEIR hands into a pair of bondage mittens and secure them!`
             ]
         },
         other: {
