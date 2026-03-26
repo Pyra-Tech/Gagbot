@@ -69,7 +69,7 @@ const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, is
                 webhookClient = process.webhook[channel_id];
             }
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, allowedMentions: { parse: [] } }).then((webmess) => {
-                if (isreply) {
+                if (isreply && !threadId) {
                     recordMessage(msg, webmess);
                     webhookClient.editMessage(webmess, { content: `${webmess.content.slice(0,1998)} ​`, allowedMentions: { parse: ["users"] } }).then(() => {
                         return webmess;
@@ -113,7 +113,7 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
             });
 
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
-                if (isreply) {
+                if (isreply && !threadId) {
                     recordMessage(msg, webmess);
                     webhookClient.editMessage(webmess, { content: `${webmess.content.slice(0,1998)} ​`, files: attachments, allowedMentions: { parse: ["users"] } }).then(() => {
                         return webmess;
