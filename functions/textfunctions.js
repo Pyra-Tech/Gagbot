@@ -1360,7 +1360,7 @@ const texts_mitten = {
             gag: [
                 `USER_TAG grabs TARGET_TAG's hands, shoving a set of VAR_C2 on them! TARGET_THEY_CAP won't be able to use TARGET_THEIR hands!`,
 				`USER_TAG grabs TARGET_TAG's hands, shoving a pair of VAR_C2 on and putting a lock on the straps, sealing away TARGET_THEIR hands!`,
-                `USER_TAG giggles as USER_THEY slip a pair of VAR_C2 on TARGET_TAG's hands to ensure TARGET_THEY can't remove TARGET_THEIR gag!`,
+                `USER_TAG giggles as USER_THEY slipUSER_S a pair of VAR_C2 on TARGET_TAG's hands to ensure TARGET_THEY can't remove TARGET_THEIR gag!`,
                 `Before TARGET_TAG can blink, USER_TAG puts a pair of VAR_C2 on TARGET_THEIR hands, keeping TARGET_THEIR gag safe and secure!`
             ],
             nogag: [
