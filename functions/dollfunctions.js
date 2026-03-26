@@ -248,22 +248,22 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 // More can be eventually added with a config option
                 let uniquedollprotocol = []
 
-                // Capture the displayname of the user.
+                // Capture the displayname of the user.  --------- we had (?:\\w|\\d)* on either side of the p term, but maybe we dont really need it...
                 if (msg.author.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
                     msg.author.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
-                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "DISPLAYNAME" })
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(${p})\\b`, `gi`), value: 2, type: "redact", string: "DISPLAYNAME" })
                     })
                 }
                 // Capture the username of the user.
                 if (msg.author.username.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
                     msg.author.username.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
-                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" })
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(${p})\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" })
                     })
                 }
                 // Capture the member displayname of the user.
                 if (msg.member.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi)) {
                     msg.member.displayName.match(/\b(?!\w*doll\w*)[a-z]+\b/gi).forEach((p) => {
-                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${p})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" })
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(${p})\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" })
                     })
                 }
 
