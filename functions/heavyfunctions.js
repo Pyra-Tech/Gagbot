@@ -157,7 +157,7 @@ const heavytypes = [
     { name: "Delivery Crate", value: "crate_delivery", tags: ["confined"], denialCoefficient: 4, heavytags: ["container","arms", "legs"] },
     { name: "Dolly", value: "dolly", tags: ["confined"], denialCoefficient: 3, heavytags: ["container","arms", "legs"] },
     { name: "Pet Carrier", value: "carrier", tags: ["pet", "confined"], denialCoefficient: 4, heavytags: ["container"] },
-	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2, heavytags: ["container","arms", "legs"] },
+	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{
