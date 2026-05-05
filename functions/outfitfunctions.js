@@ -29,6 +29,7 @@ const { calcDenialCoefficient } = require("./vibefunctions");
 const { getToys, getBaseToy } = require("./toyfunctions");
 const { getOption } = require("./configfunctions");
 const { getUserVar } = require("./usercontext");
+const { statsGeneratePage } = require("./statsfunctions");
 
 function getOutfits(userID) {
 	if (process.outfits == undefined) {
@@ -721,20 +722,27 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             .setEmoji({ name: "armbinder", id: process.emojis["armbinder"].match(/(?:<:[\w:\d]+:)(\d+)(?:>)/)[1] })
 			.setStyle(menu == "restraints" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "restraints" ? true : false),
-		// Restraints
+		// Wearables
 		new ButtonBuilder()
 			.setCustomId(`inspect_wearable_${inspectuserID}_1`)
 			.setLabel("Apparel")
             .setEmoji({ name: "👗" })
 			.setStyle(menu == "wearable" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "wearable" ? true : false),
-        // Restraints
+        // Keys
 		new ButtonBuilder()
 			.setCustomId(`inspect_keys_${inspectuserID}_1`)
 			.setLabel("Keys")
             .setEmoji({ name: "🔑" })
 			.setStyle(menu == "keys" ? ButtonStyle.Primary : ButtonStyle.Secondary)
 			.setDisabled(menu == "keys" ? true : false),
+        // Keys
+		new ButtonBuilder()
+			.setCustomId(`inspect_stats_${inspectuserID}_1`)
+			.setLabel("Stats")
+            .setEmoji({ name: "📊" })
+			.setStyle(menu == "stats" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(menu == "stats" ? true : false),
 	];
 	pagecomponents.push(new ActionRowBuilder().addComponents(...tabbuttons));
 
@@ -1183,6 +1191,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
 
         pagecomponents.push(new TextDisplayBuilder().setContent(collated))
+    }
+    else if (menu == "stats") {
+        pagecomponents.push(new TextDisplayBuilder().setContent(statsGeneratePage(inspectuserID)))
     }
 
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
