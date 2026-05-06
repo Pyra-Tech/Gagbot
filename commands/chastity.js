@@ -72,7 +72,7 @@ module.exports = {
 				textarray: "texts_chastity",
 				textdata: {
 					interactionuser: interaction.user,
-					chastityuser: chastityuser,
+					targetuser: chastityuser,
 					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: (braorbelt == "chastitybelt" ? getChastityName(chastityuser, bondagetype) : getChastityBraName(chastityuser, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
                     c3: `<@${braorbelt == "chastitybelt" ? getChastity(chastityuser)?.keyholder : getChastityBra(chastityuser)?.keyholder}>`
