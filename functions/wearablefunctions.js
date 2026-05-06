@@ -72,13 +72,15 @@ let wearabletypes = [
 	{ name: "Blinkers", value: "blinkers_leather", category: "Cosplay", colorable: true },
 	{ name: "Reins", value: "reins_leather", category: "Cosplay", colorable: true },
 
-	// Maids
+	// Maids and Butlers
 	{ name: "Maid Dress", value: "maid_dress", colorable: true, category: "Cosplay", uniqueColors: ["Gothic", "Victorian", "Oriental", "French", "Cyber", "Frilly"] },
 	{ name: "Latex Maid Dress", value: "maiddress_latex", colorable: true, category: "Cosplay", uniqueColors: ["Starry", "Shadow", "Gothic", "French", "Cyber"] },
 	{ name: "Apron", value: "maid_apron", colorable: true, category: "Cosplay", forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Latex Apron", value: "maidapron_latex", colorable: true, category: "Cosplay", forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Maid Headdress", value: "maid_headdress", category: "Cosplay", },
 	{ name: "Maid Badge of Office", value: "maid_badge", colorable: true, category: "Cosplay", uniqueColors: ["Brass", "Silver", "Gold"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Butler's Tailcoat", value: "butler_tailcoat", colorable: true, category: "Cosplay" },
+	{ name: "Butler's Waistcoat", value: "butler_waistcoat", colorable: true, category: "Cosplay" },
 
 	//Dolls and Drones
 	{ name: "Drone Suit", value: "dronesuit", colorable: true, category: "Doll" },
@@ -146,6 +148,7 @@ let wearabletypes = [
 	{ name: "Mesh Top", value: "top_mesh", colorable: true, category: "Upper Body" },
 	{ name: "Lycra Top", value: "top_lycra", colorable: true, category: "Upper Body" },
 	{ name: "Checked Shirt", value: "shirt_checked", colorable: true, category: "Upper Body" },
+	{ name: "Formal Shirt", value: "shirt_formal", colorable: true, category: "Upper Body" },
 	{ name: "Button-up Blouse", value: "buttonup_blouse", colorable: true, category: "Upper Body", uniqueColors: ["Witchy", "Latex"] },
 	{ name: "Comfortable Jacket", value: "jacket_comfortable", colorable: true, category: "Upper Body", uniqueColors: ["Leather", "Bomber", "Double-breasted"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "T-shirt", value: "tshirt", colorable: true, category: "Upper Body", uniqueColors: ["Goth Metal", "Plain", "Black", "Alternative", "Grey", "Simple", "Striped"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
@@ -308,8 +311,9 @@ let wearabletypes = [
 	{ name: "Cozy Blanket", value: "blanket_cozy", colorable: true, category: "Misc" },
 	{ name: "Silk Scarf", value: "scarf_silk", colorable: true, category: "Misc" },
 	{ name: "Necklace", value: "necklace", colorable: true, category: "Misc", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings", "Keychain"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Bowtie", value: "bowtie", colorable: true, category: "Misc" },
+	{ name: "Bow Tie", value: "bow_tie", colorable: true, category: "Misc" },
 	{ name: "Tie", value: "tie", colorable: true, category: "Misc" },
+	{ name: "Pocket Watch", value: "pocket_watch", colorable: true, category: "Misc", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Hoshi no Tama", value: "tama", category: "Misc" },
 	{ name: "Silk Belt", value: "belt_silk", colorable: true, category: "Misc" },
 	{ name: "Leather Belt", value: "belt_leather", colorable: true, category: "Misc" },
