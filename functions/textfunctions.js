@@ -883,6 +883,12 @@ const texts_heavy = {
                         },
                         text: `USER_TAG walks over to the VAR_C2, clipping on a leash and blushing as USER_THEY kneelUSER_S down and tieUSER_S the other end to the VAR_C2!`,
                     },
+					{
+                        only: (t) => {
+                            return t.c2.includes("Dancer's Pole");
+                        },
+                        text: `USER_TAG climbs onto the stage, stalking over to the VAR_C2 and beginning to dance sensuously for the pleasure of USER_THEIR Audience!`,
+                    },
                 ]
             },
             nocanwear: {
@@ -948,12 +954,7 @@ const texts_heavy = {
                         },
                         text: `USER_TAG guides TARGET_TAG into a latex puddle, watching as it spreads over TARGET_THEIR feet and begins to climb up TARGET_THEIR legs. Before long everything below TARGET_THEIR neck is covered in a layer of latex!`,
                     },
-                    {
-                        only: (t) => {
-                            return t.c3.includes("Dancer's Pole");
-                        },
-                        text: `USER_TAG helps TARGET_TAG climb onto the stage and cuffs TARGET_THEMSELF to the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for USER_THEIR enjoyment~!`,
-                    },
+                    
                     // Latex
                     {
                         only: (t) => {
@@ -1068,6 +1069,12 @@ const texts_heavy = {
                             return t.c3.endsWith("'s Lap");
                         },
                         text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.`,
+                    },
+					{
+                        only: (t) => {
+                            return t.c3.includes("Dancer's Pole");
+                        },
+                        text: `USER_TAG helps TARGET_TAG climb onto the stage and pushes TARGET_THEMSELF gently towards the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for USER_THEIR enjoyment~!`,
                     },
                 ]
             },
@@ -1368,7 +1375,7 @@ const texts_struggle = {
 			required: (t) => {
 				return t.c1.includes("Dancer's Pole");
 			},
-			text: `USER_TAG tugs on USER_THEIR cuffs but the VAR_C1 holds firm, leaving USER_THEM no choice but to continue dancing for USER_THEIR audience!`,
+			text: `USER_TAG considers stepping away from the VAR_C1 but can't bring USER_THEMSELF to disappoint USER_THEIR audience! USER_THEY will just have to keep dancing until USER_THEY have finished USER_THEIR performance~`,
 		},
 		{
 			required: (t) => {
@@ -4287,6 +4294,7 @@ const texts_eventfunctions = {
 				collar: { replace: [`The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the Costumer Mimic moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
 				headwear: { add: [`The Costumer Mimic produces a VAR_C1 from within itself and secures it onto USER_TAG's head.`] },
 				gag: { add: [`The Costumer Mimic pulls a VAR_C1 from its storage and secures it into USER_TAG's mouth.`] },
+				toy: { add: [`The Costumer Mimic pulls a VAR_C1 from its storage and applies it to USER_TAG.`] },
 				heavyrestraint: { add: [`The Costumer Mimic pulls a VAR_C1 from its storage and securely binds USER_TAG with it.`] },
 				unknown: [`The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from its storage. Perhaps it ran out of space?`],
 			},
@@ -4304,6 +4312,24 @@ const texts_eventfunctions = {
 							return t.c1.includes("Leashing");
 						},
 						text: `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but as USER_THEY wobbles in USER_THEIR new heels, the Mimic hitches USER_THEM to a nearby VAR_C1~.`,
+					},
+					{
+						only: (t) => {
+							return t.c1.includes("Dancer");
+						},
+						text: `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... and onto a stage with a VAR_C1 so USER_THEY can dance for everyone's pleasure~.`,
+					},
+					{
+						only: (t) => {
+							return t.c1.includes("Shadow");
+						},
+						text: `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but as USER_THEY gets USER_THEIR bearings USER_THEY fails to notice the grasping VAR_C1 coming from USER_THEIR new tome until it is too late~.`,
+					},
+					{
+						only: (t) => {
+							return t.c1.includes("Mermaid");
+						},
+						text: `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... and straight into a large VAR_C1 where USER_THEY can swim around as a pretty bound mermaid~.`,
 					},
 				], 
 				none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
