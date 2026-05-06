@@ -158,10 +158,17 @@ const assignCorset = (user, type, tightness, origbinder) => {
 	if (old.type != type) {
 		getBaseCorset(type)?.onEquip({ userID: user });
 	}
+    // Increment the worn corset counter
+    if (process.userstats == undefined) { process.userstats = {} }
+    if (process.userstats[user] == undefined) { process.userstats[user] = {} }
+
+    process.userstats[user].worncorsets = (process.userstats[user].worncorsets ?? 0) + 1;
+
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.corset = true;
+    process.readytosave.userstats = true;
 };
 
 const getCorset = (user) => {

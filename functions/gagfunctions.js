@@ -106,10 +106,17 @@ const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
 		process.gags[userID].splice(foundgag, 1);
 	}
 	process.gags[userID].push({ gagtype: gagtype, intensity: intensity, origbinder: originalbinder });
+    // Increment the worn corset counter
+    if (process.userstats == undefined) { process.userstats = {} }
+    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
+
+    process.userstats[userID].worngags = (process.userstats[userID].worngags ?? 0) + 1;
+    
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.gags = true;
+    process.readytosave.userstats = true;
 };
 
 // to ensure compatibility with existing code, this will retrieve the first gag
@@ -209,10 +216,17 @@ const assignMitten = (userID, mittentype, origbinder) => {
 		mittenname: mittentype,
 		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
 	};
+    // Increment the worn corset counter
+    if (process.userstats == undefined) { process.userstats = {} }
+    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
+
+    process.userstats[userID].wornmittens = (process.userstats[userID].wornmittens ?? 0) + 1;
+    
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.mitten = true;
+    process.readytosave.userdata = true;
 };
 
 const getMitten = (userID) => {

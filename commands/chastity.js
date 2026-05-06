@@ -22,6 +22,7 @@ module.exports = {
 	async autoComplete(interaction) {
 		try {
             const focusedValue = interaction.options.getFocused();
+            let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
             let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt";
             let autocompletes = process.autocompletes[beltorbra];
             let matches = didYouMean(focusedValue, autocompletes, {
@@ -33,7 +34,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.user.id);
+            let tags = getUserTags(chosenuserid);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -87,6 +88,23 @@ module.exports = {
                     bondagetype = undefined; // Just delete it, we got something invalid lol
                 }
             }
+
+            let blocked = false;
+            if (bondagetype) {
+                let tags = getUserTags(chastityuser.id);
+                let i = getBaseChastity(bondagetype)
+                tags.forEach((t) => {
+                    if (i && i.tags && i.tags.includes(t) && (chastityuser != interaction.user)) {
+                        interaction.reply({ content: `${chastityuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                        blocked = true;
+                        return;
+                    }
+                })
+            }
+            if (blocked) {
+                return;
+            }
+
             if (chastityuser.id == interaction.user.id) {
                 data.self = true;
             }

@@ -15,6 +15,8 @@ const heavytypes = [
 	{ name: "Wolfbinder", value: "armbinder_wolf", denialCoefficient: 3, heavytags: ["arms"] },
 	{ name: "Wolf Queenbinder", value: "armbinder_wolfqueen", tags: ["leather"], denialCoefficient: 3, heavytags: ["arms"] },
     { name: "Rigid Arm Splints", value: "splints_arm", denialCoefficient: 10, heavytags: ["arms"] },
+    { name: "Latex Reverse-Prayer Glove", value: "armbinder_reverseprayer", denialCoefficient: 10, heavytags: ["arms"], tags: ["latex"] },
+    { name: "Leather Reverse-Prayer Glove", value: "armbinder_reverseprayer", denialCoefficient: 10, heavytags: ["arms"], tags: ["leather"] },
 
 	// Boxbinders
 	{ name: "Latex Boxbinder", value: "boxbinder_latex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
@@ -53,6 +55,8 @@ const heavytypes = [
     { name: "Starry Latex Mermaid Tail", value: "legbinder_starrylatexmermaidtail", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
     { name: "Shadow Latex Mermaid Tail", value: "legbinder_shadowlatexmermaidtail", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
     { name: "Rigid Leg Splints", value: "splints_leg", denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Leather Monoboot", value: "monoboot_leather", denialCoefficient: 2.5, heavytags: ["legs"], tags: ["leather"] },
+    { name: "Latex Monoboot", value: "monoboot_latex", denialCoefficient: 2.5, heavytags: ["legs"], tags: ["latex"] },
 
 	// Petsuits
 	{ name: "Piddlefours", value: "petsuit_piddlefours", tags: ["pet", "leather"], denialCoefficient: 2, heavytags: ["arms", "legs"] },
@@ -144,6 +148,8 @@ const heavytypes = [
     { name: "Great Sphere", value: "capture_sphere_great", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Ultra Sphere", value: "capture_sphere_ultra", tags: ["confined", "dimensional"], denialCoefficient: 7, heavytags: ["arms", "legs"] },
     { name: "Master Sphere", value: "capture_sphere_master", tags: ["confined", "dimensional"], denialCoefficient: 9, heavytags: ["arms", "legs"] },
+    { name: "Portal Cuffs (Arms)", value: "portalcuffs_arms", tags: ["dimensional"], denialCoefficient: 10, heavytags: ["arms"] },
+    { name: "Portal Cuffs (Legs)", value: "portalcuffs_legs", tags: ["dimensional"], denialCoefficient: 1.5, heavytags: ["legs"] },
 
     // Containers
     { name: "Pet Cage", value: "pet_cage", tags: ["pet"], denialCoefficient: 4, heavytags: ["container"] },
@@ -272,11 +278,18 @@ const assignHeavy = (user, type, origbinder, customname) => {
             displayname: customname ?? getHeavyName(type)
         })
     }
-	//process.heavy[user] = { type: customname ?? convertheavy(type), typeval: type, origbinder: originalbinder ?? origbinder };
+
+    // Increment the worn heavy bondage counter
+    if (process.userstats == undefined) { process.userstats = {} }
+    if (process.userstats[user] == undefined) { process.userstats[user] = {} }
+
+    process.userstats[user].wornheavy = (process.userstats[user].wornheavy ?? 0) + 1;
+    
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.heavy = true;
+    process.readytosave.userstats = true;
 };
 
 /*************

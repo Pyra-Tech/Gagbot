@@ -69,6 +69,48 @@ function statsGeneratePage(user) {
                 stat: "strugglemessages"
             },
             {
+                name: "Gags Worn",
+                type: "counter",
+                stat: "worngags"
+            },
+            {
+                name: "Mittens Worn",
+                type: "counter",
+                stat: "wornmittens"
+            },
+            {
+                name: "Masks Worn",
+                type: "counter",
+                stat: "wornmasks"
+            },
+            {
+                name: "Heavy Bondage Worn",
+                type: "counter",
+                stat: "wornheavy"
+            },
+            {
+                name: "Corsets Worn",
+                type: "counter",
+                stat: "worncorsets"
+            },
+        ],
+        Arousal: [
+            {
+                name: "Successful Orgasms",
+                type: "counter",
+                stat: "orgasms"
+            },
+            {
+                name: "Highest Arousal Let Go",
+                type: "counter",
+                stat: "highestarousal"
+            },
+            {
+                name: "Highest Denial Overcome",
+                type: "counter",
+                stat: "highestdenial"
+            },
+            {
                 name: "Longest Chastity Belt Worn",
                 type: "special",
                 special: (user) => {

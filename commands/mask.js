@@ -56,7 +56,7 @@ module.exports = {
 		try {
 			let headwearuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
             let targetuser = headwearuser; // I dont feel like changing all the headwearusers right now. 
-			let headwearchoice = interaction.options.getString("type") ? interaction.options.getString("type") : "hood_latex";
+			let headwearchoice = interaction.options.getString("type") ? interaction.options.getString("type") : "hood_latexfull";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(headwearuser.id)?.mainconsent) {
 				await handleConsent(interaction, headwearuser.id);

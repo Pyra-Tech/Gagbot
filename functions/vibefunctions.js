@@ -233,7 +233,7 @@ const removeChastity = (user, keyholder, force = false) => {
 
 	chastitybase.onUnequip({ userID: user });
 
-    if (process.chastity[user].stateligible) {
+    if (process.chastity[user]?.stateligible) {
         if (process.userstats == undefined) { process.userstats = {} }
         if (process.userstats[user] == undefined) { process.userstats[user] = {} }
         process.userstats[user].chastitywornduration = (Date.now() - process.chastity[user].timestamp)
@@ -297,7 +297,7 @@ const removeChastityBra = (user, keyholder, force = false) => {
 
 	chastitybase.onUnequip({ userID: user });
 
-    if (process.chastitybra[user].stateligible) {
+    if (process.chastitybra[user]?.stateligible) {
         if (process.userstats == undefined) { process.userstats = {} }
         if (process.userstats[user] == undefined) { process.userstats[user] = {} }
         process.userstats[user].chastitybrawornduration = (Date.now() - process.chastitybra[user].timestamp)
@@ -1521,6 +1521,23 @@ function tryOrgasm(user) {
 	const orgasmLimit = ORGASM_LIMIT;
 
 	if ((arousal * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
+        // Increment the arousal counter
+        // and also register the highest arousal, if it is higher. 
+        if (process.userstats == undefined) { process.userstats = {} }
+        if (process.userstats[user] == undefined) { process.userstats[user] = {} }
+
+        process.userstats[user].orgasms = (process.userstats[user].orgasms ?? 0) + 1;
+
+        if (process.userstats[user].highestarousal == undefined) { process.userstats[user].highestarousal = 0 }
+        process.userstats[user].highestarousal = Math.round(Math.max(process.userstats[user].highestarousal, arousal))
+
+        if (process.userstats[user].highestdenial == undefined) { process.userstats[user].highestdenial = 0 }
+        process.userstats[user].highestdenial = Math.round(Math.max(process.userstats[user].highestdenial, orgasmLimit * denialCoefficient));
+
+        if (process.readytosave == undefined) {
+            process.readytosave = {};
+        }
+        process.readytosave.userstats = true;
 		setArousalCooldown(user, traits.orgasmCooldown, traits.orgasmArousalLeft);
 		if (chastity) {
 			chastity.timestamp = (chastity.timestamp + now) / 2;

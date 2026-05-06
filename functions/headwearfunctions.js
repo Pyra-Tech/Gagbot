@@ -100,10 +100,17 @@ const assignHeadwear = (userID, headwear, origbinder) => {
 	} else {
 		process.headwear[userID] = { wornheadwear: [headwear], origbinder: originalbinder ?? origbinder };
 	}
+    // Increment the worn corset counter
+    if (process.userstats == undefined) { process.userstats = {} }
+    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
+
+    process.userstats[userID].wornmasks = (process.userstats[userID].wornmasks ?? 0) + 1;
+    
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.headwear = true;
+    process.readytosave.userstats = true;
 };
 
 const getHeadwear = (userID) => {
