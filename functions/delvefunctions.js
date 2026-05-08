@@ -62,6 +62,7 @@ const delveroomchoices = {
     // This is the entrance room and will always be floor 0. 
     delveentrance: {
         name: "Deepbound Palace Entrance",
+        hintdesc: "BUG",
         shortdesc: "An ornate door stands in front of you, an entrance to an underground crypt and it's lined with images of restraints.",
         longdesc: "You arrive at the entrance of the Deepbound Palace. It's smooth wall is decorated by images of people wearing restraints and a mural above the door depicting several kneeling submissives around a woman sitting in a chair. She is clad with what you recognize to be a black minidress in the image. The door handle is unremarkable, but it reminds you of a handle for a flogger. ",
         extradesc: (userID, text, delvedata, resolve) => { return text },
@@ -82,13 +83,14 @@ const delveroomchoices = {
             }
         ],
         weight: 0,
-        weightspecial: (userID, weight) => { return true },
+        weightspecial: (userID, weight) => { return weight },
         weightforce: () => { return 0 },
         accentcolor: 0xFFFFFF
     },
     // This is the fallback if a room doesn't exist
     errorroom: {
         name: "Room of Pink Squares",
+        hintdesc: "Bright Pink Glitchy Room BUG",
         shortdesc: "You encounter a room full of pink squares and exclamation marks. You shouldn't be here. (Bug, report!)",
         longdesc: "Gone is the dungeon aesthetic, replaced by a room full of odd looking pink squares over where objects on a table in the center of the room would be. The room is completely silent, even devoid of the sounds of your own breathing. You get the irking feeling that you really should not be here. (This is a bug, please report!)",
         extradesc: (userID, text, delvedata, resolve) => { return text },
@@ -109,12 +111,13 @@ const delveroomchoices = {
             }
         ],
         weight: 0,
-        weightspecial: (userID, weight) => { return true },
+        weightspecial: (userID, weight) => { return weight },
         weightforce: () => { return 0 },
         accentcolor: 0xFF4444
     },
     hall1: {
         name: "Long Corridor",
+        hintdesc: "Echoing Corridor",
         shortdesc: "You encounter a long, empty hallway devoid of obstacles or inhabitants.",
         longdesc: "You turn a corner and encounter a long hallway, stretching so far back that the end of it is swallowed by the inky black void of darkness. The floor is plain and sturdy, while the walls textured only by the carved rock of the dungeon. Nothing is out of place and you can proeed without worry. ",
         extradesc: (userID, text, delvedata, resolve) => { return text },
@@ -135,12 +138,103 @@ const delveroomchoices = {
             }
         ],
         weight: 10,
-        weightspecial: (userID, weight) => { return true },
+        weightspecial: (userID, weight) => { return weight },
+        weightforce: undefined,
+        accentcolor: 0x0099ff
+    },
+    rewardchest1: {
+        name: "Simple Chest Room",
+        hintdesc: "Simple Room with Chest",
+        shortdesc: "You step into a room with nothing but a singular chest.",
+        longdesc: "You open a door that leads into a room with nothing but a singular chest in the center. It lies on top of a raised stone step, facing you with a white light casting over it. It's as if you were intended to open it... if you dare. What could possibly go wrong?",
+        extradesc: (userID, text, delvedata, resolve) => { return text },
+        revisitshortdesc: "You return to the room .",
+        revisitlongdesc: "You return to the room with a light casting down upon the",
+        revisitextradesc: (userID, text, delvedata, resolve) => { 
+            if (getDelveFloorState(userID, delvedata.floor).opened) {
+                return `${text} open chest. You've obtained your loot, so there's little reason for you to remain here!`
+            }
+            else {
+                return `${text} closed chest. The chest sadly remains magically sealed now, as if it knows you passed it up before. You'll just have to find more!`
+            }
+        },
+        choices: [
+            {
+                name: "Open the Chest",
+                shortoutcome_success: "You walk up to the chest and carefully undo the clasp on it. It opens and reveals some loot!",
+                longoutcome_success: "You walk up to the chest. The room darkens a bit as your eyes adjust to the bright light and you open the chest. It glows brightly as you peer inside and pull out some loot!",
+                shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
+                longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
+                statweight: {},
+                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
+            },
+            {
+                name: "Ignore it",
+                shortoutcome_success: "You look at the chest and choose to ignore it. This isn't your first rodeo! Unfortunately... it had valuable treasure inside and was not a mimic.",
+                longoutcome_success: "You look at the chest and it seems to stare back at you for the longest time before you turn away from it to ignore it. A soft hum can be heard as it magically locks itself from further tampering. As you stare back at it, it turns translucent for a moment and reveals loot inside. It was not a mimic. Better luck next time!",
+                shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
+                longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
+                statweight: {},
+                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
+            }
+        ],
+        weight: 4,
+        weightspecial: (userID, weight) => { return weight },
+        weightforce: undefined,
+        accentcolor: 0x0099ff
+    },
+    rewardchest1_mimic: {
+        name: "Simple Chest Room",
+        hintdesc: "Simple Room with Chest",
+        shortdesc: "You step into a room with nothing but a singular chest.",
+        longdesc: "You open a door that leads into a room with nothing but a singular chest in the center. It lies on top of a raised stone step, facing you with a white light casting over it. It's as if you were intended to open it... if you dare. What could possibly go wrong?",
+        extradesc: (userID, text, delvedata, resolve) => { return text },
+        revisitshortdesc: "You return to the room .",
+        revisitlongdesc: "You return to the room with a light casting down upon the",
+        revisitextradesc: (userID, text, delvedata, resolve) => { 
+            if (getDelveFloorState(userID, delvedata.floor).opened) {
+                return `${text} vestige of the toothy mimic. You shudder remembering what it did to you...`
+            }
+            else {
+                return `${text} closed chest. The chest remains tightly sealed, but fortunately you dodged the mimic!`
+            }
+        },
+        choices: [
+            {
+                name: "Open the Chest",
+                shortoutcome_success: "You walk up to the chest and carefully undo the clasp on it. It opens... and immediately wraps you in tentacles as it places some restraints on you!",
+                longoutcome_success: "You walk up to the chest. The room darkens a bit as your eyes adjust to the bright light and you open the chest. It glows brightly as you peer inside and pull out some loot!",
+                shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
+                longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
+                statweight: {},
+                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
+            },
+            {
+                name: "Ignore it",
+                shortoutcome_success: "You look at the chest and choose to ignore it. This isn't your first rodeo! The chest flashes as it seals again, showing a visage of teeth and tentacles inside.",
+                longoutcome_success: "You look at the chest and it seems to stare back at you for the longest time before you turn away from it to ignore it. A soft hum can be heard as it magically locks itself from further tampering. As you stare back at it, a mess of teeth and tentacles show inside as it turns translucent! You managed to avoid a mimic!",
+                shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
+                longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
+                statweight: {},
+                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
+            }
+        ],
+        weight: 4,
+        weightspecial: (userID, weight) => { return weight },
         weightforce: undefined,
         accentcolor: 0x0099ff
     },
     garden_intoxicatingspores: {
         name: "Spore Garden",
+        hintdesc: "Hazy Vineyard",
         shortdesc: "You find a room full of foliage including plants with pink flowers. The room gives off a faint pink haze.",
         longdesc: "You encounter a room full of vines, flowers and plants snaking around stone pillars. The vines look innocuous enough but the flowers are pink and in full bloom as the room gives off a distinctly pink haze. A small whiff makes you feel slightly woozy as you find yourself suddenly considering how you feel about the various bondage restraints you usually encounter in this place.",
         extradesc: (userID, text, delvedata, resolve) => {
@@ -210,7 +304,7 @@ const delveroomchoices = {
             }
         ],
         weight: 5,
-        weightspecial: (userID, weight) => { return true },
+        weightspecial: (userID, weight) => { return weight },
         weightforce: undefined,
         accentcolor: 0x0099ff
     },
@@ -355,7 +449,13 @@ function generateDelveModal(user, floor) {
     }
     // Else, if theyve completed the primary action, generate a list of buttons as options where to go
     else if ((delveuserdata.floorarr.length - 1) == getCurrentFloor(user)) {
-
+        let roomchoices = chooseNextRooms(user, 3);
+        roomchoices = roomchoices.map((r) => {
+            return new ButtonBuilder()
+                        .setCustomId(`delve_${floor}_newroom_${r}`)
+                        .setLabel(delveroomchoices[r].hintdesc)
+                        .setStyle(ButtonStyle.Success)
+        })
     }
 
     // Set the back and forward buttons
@@ -404,3 +504,88 @@ function generateDelveModal(user, floor) {
 
     return { components: outcontainer, flags: [MessageFlags.IsComponentsV2] }
 }
+
+/********
+ * Generates a weighted list (with modifications to weights) and then selects rooms from that list
+ * 
+ * - (user id) user - User ID doing the Delve
+ * - (integer) roomnumber - Number of rooms to select
+ ********/
+function chooseNextRooms(user, roomnumber) {
+    let rooms = {};
+    let forcerooms = {};
+    let outrooms = [];
+    Object.keys(delveroomchoices).forEach((r) => {
+        let weight = delveroomchoices[r].weightspecial(user, delveroomchoices[r].weight)
+        let weightforce = delveroomchoices[r].weightforce ? delveroomchoices[r].weightforce() : false;
+        if (weightforce) {
+            forcerooms[r] = {
+                weight: Math.min(weight, 1),
+                id: r
+            }
+        }
+        if (weight > 0) {
+            // If the weight is 0 or below, it should never roll. 
+            rooms[r] = {
+                weight: weight,
+                id: r
+            }
+        }
+    })
+    let roomrolls = rooms;
+    if (Object.keys(forcerooms).length > 0) {
+        roomrolls = forcerooms
+    }
+    for (let i = 0; ((i < roomnumber) && (Object.keys(roomrolls).length > 0)); i++) {
+        // Shuffle the set of rooms each time we grab a new one. 
+        let roomarr = arrayShuffle(Object.keys(roomrolls).map((r) => roomrolls[r]));
+
+        // Now determine the max number we can go to by weight
+        let weightmax = roomarr.reduce((prev, curr) => { prev += curr.weight }, 0)
+
+        // Roll a random number between 0 and the weight max.
+        let weightroll = Math.random() * weightmax;
+
+        // Now subtract each weight until we have a negative number. 
+        let roomiterator = -1;
+        while((roomiterator < roomarr.length) && (weightroll > 0)) {
+            roomiterator++;
+            weightroll = weightroll - roomarr[roomiterator].weight;
+        }
+        // When this loop *finishes*, we should have the room index on roomarr which this weight matches.
+        // Since it is randomly shuffled, this should be sufficiently random. 
+        outrooms.push(roomarr[roomiterator].id)
+
+        // Now cull this from the list. If we have less than 3 eligible rooms, provide less than 3 rooms
+        delete roomrolls[roomarr[roomiterator].id];
+    }
+    return roomrolls;
+}
+
+/********
+ * Perform a Durstenfeld shuffle of an array. This is an optimized Fischer-Yates. 
+ * 
+ * **Note: *This mutates the original array***
+ * 
+ * Credit to https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ * 
+ * - (array) arr - array to shuffle
+ ********/
+function arrayShuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr; 
+}
+
+/*******
+ * Handle Delve command interactions
+ * 
+ * (interaction) interaction - the interaction received
+ *******/
+function handleDelveInteraction(interaction) {
+    console.log(interaction);
+}
+
+exports.handleDelveInteraction = handleDelveInteraction;
