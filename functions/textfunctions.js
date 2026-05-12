@@ -1812,9 +1812,9 @@ const texts_struggle = {
         `USER_TAG hums a song to USER_THEMSELF. What is the song? Well, this time, everyone should know it!`,
         `Surely it's not the silliest idea to lock USER_THEMSELF up and then mail the key so it arrives a week later. USER_TAG would never do something so silly like that!`,
         `USER_TAG ponders on the dispute between West Coast and East Coast. Surely there's a better coast here!`,
-        `USER_TAG thinks about USER_THEIR bedtime routine and how USER_THEY will brush USER_THEIR teeth when it's bedtime!`,
+        `USER_TAG thinks about USER_THEIR bedtime routine and how USER_THEY will brush USER_THEIR teeth when USER_THEY feelUSER_S sleepy tonight!`,
         `USER_TAG wants a vanilla flavored cookie to munch on!`,
-        `USER_TAG stretches as USER_THEY consider USER_THEIR bedtime tonight and the exact technique with which USER_THEY will brush USER_THEIR teeth.`,
+        `USER_TAG stretches as USER_THEY considerUSER_S USER_THEIR bedtime tonight and the exact technique with which USER_THEY will brush USER_THEIR teeth.`,
         `"There are so many struggle texts," USER_TAG thinks. USER_THEY_CAP can't help but wonder just how long it took to write all these...`,
         `USER_TAG jumps onto a green pipe and with enough imagination, USER_THEY sink down into it, never to be seen again until a man in a red hat finds USER_THEM.`,
         `USER_TAG fusses with a triangular shaped piece of cheese, separating it into three smaller triangles, and then labelling them 'Wisdom,' 'Power' and 'Courage!'`,
@@ -1829,7 +1829,7 @@ const texts_touch = {
             hit: {
                 triplecrit: {
                     noboundmiss: [
-                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY place USER_THEIR hand on USER_THEIR head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
+                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY placeUSER_S USER_THEIR hand on USER_THEIR head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
                     ]
                 },
                 doublecrit: {
@@ -1888,7 +1888,7 @@ const texts_touch = {
             hit: {
                 triplecrit: {
                     noboundmiss: [
-                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY place USER_THEIR hand on TARGET_TAG's head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
+                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY placeUSER_S USER_THEIR hand on TARGET_TAG's head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
                     ]
                 },
                 doublecrit: {
