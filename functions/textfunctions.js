@@ -3062,6 +3062,12 @@ const texts_unheavy = {
 				},
 				text: `USER_TAG throws the VAR_C2 and out comes the captured TARGET_TAG!`,
 			},
+            {
+				only: (t) => {
+					return t.c2.includes("Binding Circle");
+				},
+				text: `USER_TAG uses a shoe to smudge part of the drawn magic circle trapping TARGET_TAG! It dissipates immediately.`,
+			},
 		],
 		noheavyequipped: { self: [`You aren't in any kind of heavy bondage!`], other: [`TARGET_TAG is not in any kind of heavy bondage!`] },
 	},
