@@ -109,7 +109,6 @@ module.exports = {
             if (originalmessagechannel) {
                 let originalmessage = await originalmessagechannel.messages.fetch(optionparts[1])
                 if (originalmessage) {
-                    console.log(originalmessage)
                     let newmessage = Object.assign({}, originalmessage)
                     newmessage.content = usereditedtext;
                     newmessage.guild = interaction.guild;
@@ -117,12 +116,16 @@ module.exports = {
                     newmessage.member = interaction.member;
                     let garbled = await modifymessage(newmessage, null, true);
                     if (garbled) {
+                        if (process.recordedmessages[originalmessage.id] && process.recordedmessages[originalmessage.id].replyauthor) {
+                            garbled = `${process.recordedmessages[originalmessage.id].replyauthor} ⟶ https://discord.com/channels/${newmessage?.guild?.id}/${interaction.channelId}/${process.recordedmessages[originalmessage.id].replymessageid}\n${garbled}`
+                            garbled = garbled.slice(0,2000);
+                        }
                         if (process.webhook && process.webhook[optionparts[2]]) {
                             let webhookClient = process.webhook[optionparts[2]].human;
                             if (optionparts[3] == "b") { webhookClient = process.webhook[optionparts[2]].bot }
                             webhookClient.editMessage(originalmessage, garbled).then(() => {
                                 interaction.deferUpdate();
-                                //interaction.reply({ content: "Message successfully edited.", flags: MessageFlags.Ephemeral })
+                                if (process.recordedmessages[originalmessage.id]) { process.recordedmessages[originalmessage.id].content = usereditedtext }
                             })
                         }
                         else {

@@ -573,6 +573,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 	try {
 		// If this is a reply, we want to create a reply in-line because webhooks can't reply.
         let isreply = false;
+        let replyobject;
 		if (msg.type == "19") {
 			const replied = await msg.fetchReference();
             let displayname = replied.member ? replied.member.displayName : replied.author.displayName
@@ -580,8 +581,16 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			const first = replyauthorobject.first();
 			if (first) {
 				outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
+                replyobject = {
+                    replyauthor: `<@${first.id}>`,
+                    replymessageid: replied.id
+                }
 			} else {
 				outtext = `${displayname} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
+                replyobject = {
+                    replyauthor: `${displayname}`,
+                    replymessageid: replied.id
+                }
 			}
             isreply = first?.id;
 		}
@@ -635,7 +644,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			}
 			Promise.all(promisearr).then(async (v) => {
 				// Send it!
-				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply).then((modifiedmsg) => {
+				messageSendImg(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply, replyobject).then((modifiedmsg) => {
                     // Cleanup after sending
 					msg.delete().then(() => {
 						attachments.forEach((attach) => {
@@ -664,7 +673,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 				outtext = "Something went wrong. Ping <@125093095405518850> and let her know!";
 			}
 			// Finally send it!
-			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply).then((modifiedmsg) => {
+			messageSend(msg, outtext, msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply, replyobject).then((modifiedmsg) => {
 				// Cleanup after sending.
 				msg.delete().then(() => {
 					// If the user violates Doll Protocol, do STUFF
