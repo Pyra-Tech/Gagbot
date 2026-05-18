@@ -894,7 +894,7 @@ const texts_heavy = {
                         only: (t) => {
                             return t.c3.includes("Cuddle Puddle");
                         },
-                        text: `USER_TAG walks towards the VAR_C2! It envelops USER_THEM in a collage of cuddles!`,
+                        text: `USER_TAG walks towards the VAR_C2! It envelops USER_THEM in a neverending cascade of cuddles!`,
                     },
                 ]
             },
