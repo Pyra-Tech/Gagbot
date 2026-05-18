@@ -1052,6 +1052,9 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             if (!getCollar(inspectuserID).keyholder_only) {
                 keyedrestraints = `${keyedrestraints}, **Free Use!**`
             }
+            if (getCollar(inspectuserID).headpatvulnerable) {
+                keyedrestraints = `${keyedrestraints}, **Vulnerable from Headpat!**`
+            }
             if (headwearrestrictions.canInspect && getCollar(inspectuserID).clonedKeyholders && (getCollar(inspectuserID).clonedKeyholders.length > 0)) {
                 keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
