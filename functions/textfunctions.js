@@ -3327,7 +3327,7 @@ const texts_unheavy = {
                     only: (t) => {
                         return t.c2.includes("Leashing Post");
                     },
-                    text: `USER_TAG helps TARGET_TAG stand up from the VAR_C2! TARGET_THEY_CAP USER_ISARE no longer stuck kneeling there!`,
+                    text: `USER_TAG helps TARGET_TAG stand up from the VAR_C2! TARGET_THEY_CAP TARGET_ISARE no longer stuck kneeling there!`,
                 },
                 {
                     only: (t) => {
