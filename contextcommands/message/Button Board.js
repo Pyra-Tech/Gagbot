@@ -36,7 +36,7 @@ module.exports = {
                     let b = new ButtonBuilder()
                         .setCustomId(`buttonboard_${bb}`)
                         .setStyle(ButtonStyle.Secondary)
-                    if (bb.startsWith('BOT|')) {
+                    if (getHeadwearRestrictions(interaction.user.id).canInspect && bb.startsWith('BOT|')) {
                         b.setEmoji(bb.split("|")[1])
                     }
                     else {
