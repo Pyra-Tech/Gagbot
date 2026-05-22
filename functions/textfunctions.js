@@ -2006,7 +2006,7 @@ const texts_touch = {
                 },
                 doublecrit: {
                     noboundmiss: [
-                        `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`
+                        `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`,
                         `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`
                     ]
                 },
