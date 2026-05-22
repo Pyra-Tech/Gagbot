@@ -622,7 +622,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
             let sponsors = [
                 `FANG (Fox Asset and National Growth) - Asset Management since 2008!`,
                 `FEC (Fox Exchange Commission) - Your Trusted Stock Broker since 1929!`,
-                `Chain Corp - Keeping you in chains!`,
+                `Chain Corps - Keeping you in chains!`,
                 `Dragon Banking Guild - ~~Hoarding~~ Protecting Your Money!`,
                 `WeenRawr - Chastity for All!`,
                 `Fandumb - Ads and Wikis For Anything`,
@@ -633,7 +633,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `Pizza House - Get 3 Large Pizzas for the Price of 2! Order now!`,
                 `Sub-Way - Eating ~~out~~ Fresh!`,
                 `Jenny Jones - Freaky Fast Doms at your door in 15 minutes or less!`,
-                `Collar-Cola - The Dungeon's Favorite Soda!`,
+                `Coca-Collar - The Dungeon's Favorite Soda!`,
                 `Dressup Co - Making Pretty Subbies out of Everyone!`,
                 `Eldritch Entities - You will Serve Us. Enquire today with the Overseer!`,
                 `Latex Mills Inc - Carefully manufacturing Latex since the last Latex Spill of 2026!`,
@@ -648,6 +648,19 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `Crossroad Demons Inc - Do you have a problem in your life? Let us help you for a low cost you won't ever miss!`,
                 `Doll Corp - It **will** be a Doll. It will put on a Doll Visor. It will serve.`,
                 `The Ropeworks - Tying Everything Together!`,
+                `Snoop Suits - Premium Suits for all Pets, in any color you like as long as it's Blue!`,
+                `Sapphic Mermaids - Inspiring gay panic in Women since the time of Sapphos!`,
+                `Mick Donald Gags - Ba-da Ba Ba Daaaaaaaaa! I'm mmmmphing it!`,
+                `Anchorage Armbinders - An essential tool to use on the wayward submissive!`,
+                `Happy Headpats - Providing happiness to all with the power of Headpats!`,
+                `Wednesday Whips - Inspiring true gothic fashion and tools for the witchy Domme!`,
+                `HexCorp Drones - Thought leaders in the dronification sphere. Join the Hivemind today!`,
+                `Chaotic Destruction Ducks - QUECK QUACK QUACK! EHEHEHEHEHE!`,
+                `Freedom Dreams Casinos - Gamble your future for a chance to win big today! Inquire with one of our lovely attendants!`,
+                `Veronica's Secret Bondage - Intimate Chastity-Wear for *you*. <3`,
+                `Floe's Dressup Room - Letting your clothing dreams flow!`,
+                `Mocha - Please pat me!`,
+                `Dancer-chans Worldwide - Providing an exotic dance show at any time, globally!`
             ]
             appendmessages.push(`-# Sponsored by ${sponsors[Math.floor(sponsors.length * Math.random())]}`);
         }

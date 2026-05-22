@@ -3393,7 +3393,7 @@ const texts_unheavy = {
                     only: (t) => {
                         return t.c2.includes("Doll Case");
                     },
-                    text: `USER_TAG undoes the clasp with USER_THEIR TARGET_TAG doll inside and sets the beautiful figure down! Maybe TARGET_TAG will become animate if USER_TAG leaves...`,
+                    text: `USER_TAG undoes the clasp of the VAR_C2 with USER_THEIR TARGET_TAG doll inside and sets the beautiful figure down! Maybe TARGET_THEY will become animate if USER_TAG leaves...`,
                 },
                 {
                     only: (t) => {

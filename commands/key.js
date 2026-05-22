@@ -1055,12 +1055,12 @@ module.exports = {
                             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                             await handleExtremeRestraint(interaction.user, wearer, "collar", collareffect).then(
                                 async (success) => {
-                                    await interaction.followUp({ content: `Applying the ${data.textdata.c2} effect`, flags: MessageFlags.Ephemeral })
+                                    await interaction.followUp({ content: `Applying the ${data.textdata.c1} effect`, flags: MessageFlags.Ephemeral })
                                     await interaction.followUp({ content: getText(data) })
                                     addAdditionalCollarEffect(wearer.id, collareffect);
                                 },
                                 async (reject) => {
-                                    await interaction.followUp({ content: `The ${data.textdata.c2} effect was rejected.`, flags: MessageFlags.Ephemeral })
+                                    await interaction.followUp({ content: `The ${data.textdata.c1} effect was rejected.`, flags: MessageFlags.Ephemeral })
                                 }
                             )
                         }
