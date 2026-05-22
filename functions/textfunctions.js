@@ -1944,7 +1944,8 @@ const texts_touch = {
                 },
                 doublecrit: {
                     noboundmiss: [
-                        `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on USER_THEMSELF, critting *twice* in one swing!`
+                        `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on USER_THEMSELF, critting *twice* in one swing!`,
+                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of USER_THEIR head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`
                     ]
                 },
                 crit: {
@@ -1953,7 +1954,8 @@ const texts_touch = {
                         `USER_TAG raises USER_THEIR hand to give USER_THEMSELF a headpat! It hits in JUST the perfect spot and gives USER_THEM the critical satisfaction!`,
                         `As if guided by an unseen hand, USER_TAG places USER_THEIR hand on USER_THEIR head at just the perfect angle for the *perfect* headpat!`,
                         `USER_TAG gasps as USER_THEY manageUSER_S to deliver the best headpat ever to USER_THEMSELF! Not too firm, not too soft, it's just right!`,
-                        `A faint chime can be heard as USER_TAG places USER_THEIR hand on USER_THEIR head! It landed just in the right spot, providing a hefty amount of happiness!`
+                        `A faint chime can be heard as USER_TAG places USER_THEIR hand on USER_THEIR head! It landed just in the right spot, providing a hefty amount of happiness!`,
+                        `It might only be on USER_THEMSELF, but who better to know just where the best sensations can be found on USER_TAG's head? USER_THEY_CAP meltUSER_S under USER_THEIR own critical pat...`
                     ]
                 },
                 nocrit: {
@@ -1963,7 +1965,8 @@ const texts_touch = {
                         `USER_TAG giggles as USER_THEY runUSER_S USER_THEIR fingers up to USER_THEIR head, spreading them ever so slightly over the top of USER_THEIR head!`,
                         `USER_TAG nods as USER_THEY placeUSER_S USER_THEIR hand on USER_THEIR head. It's not quite the same as someone else doing it to USER_THEM though.`,
                         `Leaning forward slightly, USER_TAG places USER_THEIR hand on USER_THEIR head, taking in the moment.`,
-                        `USER_TAG places both hands on USER_THEIR head, rubbing them slightly over the top of it, ruffling USER_THEIR hair!`
+                        `USER_TAG places both hands on USER_THEIR head, rubbing them slightly over the top of it, ruffling USER_THEIR hair!`,
+                        `USER_TAG ruffles USER_THEIR own hair, enjoying the sensation as USER_THEIR bangs fly around in front of USER_THEIR face!`
                     ]
                 }
             },
@@ -2004,6 +2007,7 @@ const texts_touch = {
                 doublecrit: {
                     noboundmiss: [
                         `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`
+                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`
                     ]
                 },
                 crit: {
@@ -2058,7 +2062,24 @@ const texts_touch = {
                             text: `USER_TAG plays with TARGET_TAG's ears as USER_THEY patUSER_S USER_THEIR bestest pet! TARGET_THEY_CAP TARGET_ISARE such a good TARGET_PRAISEOBJECT! Yes TARGET_THEY TARGET_ISARE!`
                         },
                         `USER_TAG places USER_THEIR hand on TARGET_TAG's head. TARGET_THEY_CAP nuzzleTARGET_S into USER_THEIR hand with zero thoughts!`,
-                        `USER_TAG considers pouncing on TARGET_TAG to tie TARGET_THEM up, but instead opts to pat TARGET_THEM. The bondage can wait for later!`
+                        `USER_TAG considers pouncing on TARGET_TAG to tie TARGET_THEM up, but instead opts to pat TARGET_THEM. The bondage can wait for later!`,
+                        `USER_TAG giggles as USER_THEY placeUSER_S USER_THEIR hands on TARGET_TAG's head, giving TARGET_THEM a silly little headpat!`,
+                        `USER_TAG scritches TARGET_TAG's head in all the fun little places! TARGET_TAG sighs in content at the headpat...`,
+                        `USER_TAG gently pats the hair on TARGET_TAG's head, giving TARGET_THEM a sense of glee as the sensations run down TARGET_THEIR body!`,
+                        `USER_TAG gingerly runs USER_THEIR fingers over TARGET_TAG's ears and behind TARGET_THEIR head to give TARGET_THEM a small but gentle scritch!`,
+                        `USER_TAG brushes the hair out of TARGET_TAG's face as USER_THEY runUSER_S their hand over TARGET_THEIR head with a cute little headpat!`,
+                        {
+                            required: (t) => {
+                                return (getArousal(t.targetuser.id) > 50)
+                            },
+                            text: `USER_TAG runs USER_THEIR hand over TARGET_TAG's hair. The heat radiating from TARGET_THEIR breath is enough to cook an egg with!`
+                        },
+                        {
+                            required: (t) => {
+                                return (getArousal(t.targetuser.id) > 100)
+                            },
+                            text: `USER_TAG runs USER_THEIR hand over TARGET_TAG's hair. TARGET_THEIR_CAP eyes are a bit glazed over from how horny TARGET_THEY feelTARGET_S right now...`
+                        },
                     ]
                 }
             },
