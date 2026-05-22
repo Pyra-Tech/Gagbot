@@ -662,7 +662,8 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `Mocha - Please pat me!`,
                 `Dancer-chans Worldwide - Providing an exotic dance show at any time, globally!`,
                 `Maidcorp - Glass Cleaner so effective, it works as Maid Storage!`,
-                `Cassandra's Secret - Witch by Day, Obedient Doll by Night`
+                `Cassandra's Secret - Witch by Day, Obedient Doll by Night`,
+                `Sponsorship Collar - Put me on. Advertise our corporate overlords like a good little subbie drone you are!`
             ]
             appendmessages.push(`-# Sponsored by ${sponsors[Math.floor(sponsors.length * Math.random())]}`);
         }
