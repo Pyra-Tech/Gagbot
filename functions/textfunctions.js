@@ -1013,7 +1013,7 @@ const texts_heavy = {
                         only: (t) => {
                             return t.c3.includes("Pile of Cats");
                         },
-                        text: `Like the Simpsons crazy cat lady, USER_TAG picks up a bunch of cats and starts lobbing them one by one at TARGET_TAG! Soon, TARGET_THEY TARGET_ISARE stunned as TARGET_THEY become trapped by a purring VAR_C3!`,
+                        text: `Like the Simpsons crazy cat lady, USER_TAG picks up a bunch of cats and starts lobbing them one by one at TARGET_TAG! Soon, TARGET_THEY TARGET_ISARE stunned as TARGET_THEY becomeTARGET_S trapped by a purring VAR_C3!`,
                     },
                     {
                         only: (t) => {
