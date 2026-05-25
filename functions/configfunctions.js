@@ -2040,6 +2040,54 @@ const configoptions = {
 				return false;
 			},
 		},
+        "extreme-collar-remoteshockcollar": {
+			name: "Collar - Remote Shock Collar",
+			desc: "Allows the Shock right-click command",
+			prompttext: `The Remote Control Shock Collar allows anybody who can access your collar to shock you using the Apps "Shock" command when right clicking your user tag.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Remote Control Shock Collar is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
 		"extreme-gag-politeSub": {
 			name: "Gag - Polite Sub",
 			desc: "Enforces the use of Honorifics to speak",
