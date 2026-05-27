@@ -77,7 +77,7 @@ const configoptions = {
 			descmodal: "Write the exact title you wish to be addressed by:",
 			choices: [
 				{
-					name: "Set Titles",
+					name: "Set Title",
 					helptext: "Displaying as **",
 					helptextnone: "*No Preferred Titles Set*",
 					select_function: (userID) => {
