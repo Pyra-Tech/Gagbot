@@ -1246,11 +1246,43 @@ const texts_key = {
 			chastitybelt: [`USER_TAG waves USER_THEIR fingers a bit and a nearly-perfect replica of USER_THEIR chastity belt key appears! USER_THEY_CAP giveUSER_S it to VAR_C2.`],
 			chastitybra: [`USER_TAG waves USER_THEIR fingers a bit and a nearly-perfect replica of USER_THEIR chastity bra key appears! USER_THEY_CAP giveUSER_S it to VAR_C2.`],
 		},
-		other: { collar: [`USER_TAG subtly puts TARGET_TAG's collar key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`], chastitybelt: [`USER_TAG subtly puts TARGET_TAG's chastity belt key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`], chastitybra: [`USER_TAG subtly puts TARGET_TAG's chastity bra key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`] },
+		other: { 
+            collar: [
+                `USER_TAG subtly puts TARGET_TAG's collar key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`,
+                `USER_TAG takes a file and carefully carves a duplicate of TARGET_TAG's collar key and slips it into VAR_C2's pocket.`,
+                `TARGET_TAG's collar key is wrapped up in some clay and then a duplicate is made! USER_TAG hands it to VAR_C2 before TARGET_THEY can notice!`,
+            ], 
+            chastitybelt: [
+                `USER_TAG subtly puts TARGET_TAG's chastity belt key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`,
+                `USER_TAG takes a file and carefully carves a duplicate of TARGET_TAG's chastity key and slips it into VAR_C2's pocket.`,
+                `TARGET_TAG's chastity key is wrapped up in some clay and then a duplicate is made! USER_TAG hands it to VAR_C2 before TARGET_THEY can notice!`,
+            ], 
+            chastitybra: [
+                `USER_TAG subtly puts TARGET_TAG's chastity bra key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`,
+                `USER_TAG takes a file and carefully carves a duplicate of TARGET_TAG's chastity bra key and slips it into VAR_C2's pocket.`,
+                `TARGET_TAG's chastity bra key is wrapped up in some clay and then a duplicate is made! USER_TAG hands it to VAR_C2 before TARGET_THEY can notice!`,
+            ] 
+        },
 	},
 	give: {
-		self: { collar: [`USER_TAG gives USER_THEIR collar key to VAR_C2.`], chastitybelt: [`USER_TAG gives USER_THEIR chastity belt key to VAR_C2.`], chastitybra: [`USER_TAG gives USER_THEIR chastity bra key to VAR_C2.`] },
-		other: { collar: [`USER_TAG subtly gives TARGET_TAG's collar key to VAR_C2 without TARGET_THEM noticing!`], chastitybelt: [`USER_TAG subtly gives TARGET_TAG's chastity belt key to VAR_C2 without TARGET_THEM noticing!`], chastitybra: [`USER_TAG subtly gives TARGET_TAG's chastity bra key to VAR_C2 without TARGET_THEM noticing!`] },
+		self: { 
+            collar: [
+                `USER_TAG gives USER_THEIR collar key to VAR_C2.`
+            ], 
+            chastitybelt: [
+                `USER_TAG gives USER_THEIR chastity belt key to VAR_C2.`
+            ], 
+            chastitybra: [
+                `USER_TAG gives USER_THEIR chastity bra key to VAR_C2.`
+            ] 
+        },
+		other: { 
+            collar: [
+                `USER_TAG subtly gives TARGET_TAG's collar key to VAR_C2 without TARGET_THEM noticing!`
+            ], 
+            chastitybelt: [
+                `USER_TAG subtly gives TARGET_TAG's chastity belt key to VAR_C2 without TARGET_THEM noticing!`
+            ], chastitybra: [`USER_TAG subtly gives TARGET_TAG's chastity bra key to VAR_C2 without TARGET_THEM noticing!`] },
 	},
 	revoke: {
 		isclone: { collar: ["USER_TAG magically destroys the cloned key for TARGET_TAG's collar that USER_THEY USER_WERE holding!"], chastitybelt: ["USER_TAG magically destroys the cloned key for TARGET_TAG's chastity belt that USER_THEY USER_WERE holding!"], chastitybra: ["USER_TAG magically destroys the cloned key for TARGET_TAG's chastity bra that USER_THEY USER_WERE holding!"] },
