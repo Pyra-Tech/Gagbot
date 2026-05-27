@@ -264,7 +264,7 @@ const configoptions = {
 		},
         allowedheadpats: {
 			name: "Headpat Exempt Users",
-			desc: "Set users which can headpat you regardless of your setting above",
+			desc: "Set users who can headpat you regardless of your setting above",
 			descmodal: "Select up to 25 users which can headpat you at all times:",
 			choices: [
 				{
@@ -336,7 +336,7 @@ const configoptions = {
 		},
         allowedshocks: {
 			name: "Shock Exempt Users",
-			desc: "Set users which can always shock you while wearing a remote controlled shock collar, regardless of the setting above",
+			desc: "Set users who can always shock you while wearing a remote controlled shock collar, regardless of the setting above",
 			descmodal: "Select up to 25 users which can shock you at all times:",
 			choices: [
 				{
