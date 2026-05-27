@@ -19,7 +19,7 @@ module.exports = {
             let buttons = [
                 [ "💢", "❔", "❕", "💕", "✅"],
                 [ "🍔", "🔑", "🔒", "🔗", "🥽"],
-                [ "👀", "🥺", "💤", "💼", "☕︎" ],
+                [ "👀", "🥺", "💤", "❌", "☕︎" ],
                 [ `BOT|${process.emojis.armbinder}`, `BOT|${process.emojis.collar}`, `BOT|${process.emojis.chastity}`, `BOT|${process.emojis.gag}`, `BOT|${process.emojis.wand}` ],
                 [ `BOT|${process.emojis.happymaid}`, `BOT|${process.emojis.yesh}`, `BOT|${process.emojis.tetowoah}`, `BOT|${process.emojis.miku}`, `BOT|${process.emojis.shyumm}` ],
             ]
