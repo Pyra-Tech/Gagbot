@@ -189,8 +189,8 @@ function doHeadpatFunctions(headpatter, recipient, returnedobject) {
 /********
  * Returns a Promise where Resolve allowed the action and Reject disallowed the action. Checks the relevant config variable under "type" and DMs the recipient for permission if necessary.
  * 
- * - (user ID) user - The person performing the action
- * - (user ID) target - The person receiving the action
+ * - (user object) user - The person performing the action
+ * - (user object) target - The person receiving the action
  * - (string) type - The type of action being performed ("headpat", "shock", etc)
  * - (boolean) noprompt? - If true, skips DMing and immediately rejects if no suitable user
  ********/
@@ -246,7 +246,7 @@ async function handleTouchEvent(user, target, type, noprompt = false) {
             }
         }
         if (hasOption === "collaraccess") {
-            if (canAccessCollar(target, user).access) {
+            if (canAccessCollar(target.id, user.id).access) {
                 res(true)
                 return;
             }
