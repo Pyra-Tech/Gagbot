@@ -3,12 +3,17 @@ const { setUserVar, getUserVar } = require("../functions/usercontext");
 const honorifictitles = [
 	// Oh god its hard to type these without caps
 	"miss",
+    "missus",
+    "mister",
 	"master",
 	"masters",
 	"sir",
+    "ser",
 	"sirs",
 	"ma\'am",
 	"maam",
+    "madame",
+    "madam",
 	"lady",
 	"ladies",
 	"lord",
