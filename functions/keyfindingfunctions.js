@@ -60,6 +60,14 @@ function rollKeyFumble(keyholder, locked) {
             const penalties = frustrationPenalties.get(keyholder) ?? [];
             penalties.push({ timestamp: Date.now(), value: 15, decay: 2 });
             frustrationPenalties.set(keyholder, penalties);
+
+            if (process.readytosave == undefined) {
+                process.readytosave = {};
+            }
+            process.readytosave.collar = true;
+            process.readytosave.chastity = true;
+            process.readytosave.chastitybra = true;
+
             return 2; // They dropped the key.
         }
         else {
@@ -151,6 +159,12 @@ async function handleKeyFinding(message) {
                             messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
                             // Delete the Fumbled date.
                             delete process[pv][en[0]].fumbled;
+                            if (process.readytosave == undefined) {
+                                process.readytosave = {};
+                            }
+                            process.readytosave.collar = true;
+                            process.readytosave.chastity = true;
+                            process.readytosave.chastitybra = true;
                         }
                         else {
                             // Fumbled finding the key lol
