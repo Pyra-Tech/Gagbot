@@ -15,6 +15,7 @@ const { logConsole } = require("./logfunctions.js");
 const { getBaseChastity } = require("./chastityfunctions.js");
 const { getTextGeneric } = require("./textfunctions.js");
 const { getHeadwearRestrictions } = require("./headwearfunctions.js");
+const { statsAddCounter } = require("./statsfunctions.js");
 
 const MAX_FUMBLE_CHANCE = 0.95;
 
@@ -170,6 +171,8 @@ async function handleKeyFinding(message) {
                                 messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
                                 // Delete the Fumbled date.
                                 delete process[pv][en[0]].fumbled;
+
+                                statsAddCounter(message.member.id, "fumbledkeysrecovered")
                                 if (process.readytosave == undefined) {
                                     process.readytosave = {};
                                 }
@@ -180,6 +183,7 @@ async function handleKeyFinding(message) {
                             else {
                                 // Fumbled finding the key lol
                                 messageSendChannel(getTextGeneric(`find_keyfail_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                                statsAddCounter(message.member.id, "fumbledkeysfailedtorecover")
                             }
                         }   
                         // Case 2: We spot our own key... we wont be able to do anything about it though, our keyholder needs to find the key!
@@ -188,12 +192,14 @@ async function handleKeyFinding(message) {
                             targetuser = await message.guild.members.fetch(en[1].keyholder) // Use the keyholder object to bring that into scope
                             // @___ spots the key to her chastity belt! She tries to point it out to @___ but they're unable to find it...
                             messageSendChannel(getTextGeneric(`spot_key_self`, data), message.channel.id)
+                            statsAddCounter(message.member.id, "fumbledkeysfailedtorecover")
                         }
                         // Case 3: We can find keys but the person whose restraint it is does NOT want us to find their key
                         // Simply send a message hinting at a sparkle. 
                         else if ((getOption(message.member.id, "findkeymode") == "others") && (getOption(en[0], "ownrestraintfindkeymode") == "onlykh")) {
                             // @___ *thinks* she sees a little glimmer that looks like @___'s chastity belt key, but the moment she blinks, it disappears again...
                             messageSendChannel(getTextGeneric(`spot_key_other`, data), message.channel.id)
+                            statsAddCounter(message.member.id, "fumbledkeysfailedtorecover")
                         }
                         // Case 4: We can find keys and the person whose restraint it is DOES want us to find their key.
                         // This will result in giving us keyholder using the .temporarykeyholder prop and .temporarykeyholdertime. This MUST be set and checked every bot tick to clear.
@@ -204,6 +210,7 @@ async function handleKeyFinding(message) {
                                 // Set temporary keyholder!
                                 process[pv][en[0]].temporarykeyholder = message.member.id;
                                 process[pv][en[0]].temporarykeyholdertime = (Date.now() + getOption(en[0], "ownrestraintfindkeymode"))
+                                statsAddCounter(message.member.id, "fumbledkeysrecovered")
                                 if (process.readytosave == undefined) {
                                     process.readytosave = {};
                                 }
@@ -236,6 +243,8 @@ function discardKey(userid, keyholderid, device) {
         console.log(`Unknown device ${device}. Use "collar", "chastity belt" or "chastity bra"`)
         return false 
     }
+    statsAddCounter(keyholderid, "fumbledkeys")
+    statsAddCounter(userid, "restraintkeysfumbled")
     let processvar = "collar";
     if (device == "chastity belt") { processvar = "chastity" }
     if (device == "chastity bra") { processvar = "chastitybra" }
