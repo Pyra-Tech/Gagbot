@@ -806,10 +806,10 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             // Lost keys from fumble
             else if (getChastity(inspectuserID)?.fumbled) {
                 if (getChastity(inspectuserID)?.temporarykeyholder) {
-                    wearingtext = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Temporarily held by <@${getChastity(inspectuserID)?.temporarykeyholder}>!**`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Temporarily held by <@${getChastity(inspectuserID)?.temporarykeyholder}>!**`
                 }
                 else {
-                    wearingtext = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
                 }
             }
             else if (getChastityTimelock(inspectuserID)) {
@@ -843,10 +843,10 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             // Lost keys from fumble
             else if (getChastityBra(inspectuserID)?.fumbled) {
                 if (getChastityBra(inspectuserID)?.temporarykeyholder) {
-                    wearingtext = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Temporarily held by <@${getChastityBra(inspectuserID)?.temporarykeyholder}>!**`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Temporarily held by <@${getChastityBra(inspectuserID)?.temporarykeyholder}>!**`
                 }
                 else {
-                    wearingtext = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
                 }
             }
             else if (getChastityBraTimelock(inspectuserID)) {
