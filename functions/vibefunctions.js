@@ -435,7 +435,7 @@ const getChastityBraKeys = (user) => {
 	}
 	let keysheld = [];
 	Object.keys(process.chastitybra).forEach((k) => {
-		if ((process.chastitybra[k].keyholder == user) && (!process.chastity[k]?.fumbled)) {
+		if ((process.chastitybra[k].keyholder == user) && (!process.chastitybra[k]?.fumbled)) {
 			keysheld.push(k);
 		}
 	});
