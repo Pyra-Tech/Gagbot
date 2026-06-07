@@ -3166,16 +3166,42 @@ const texts_ungag = {
 		nomitten: {
 			self: {
 				gag: {
-					single: [`USER_TAG has taken USER_THEIR VAR_C2 out!`, `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR VAR_C2 out!`, `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR VAR_C2!`, `USER_TAG takes USER_THEIR VAR_C2 out, stretching USER_THEIR jaw slightly!`],
-					multiple: [`USER_TAG undoes all the straps holding USER_THEIR gags in USER_THEIR mouth, letting them fall into USER_THEIR lap.`, `USER_TAG lets out a "pleh~" as USER_THEY undoUSER_ES the straps holding the gags in USER_THEIR mouth.`, `USER_TAG's gags are covered in drool as USER_THEY gently pullUSER_S them out from between USER_THEIR teeth.`],
+                    failed: [
+                        `USER_TAG tugs at USER_THEIR VAR_C2, but the straps on head harness hold it firmly to USER_THEIR head. USER_THEY_CAP twiddleUSER_S with the little locks on it.`,
+                        `It's not for lack of trying, but the straps circling USER_TAG's vision remind USER_THEM of the futility in trying to remove USER_THEIR locked gag.`,
+                        `USER_TAG paws at the head harness on USER_THEIR head, clearly forgetting that USER_THEY USER_ISARE meant to be gagged until USER_THEIR head harness is unlocked.`
+                    ],
+					single: [
+                        `USER_TAG has taken USER_THEIR VAR_C2 out!`, 
+                        `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR VAR_C2 out!`, 
+                        `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR VAR_C2!`, 
+                        `USER_TAG takes USER_THEIR VAR_C2 out, stretching USER_THEIR jaw slightly!`
+                    ],
+                    multipleharnessed: [
+                        `USER_TAG undoes the straps on some of USER_THEIR gags, but USER_THEY USER_ISARE unable to remove the rest because of the locked straps on USER_THEIR head harness.`,
+                        `USER_TAG sucks in some breath after removing some of USER_THEIR gags, but the rest remain securely locked on USER_THEIR head...`
+                    ],
+					multiple: [
+                        `USER_TAG undoes all the straps holding USER_THEIR gags in USER_THEIR mouth, letting them fall into USER_THEIR lap.`, 
+                        `USER_TAG lets out a "pleh~" as USER_THEY undoUSER_ES the straps holding the gags in USER_THEIR mouth.`, 
+                        `USER_TAG's gags are covered in drool as USER_THEY gently pullUSER_S them out from between USER_THEIR teeth.`
+                    ],
 				},
 				// Ephemeral
 				nogag: [`You aren't currently gagged right now!`],
 			},
 			other: {
 				gag: {
-					single: [`USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, `USER_TAG unclasps the buckle for TARGET_TAG's VAR_C2, then carefully pops it out.`, `USER_TAG carefully unbuckles TARGET_TAG's VAR_C2, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`],
-					multiple: [`USER_TAG undoes all the straps holding TARGET_TAG's gags in TARGET_THEIR mouth, letting them fall into TARGET_THEIR lap.`, `TARGET_TAG lets out a "pleh~" as USER_TAG undoes the straps holding the gags in TARGET_THEIR mouth.`, `TARGET_TAG's gags are covered in drool as USER_TAG gently pulls them out from between TARGET_THEIR teeth.`],
+					single: [
+                        `USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, 
+                        `USER_TAG unclasps the buckle for TARGET_TAG's VAR_C2, then carefully pops it out.`, 
+                        `USER_TAG carefully unbuckles TARGET_TAG's VAR_C2, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`
+                    ],
+					multiple: [
+                        `USER_TAG undoes all the straps holding TARGET_TAG's gags in TARGET_THEIR mouth, letting them fall into TARGET_THEIR lap.`, 
+                        `TARGET_TAG lets out a "pleh~" as USER_TAG undoes the straps holding the gags in TARGET_THEIR mouth.`, 
+                        `TARGET_TAG's gags are covered in drool as USER_TAG gently pulls them out from between TARGET_THEIR teeth.`
+                    ],
 				},
 				// Ephemeral
 				nogag: [`TARGET_TAG is not currently gagged right now!`],
@@ -3185,6 +3211,14 @@ const texts_ungag = {
 };
 
 const texts_unheadwear = {
+    noneworn: {
+        self: [
+            `You're not wearing any headgear!`
+        ],
+        other: [
+            `TARGET_TAG isn't wearing any headgear!`
+        ]
+    },
 	heavy: {
 		self: {
 			single: {
@@ -3215,33 +3249,76 @@ const texts_unheadwear = {
 		mitten: {
 			self: {
 				single: {
-					worn: [`USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`],
+					worn: [
+                        `USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`
+                    ],
 					// Ephemeral
-					noworn: [`You aren't wearing a VAR_C2, but you couldn't remove it anyway!`],
+					noworn: [
+                        `You aren't wearing a VAR_C2, but you couldn't remove it anyway!`
+                    ],
 				},
 				multiple: {
-					worn: [`USER_TAG paws at USER_THEIR head restraints, trying to scoot them off of USER_THEIR head! No fingers makes it impossible to slip any off!`],
+					worn: [
+                        `USER_TAG paws at USER_THEIR head restraints, trying to scoot them off of USER_THEIR head! No fingers makes it impossible to slip any off!`
+                    ],
 					// Ephemeral
-					noworn: [`You aren't wearing any head restraints, but you couldn't remove them anyway!`],
+					noworn: [
+                        `You aren't wearing any head restraints, but you couldn't remove them anyway!`
+                    ],
 				},
 			},
 			other: {
 				single: {
-					worn: [`USER_TAG paws at the VAR_C2 on TARGET_TAG's head, trying to inch it off of TARGET_THEIR face!`],
+					worn: [
+                        `USER_TAG paws at the VAR_C2 on TARGET_TAG's head, trying to inch it off of TARGET_THEIR face!`
+                    ],
 					// Ephemeral
-					noworn: [`TARGET_TAG isn't wearing a VAR_C2, but you couldn't remove it anyway!`],
+					noworn: [
+                        `TARGET_TAG isn't wearing a VAR_C2, but you couldn't remove it anyway!`
+                    ],
 				},
 				multiple: {
-					worn: [`USER_TAG paws at the head gear on TARGET_TAG's head, trying to inch it all off of TARGET_THEIR face!`],
+					worn: [
+                        `USER_TAG paws at the head gear on TARGET_TAG's head, trying to inch it all off of TARGET_THEIR face!`
+                    ],
 					// Ephemeral
-					noworn: [`TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`],
+					noworn: [
+                        `TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`
+                    ],
 				},
 			},
 		},
 		nomitten: {
 			self: {
 				single: {
-					worn: [`USER_TAG carefully undoes the straps on the VAR_C2, gently pulling it off of USER_THEIR head!`],
+                    locked: [
+                        `USER_TAG tries to put a finger underneath the VAR_C2 to get some leverage and remove it, but the locks keep it firmly secured to USER_THEIR head!`,
+                        `Despite USER_THEIR best efforts, the VAR_C2 does not budge from USER_THEIR head without the key. USER_THEY_CAP should find who has it and ask for it back.`
+                    ],
+					worn: [
+                        `USER_TAG carefully undoes the straps on the VAR_C2, gently pulling it off of USER_THEIR head!`,
+                        `USER_TAG runs USER_THEIR fingers carefully over the VAR_C2 and undoes it, letting it fall gently into USER_THEIR lap.`,
+                        `The VAR_C2 slips off slowly as the straps on it are unbuckled, freeing USER_TAG from it's effects!`,
+                        // Twice as likely on blindfolds. 
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockinspect
+                            },
+                            text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
+                        },
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockinspect
+                            },
+                            text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
+                        },
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockemote
+                            },
+                            text: `USER_TAG's face is no longer hidden as USER_THEY removeUSER_S the VAR_C2!`
+                        },
+                    ],
 					// Ephemeral
 					noworn: [`You aren't currently wearing a VAR_C2!`],
 				},
@@ -3253,7 +3330,33 @@ const texts_unheadwear = {
 			},
 			other: {
 				single: {
-					worn: [`USER_TAG runs USER_THEIR hands on TARGET_TAG's head, unclasping the straps to TARGET_THEIR VAR_C2 and taking it off!`],
+                    locked: [
+                        `USER_TAG tugs against the VAR_C2 on TARGET_TAG's head, but without some elaborate lockpicking tools, there's no hope of undoing the locks on it!`,
+                        `Sadly, USER_TAG does not have the key to unlock the VAR_C2 on TARGET_TAG's head. A shame.`
+                    ],
+					worn: [
+                        `USER_TAG runs USER_THEIR hands on TARGET_TAG's head, unclasping the straps to TARGET_THEIR VAR_C2 and taking it off!`,
+                        `USER_TAG carefully slips the VAR_C2 off of TARGET_TAG's head, granting TARGET_THEM just a small semblance of freedom!`,
+                        // Twice as likely on blindfolds. 
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockinspect
+                            },
+                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again as TARGET_THEY look at USER_TAG rescuing USER_THEM from the darkness of the VAR_C2.`
+                        },
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockinspect
+                            },
+                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again as TARGET_THEY look at USER_TAG rescuing USER_THEM from the darkness of the VAR_C2.`
+                        },,
+                        {
+                            required: (t) => {
+                                return process.headtypes[t.headwearchoice]?.blockemote
+                            },
+                            text: `TARGET_TAG's face is no longer hidden as USER_TAG removes the VAR_C2!`
+                        },
+                    ],
 					// Ephemeral
 					noworn: [`TARGET_TAG isn't currently wearing a VAR_C2!`],
 				},

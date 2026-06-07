@@ -48,9 +48,9 @@ module.exports = {
 	},
 	async execute(interaction) {
 		try {
-			let headwearuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
-			let headwearchoice = interaction.options.getString("type");
-			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+			let headwearuser = interaction.options.getUser("user") ?? interaction.user;
+			let headwearchoice = interaction.options.getString("type") ?? (getHeadwear(headwearuser.id) && getHeadwear(headwearuser.id)[0]);
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(headwearuser.id)?.mainconsent) {
 				await handleConsent(interaction, headwearuser.id);
 				return;
@@ -65,12 +65,25 @@ module.exports = {
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: headwearuser,
+                    headwearchoice: headwearchoice ?? "none",
 					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
 					c2: getHeadwearName(headwearuser.id, headwearchoice),
 				},
 			};
 
-			if (headwearchoice && data.textdata.c2 == undefined) {
+            if (getHeadwear(headwearuser.id)[0] == undefined) {
+                data.noneworn = true
+                if (headwearuser.id == interaction.user.id) { 
+                    data.self = true 
+                }
+                else {
+                    data.other = true 
+                }
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                return;
+            }
+
+			if (!headwearchoice || data.textdata.c2 == undefined) {
 				// Something went CRITICALLY wrong. Eject, eject!
 				interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral });
 				return;
@@ -210,7 +223,15 @@ module.exports = {
 							data.single = true;
 							if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
 								// Wearing the headgear already, Ephemeral
-								data.worn = true;
+                                if (process.headwear[headwearuser.id][headwearchoice]) {
+                                    if (process.headwear[headwearuser.id][headwearchoice].origbinder != interaction.user.id) {
+                                        // Not allowed to unlock headgear someone else put on us. 
+                                        data.locked = true;
+                                        interaction.reply(getText(data));
+                                        return;
+                                    }
+                                }
+                                data.worn = true;
 								interaction.reply(getText(data));
 								deleteHeadwear(headwearuser.id, headwearchoice);
 							} else {
@@ -240,9 +261,17 @@ module.exports = {
 							data.single = true;
 							if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
 								// Wearing the headgear already, Ephemeral
-								data.worn = true;
+                                if (process.headwear[headwearuser.id][headwearchoice]) {
+                                    if (process.headwear[headwearuser.id][headwearchoice].origbinder != interaction.user.id) {
+                                        // Not allowed to unlock headgear someone else put on them. 
+                                        data.locked = true;
+                                        interaction.reply(getText(data));
+                                        return;
+                                    }
+                                }
+                                data.worn = true;
 								// Now lets make sure the wearer wants that.
-								if (checkBondageRemoval(interaction.user.id, headwearuser.id, "headwear") == true) {
+								if (checkBondageRemoval(interaction.user.id, headwearuser.id, "headwear", headwearchoice) == true) {
 									// Allowed immediately, lets go
 									interaction.reply(getText(data));
 									deleteHeadwear(headwearuser.id, headwearchoice);

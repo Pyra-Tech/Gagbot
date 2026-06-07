@@ -162,11 +162,11 @@ const getGagLast = (userID) => {
 	}
 };
 
-const getGagBinder = (userID) => {
+const getGagBinder = (userID, item) => {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
-	return process.gags[userID]?.origbinder;
+	return process.gags[userID]?.find((g) => g.gagtype == item)?.origbinder;
 };
 
 const getGagIntensity = (userID) => {
@@ -180,18 +180,35 @@ const getGagIntensity = (userID) => {
 	}
 };
 
-const deleteGag = (userID, specificgag) => {
+const deleteGag = (userID, specificgag, force = false) => {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
 	// Remove all gags if none is specified.
 	if (!specificgag && process.gags[userID]) {
-        process.gags[userID].forEach((g) => {
-            if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
-                process.gagtypes[g.gagtype].onUnlock(userID);
-            }
-        })
-		delete process.gags[userID];
+        let lockedheadgears = [];
+        if (process.headwear[userID]) { lockedheadgears = Object.keys(process.headwear[userID]) }
+        if ((lockedheadgears.length <= 1) || force) {
+            // They dont have anything locked on their head, business as usual. 
+            process.gags[userID].forEach((g) => {
+                if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
+                    process.gagtypes[g.gagtype].onUnlock(userID);
+                }
+            })
+            delete process.gags[userID];
+        }
+        else {
+            process.gags[userID].forEach((g) => {
+                if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
+                    process.gagtypes[g.gagtype].onUnlock(userID);
+                }
+                if (!process.headwear[userID][`gagharness_${g.gagtype}`]) {
+                    // Splice out any gags that are eligible to be removed. 
+                    let loc = process.gags[userID].findIndex((f) => f.gagtype == g.gagtype);
+                    process.gags[userID].splice(loc, 1);
+                }
+            })
+        }
 	} else if (process.gags[userID]) {
 		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
 		if (loc > -1) {

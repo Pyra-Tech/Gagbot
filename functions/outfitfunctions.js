@@ -765,6 +765,13 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            let lockedheadgears = [];
+            if (process.headwear[inspectuserID]) { lockedheadgears = Object.keys(process.headwear[inspectuserID]) }
+            lockedheadgears.forEach((lh) => {
+                if (process.headwear[inspectuserID][lh].origbinder) {
+                    wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
+                }
+            })
         }
         // Mittens
         if (getMitten(inspectuserID)) {
@@ -949,6 +956,13 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            let lockedheadgears = [];
+            if (process.headwear[inspectuserID]) { lockedheadgears = Object.keys(process.headwear[inspectuserID]) }
+            lockedheadgears.forEach((lh) => {
+                if (process.headwear[inspectuserID][lh].origbinder) {
+                    wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
+                }
+            })
         }
         // Mittens
         if (getMitten(inspectuserID)) {

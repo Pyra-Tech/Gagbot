@@ -41,7 +41,15 @@ module.exports = {
                     else if (i.tags && (i.tags[t])) { tagged = true }
                 })
                 if (!tagged) {
-                    newsorted.push(f);
+                    // If showfunction is specified, it must return true to be shown in this list. 
+                    if (i.showfunction) {
+                        if (i.showfunction(chosenuserid)) {
+                            newsorted.push(f);
+                        }
+                    }
+                    else {
+                        newsorted.push(f);
+                    }
                 }
                 else {
                     newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })

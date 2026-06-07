@@ -6,6 +6,7 @@ const { getConsent, handleConsent } = require("./../functions/interactivefunctio
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getHeadwear } = require("../functions/headwearfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -140,15 +141,26 @@ module.exports = {
 						if (getGag(gaggeduser.id)) {
 							// We are wearing a gag
 							data.gag = true;
-							if (gagtoremove) {
+                            // Now check if we have any gags that are locked on!
+                            let lockedheadgears = [];
+                            if (process.headwear[gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[gaggeduser.id]) }
+                            if (gagtoremove && process.headwear[gaggeduser.id] && process.headwear[gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                                data.failed = true
+                                interaction.reply(getText(data));
+                            }
+							else if (gagtoremove) {
 								data.single = true;
 								interaction.reply(getText(data));
 								deleteGag(gaggeduser.id, gagtoremove);
-							} else {
-								data.multiple = true;
+							} else if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
+								data.multipleharnessed = true;
 								interaction.reply(getText(data));
 								deleteGag(gaggeduser.id);
-							}
+							} else {
+                                data.multiple = true;
+								interaction.reply(getText(data));
+								deleteGag(gaggeduser.id);
+                            }
 						} else {
 							// Not gagged! Ephemeral
 							data.nogag = true;

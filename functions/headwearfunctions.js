@@ -81,8 +81,16 @@ const loadHeadwearTypes = () => {
     // Push the gag name over to the choice array.
     for (const file of commandFiles) {
         const head = require(`./../headwear/${file}`);
+        if (head.setupfunction) { 
+            let setupreturn = head.setupfunction();
+            if (!Array.isArray(setupreturn) && setupreturn) { setupreturn = [setupreturn] }
+            setupreturn.forEach((h) => {
+                headweartypes[h.type] = h
+                if (h.type && h.name && !h.hidden) { headwearautocompletes.push({ name: h.name, value: h.type }) };
+            })
+        }
         headweartypes[file.replace(".js", "")] = head;
-        if (!head.hidden) { headwearautocompletes.push({ name: head.name, value: file.replace(".js", "") }) };
+        if (!head.hidden && !head.setupfunction) { headwearautocompletes.push({ name: head.name, value: file.replace(".js", "") }) };
     }
 
     process.headtypes = headweartypes;
@@ -100,6 +108,7 @@ const assignHeadwear = (userID, headwear, origbinder) => {
 	} else {
 		process.headwear[userID] = { wornheadwear: [headwear], origbinder: originalbinder ?? origbinder };
 	}
+    process.headwear[userID][headwear] = { origbinder: origbinder ?? userID }
     // Increment the worn corset counter
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
@@ -124,7 +133,7 @@ const getHeadwearBinder = (userID) => {
 	if (process.headwear == undefined) {
 		process.headwear = {};
 	}
-	return process.headwear[userID]?.origbinder;
+	return (process.headwear[userID] && process.headwear[userID][item]?.origbinder);
 };
 
 const getLockedHeadgear = (userID) => {

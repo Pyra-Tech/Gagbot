@@ -592,7 +592,7 @@ const assignMemeImages = () => {
 // Returns a blocking function which can be awaited
 // Will immediately resolve if the user allows everyone to remove bondage
 // else, will prompt them. Will resolve false if rejected.
-function checkBondageRemoval(userID, targetID, type) {
+function checkBondageRemoval(userID, targetID, type, item) {
 	let useroption = getOption(targetID, "removebondage");
 
 	// Return true immediately if it's accepted without question
@@ -618,7 +618,7 @@ function checkBondageRemoval(userID, targetID, type) {
 			restraintobject = getHeavyBinder(targetID, type);
 		}
 		if (type == "gag") {
-			restraintobject = getGagBinder(targetID);
+			restraintobject = getGagBinder(targetID, item);
 		}
 		if (type == "mitten") {
 			restraintobject = getMittenBinder(targetID);
@@ -627,7 +627,7 @@ function checkBondageRemoval(userID, targetID, type) {
 			restraintobject = getCorsetBinder(targetID);
 		}
 		if (type == "headwear") {
-			restraintobject = getHeadwearBinder(targetID);
+			restraintobject = getHeadwearBinder(targetID, item);
 		}
 		// if (type == "vibe") { restraintobject = getVibe(targetID) }
 

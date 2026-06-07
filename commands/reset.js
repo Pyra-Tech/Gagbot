@@ -20,7 +20,7 @@ module.exports = {
             if (interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
                 // User has the permission, proceed with the action (e.g., a purge command)
                 await interaction.reply({ content: `Resetting ${resetuser}`, flags: MessageFlags.Ephemeral });
-                deleteGag(resetuser.id);
+                deleteGag(resetuser.id, undefined, true);
                 deleteMitten(resetuser.id);
                 removeChastity(resetuser.id, undefined, true);
                 removeChastityBra(resetuser.id, undefined, true);
@@ -31,7 +31,7 @@ module.exports = {
                 removeHeavy(resetuser.id);
                 removeCorset(resetuser.id);
                 deleteWearable(resetuser.id);
-                deleteHeadwear(resetuser.id);
+                deleteHeadwear(resetuser.id, undefined, true);
                 setArousalCooldown(resetuser.id);
             } else {
                 if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
@@ -40,7 +40,7 @@ module.exports = {
                 } else if (getServerOption(interaction.guildId, "server-safewordroleid") && interaction.member.roles.cache.has(getServerOption(interaction.guildId, "server-safewordroleid"))) {
                     // User has the safeword role, we should remove all their restraints because they safeworded
                     await interaction.reply({ content: "Resetting all of your restraints because you are safeworded.", flags: MessageFlags.Ephemeral });
-                    deleteGag(interaction.user.id);
+                    deleteGag(interaction.user.id, undefined, true);
                     deleteMitten(interaction.user.id);
                     removeChastity(interaction.user.id, undefined, true);
                     removeChastityBra(interaction.user.id, undefined, true);
@@ -51,7 +51,7 @@ module.exports = {
                     removeHeavy(interaction.user.id);
                     removeCorset(interaction.user.id);
                     deleteWearable(interaction.user.id);
-                    deleteHeadwear(interaction.user.id);
+                    deleteHeadwear(interaction.user.id, undefined, true);
                     setArousalCooldown(interaction.user.id);
                 } else {
                     // User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then
