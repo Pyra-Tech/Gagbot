@@ -189,7 +189,7 @@ module.exports = {
                                         await interaction.followUp(followupmessage) 
                                     };
                                     await interaction.followUp(getText(data));
-                                    assignHeadwear(headwearuser.id, headwearchoice);
+                                    assignHeadwear(headwearuser.id, headwearchoice, interaction.user.id);
                                 },
                                 async (reject) => {
                                     let nomessage = `You have rejected the ${getHeadwearName(headwearuser.id, headwearchoice)}.`;
@@ -226,7 +226,7 @@ module.exports = {
                                             await interaction.followUp(followupmessage) 
                                         };
                                         await interaction.followUp(getText(data));
-                                        assignHeadwear(headwearuser.id, headwearchoice);
+                                        assignHeadwear(headwearuser.id, headwearchoice, interaction.user.id);
                                     },
                                     async (reject) => {
                                         let nomessage = `${targetuser} rejected the ${getHeadwearName(headwearuser.id, headwearchoice)}.`;
