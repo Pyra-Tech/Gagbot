@@ -692,6 +692,14 @@ async function handleBondageRemoval(user, target, type, change = false) {
 
 async function handleExtremeRestraint(user, target, type, restraint) {
 	return new Promise(async (res, rej) => {
+        // cull out multiple styles of the same kind, this is used for things like Gag Harness to group multiple headpieces.
+        let origrestraint = restraint
+        let extrahelptextoverride;
+        // Gag Harness
+        if (restraint.startsWith("gagharness")) { 
+            extrahelptextoverride = configoptions["Extreme"][`extreme-mask-gagharness`]?.prompttext
+            restraint = "gagharness"
+        }
 		let hasOption = getOption(target.id, `extreme-${type}-${restraint}`);
 		if (!hasOption || hasOption == "Enabled" || (hasOption == "PromptOthers" && user.id == target.id)) {
 			res(true);
@@ -702,6 +710,9 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 			rej("Disabled");
 			return;
 		} // NOPE
+
+        // Code Compatibility. 
+        restraint = origrestraint;
 
 		let restraintfullname = ``;
 		switch (type) {
@@ -724,7 +735,7 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 		}
 
 		// We need to ASK
-		let extrahelptext = configoptions["Extreme"][`extreme-${type}-${restraint}`]?.prompttext ?? "Something went wrong retrieving this text.";
+		let extrahelptext = extrahelptextoverride ?? configoptions["Extreme"][`extreme-${type}-${restraint}`]?.prompttext ?? "Something went wrong retrieving this text.";
 		let prompttext = `## ${user} would like to place a ${type} restraint on you: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`;
 		if (user.id == target.id) {
 			prompttext = `## You are attempting to wear the following restraint: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`;
