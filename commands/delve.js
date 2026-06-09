@@ -5,7 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("delve")
 		.setDescription(`ALPHA - Only available to Enraa`)
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
         .addSubcommand((subcommand) => 
             subcommand
                 .setName("run")

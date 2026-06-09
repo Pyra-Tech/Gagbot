@@ -14,7 +14,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("shock")
 		.setDescription("Attempt to shock someone with a remote control")
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to shock?")),
 	async execute(interaction) {
 		try {

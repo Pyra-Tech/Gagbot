@@ -17,7 +17,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("unchastity")
 		.setDescription("Remove a chastity belt from someone")
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		.addUserOption((opt) => opt.setName("wearer").setDescription("Who to unlock..."))
 		.addStringOption((opt) => opt.setName("braorbelt").setDescription("Chastity belt or bra?").setChoices({ name: "Chastity Belt", value: "chastitybelt" }, { name: "Chastity Bra", value: "chastitybra" })),
 	async execute(interaction) {

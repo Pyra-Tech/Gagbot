@@ -64,7 +64,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
         .setName("scoreboard")
         .setDescription("View the Leaderboard for Stats!")
-        .setNSFW(true),
+        .setNSFW(process.nsfwflag), // Override this with /debug for testing, if necessary.
 	async execute(interaction) {
 		try {
 			interaction.reply(await generateList("headpatsgiven"))

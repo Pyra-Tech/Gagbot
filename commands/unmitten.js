@@ -10,7 +10,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("unmitten")
 		.setDescription(`Take someone else's mittens off`)
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to free from their mittens")),
 	async execute(interaction) {
 		try {

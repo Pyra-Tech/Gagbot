@@ -11,7 +11,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("unheavy")
 		.setDescription(`Free someone from their heavy bondage`)
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to free from their predicament..."))
         .addStringOption((opt) =>
 			opt

@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
         .setName("outfit")
         .setDescription("Set up or restore outfits")
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("menu")

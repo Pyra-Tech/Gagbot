@@ -9,7 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
         .setName("letgo")
         .setDescription(`Try to get release`)
-        .setNSFW(true),
+        .setNSFW(process.nsfwflag), // Override this with /debug for testing, if necessary.
 
 	async execute(interaction) {
 		try {

@@ -62,7 +62,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
         .setName("list")
         .setDescription("List out items of categories")
-        .setNSFW(true),
+        .setNSFW(process.nsfwflag), // Override this with /debug for testing, if necessary.
 	async execute(interaction) {
 		try {
 			interaction.reply(await generateList("Heavy", 1, false));

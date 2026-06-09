@@ -9,7 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("uncollar")
 		.setDescription(`Unlock a collar`)
-        .setNSFW(true)
+        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		.addUserOption((opt) => opt.setName("user").setDescription("Whose collar to unlock (blank for your own)")),
 	async execute(interaction) {
 		try {
