@@ -262,7 +262,7 @@ module.exports = {
 							if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
 								// Wearing the headgear already, Ephemeral
                                 if (process.headwear[headwearuser.id][headwearchoice]) {
-                                    if (process.headwear[headwearuser.id][headwearchoice].origbinder != interaction.user.id) {
+                                    if ((process.headwear[headwearuser.id][headwearchoice].lockable) && (process.headwear[headwearuser.id][headwearchoice].origbinder != interaction.user.id)) {
                                         // Not allowed to unlock headgear someone else put on them. 
                                         data.locked = true;
                                         interaction.reply(getText(data));
