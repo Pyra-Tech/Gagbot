@@ -930,3 +930,4 @@ exports.convertGagText = convertGagText;
 exports.getMittenName = getMittenName;
 exports.mittentypes = mittentypes;
 exports.gagtypes = gagtypesout;
+exports.mittentypes = mittentypes;

@@ -4301,6 +4301,9 @@ exports.deleteWebhook = deleteWebhook;
 exports.loadWebhooks = loadWebhooks;
 
 exports.getAllJoinedGuilds = getAllJoinedGuilds;
+exports.initializeOptions = initializeOptions;
+exports.initializeBotOptions = initializeBotOptions;
+exports.configoptions = configoptions;
 
 const functions = {};
 

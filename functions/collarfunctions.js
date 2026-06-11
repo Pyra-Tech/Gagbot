@@ -38,6 +38,7 @@ function loadCollarTypes() {
     process.autocompletes.collar = collartypes.map((c) => {
         return { name: c.name, value: c.value }
     })
+    process.collartypes = collartypes;
 }
 
 function getBaseCollar(type) {

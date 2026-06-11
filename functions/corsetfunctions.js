@@ -384,3 +384,4 @@ exports.getBreath = getBreath;
 exports.tryExpendBreath = tryExpendBreath;
 
 exports.setUpCorsets = setUpCorsets;
+exports.calcBreath = calcBreath;
