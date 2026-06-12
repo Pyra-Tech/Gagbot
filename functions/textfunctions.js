@@ -322,9 +322,15 @@ const texts_collarequip = {
 						},
 						{
 							only: (t) => {
-								return t.c3.includes("Bandage");
+								return t.c3.includes("Bandage")
 							},
 							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY TARGET_ISARE completely mummified by the VAR_C3!`,
+						},
+                        {
+							only: (t) => {
+								return t.c3.includes("Tape Mumm")
+							},
+							text: `USER_TAG pulls out a roll of tape and begins to wrap it around TARGET_TAG! Soon enough TARGET_THEY TARGET_ISARE completely mummified by tape!`,
 						},
 						// Comfy
 						{
@@ -874,6 +880,12 @@ const texts_heavy = {
                         },
                         text: `USER_TAG pulls out a roll of VAR_C2 and enchants them to wind around USER_THEMSELF! Soon enough USER_THEY USER_ISARE completely mummified by the VAR_C3!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Tape Mummi")
+                        },
+                        text: `USER_TAG pulls out a roll of tape and begins to wrap it around USER_THEMSELF! Soon enough USER_THEY USER_ISARE completely mummified by tape!`,
+                    },
                     // Comfy
                     {
                         only: (t) => {
@@ -1078,6 +1090,12 @@ const texts_heavy = {
                             return t.c3.includes("Bandage");
                         },
                         text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY TARGET_ISARE completely mummified by the VAR_C3!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Tape Mumm")
+                        },
+                        text: `USER_TAG pulls out a roll of tape and begins to wrap it around TARGET_TAG! Soon enough TARGET_THEY TARGET_ISARE completely mummified by tape!`,
                     },
                     // Comfy
                     {
@@ -1591,13 +1609,13 @@ const texts_struggle = {
 		// Encasement or Wrappings
 		{
 			required: (t) => {
-				return t.c1.includes("Autotape");
+				return (t.c1.includes("Autotape") || t.c1.includes("Tape Mumm"));
 			},
 			text: `USER_TAG struggles against the VAR_C1, but the Autotape is too sticky to come loose that easily!`,
 		},
 		{
 			required: (t) => {
-				return t.c1.includes("Bandage");
+				return (t.c1.includes("Bandage") || t.c1.includes("Tape Mummi"));
 			},
 			text: `USER_TAG squirms in the VAR_C1, but USER_THEY makeUSER_S no progress in escaping USER_THEIR mummification!!`,
 		},
