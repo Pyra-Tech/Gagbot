@@ -68,6 +68,9 @@ process.on('uncaughtExceptionMonitor', (err,origin) => {
     }
 })
 
+// Assign nsfwflag to true. /debug process.nsfwflag = false to forcibly set nsfw commands to sfw. Not recommended, Discord API says this is not allowed.
+process.nsfwflag = true
+
 // If they never changed from the default in .env.md, use base directory. 
 if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.env.GAGBOTFILEDIRECTORY = "." }
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname

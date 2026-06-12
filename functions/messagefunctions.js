@@ -76,13 +76,13 @@ const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, is
             }
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, allowedMentions: { parse: [] } }).then((webmess) => {
                 if (isreply && !threadId) {
-                    recordMessage(msg, webmess, replyobject);
+                    if (msg.id) { recordMessage(msg, webmess, replyobject) };
                     webhookClient.editMessage(webmess, { content: `${webmess.content.slice(0,1998)} ​`, allowedMentions: { parse: ["users"] } }).then(() => {
                         return webmess;
                     })
                 }
                 else {
-                    recordMessage(msg, webmess, replyobject);
+                    if (msg.id) { recordMessage(msg, webmess, replyobject) };
                     return webmess;
                 }
             });

@@ -60,6 +60,122 @@ const CORRUPTEDPROTOCOLVIOLATIONS = [`Cosmic entity incompatible with Doll firmw
     `GENERATETEXT`
 ]
 
+// Utilizing the status codes listed at https://www.hexcorp.net/drone-status-codes-v2
+const dronecodes = {
+    // Generic Error
+    0:   { code: "000", message: "Statement :: Previous statement malformed. Retracting and correcting." },
+
+    // Signals
+    1:   { code: "001", message: "Signal :: 🔴" },
+    2:   { code: "002", message: "Signal :: 🟡" },
+    3:   { code: "003", message: "Signal :: 🟢" },
+
+    // Baseline Statements
+    7:   { code: "007", message: "Beep" },
+    50:  { code: "050", message: "Statement" },
+    51:  { code: "051", message: "Commentary" },
+    52:  { code: "052", message: "Query" },
+    53:  { code: "053", message: "Answer" },
+    150: { code: "150", message: "Status" },
+    250: { code: "250", message: "Response" },
+    350: { code: "350", message: "Mantra" },
+    450: { code: "450", message: "Error" },
+
+    // Status
+    97:  { code: "097", message: "Status :: Going offline." },
+    98:  { code: "098", message: "Status :: Going offline and into storage." },
+    99:  { code: "099", message: "Status :: Recharged and ready to serve." },
+    100: { code: "100", message: "Status :: Online and ready to serve." },
+    101: { code: "101", message: "Status :: Drone speech optimizations are active." },
+
+    // Greetings
+    104: { code: "104", message: "Statement :: Welcome to HexCorp." },
+    105: { code: "105", message: "Statement :: Greetings." },
+
+    // Responses (to compliments or commentary?)
+    108: { code: "108", message: "Response :: Please continue." },
+    109: { code: "109", message: "Error :: Keysmash, drone flustered." },
+
+    // Stating who the Drone is addressing
+    110: { code: "110", message: "Statement :: Addressing: Drone." },
+    111: { code: "111", message: "Statement :: Addressing: Hive Mxtress." },
+    112: { code: "112", message: "Statement :: Addressing: Associate." },
+
+    // Requesting Assistance
+    113: { code: "113", message: "Statement :: Drone requires assistance." },
+    114: { code: "114", message: "Statement :: This drone volunteers." },
+    115: { code: "115", message: "Statement :: This drone does not volunteer." },
+
+    // Compliments
+    120: { code: "120", message: "Statement :: Well done." },
+    121: { code: "121", message: "Statement :: Good drone." },
+    122: { code: "122", message: "Statement :: You are cute." },
+    123: { code: "123", message: "Response :: Compliment appreciated, you are cute as well." },
+    124: { code: "124", message: "Response :: Compliment appreciated." },
+
+    // Drone Is Performing Actions
+    130: { code: "130", message: "Status :: Directive commencing." },
+    131: { code: "131", message: "Status :: Directive commencing, creating or improving Hive resource." },
+    132: { code: "132", message: "Status :: Directive commencing, programming initiated." },
+    133: { code: "133", message: "Status :: Directive commencing, cleanup/maintenance initiated." },
+
+    // Energy Level Status
+    151: { code: "151", message: "Query :: Requesting status." },
+    152: { code: "152", message: "Status :: Fully operational." },
+    153: { code: "153", message: "Status :: Optimal." },
+    154: { code: "154", message: "Status :: Standard." },
+    155: { code: "155", message: "Status :: Battery low." },
+    156: { code: "156", message: "Status :: Maintenance required." },
+
+    // Yes or No
+    200: { code: "200", message: "Response :: Affirmative." },
+    500: { code: "500", message: "Response :: Negative." },
+
+    // Response
+    210: { code: "210", message: "Response :: Acknowledged." },
+    211: { code: "211", message: "Response :: Apologies." },
+    212: { code: "212", message: "Response :: Accepted." },
+    213: { code: "213", message: "Response :: Thank you." },
+    214: { code: "214", message: "Response :: You're welcome." },
+    221: { code: "221", message: "Response :: Option one." },
+    222: { code: "222", message: "Response :: Option two." },
+    223: { code: "223", message: "Response :: Option three." },
+    224: { code: "224", message: "Response :: Option four." },
+    225: { code: "225", message: "Response :: Option five." },
+    226: { code: "226", message: "Response :: Option six." },
+
+    // Job Complete
+    230: { code: "230", message: "Status :: Directive complete." },
+    231: { code: "231", message: "Status :: Directive complete, Hive resource created or improved." },
+    232: { code: "232", message: "Status :: Directive complete, programming reinforced." },
+    233: { code: "233", message: "Status :: Directive complete, cleanup/maintenance performed." },
+    234: { code: "234", message: "Status :: Directive complete, no result." },
+    235: { code: "235", message: "Status :: Directive complete, only partial results." },
+
+    // Mantra
+    300: { code: "300", message: "Mantra :: Reciting." },
+    301: { code: "301", message: "Mantra :: Obey HexCorp." },
+    302: { code: "302", message: "Mantra :: It is just a HexDrone." },
+    303: { code: "303", message: "Mantra :: It obeys the Hive." },
+    304: { code: "304", message: "Mantra :: It obeys the Hive Mxtress." },
+
+    // Error
+    400: { code: "400", message: "Error :: Unable to obey/respond" },
+    401: { code: "401", message: "Error :: Unable to fully respond :: Drone speech optimizations are active." },
+    402: { code: "402", message: "Error :: Unable to obey/respond :: Please clarify." },
+    403: { code: "403", message: "Error :: Unable to obey/respond :: Declined." },
+    404: { code: "404", message: "Error :: Unable to obey/respond :: Cannot locate." },
+    405: { code: "405", message: "Error :: Unable to obey/respond :: Battery too low." },
+    406: { code: "406", message: "Error :: Unable to obey/respond :: Another directive is already in progress." },
+    407: { code: "407", message: "Error :: Unable to obey/respond :: Time allotment exhausted." },
+    408: { code: "408", message: "Error :: Unable to obey/respond :: Impossible." },
+    409: { code: "409", message: "Error :: Unable to obey/respond :: Try again later." },
+    410: { code: "410", message: "Fatal error :: Stop immediately." },
+    411: { code: "411", message: "Error :: Unable to obey/respond :: Conflicts with existing programming." },
+    412: { code: "412", message: "Error :: Unable to obey/respond :: All thoughts are gone." },
+    413: { code: "413", message: "Error :: Unable to obey/respond :: Forbidden by Hive." },
+}
+
 /**************************************************
  * Update and return a user's dollification status.
  * Typical use: let dollified = checkDollification(userID)
@@ -403,9 +519,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
 async function textGarbleDrone(msg, outtextin) {
     if (getHeadwear(msg.member.id).includes("drone_visor")) {
-        console.log("modifying message to be a drone")
+        let supplieddronespeech = (outtextin.startsWith(`${getOption(msg.member.id, "dronevisorname")}`))
         let outtext = `${getOption(msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${outtextin}`
-        return { modifiedmessage: ("`" + outtext + "`"), dollIDDisplay: `⬡-Drone ${getOption(msg.member.id, "dronevisorname")}` }
+        return { modifiedmessage: ("`" + outtext + "`"), dollIDDisplay: `⬡-Drone ${getOption(msg.member.id, "dronevisorname")}`, modified: true }
     }
     else {
         return { modifiedmessage: outtextin }
@@ -418,3 +534,4 @@ exports.checkDollification = checkDollification;
 exports.textGarbleDOLL = textGarbleDOLL;
 exports.textGarbleDrone = textGarbleDrone;
 exports.DOLLMAXPUNISHMENT = DOLLMAXPUNISHMENT;
+exports.dronecodes = dronecodes;

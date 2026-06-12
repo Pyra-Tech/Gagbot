@@ -1,3 +1,7 @@
+const { getCollar } = require("./getCollar");
+const { getHeadwear } = require("./getHeadwear");
+const { getOption } = require("./getOption");
+
 /**********
  * Retrieves any alternate name for the user
  * 
