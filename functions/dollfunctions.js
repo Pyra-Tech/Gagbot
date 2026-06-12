@@ -525,7 +525,7 @@ function textGarbleDrone(text, parent, msg, msgTreeMods) {
         return ("`" + outtext + "`")
     }
     else {
-        return outtextin;
+        return text;
     }
 }
 
