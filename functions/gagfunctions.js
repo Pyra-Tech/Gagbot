@@ -8,7 +8,7 @@ const { getVibeEquivalent } = require("./vibefunctions.js");
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
 const { getOption } = require(`./../functions/configfunctions.js`);
 const { getText } = require(`./../functions/textfunctions.js`);
-const { DOLLMAXPUNISHMENT, textGarbleDOLL } = require(`./../functions/dollfunctions.js`);
+const { DOLLMAXPUNISHMENT, textGarbleDOLL, textGarbleDrone } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
 const { assignHeavy, getHeavyRestrictions } = require(`./../functions/heavyfunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
@@ -445,6 +445,12 @@ const modifymessage = async (msg, threadId, messageonly) => {
 
 		// Scrub all control characters used to delineate text.
 		outtext = outtext.replaceAll(/[]/g, "");
+
+        // Get Drone Visor if worn
+        let dronetext = await textGarbleDrone(msg, outtext);
+        if (dronetext.modifiedmessage) { outtext = dronetext.modifiedmessage }
+        if (dronetext.dollIDDisplay) { dollIDDisplay = dronetext.dollIDDisplay }
+        if (dronetext.modified) { msgTreeMods.modified = true };
 
         // Append any extra messages from collar effects
         let appendcollar = await appendCollarEffects(msg, outtext, msgTreeMods);

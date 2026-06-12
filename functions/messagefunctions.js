@@ -6,7 +6,7 @@ const axios = require("axios");
 const { getToys } = require("./toyfunctions");
 const { getWearable } = require("./wearablefunctions");
 const { getHeavy } = require("./heavyfunctions");
-const { getHeadwear, DOLLVISORS } = require("./headwearfunctions");
+const { getHeadwear, DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
 const { getCollar } = require("./collarfunctions");
 const { getOption } = require("./configfunctions");
 
@@ -324,6 +324,11 @@ function getAlternateName(user) {
         else {
             outname = dollIDOverride;
         }
+    }
+
+    // Handle Drone Visor name
+    if (getHeadwear(user.id).find((headwear) => DRONEVISORS.includes(headwear))) {
+        outname = `⬡-Drone ${getOption(user.id, "dronevisorname")}`;
     }
 
     // Finally, if the outname is EXACTLY the same as the displayName we recieved, 

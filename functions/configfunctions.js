@@ -1619,6 +1619,39 @@ const configoptions = {
 				return false;
 			},
 		},
+        dronevisorname: {
+			name: "⬡-Drone Visor Name",
+			desc: "Set a custom name for ⬡-Drone Visor name tags.",
+			descmodal: "What should your tag display as in the ⬡-Drone Visor? Your default ⬡-Drone tag is CUSTOMTEXT.",
+			choices: [
+				{
+					name: "Set Name",
+					helptext: "⬡-Drone Visor name is set to ",
+					helptextnone: "*⬡-Drone Visor name has not been set*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `${userID.slice(-4)}`;
+			},
+			placeholder: (userID) => {
+				return `${userID.slice(-4)}`;
+			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return `${userID.slice(-4)}`;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
         engravedcollarname: {
 			name: "Engraved Collar Name",
 			desc: "Name while wearing engraved collar",

@@ -66,6 +66,7 @@ const headweartypes = [
 ];*/
 
 const DOLLVISORS = ["doll_visor", "doll_visor_blind", "dollmaker_visor"];
+const DRONEVISORS = ["drone_visor"];
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -498,5 +499,6 @@ exports.addLockedHeadgear = addLockedHeadgear;
 exports.getLockedHeadgear = getLockedHeadgear;
 exports.removeLockedHeadgear = removeLockedHeadgear;
 exports.DOLLVISORS = DOLLVISORS;
+exports.DRONEVISORS = DRONEVISORS;
 
 exports.processHeadwearTruthgas = processHeadwearTruthgas;
