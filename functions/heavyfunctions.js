@@ -85,6 +85,7 @@ const heavytypes = [
 	{ name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Weighted Blanket", value: "blanket_weighted", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	{ name: "Pile of Cats", value: "catpile", denialCoefficient: 99, heavytags: ["arms", "legs"] }, // Are you ***really*** going to disturb the kitties to let go?
+    { name: "Cat in Lap", value: "catlap", denialCoefficient: 99, heavytags: ["legs" ]}, // Soft kitty, warm kitty, little ball of fur...
 	{ name: "Giant Pile of Plushies", value: "plushie_pile", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	{ name: "Bed Restraints", value: "bedrestraints", denialCoefficient: 6, heavytags: ["arms", "legs"] },
 	{ name: "Massage Table Binding", value: "massage_table_binding", denialCoefficient: 2, heavytags: ["arms", "legs"] },

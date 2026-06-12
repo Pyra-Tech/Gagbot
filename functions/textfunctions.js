@@ -934,7 +934,13 @@ const texts_heavy = {
                 legs: [
                     `USER_TAG pulls out a VAR_C2 and wraps it over USER_THEIR legs! USER_THEY_CAP will be quite unable to move now!`,
                     `USER_TAG conjures a VAR_C2 and puts it on over USER_THEIR legs, securing it tightly to prevent USER_THEIR movement!`,
-                    `With dreams of immobility, USER_TAG takes out a VAR_C2 and puts it on over USER_THEIR legs, keeping USER_THEM from reaching anyone!`
+                    `With dreams of immobility, USER_TAG takes out a VAR_C2 and puts it on over USER_THEIR legs, keeping USER_THEM from reaching anyone!`,
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Cat in Lap");
+                        },
+                        text: `USER_TAG sits down while talking. Suddenly, a cute and adorable cat hops up into USER_THEIR lap and starts purring!`,
+                    }
                 ],
                 container: [
                     `USER_TAG steps into a VAR_C2 and closes the door behind USER_THEM! The space inside feels so defined now!`,
@@ -1140,6 +1146,12 @@ const texts_heavy = {
                         },
                         text: `USER_TAG traces some runes in the air near TARGET_TAG's legs, placing TARGET_THEM into a set of VAR_C3!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Cat in Lap");
+                        },
+                        text: `USER_TAG sits down while talking. Suddenly, a cute and adorable cat hops up into USER_THEIR lap and starts purring!`,
+                    }
                 ],
                 container: [
                     `USER_TAG guides TARGET_TAG into a VAR_C3 and then closes the door shut behind TARGET_THEM, sealing TARGET_THEM in!`,
@@ -1632,6 +1644,12 @@ const texts_struggle = {
 			},
 			text: `USER_TAG squirms in USER_THEIR VAR_C1, enough to cause it to shake a bit on the outside! It's such a tiny digitized space USER_THEY USER_ISARE trapped in...`,
 		},
+        {
+            only: (t) => {
+                return t.c1.includes("Cat in Lap");
+            },
+            text: `USER_TAG giggles and continues petting the adorable little kitty sitting in USER_THEIR lap! It purrs in delight!`,
+        }
 	],
 	gag: {
 		heavy: [`Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`, `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`, `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`],
@@ -3497,6 +3515,12 @@ const texts_unheavy = {
                     },
                     text: `USER_TAG slowly rises out of the VAR_C2 and away from all the warm cuddles it had!`,
                 },
+                {
+                    only: (t) => {
+                        return t.c2.includes("Cat in Lap");
+                    },
+                    text: `USER_TAG gently taps on the cat sitting in USER_THEIR lap. The cat looks up at USER_THEM, offended, before hopping off and running away at breakneck speed!`,
+                }
             ],
             other: [
                 `USER_TAG helps TARGET_TAG out of TARGET_THEIR VAR_C2! TARGET_THEY_CAP stretchTARGET_ES TARGET_THEIR arms and sighTARGET_S with gratitude!`,
@@ -3722,6 +3746,12 @@ const texts_unheavy = {
                     },
                     text: `USER_TAG gently pulls TARGET_TAG out of the VAR_C2 and into the cold, cruel world!`,
                 },
+                {
+                    only: (t) => {
+                        return t.c2.includes("Cat in Lap");
+                    },
+                    text: `USER_TAG tries to "pspsps!" to lure the cat away from TARGET_TAG's lap! The cat zooms off and around the corner!`,
+                }
             ],
         },
 		noheavyequipped: { self: [`You aren't in any kind of heavy bondage!`], other: [`TARGET_TAG is not in any kind of heavy bondage!`] },
