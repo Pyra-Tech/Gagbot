@@ -432,6 +432,7 @@ const transferCollarKey = (lockedUser, newKeyholder) => {
 	return false;
 };
 
+//////// OLD CODE
 const discardCollarKey = (user) => {
 	if (process.collar == undefined) {
 		process.collar = {};
@@ -451,6 +452,7 @@ const discardCollarKey = (user) => {
 	process.readytosave.discardedKeys = true;
 };
 
+/////// OLD CODE
 const findCollarKey = (index, newKeyholder) => {
 	if (process.collar == undefined) {
 		process.collar = {};
