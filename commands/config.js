@@ -1,12 +1,11 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField, ApplicationCommandOptionChannelTypesMixin } = require("discord.js");
 const { mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, timelockChastityModalnew } = require("./../functions/interactivefunctions.js");
-const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require("./../functions/configfunctions.js");
+const { handleConsent, timelockChastityModalnew } = require("./../functions/interactivefunctions.js");
+const { generateConfigModal, configoptions, initializeOptions } = require("./../functions/configfunctions.js");
 const { removeAllCommands } = require("../functions/configfunctions.js");
 const { initializeServerOptions } = require("../functions/configfunctions.js");
-const { setCommands, setBotOption, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require("../functions/configfunctions.js");
+const { setCommands, generateTextEntryModal } = require("../functions/configfunctions.js");
 const { processTimedEvents } = require("../functions/timefunctions.js");
 const { generateUserEntryModal } = require("../functions/configfunctions.js");
 

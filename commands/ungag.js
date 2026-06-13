@@ -1,12 +1,8 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getGag, deleteGag, getMitten, getGags } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getHeadwear } = require("../functions/headwearfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

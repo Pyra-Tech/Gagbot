@@ -1,8 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, removeHeavy, convertheavy, getHeavyList, getBaseHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");

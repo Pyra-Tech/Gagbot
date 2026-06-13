@@ -1,7 +1,5 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { generateConfigModal, configoptions, getOption, setOption } = require("./../functions/configfunctions.js");
-const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
-const { getWearable, getLockedWearable, addLockedWearable, getWearableName, removeLockedWearable } = require("../functions/wearablefunctions.js");
+const { generateConfigModal, configoptions } = require("./../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getPronouns, setPronouns, pronounsMap } = require("./../functions/pronounfunctions.js");
+const { pronounsMap } = require("./../functions/pronounfunctions.js");
 
 // Build the choice array
 const pronounTypes = [];

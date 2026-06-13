@@ -1,14 +1,10 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
-const { getGag, assignGag, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
+const { handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

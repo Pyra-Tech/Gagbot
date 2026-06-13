@@ -1,14 +1,8 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
+const { mittentypes } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getHeadwear } = require("../functions/headwearfunctions.js");
-const { getCorset } = require("../functions/corsetfunctions.js");
-const { getChastity, getChastityBra, getChastityName, getChastityBraName } = require("../functions/vibefunctions.js");
-const { getCollar, getCollarName } = require("../functions/collarfunctions.js");
 
 module.exports = {
 	cooldown: 10,

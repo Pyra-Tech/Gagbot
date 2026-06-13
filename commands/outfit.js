@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { assignOutfit, restoreOutfit, getOutfits, generateOutfitModal, outfitEntryModal, renameOutfit } = require("../functions/outfitfunctions.js");
+const { generateOutfitModal, outfitEntryModal } = require("../functions/outfitfunctions.js");
 
 const PAGE_SIZE = 5;
 

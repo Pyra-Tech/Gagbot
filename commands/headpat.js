@@ -1,11 +1,6 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
+const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getOption } = require("../functions/configfunctions.js");
-const { getUserTags } = require("../functions/configfunctions.js");
 const { rollPatChance, handleTouchEvent } = require("../functions/touchfunctions.js");
 
 module.exports = {

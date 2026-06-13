@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, TextDisplayBuilder } = require("discord.js")
 const { inspectModal } = require("../functions/outfitfunctions");
-const { getHeadwearRestrictions } = require("../functions/headwearfunctions");
 
 module.exports = {
 	data: new SlashCommandBuilder()

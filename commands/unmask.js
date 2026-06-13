@@ -1,9 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getHeadwear, getHeadwearName, deleteHeadwear, getLockedHeadgear } = require("../functions/headwearfunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 

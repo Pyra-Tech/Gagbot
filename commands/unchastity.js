@@ -1,17 +1,9 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, removeChastity, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { config } = require("../functions/configfunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { canAccessChastityBra } = require("../functions/vibefunctions.js");
-const { removeChastityBra } = require("../functions/vibefunctions.js");
-const { discardChastityBraKey } = require("../functions/vibefunctions.js");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -3,7 +3,6 @@ const { ButtonBuilder } = require("discord.js");
 const { ActionRowBuilder } = require("discord.js");
 const { StringSelectMenuOptionBuilder } = require("discord.js");
 const { StringSelectMenuBuilder } = require("discord.js");
-const { statsGetAllStat } = require("../functions/statsfunctions");
 
 const PAGE_SIZE = 20;
 

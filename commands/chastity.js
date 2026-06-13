@@ -1,15 +1,9 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getChastity, assignChastity, getChastityName } = require("./../functions/vibefunctions.js");
+const { assignChastity } = require("./../functions/vibefunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleMajorRestraint, handleExtremeRestraint, generateExtraConfig } = require("./../functions/interactivefunctions.js");
+const { handleConsent, handleMajorRestraint, handleExtremeRestraint, generateExtraConfig } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { assignChastityBra, getChastityBraName } = require("../functions/vibefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
-const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

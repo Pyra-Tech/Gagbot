@@ -1,11 +1,7 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
+const { collartypes } = require("./../functions/collarfunctions.js");
+const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getOption } = require("../functions/configfunctions.js");
-const { getUserTags } = require("../functions/configfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 module.exports = {
