@@ -1,6 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getToys, getBaseToy } = require("../../functions/toyfunctions");
-const { getArousal, addArousal } = require("../../functions/vibefunctions")
+
 
 // Seal of False Calm
 // This Seal locks arousal at 0, while tracking what the strongest vibe they are wearing is and storing an arousal value relative to that every minute that is applied on being unequipped

@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getArousal, addArousal } = require("../../functions/vibefunctions")
+
 
 // Seal of the Ardent Flame
 // This Seal locks the user's min arousal at their current level, and increases the growth coefficient along with reducing the decay rate. Also halves the Orgasm Cooldown

@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getChastityBra } = require("../../functions/vibefunctions.js");
+
 
 // Livingwood Belt
 // This belt has a higher growth coefficient. Notably however,

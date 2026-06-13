@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { clearArousal, getArousal, addArousal, getChastity } = require("../../functions/vibefunctions")
+
 
 // Seal of Cyclical Time
 // This Seal resets the wearer to their initial state every 3 minutes

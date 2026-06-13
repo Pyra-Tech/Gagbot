@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getChastity } = require("../../functions/vibefunctions.js");
+
 
 // Livingwood Bra
 // This bra has a higher growth coefficient. Notably however,

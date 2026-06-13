@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext");
-const { addArousal } = require("../../functions/vibefunctions")
+
 
 // Stasis Prison
 // Modelled after the unique in PoE. This belt restores arousal after letting go

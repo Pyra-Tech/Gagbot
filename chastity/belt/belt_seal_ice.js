@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getArousal, addArousal } = require("../../functions/vibefunctions")
+
 
 // Seal of the Enduring Ice
 // This Seal locks the user's max arousal at their current level + 5%, and decreases the growth coefficient along with increasing the decay rate. Also doubles the Orgasm Cooldown

@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getArousal, addArousal } = require("../../functions/vibefunctions")
+
 
 // Seal of the Unmoving Stone
 // This Seal locks the user's arousal to within a small range of their current level. The Range shifts gradually as they remain above or below the median. Also doubles the Orgasm Cooldown
