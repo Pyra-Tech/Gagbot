@@ -1,8 +1,6 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require("discord.js");
-const { statsAddCounter } = require("./statsfunctions");
 const { emitEvent } = require("./eventhandling");
 const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions");
-const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions");
 const { getGags } = require("./getters/gag/getGags");
 const { getHeadwear } = require("./getters/headwear/getHeadwear");
 const { getMitten } = require("./getters/mitten/getMitten");
@@ -17,6 +15,7 @@ const { getClonedChastityKey } = require("./getters/chastity/getClonedChastityKe
 const { getClonedChastityBraKey } = require("./getters/chastity/getClonedChastityBraKey");
 const { getClonedCollarKey } = require("./getters/collar/getClonedCollarKey");
 const { canAccessCollar } = require("./getters/collar/canAccessCollar");
+const { statsAddCounter } = require("./setters/config/statsAddCounter");
 
 /****************
  * Rolls a Pat based on the user's bondage and the target's bondage. If hit is false, then boundmiss will note the reason, if it is due to the user being bound. 
@@ -66,7 +65,7 @@ function rollPatChance(user, target) {
     }
 
     // Check if their arms are bound. If so, the accuracy will go down to 0. 
-    if (userheavyrestrictions.touchself) {
+    if (userheavyrestrictions.touchself == false) {
         returnedobject.boundmiss = "arms"
         hitaccuracy = 0.0;
     }

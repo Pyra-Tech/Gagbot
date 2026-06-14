@@ -7,10 +7,7 @@ const nlpSpeech = require("compromise-speech");
 nlp.extend(nlpSpeech);
 
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
-const { arousedtexts } = require("../vibes/aroused/aroused_texts.js");
-const { config } = require("./configfunctions.js");
 const { logConsole } = require("./logfunctions.js");
-const { convertPronounsText } = require("./pronounfunctions.js");
 const { getOption } = require("./getters/config/getOption.js");
 const { getArousal } = require("./getters/arousal/getArousal.js");
 const { addArousal } = require("./setters/arousal/addArousal.js");
@@ -21,6 +18,7 @@ const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
 const { heavyDenialCoefficient } = require("./getters/heavy/getHeavyDenialCoefficient.js");
+const { convertPronounsText } = require("./other/convertPronounsText.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed

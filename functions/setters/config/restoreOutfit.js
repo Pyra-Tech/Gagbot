@@ -1,5 +1,6 @@
 const { canAccessChastity } = require("../../getters/chastity/canAccessChastity");
 const { canAccessChastityBra } = require("../../getters/chastity/canAccessChastityBra");
+const { getChastity } = require("../../getters/chastity/getChastity");
 const { getChastityBra } = require("../../getters/chastity/getChastityBra");
 const { canAccessCollar } = require("../../getters/collar/canAccessCollar");
 const { getCollar } = require("../../getters/collar/getCollar");

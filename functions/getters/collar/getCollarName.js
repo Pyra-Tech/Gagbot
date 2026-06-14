@@ -18,7 +18,7 @@ function getCollarName(userID, collarid) {
         convertcollararr[process.collartypes[i].value] = process.collartypes[i].name;
     }
     if (collarid) {
-        return convertcollararr[collarname];
+        return convertcollararr[collarid];
     } else if (process.collar[userID]?.collartype) {
         return convertcollararr[process.collar[userID]?.collartype];
     } else {
