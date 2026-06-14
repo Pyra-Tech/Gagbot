@@ -10,11 +10,9 @@
  * - stateligible: If the chastity bra is restored from /outfit or other methods, will be **false** and won't be counted for longest chastity worn.
  * ###### Additional properties may be added by other functions
  *********/
-function getChastityBra(user) {
+export function getChastityBra(user) {
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
 	return process.chastitybra[user];
 }
-
-exports.getChastityBra = getChastityBra;

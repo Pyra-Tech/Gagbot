@@ -1,4 +1,4 @@
-const { configoptions } = require("../../lists/configoptions");
+import { configoptions } from "../../lists/configoptions.js";
 
 /**********
  * Sets all options to the defaults for a server. 
@@ -7,7 +7,7 @@ const { configoptions } = require("../../lists/configoptions");
  * ---
  * ##### *No return value*
  **********/
-function initializeServerOptions(serverID) {
+export function initializeServerOptions(serverID) {
     if (process.configs == undefined) {
         process.configs = {};
     }
@@ -25,5 +25,3 @@ function initializeServerOptions(serverID) {
     }
     process.readytosave.configs = true;
 }
-
-exports.initializeServerOptions = initializeServerOptions;

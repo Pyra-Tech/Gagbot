@@ -1,6 +1,6 @@
-const { getUserVar } = require("../config/getUserVar");
-const { getBaseHeavy } = require("./getBaseHeavy");
-const { getHeavy } = require("./getHeavy");
+import { getUserVar } from "../config/getUserVar.js";
+import { getBaseHeavy } from "./getBaseHeavy.js";
+import { getHeavy } from "./getHeavy.js";
 
 /*******
  * Retrieve a list of restrictions for a user based on current heavy bondage
@@ -13,7 +13,7 @@ const { getHeavy } = require("./getHeavy");
  * - touchothers: If true, the user is able to do actions on others
  * - touchlist?: If specified, an array of users the user can do actions to
  *******/
-function getHeavyRestrictions(user) {
+export function getHeavyRestrictions(user) {
     let returnobject = {
         heavytags: [],
         touchself: true,
@@ -59,5 +59,3 @@ function getHeavyRestrictions(user) {
         return returnobject;
     }
 }
-
-exports.getHeavyRestrictions = getHeavyRestrictions;

@@ -1,4 +1,4 @@
-const { getCorset } = require("./getCorset");
+import { getCorset } from "./getCorset.js";
 
 /**********
  * Gets the origbinder of someone's corset, if worn.
@@ -7,8 +7,6 @@ const { getCorset } = require("./getCorset");
  * ---
  * ##### Returns the user ID of the person who put this corset on the wearer.
  **********/
-function getCorsetBinder(user) {
+export function getCorsetBinder(user) {
 	return getCorset(user)?.origbinder;
 }
-
-exports.getCorsetBinder = getCorsetBinder;

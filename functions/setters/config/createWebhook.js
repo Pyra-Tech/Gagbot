@@ -7,7 +7,7 @@
  * ##### Returns an object with the following properties:
  *  - humanwebhook: If true, a valid human made webhook was found
  ********/
-async function createWebhook(interaction, channel) {
+export async function createWebhook(interaction, channel) {
 	try {
 		// First, check if we can manage webhooks. If we can't, vamos.
 		if (!channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageWebhooks)) {
@@ -62,5 +62,3 @@ async function createWebhook(interaction, channel) {
 		return false;
 	}
 }
-
-exports.createWebhook = createWebhook;

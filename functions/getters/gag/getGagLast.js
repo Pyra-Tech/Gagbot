@@ -8,7 +8,7 @@
  * - intensity: How tight the gag is (1-10)
  * - origbinder: Who put the gag on the user
  ********/
-function getGagLast(userID) {
+export function getGagLast(userID) {
     if (process.gags == undefined) {
 		process.gags = {};
 	}
@@ -22,5 +22,3 @@ function getGagLast(userID) {
 		return undefined;
 	}
 }
-
-exports.getGagLast = getGagLast;

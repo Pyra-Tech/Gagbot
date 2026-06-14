@@ -1,4 +1,4 @@
-const { getMitten } = require("./getMitten");
+import { getMitten } from "./getMitten.js";
 
 /******
  * Gets the person who put mittens on a user. This is used in one place and should be retired.
@@ -7,8 +7,6 @@ const { getMitten } = require("./getMitten");
  * ---
  * ##### Returns the user ID who put the mittens on the user.
  ******/
-function getMittenBinder(userID) {
+export function getMittenBinder(userID) {
 	return getMitten(userID)?.origbinder;
 }
-
-exports.getMittenBinder = getMittenBinder;

@@ -6,10 +6,8 @@
  * ---
  * ##### Returns the current value of the counter for the user
  **********/
-function statsGetCounter(user, countername) {
+export function statsGetCounter(user, countername) {
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[user] == undefined) { process.userstats[user] = {} }
     return process.userstats[user][countername];
 }
-
-exports.statsGetCounter = statsGetCounter;

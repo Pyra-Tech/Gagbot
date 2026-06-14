@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  ********/
-function setOption(userID, option, choice) {
+export function setOption(userID, option, choice) {
 	if (process.configs == undefined) {
 		process.configs = {};
 	}
@@ -23,5 +23,3 @@ function setOption(userID, option, choice) {
 	}
 	process.readytosave.configs = true;
 }
-
-exports.setOption = setOption;

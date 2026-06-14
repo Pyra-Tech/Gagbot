@@ -9,16 +9,14 @@
  * - displayname: The display name of this heavy bondage
  * - namedcontainerowner?: User ID included in container checks
  *********/
-function getHeavyList(user) {
+export function getHeavyList(user) {
     if (process.heavy == undefined) {
-		process.heavy = {};
-	}
+        process.heavy = {};
+    }
     if (process.heavy[user]) {
         return process.heavy[user];
     }
-	else {
+    else {
         return [];
     }
 }
-
-exports.getHeavyList = getHeavyList;

@@ -1,4 +1,4 @@
-const { setOption } = require("./setOption");
+import { setOption } from "./setOption.js";
 
 /*********
  * Sets pronouns for a user
@@ -8,7 +8,7 @@ const { setOption } = require("./setOption");
  * ---
  * ##### *No return value*
  *********/
-function setPronouns(user, pronouns) {
+export function setPronouns(user, pronouns) {
 	if (process.pronouns == undefined) {
 		process.pronouns = {};
 	}
@@ -21,5 +21,3 @@ function setPronouns(user, pronouns) {
 	}
 	process.readytosave.pronouns = true;
 };
-
-exports.setPronouns = setPronouns;

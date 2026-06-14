@@ -1,5 +1,5 @@
-const { configoptions } = require("../../../lists/configoptions");
-const { initializeOptions } = require("../../other/initializeOptions");
+import { configoptions } from "../../../lists/configoptions.js";
+import { initializeOptions } from "../../other/initializeOptions.js";
 
 /********
  * Gets the configured option for the user ID as set in /config
@@ -9,7 +9,7 @@ const { initializeOptions } = require("../../other/initializeOptions");
  * ---
  * ##### Returns the exact value of that configured option. Will use default if user has not configured it.
  ********/
-function getOption(userID, option) {
+export function getOption(userID, option) {
     if (process.configs == undefined) {
         process.configs = {};
     }
@@ -41,5 +41,3 @@ function getOption(userID, option) {
     }
     return process.configs.users[userID][option];
 }
-
-exports.getOption = getOption;

@@ -1,4 +1,4 @@
-const { getCollar } = require("../../getters/collar/getCollar");
+import { getCollar } from "../../getters/collar/getCollar.js";
 
 /*******
  * Removes a cloned key from a collar
@@ -8,7 +8,7 @@ const { getCollar } = require("../../getters/collar/getCollar");
  * ---
  * ##### *No return value*
  *******/
-function revokeCollarKey(collarUser, newKeyholder) {
+export function revokeCollarKey(collarUser, newKeyholder) {
     let collar = getCollar(collarUser);
     if (!collar.clonedKeyholders) {
         collar.clonedKeyholders = [];
@@ -21,5 +21,3 @@ function revokeCollarKey(collarUser, newKeyholder) {
     }
     process.readytosave.collar = true;
 };
-
-exports.revokeCollarKey = revokeCollarKey;

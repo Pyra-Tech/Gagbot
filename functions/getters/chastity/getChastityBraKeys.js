@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an array of user IDs the user is the primary keyholder for.
  **********/
-function getChastityBraKeys(user) {
+export function getChastityBraKeys(user) {
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -17,5 +17,3 @@ function getChastityBraKeys(user) {
 	});
 	return keysheld;
 }
-
-exports.getChastityBraKeys = getChastityBraKeys;

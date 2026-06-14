@@ -1,4 +1,4 @@
-const { getGag } = require("./getGag");
+import { getGag } from "./getGag.js";
 
 /*****
  * Gets the original binder for a gag by ID
@@ -8,8 +8,6 @@ const { getGag } = require("./getGag");
  * ---
  * ##### Returns the user ID who put the gag on them
  *****/
-function getGagBinder(userID, item) {
+export function getGagBinder(userID, item) {
 	return getGag(userID, item)?.origbinder;
 }
-
-exports.getGagBinder = getGagBinder;

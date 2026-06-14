@@ -1,4 +1,4 @@
-const { getChastity } = require("./getChastity");
+import { getChastity } from "./getChastity.js";
 
 /*********
  * Gets a list of users with secondary key access to the user's chastity belt.
@@ -7,8 +7,6 @@ const { getChastity } = require("./getChastity");
  * ---
  * ##### Returns an array of user IDs with secondary access to this collar.
  *********/
-function getClonedChastityKey(userID) {
+export function getClonedChastityKey(userID) {
 	return getChastity(userID)?.clonedKeyholders ?? [];
-};
-
-exports.getClonedChastityKey = getClonedChastityKey;
+}; 

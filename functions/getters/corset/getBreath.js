@@ -1,4 +1,4 @@
-const { calcBreath } = require("../../corsetfunctions");
+import { calcBreath } from "../../corsetfunctions.js";
 
 
 /*********
@@ -8,7 +8,7 @@ const { calcBreath } = require("../../corsetfunctions");
  * ---
  * ##### Returns the calculated breath of the user
  *********/
-function getBreath(user) {
+export function getBreath(user) {
     const corset = calcBreath(user);
     if (process.readytosave == undefined) {
         process.readytosave = {};
@@ -16,5 +16,3 @@ function getBreath(user) {
     process.readytosave.corset = true;
     return corset.breath;
 }
-
-exports.getBreath = getBreath;

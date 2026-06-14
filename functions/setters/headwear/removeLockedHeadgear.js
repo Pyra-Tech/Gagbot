@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  **********/
-function removeLockedHeadgear(userID, headwear) {
+export function removeLockedHeadgear(userID, headwear) {
 	if (process.headwear == undefined) {
 		process.headwear = {};
 	}
@@ -27,5 +27,3 @@ function removeLockedHeadgear(userID, headwear) {
 	}
 	process.readytosave.headwear = true;
 };
-
-exports.removeLockedHeadgear = removeLockedHeadgear;

@@ -1,5 +1,5 @@
-const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
-const { getChastity } = require("../../getters/chastity/getChastity");
+import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
+import { getChastity } from "../../getters/chastity/getChastity.js";
 
 /**********
  * Adds or modifies a chastity belt on the user.
@@ -11,7 +11,7 @@ const { getChastity } = require("../../getters/chastity/getChastity");
  * ---
  * ##### Returns true if successful, false if failed to put it on
  **********/
-function assignChastity(user, keyholder, namedchastity, force = false) {
+export function assignChastity(user, keyholder, namedchastity, force = false) {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
@@ -38,5 +38,3 @@ function assignChastity(user, keyholder, namedchastity, force = false) {
 	process.readytosave.chastity = true;
 	return true;
 };
-
-exports.assignChastity = assignChastity;

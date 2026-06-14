@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  **********/
-function removeLockedWearable(userID, wearable) {
+export function removeLockedWearable(userID, wearable) {
 	if (process.wearable == undefined) {
 		process.wearable = {};
 	}
@@ -27,5 +27,3 @@ function removeLockedWearable(userID, wearable) {
 	}
 	process.readytosave.wearable = true;
 };
-
-exports.removeLockedWearable = removeLockedWearable;

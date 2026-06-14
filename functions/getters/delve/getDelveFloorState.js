@@ -8,7 +8,7 @@
  * ---
  * ##### Returns the current floordata for the floor
  *******/
-function getDelveFloorState(user, floor) {
+export function getDelveFloorState(user, floor) {
     if (process.delveuserdata == undefined) { process.delveuserdata = {} }
     if (process.delveuserdata[user]) {
         // They started a delve, now check what floor they're on
@@ -20,5 +20,3 @@ function getDelveFloorState(user, floor) {
         return undefined;
     }
 }
-
-exports.getDelveFloorState = getDelveFloorState;

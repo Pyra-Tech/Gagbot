@@ -6,7 +6,7 @@
  * ##### Returns an array of cloned chastity belt keys in the format "0000000000000000_00000000000000000" where the first set of 0s 
  * ##### is the person wearing the restraint, and the second set is the person holding the key clone.
  **********/
-function getOtherKeysChastity(userID) {
+export function getOtherKeysChastity(userID) {
     if (process.chastity == undefined) {
 		process.chastity = {};
 	}
@@ -21,6 +21,4 @@ function getOtherKeysChastity(userID) {
 		}
 	});
 	return ownedkeys;
-}
-
-exports.getOtherKeysChastity = getOtherKeysChastity;
+} 

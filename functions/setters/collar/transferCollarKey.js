@@ -1,4 +1,4 @@
-const { getCollar } = require("../../getters/collar/getCollar");
+import { getCollar } from "../../getters/collar/getCollar.js";
 
 /********
  * Changes the primary keyholder for a user's collar. Removes cloned keys.
@@ -8,7 +8,7 @@ const { getCollar } = require("../../getters/collar/getCollar");
  * ---
  * ##### Returns true if successful, false if lockedUser is not wearing a collar
  ********/
-function transferCollarKey(lockedUser, newKeyholder) {
+export function transferCollarKey(lockedUser, newKeyholder) {
 	if (getCollar(lockedUser)) {
 		if (getCollar(lockedUser).keyholder != newKeyholder) {
 			getCollar(lockedUser).keyholder = newKeyholder;
@@ -24,5 +24,3 @@ function transferCollarKey(lockedUser, newKeyholder) {
 
 	return false;
 }
-
-exports.transferCollarKey = transferCollarKey;

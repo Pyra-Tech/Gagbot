@@ -1,13 +1,13 @@
-const { getChastity } = require("../../getters/chastity/getChastity");
-const { getChastityBra } = require("../../getters/chastity/getChastityBra");
-const { getCollar } = require("../../getters/collar/getCollar");
-const { getCorset } = require("../../getters/corset/getCorset");
-const { getGags } = require("../../getters/gag/getGags");
-const { getHeavy } = require("../../getters/heavy/getHeavy");
-const { getMitten } = require("../../getters/mitten/getMitten");
-const { getToys } = require("../../getters/toy/getToys");
-const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
-const { getWearable } = require("../../getters/wearable/getWearable");
+import { getChastity } from "../../getters/chastity/getChastity.js";
+import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
+import { getCollar } from "../../getters/collar/getCollar.js";
+import { getCorset } from "../../getters/corset/getCorset.js";
+import { getGags } from "../../getters/gag/getGags.js";
+import { getHeavy } from "../../getters/heavy/getHeavy.js";
+import { getMitten } from "../../getters/mitten/getMitten.js";
+import { getToys } from "../../getters/toy/getToys.js";
+import { getLockedWearable } from "../../getters/wearable/getLockedWearable.js";
+import { getWearable } from "../../getters/wearable/getWearable.js";
 
 /*********
  * Assigns an outfit to a slot for a user
@@ -18,7 +18,7 @@ const { getWearable } = require("../../getters/wearable/getWearable");
  * ---
  * ##### *No return value*
 **********/
-function assignOutfit(userID, slot, options) {
+export function assignOutfit(userID, slot, options) {
 	if (process.outfits == undefined) {
 		process.outfits = {};
 	}
@@ -78,5 +78,3 @@ function assignOutfit(userID, slot, options) {
 		}
 	}
 }
-
-exports.assignOutfit = assignOutfit;

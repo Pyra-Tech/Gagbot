@@ -1,4 +1,4 @@
-const { wearabletypes } = require("../../wearablefunctions");
+import { wearabletypes } from "../../wearablefunctions.js";
 
 /********* 
  * Gets the base wearable type by ID.
@@ -14,7 +14,7 @@ const { wearabletypes } = require("../../wearablefunctions");
  * - forbiddenColors?: Colors not represented in variants
  * - uniqueColors?: Additional color variants
  **********/
-function getBaseWearable(type) {
+export function getBaseWearable(type) {
     try {
         let returnval = wearabletypes.find((w) => w.value == type)
         if (!returnval) {
@@ -27,5 +27,3 @@ function getBaseWearable(type) {
         console.log(err);
     }
 }
-
-exports.getBaseWearable = getBaseWearable;

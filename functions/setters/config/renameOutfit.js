@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  ********/
-function renameOutfit(userID, slot, newname) {
+export function renameOutfit(userID, slot, newname) {
 	if (process.outfits == undefined) {
 		process.outfits = {};
 	}
@@ -22,5 +22,3 @@ function renameOutfit(userID, slot, newname) {
 	}
 	process.readytosave.outfits = true;
 }
-
-exports.renameOutfit = renameOutfit;

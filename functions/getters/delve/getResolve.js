@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an integer with the current resolve of the user
  *******/
-function getResolve(user) {
+export function getResolve(user) {
     if (process.delveuserdata == undefined) { process.delveuserdata = {} }
     if (process.delveuserdata[user]) {
         // They started a delve, return their current resolve
@@ -16,5 +16,3 @@ function getResolve(user) {
         return undefined;
     }
 }
-
-exports.getResolve = getResolve;

@@ -5,7 +5,7 @@
  * - (string) type - The specific heavy bondage to remove
  * - (boolean) force? - If true, removes all heavy bondage
  *********/
-const removeHeavy = (user, type, force) => {
+export const removeHeavy = (user, type, force) => {
 	if (process.heavy == undefined) {
 		process.heavy = {};
 	}
@@ -37,5 +37,3 @@ const removeHeavy = (user, type, force) => {
 	}
 	process.readytosave.heavy = true;
 };
-
-exports.removeHeavy = removeHeavy;

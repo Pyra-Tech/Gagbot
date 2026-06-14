@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  **********/
-function addLockedHeadgear(userID, headwear) {
+export function addLockedHeadgear(userID, headwear) {
 	if (process.headwear == undefined) {
 		process.headwear = {};
 	}
@@ -22,5 +22,3 @@ function addLockedHeadgear(userID, headwear) {
 	}
 	process.readytosave.headwear = true;
 };
-
-exports.addLockedHeadgear = addLockedHeadgear;

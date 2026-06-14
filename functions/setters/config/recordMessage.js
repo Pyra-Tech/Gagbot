@@ -1,4 +1,4 @@
-const { getOption } = require("../../getters/config/getOption")
+import { getOption } from "../../getters/config/getOption.js";
 
 /*********
  * Records a message for Edit Message app command
@@ -9,7 +9,7 @@ const { getOption } = require("../../getters/config/getOption")
  * ---
  * ##### *No return value*
  *********/
-function recordMessage (msg, modifiedmsg, reply) {
+export function recordMessage (msg, modifiedmsg, reply) {
     if (getOption(msg?.author?.id, "recordmessages") == "disabled") { return }
     if (process.recordedmessages == undefined) { process.recordedmessages = {} }
     if (modifiedmsg?.id && msg?.content && msg?.author?.id && msg?.createdTimestamp) {
@@ -28,5 +28,3 @@ function recordMessage (msg, modifiedmsg, reply) {
     }
     process.readytosave.recordedmessages = true;
 }
-
-exports.recordMessage = recordMessage;

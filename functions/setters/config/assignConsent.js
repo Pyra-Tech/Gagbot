@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  *********/
-function assignConsent (user) {
+export function assignConsent (user) {
 	if (process.consented == undefined) {
 		process.consented = {};
 	}
@@ -15,6 +15,4 @@ function assignConsent (user) {
 		process.readytosave = {};
 	}
 	process.readytosave.consented = true;
-};
-
-exports.assignConsent = assignConsent;
+}

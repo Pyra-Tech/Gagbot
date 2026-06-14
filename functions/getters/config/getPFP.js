@@ -1,5 +1,5 @@
-const axios = require("axios");
-const sharp = require("sharp");
+import axios from "axios";
+import sharp from "sharp";
 
 /**********
  * Get the combined profile picture of the user, if their original one matches the one we have on file
@@ -9,7 +9,7 @@ const sharp = require("sharp");
  * ---
  * ##### Returns a string with the user's PFP URL to use
  **********/
-async function getPFP(member, mods = []) {
+export async function getPFP(member, mods = []) {
     let imagelist = mods.slice(0);
     if (member.displayAvatarDecorationURL()) {
         imagelist.push(member.displayAvatarDecorationURL())
@@ -129,5 +129,3 @@ async function getPFP(member, mods = []) {
 
     return member.displayAvatarURL();
 }
-
-exports.getPFP = getPFP;

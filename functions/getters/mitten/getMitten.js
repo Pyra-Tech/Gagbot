@@ -7,11 +7,9 @@
  * - mittenname: The ID of the mittens
  * - origbinder: The person who put the mittens on the user
  ******/
-function getMitten(userID) {
+export function getMitten(userID) {
     if (process.mitten == undefined) {
 		process.mitten = {};
 	}
 	return process.mitten[userID];
 }
-
-exports.getMitten = getMitten;

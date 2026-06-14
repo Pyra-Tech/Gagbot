@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  **********/
-function deleteGag(userID, specificgag, force = false) {
+export function deleteGag(userID, specificgag, force = false) {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
@@ -54,5 +54,4 @@ function deleteGag(userID, specificgag, force = false) {
 	process.readytosave.gags = true;
 };
 
-exports.deleteGag = deleteGag;
-exports.removeGag = deleteGag;
+export { deleteGag as removeGag };

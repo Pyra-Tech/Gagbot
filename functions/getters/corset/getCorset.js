@@ -11,9 +11,7 @@
  * - type: The type of corset (defaults to "corset_leather")
  * ###### Additional properties may be added by other functions
  *********/
-function getCorset(user) {
+export function getCorset(user) {
     if (process.corset == undefined) process.corset = {};
 	return process.corset[user];
 }
-
-exports.getCorset = getCorset;

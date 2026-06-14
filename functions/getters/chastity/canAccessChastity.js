@@ -1,4 +1,4 @@
-const { getChastity } = require("./getChastity");
+import { getChastity } from "./getChastity.js";
 
 /************
  * Checks whether the keyholder has access to do things to the chastityuser. 
@@ -13,7 +13,7 @@ const { getChastity } = require("./getChastity");
  * - public: Is this action permitted because of public access?
  * - hasbelt: Is the **chastityuser** wearing a chastity belt?
  ************/
-function canAccessChastity(chastityuser, keyholder, unlock, cloning) {
+export function canAccessChastity(chastityuser, keyholder, unlock, cloning) {
     // As a reference for access in timelocks:
     // 0: "Everyone Else"
     // 1: "Keyholder Only"
@@ -97,5 +97,3 @@ function canAccessChastity(chastityuser, keyholder, unlock, cloning) {
 
     return accessval;
 };
-
-exports.canAccessChastity = canAccessChastity;

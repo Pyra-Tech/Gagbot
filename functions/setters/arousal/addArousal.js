@@ -1,5 +1,5 @@
-const { getArousal } = require("../../getters/arousal/getArousal");
-const { getCombinedTraits } = require("../../getters/chastity/getCombinedTraits");
+import { getArousal } from "../../getters/arousal/getArousal.js";
+import { getCombinedTraits } from "../../getters/chastity/getCombinedTraits.js";
 
 /**********
  * Adds arousal to the user
@@ -9,7 +9,7 @@ const { getCombinedTraits } = require("../../getters/chastity/getCombinedTraits"
  * ---
  * ##### Returns current arousal after change
  **********/
-function addArousal(user, change) {
+export function addArousal(user, change) {
     if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
     if (isNaN(change)) {
         console.log(`ERROR - Attempting to add a NaN arousal to user ID ${user}`)
@@ -23,5 +23,3 @@ function addArousal(user, change) {
     getCombinedTraits(user).afterArousalChange({ userID: user, prevArousal: (process.arousal[user].arousal - change), currArousal: process.arousal[user].arousal });
     return getArousal(user);
 }
-
-exports.addArousal = addArousal;

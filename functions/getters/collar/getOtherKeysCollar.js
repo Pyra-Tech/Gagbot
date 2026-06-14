@@ -6,7 +6,7 @@
  * ##### Returns an array of cloned collar keys in the format "0000000000000000_00000000000000000" where the first set of 0s 
  * ##### is the person wearing the restraint, and the second set is the person holding the key clone.
  **********/
-function getOtherKeysCollar(userID) {
+export function getOtherKeysCollar(userID) {
     if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -22,5 +22,3 @@ function getOtherKeysCollar(userID) {
 	});
 	return ownedkeys;
 }
-
-exports.getOtherKeysCollar = getOtherKeysCollar;

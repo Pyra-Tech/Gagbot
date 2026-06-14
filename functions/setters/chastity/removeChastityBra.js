@@ -1,5 +1,5 @@
-const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
-const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
+import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
 
 /**********
  * Removes a chastity bra from the user.
@@ -10,7 +10,7 @@ const { getChastityBra } = require("../../getters/chastity/getChastityBra");
  * ---
  * ##### Returns true if successful, false if failed to remove
  **********/
-function removeChastityBra(user, keyholder, force = false) {
+export function removeChastityBra(user, keyholder, force = false) {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
     }
@@ -38,5 +38,3 @@ function removeChastityBra(user, keyholder, force = false) {
 
 	return true;
 };
-
-exports.removeChastityBra = removeChastityBra;

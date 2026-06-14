@@ -6,7 +6,7 @@
  * ---
  * ##### Returns an array of user IDs that have selected that value for that option.
  *********/
-function getUsersWithOption(option, value) {
+export function getUsersWithOption(option, value) {
     let userswithval = [];
     if (process.configs && process.configs.users) {
         Object.keys(process.configs.users).forEach((user) => {
@@ -17,5 +17,3 @@ function getUsersWithOption(option, value) {
     }
     return userswithval;
 }
-
-exports.getUsersWithOption = getUsersWithOption;

@@ -1,4 +1,4 @@
-const { getHeavy } = require("./getHeavy");
+import { getHeavy } from "./getHeavy.js";
 
 /********
  * Get the person who applied heavy bondage to the user.
@@ -8,7 +8,7 @@ const { getHeavy } = require("./getHeavy");
  * ---
  * ##### Returns a user ID who put this heavy bondage on the user. 
  ********/
-function getHeavyBinder(user, type) {
+export function getHeavyBinder(user, type) {
     if (getHeavy(user)) {
         if (type) {
             return getHeavy(user, type)?.origbinder
@@ -18,5 +18,3 @@ function getHeavyBinder(user, type) {
         }
     };
 }
-
-exports.getHeavyBinder = getHeavyBinder;

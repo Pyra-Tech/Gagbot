@@ -1,4 +1,4 @@
-const { getCollar } = require("./getCollar");
+import { getCollar } from "./getCollar.js";
 
 /**********
  * Gets the primary keyholder for a person's collar.
@@ -7,8 +7,6 @@ const { getCollar } = require("./getCollar");
  * ---
  * ##### Returns a string with the user ID of the primary keyholder for the user's collar.
  **********/
-function getCollarKeyholder(user) {
+export function getCollarKeyholder(user) {
 	return getCollar(user)?.keyholder;
 }
-
-exports.getCollarKeyholder = getCollarKeyholder;

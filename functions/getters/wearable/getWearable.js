@@ -5,11 +5,9 @@
  * ---
  * ##### Returns an array with strings of wearable item IDs
  **********/
-function getWearable(userID) {
-    if (process.wearable == undefined) {
+export function getWearable(userID) {
+	if (process.wearable == undefined) {
 		process.wearable = {};
 	}
 	return process.wearable[userID]?.wornwearable ? process.wearable[userID]?.wornwearable : [];
 }
-
-exports.getWearable = getWearable;

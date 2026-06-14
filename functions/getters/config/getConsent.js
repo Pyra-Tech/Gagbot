@@ -6,7 +6,7 @@
  * ##### Returns an object with the following properties:
  * - mainconsent: True if they clicked the Accept button
  ***********/
-function getConsent(user) {
+export function getConsent(user) {
 	if (process.consented == undefined) {
 		process.consented = {};
 	}
@@ -14,6 +14,4 @@ function getConsent(user) {
 		return { mainconsent: true }; // Lol, trying to gag us.
 	}
 	return process.consented[user];
-};
-
-exports.getConsent = getConsent;
+}

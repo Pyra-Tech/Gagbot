@@ -6,7 +6,7 @@
  * ---
  * ##### Returns an array with array pairs of user IDs and stats, [userid, stat]
  *********/
-function statsGetAllStat(stat) {
+export function statsGetAllStat(stat) {
     let selectedoption = [];
     if (process.userstats) {
         Object.keys(process.userstats).forEach((user) => {
@@ -24,5 +24,3 @@ function statsGetAllStat(stat) {
     }
     return selectedoption;
 }
-
-exports.statsGetAllStat = statsGetAllStat;

@@ -5,7 +5,7 @@
  * ---
  * ##### *No return value*
  ***********/
-function leaveServerOptions(serverID) {
+export function leaveServerOptions(serverID) {
 	if (process.configs == undefined) {
 		process.configs = {};
 	}
@@ -18,5 +18,3 @@ function leaveServerOptions(serverID) {
 	}
 	process.readytosave.configs = true;
 }
-
-exports.leaveServerOptions = leaveServerOptions;

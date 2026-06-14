@@ -14,7 +14,7 @@
  * - mask: Permission to apply headwear to the user
  * ###### Additional properties may be added by other functions
  *********/
-function getCollar(user) {
+export function getCollar(user) {
 	if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -27,5 +27,3 @@ function getCollar(user) {
     }
 	return process.collar[user];
 };
-
-exports.getCollar = getCollar;

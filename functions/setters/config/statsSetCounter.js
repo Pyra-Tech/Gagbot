@@ -5,7 +5,7 @@
  * - (string) countername - ID of the counter to increment
  * - (any) value - Value to store in countername
  **********/
-function statsSetCounter(user, countername, value) {
+export function statsSetCounter(user, countername, value) {
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[user] == undefined) { process.userstats[user] = {} }
     process.userstats[user][countername] = value;
@@ -14,5 +14,3 @@ function statsSetCounter(user, countername, value) {
     }
     process.readytosave.userstats = true;
 }
-
-exports.statsSetCounter = statsSetCounter;

@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  ********/
-function setBotOption(option, choice) {
+export function setBotOption(option, choice) {
 	if (process.configs == undefined) {
 		process.configs = {};
 	}
@@ -19,5 +19,3 @@ function setBotOption(option, choice) {
 	}
 	process.readytosave.configs = true;
 }
-
-exports.setBotOption = setBotOption;

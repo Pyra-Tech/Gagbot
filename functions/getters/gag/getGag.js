@@ -9,8 +9,8 @@
  * - intensity: How tight the gag is (1-10)
  * - origbinder: Who put the gag on the user
  **********/
-function getGag(userID, gagbyname) {
-    if (process.gags == undefined) {
+export function getGag(userID, gagbyname) {
+	if (process.gags == undefined) {
 		process.gags = {};
 	}
 	if (process.gags[userID] == undefined) {
@@ -20,10 +20,8 @@ function getGag(userID, gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
 		return foundgag;
 	} 
-    else if (process.gags[userID].length > 0) {
+	else if (process.gags[userID].length > 0) {
 		return process.gags[userID][0].gagtype; 
 	}
 	return undefined;
 }
-
-exports.getGag = getGag;

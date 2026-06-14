@@ -1,4 +1,4 @@
-const { getChastity } = require("./getChastity");
+import { getChastity } from "./getChastity.js";
 
 /***********
  * Returns UNIX timestring of the wearer's unlock time for their chastity belt if they are timelocked.
@@ -8,7 +8,7 @@ const { getChastity } = require("./getChastity");
  * ---
  * ##### Returns an integer with the unlockTime or a string with the unlock time for Discord.
  ***********/
-function getChastityTimelock(user, UNIXTimestring) {
+export function getChastityTimelock(user, UNIXTimestring) {
 	if (!UNIXTimestring) {
 		return getChastity(user)?.unlockTime;
 	} else {
@@ -18,6 +18,4 @@ function getChastityTimelock(user, UNIXTimestring) {
 			return null;
 		}
 	}
-}
-
-exports.getChastityTimelock = getChastityTimelock;
+} 

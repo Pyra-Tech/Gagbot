@@ -1,4 +1,4 @@
-const { getCollar } = require("../../getters/collar/getCollar");
+import { getCollar } from "../../getters/collar/getCollar.js";
 
 /******
  * Adds an additional Collar effect to the user's collar, if they are wearing a collar. 
@@ -8,7 +8,7 @@ const { getCollar } = require("../../getters/collar/getCollar");
  * ---
  * ##### *No return value*
  *******/
-function addAdditionalCollarEffect(user, type) {
+export function addAdditionalCollarEffect(user, type) {
     try {
         if (getCollar(user)) {
             if (!getCollar(user).additionalcollars) { getCollar(user).additionalcollars = [] }
@@ -23,5 +23,3 @@ function addAdditionalCollarEffect(user, type) {
         console.log(err);
     }
 }
-
-exports.addAdditionalCollarEffect = addAdditionalCollarEffect;

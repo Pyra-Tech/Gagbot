@@ -5,7 +5,7 @@
  * ---
  * ##### Returns true if configured, false if not
  ************/
-function knownServer(serverID) {
+export function knownServer(serverID) {
 	if (process.configs == undefined) {
 		process.configs = {};
 	}
@@ -14,5 +14,3 @@ function knownServer(serverID) {
 	}
 	return process.configs.servers[serverID] != undefined;
 }
-
-exports.knownServer = knownServer;

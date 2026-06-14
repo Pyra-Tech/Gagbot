@@ -9,7 +9,7 @@
  * ---
  * ###### Note: Needs rework into separate getChastityName and getChastityNameOnUser functions
  ************/
-function getChastityBraName(userID, chastityname) {
+export function getChastityBraName(userID, chastityname) {
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -25,5 +25,3 @@ function getChastityBraName(userID, chastityname) {
 		return undefined;
 	}
 }
-
-exports.getChastityBraName = getChastityBraName;

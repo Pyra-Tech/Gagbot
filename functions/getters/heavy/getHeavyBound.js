@@ -1,5 +1,5 @@
-const { getHeavy } = require("./getHeavy");
-const { getHeavyRestrictions } = require("./getHeavyRestrictions");
+import { getHeavy } from "./getHeavy.js";
+import { getHeavyRestrictions } from "./getHeavyRestrictions.js";
 
 /**********
  * Check if **user** can bind **target** by ID.
@@ -9,7 +9,7 @@ const { getHeavyRestrictions } = require("./getHeavyRestrictions");
  * ---
  * ##### Returns true if the user is able to bind the target, false if not
  **********/
-function getHeavyBound(user, target) {
+export function getHeavyBound(user, target) {
     if (getHeavy(user) == undefined) {
         return true; // No need to worry, they are able to do anything!
     }
@@ -32,5 +32,3 @@ function getHeavyBound(user, target) {
         }
     }
 }
-
-exports.getHeavyBound = getHeavyBound;

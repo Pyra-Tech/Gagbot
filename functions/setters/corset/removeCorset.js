@@ -5,7 +5,7 @@
  * ---
  * ##### *No return value*
  ********/
-function removeCorset(user) {
+export function removeCorset(user) {
 	if (process.corset == undefined) process.corset = {};
 	delete process.corset[user];
 	if (process.readytosave == undefined) {
@@ -13,5 +13,3 @@ function removeCorset(user) {
 	}
 	process.readytosave.corset = true;
 };
-
-exports.removeCorset = removeCorset;

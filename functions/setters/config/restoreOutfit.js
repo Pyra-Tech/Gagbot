@@ -1,15 +1,15 @@
-const { canAccessChastity } = require("../../getters/chastity/canAccessChastity");
-const { canAccessChastityBra } = require("../../getters/chastity/canAccessChastityBra");
-const { getChastityBra } = require("../../getters/chastity/getChastityBra");
-const { canAccessCollar } = require("../../getters/collar/canAccessCollar");
-const { getCollar } = require("../../getters/collar/getCollar");
-const { getCorset } = require("../../getters/corset/getCorset");
-const { getGags } = require("../../getters/gag/getGags");
-const { getHeadwear } = require("../../getters/headwear/getHeadwear");
-const { getHeavy } = require("../../getters/heavy/getHeavy");
-const { getMitten } = require("../../getters/mitten/getMitten");
-const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
-const { getWearable } = require("../../getters/wearable/getWearable");
+import { canAccessChastity } from "../../getters/chastity/canAccessChastity.js";
+import { canAccessChastityBra } from "../../getters/chastity/canAccessChastityBra.js";
+import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
+import { canAccessCollar } from "../../getters/collar/canAccessCollar.js";
+import { getCollar } from "../../getters/collar/getCollar.js";
+import { getCorset } from "../../getters/corset/getCorset.js";
+import { getGags } from "../../getters/gag/getGags.js";
+import { getHeadwear } from "../../getters/headwear/getHeadwear.js";
+import { getHeavy } from "../../getters/heavy/getHeavy.js";
+import { getMitten } from "../../getters/mitten/getMitten.js";
+import { getLockedWearable } from "../../getters/wearable/getLockedWearable.js";
+import { getWearable } from "../../getters/wearable/getWearable.js";
 
 /*********
  * Retrieves an outfit and attempts to apply it to the user. 
@@ -20,7 +20,7 @@ const { getWearable } = require("../../getters/wearable/getWearable");
  * ---
  * ##### *No return value*
  *********/
-function restoreOutfit(userID, storedobject) {
+export function restoreOutfit(userID, storedobject) {
 	Object.keys(storedobject).forEach((k) => {
 		// I could use a switch statement here but I feel like using if conditionals.
 		if (k == "wearable") {
@@ -139,5 +139,3 @@ function restoreOutfit(userID, storedobject) {
 		}*/
 	});
 }
-
-exports.restoreOutfit = restoreOutfit;

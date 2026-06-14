@@ -1,4 +1,4 @@
-const { getCollar } = require("./getCollar");
+import { getCollar } from "./getCollar.js";
 
 /********
  * Returns a boolean or undefined for perms supplied to a collar. 
@@ -8,8 +8,6 @@ const { getCollar } = require("./getCollar");
  * ---
  * ##### Returns a boolean if permission is allowed or not, or undefined if not specified.
  ********/
-function getCollarPerm(user, perm) {
+export function getCollarPerm(user, perm) {
     return (getCollar(user) ? getCollar(user)[perm] : undefined)
 }
-
-exports.getCollarPerm = getCollarPerm;

@@ -8,10 +8,8 @@
  * - intensity: The intensity of the toy 1-20
  * - origbinder: The user ID who put the toy on the user
  **********/
-function getToys(user) {
+export function getToys(user) {
     if (process.toys == undefined) { process.toys = {} }
     if (process.toys[user] == undefined) { process.toys[user] = [] }
     return process.toys[user];
 }
-
-exports.getToys = getToys;

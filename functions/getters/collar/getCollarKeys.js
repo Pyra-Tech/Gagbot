@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an array of user IDs the user is the primary keyholder for.
  **********/
-function getCollarKeys(user) {
+export function getCollarKeys(user) {
     if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -17,5 +17,3 @@ function getCollarKeys(user) {
 	});
 	return keysheld;
 }
-
-exports.getCollarKeys = getCollarKeys;

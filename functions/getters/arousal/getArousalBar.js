@@ -1,5 +1,5 @@
-const { calcDenialCoefficient } = require("../../vibefunctions");
-const { getArousal } = require("./getArousal");
+import { calcDenialCoefficient } from "../../vibefunctions.js";
+import { getArousal } from "./getArousal.js";
 
 /**********
  * Get a bar representing the user's current arousal over denial.
@@ -8,7 +8,7 @@ const { getArousal } = require("./getArousal");
  * ---
  * ##### Returns a string representing a filled bar for arousal percentage
  **********/
-function getArousalBar(userID) {
+export function getArousalBar(userID) {
     const arousal = getArousal(userID);
     const denialCoefficient = calcDenialCoefficient(userID);
     const orgasmLimit = ORGASM_LIMIT;
@@ -32,5 +32,3 @@ function getArousalBar(userID) {
 
     return { bar: stringout, percentage: Math.round(percentagefilled * 100) };
 }
-
-exports.getArousalBar = getArousalBar;

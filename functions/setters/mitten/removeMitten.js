@@ -5,7 +5,7 @@
  * ---
  * ##### *No return value*
  **********/
-function deleteMitten(userID) {
+export function deleteMitten(userID) {
 	if (process.mitten == undefined) {
 		process.mitten = {};
 	}
@@ -16,5 +16,4 @@ function deleteMitten(userID) {
 	process.readytosave.mitten = true;
 };
 
-exports.deleteMitten = deleteMitten;
-exports.removeMitten = deleteMitten;
+export const deleteMitten = removeMitten;

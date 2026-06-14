@@ -10,7 +10,7 @@ import { getBaseChastity } from ("../../getters/chastity/getBaseChastity");
  * ---
  * ##### *No return value*
  **********/
-function removeToy(user, keyholder, toytype, force = false) {
+export function removeToy(user, keyholder, toytype, force = false) {
     if (process.toys == undefined) { process.toys = {} }
     if (process.toys[user] == undefined) { process.toys[user] = [] }
     let index = process.toys[user].findIndex((toy) => toy.type == toytype)
@@ -30,5 +30,3 @@ function removeToy(user, keyholder, toytype, force = false) {
     }
     process.readytosave.toys = true;
 }
-
-export { removeToy };
