@@ -3,6 +3,13 @@ const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getGags } = require("../functions/getters/gag/getGags.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getGag } = require("../functions/getters/gag/getGag.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getMitten } = require("../functions/getters/mitten/getMitten.js");
+const { deleteGag } = require("../functions/setters/gag/removeGag.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

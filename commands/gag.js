@@ -5,6 +5,14 @@ const { handleConsent, handleExtremeRestraint } = require("./../functions/intera
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getGag } = require("../functions/getters/gag/getGag.js");
+const { getGagLast } = require("../functions/getters/gag/getGagLast.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getMitten } = require("../functions/getters/mitten/getMitten.js");
+const { assignGag } = require("../functions/setters/gag/assignGag.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -367,7 +375,7 @@ module.exports = {
 -# Restricted if wearing mittens
 ${restrictedtext}
 Applies a gag to the target **user**, impairing their speech in various ways. The standard gag is the **Ball Gag**, but others exist which will garble the wearer's speech in other ways. **Intensity** will sometimes influence how much the gag affects speech. **Tone** will affect the tone of the application text to others.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

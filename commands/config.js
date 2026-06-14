@@ -8,6 +8,14 @@ const { initializeServerOptions } = require("../functions/configfunctions.js");
 const { setCommands, generateTextEntryModal } = require("../functions/configfunctions.js");
 const { processTimedEvents } = require("../functions/timefunctions.js");
 const { generateUserEntryModal } = require("../functions/configfunctions.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getServerOption } = require("../functions/getters/config/getServerOption.js");
+const { getBotOption } = require("../functions/getters/config/getBotOption.js");
+const { setServerOption } = require("../functions/setters/config/setServerOption.js");
+const { createWebhook } = require("../functions/setters/config/createWebhook.js");
+const { deleteWebhook } = require("../functions/setters/config/deleteWebhook.js");
+const { leaveServerOptions } = require("../functions/setters/config/leaveServerOptions.js");
+const { setOption } = require("../functions/setters/config/setOption.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),

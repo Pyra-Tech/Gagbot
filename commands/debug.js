@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

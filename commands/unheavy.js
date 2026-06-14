@@ -4,6 +4,12 @@ const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getHeavyList } = require("../functions/getters/heavy/getHeavyList.js");
+const { getBaseHeavy } = require("../functions/getters/heavy/getBaseHeavy.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { removeHeavy } = require("../functions/setters/heavy/removeHeavy.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -1,6 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getText } = require("../functions/textfunctions");
+const { getToys } = require("../functions/getters/toy/getToys");
+const { getBaseToy } = require("../functions/getters/toy/getBaseToy");
+const { getConsent } = require("../functions/getters/config/getConsent");
+const { handleConsent } = require("../functions/interactivefunctions");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy");
 
 
 module.exports = {

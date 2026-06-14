@@ -3,6 +3,13 @@ const { collartypes } = require("./../functions/collarfunctions.js");
 const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getTextGeneric } = require("./../functions/textfunctions.js");
 const { handleTouchEvent, shockUser } = require("../functions/touchfunctions.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getCollarName } = require("../functions/getters/collar/getCollarName.js");
+const { getCollar } = require("../functions/getters/collar/getCollar.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { addArousal } = require("../functions/setters/arousal/addArousal.js");
+const { statsAddCounter } = require("../functions/setters/config/statsAddCounter.js");
+const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

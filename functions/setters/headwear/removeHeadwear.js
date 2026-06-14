@@ -5,10 +5,11 @@ const { getLockedHeadgear } = require("../../getters/headwear/getLockedHeadgear"
  * 
  * - (user id) userID - The person wearing the headwear
  * - (string) headwear - The type of headwear to remove
+ * - (boolean) force - If true, forcibly removes all headwear
  * ---
  * ##### *No return value*
  **********/
-function deleteHeadwear(userID, headwear) {
+function deleteHeadwear(userID, headwear, force = true) {
     if (process.headwear == undefined) {
         process.headwear = {};
     }
@@ -46,6 +47,7 @@ function deleteHeadwear(userID, headwear) {
             delete process.headwear[userID];
         }
     }
+    if (force) { delete process.headwear[userID] }
     if (process.readytosave == undefined) {
         process.readytosave = {};
     }

@@ -4,6 +4,17 @@ const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { handleConsent, handleMajorRestraint, handleExtremeRestraint, generateExtraConfig } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getBaseChastity } = require("../functions/getters/chastity/getBaseChastity.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getChastityName } = require("../functions/getters/chastity/getChastityName.js");
+const { getChastityBraName } = require("../functions/getters/chastity/getChastityBraName.js");
+const { getChastityBra } = require("../functions/getters/chastity/getChastityBra.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getPronouns } = require("../functions/getters/config/getPronouns.js");
+const { assignChastityBra } = require("../functions/setters/chastity/assignChastityBra.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -287,7 +298,7 @@ module.exports = {
 -# Restricted if not holding the device's key or in heavy bondage
 ${restrictedtext}
 Applies a **Chastity Belt** or **Chastity Bra** to yourself, which will prevent the use of commands to change, add or remove certain **Toys** on you, as well as **Corsets** when wearing a **Chastity Belt**. Chastity will increase the threshold required to successfully **/letgo** and can potentially have other arousing effects. If configured, worn time with chastity can contribute to Frustration which impacts fumble chance when unlocking the device.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

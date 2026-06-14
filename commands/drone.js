@@ -3,6 +3,10 @@ const { dronecodes } = require("../functions/dollfunctions");
 const { default: didYouMean, ReturnTypeEnums, ThresholdTypeEnums } = require("didyoumean2");
 const { handleConsent } = require("../functions/interactivefunctions");
 const { messageSend } = require("../functions/messagefunctions");
+const { getConsent } = require("../functions/getters/config/getConsent");
+const { getOption } = require("../functions/getters/config/getOption");
+const { getAlternateName } = require("../functions/getters/config/getAlternateName");
+const { getPFP } = require("../functions/getters/config/getPFP");
 
 module.exports = {
 	data: new SlashCommandBuilder()

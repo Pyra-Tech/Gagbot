@@ -1,5 +1,15 @@
 const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require("discord.js");
 const { setArousalCooldown } = require("../functions/vibefunctions.js");
+const { deleteGag } = require("../functions/setters/gag/removeGag.js");
+const { deleteMitten } = require("../functions/setters/mitten/removeMitten.js");
+const { removeChastity } = require("../functions/setters/chastity/removeChastity.js");
+const { removeChastityBra } = require("../functions/setters/chastity/removeChastityBra.js");
+const { removeCollar } = require("../functions/setters/collar/removeCollar.js");
+const { removeHeavy } = require("../functions/setters/heavy/removeHeavy.js");
+const { removeCorset } = require("../functions/setters/corset/removeCorset.js");
+const { deleteWearable } = require("../functions/setters/wearable/removeWearable.js");
+const { deleteHeadwear } = require("../functions/setters/headwear/removeHeadwear.js");
+const { getServerOption } = require("../functions/getters/config/getServerOption.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
