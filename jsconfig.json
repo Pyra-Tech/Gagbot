@@ -6,5 +6,5 @@
         "checkJs": false // Set true to get typescripted
     },
     "exclude": ["node_modules"],
-    "include": ["functions/*", "lists/*"],
+    //"include": ["functions/*", "lists/*"],
 }

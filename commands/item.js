@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { generateConfigModal, configoptions } = require("./../functions/configfunctions.js");
+const { generateConfigModal } = require("./../functions/configfunctions.js");
 const { getHeadwear } = require("../functions/getters/headwear/getHeadwear.js");
 const { getLockedHeadgear } = require("../functions/getters/headwear/getLockedHeadgear.js");
 const { getWearable } = require("../functions/getters/wearable/getWearable.js");
