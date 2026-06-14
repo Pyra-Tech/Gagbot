@@ -1,4 +1,4 @@
-import { getBaseChastity } from ("../../getters/chastity/getBaseChastity");
+const getBaseChastity = require("../../getters/chastity/getBaseChastity");
 
 /**********
  * Removes a toy from the user.
@@ -31,4 +31,4 @@ function removeToy(user, keyholder, toytype, force = false) {
     process.readytosave.toys = true;
 }
 
-export { removeToy };
+exports.removeToy = removeToy;
