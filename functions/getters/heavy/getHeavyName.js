@@ -1,4 +1,4 @@
-const { heavytypes } = require("../heavyfunctions");
+const { heavytypes } = require("../../heavyfunctions");
 
 /**********
  * Gets the heavy bondage full name from its item ID

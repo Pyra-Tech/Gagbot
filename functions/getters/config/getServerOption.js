@@ -1,4 +1,5 @@
-const { initializeServerOptions, configoptions } = require("../configfunctions");
+const { initializeServerOptions } = require("../../configfunctions");
+
 
 /*********
  * Gets the value of an option set for a server ID

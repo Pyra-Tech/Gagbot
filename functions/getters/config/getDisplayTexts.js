@@ -1,3 +1,13 @@
+const { calcDenialCoefficient } = require("../../vibefunctions");
+const { getArousal } = require("../arousal/getArousal");
+const { getArousalBar } = require("../arousal/getArousalBar");
+const { getArousalChangeDescription } = require("../arousal/getArousalChangeDescription");
+const { getArousalDescription } = require("../arousal/getArousalDescription");
+const { getHeavy } = require("../heavy/getHeavy");
+const { getToys } = require("../toy/getToys");
+const { getOption } = require("./getOption");
+const { getUserVar } = require("./getUserVar");
+
 /*************
  * Get the user's additional display texts, ordered and only viewable if necessary. 
  * 
@@ -18,8 +28,8 @@ async function getDisplayTexts(userID, inspectuserID) {
             }
         }
         if (getOption(userID, "arousaldisplay") == "desc") {
-            arousaltext = getArousalDescription(inspectuserID);
-            arousalchangetext = getArousalChangeDescription(inspectuserID)
+            let arousaltext = getArousalDescription(inspectuserID);
+            let arousalchangetext = getArousalChangeDescription(inspectuserID)
             bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
         }
         if (getOption(userID, "arousaldisplay") == "numbers") {

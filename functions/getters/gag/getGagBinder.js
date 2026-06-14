@@ -1,3 +1,5 @@
+const { getGag } = require("./getGag");
+
 /*****
  * Gets the original binder for a gag by ID
  * 
@@ -7,10 +9,7 @@
  * ##### Returns the user ID who put the gag on them
  *****/
 function getGagBinder(userID, item) {
-    if (process.gags == undefined) {
-		process.gags = {};
-	}
-	return process.gags[userID]?.find((g) => g.gagtype == item)?.origbinder;
+	return getGag(userID, item)?.origbinder;
 }
 
 exports.getGagBinder = getGagBinder;

@@ -1,4 +1,5 @@
-const { calcBreath } = require("../corsetfunctions");
+const { calcBreath } = require("../../corsetfunctions");
+
 
 /*********
  * Gets the current breath of the user

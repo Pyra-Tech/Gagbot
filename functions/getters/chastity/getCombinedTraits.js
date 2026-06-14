@@ -1,3 +1,60 @@
+const { getBaseChastity } = require("./getBaseChastity");
+const { getChastity } = require("./getChastity");
+const { getChastityBra } = require("./getChastityBra");
+
+const NO_CHASTITY = {
+	growthCoefficient: 1,
+	decayCoefficient: 1,
+	denialCoefficient: 1,
+	timescale: 1,
+	minVibe: null,
+	minArousal: null,
+	maxVibe: null,
+	maxArousal: null,
+	minGrowth: null,
+	maxGrowth: null,
+	minDecay: null,
+	maxDecay: null,
+	orgasmCooldown: 1,
+	orgasmArousalLeft: 0,
+	onOrgasm(user, prevArousal) { },
+	onFailedOrgasm(user, prevArousal) { },
+	onEquip(user) { },
+	onUnequip(user) { },
+	onFumble(wearer, keyholder, fumbleResult) { },
+	afterArousalChange(user, prevArousal, newArousal) { },
+	canUnequip(user) {
+		return true;
+	},
+    calcVibeEffect(data) {
+        return 0
+    }
+};
+
+function min(a, b) {
+	if (!a && a !== 0) return b;
+	if (!b && b !== 0) return a;
+	return Math.min(a, b);
+}
+
+function max(a, b) {
+	if (a && a !== 0) return b;
+	if (b && b !== 0) return a;
+	return Math.max(a, b);
+}
+
+function bounded(min, val, max) {
+	const noMin = !min && min !== 0;
+	const noMax = !max && max !== 0;
+	if (noMin && noMax) return val;
+	if (noMin) return Math.min(val, max);
+	if (noMax) return Math.max(val, min);
+	if (max < min) return (max + min) / 2;
+	if (val < min) return min;
+	if (val > max) return max;
+	return val;
+}
+
 /********
  * Get the combined chastity related traits for a user, accounting for chastity belt and bra, if worn. 
  * 

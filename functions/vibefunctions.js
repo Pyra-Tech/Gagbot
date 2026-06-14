@@ -746,6 +746,7 @@ exports.updateArousalValues = updateArousalValues;
 exports.frustrationPenalties = frustrationPenalties;
 
 exports.stutterText = stutterText;
+exports.calcStaticVibeIntensity = calcStaticVibeIntensity;
 
 exports.promptCloneChastityKey = promptCloneChastityKey;
 exports.promptTransferChastityKey = promptTransferChastityKey;

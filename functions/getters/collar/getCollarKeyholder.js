@@ -1,3 +1,5 @@
+const { getCollar } = require("./getCollar");
+
 /**********
  * Gets the primary keyholder for a person's collar.
  * 
@@ -6,10 +8,7 @@
  * ##### Returns a string with the user ID of the primary keyholder for the user's collar.
  **********/
 function getCollarKeyholder(user) {
-    if (process.collar == undefined) {
-		process.collar = {};
-	}
-	return process.collar[user]?.keyholder;
+	return getCollar(user)?.keyholder;
 }
 
 exports.getCollarKeyholder = getCollarKeyholder;

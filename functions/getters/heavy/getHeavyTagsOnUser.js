@@ -1,3 +1,6 @@
+const { getBaseHeavy } = require("./getBaseHeavy");
+const { getHeavyList } = require("./getHeavyList");
+
 /*********
  * Gets a list of heavy tags affecting a user
  * 
@@ -6,15 +9,12 @@
  * ##### Returns an array of "arms", "legs", or "container"
  *********/
 function getHeavyTagsOnUser(user) {
-    if (process.heavy == undefined) {
-        process.heavy = {};
-    }
-    if (process.heavy[user] == undefined) {
+    if (getHeavyList(user) == undefined) {
         return []; // They're not bound by anything lol
     }
     else {
         let tags = [];
-        process.heavy[user].forEach((heavy) => {
+        getHeavyList(user).forEach((heavy) => {
             getBaseHeavy(heavy.type).heavytags.forEach((t) => {
                 tags.push(t);
             })

@@ -1,3 +1,5 @@
+const { getOption } = require("../config/getOption");
+
 /********
  * Determines if a toy is arousing and blocks it on the user if they do not have arousal enabled
  * 

@@ -1,4 +1,4 @@
-const { mittentypes } = require("../gagfunctions");
+const { mittentypes } = require("../../gagfunctions");
 
 /************
  * Gets the full mitten name of the User ID. Optionally will get the full mitten name of mittens by ID.

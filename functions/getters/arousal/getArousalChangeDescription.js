@@ -1,3 +1,9 @@
+const { getBotOption } = require("../config/getBotOption");
+const { getOption } = require("../config/getOption");
+
+// the arousal needed for an unbelted user to orgasm
+const ORGASM_LIMIT = 10;
+
 /**********
  * Gets a description representing the user's arousal change
  * 
@@ -6,7 +12,7 @@
  * ##### Returns a string representing their arousal change
  **********/
 function getArousalChangeDescription(user) {
-	if (!config.getDynamicArousal(user)) return null;
+	if (getOption(user, "arousalsystem") != 2) return null;
 
 	const arousal = process.arousal[user];
 	if (!arousal) return null;

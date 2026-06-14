@@ -1,4 +1,6 @@
-const { configoptions } = require("../configfunctions");
+const { configoptions } = require("../../configfunctions");
+const { getOption } = require("./getOption");
+
 
 /*********
  * Gets a list of tags the user has blocked or preferred

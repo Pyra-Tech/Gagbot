@@ -1,3 +1,12 @@
+const { calcDenialCoefficient } = require("../../vibefunctions");
+const { getOption } = require("../config/getOption");
+const { getArousal } = require("./getArousal");
+
+// the arousal needed for an unbelted user to orgasm
+const ORGASM_LIMIT = 10;
+// the arousal under which it is treated as 0
+const RESET_LIMIT = 0.1;
+
 /**********
  * Gets a description representing the user's arousal
  * 

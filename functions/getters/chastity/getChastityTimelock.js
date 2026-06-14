@@ -1,3 +1,5 @@
+const { getChastity } = require("./getChastity");
+
 /***********
  * Returns UNIX timestring of the wearer's unlock time for their chastity belt if they are timelocked.
  * 
@@ -7,14 +9,11 @@
  * ##### Returns an integer with the unlockTime or a string with the unlock time for Discord.
  ***********/
 function getChastityTimelock(user, UNIXTimestring) {
-    if (process.chastity == undefined) {
-		process.chastity = {};
-	}
 	if (!UNIXTimestring) {
-		return process.chastity[user]?.unlockTime;
+		return getChastity(user)?.unlockTime;
 	} else {
-		if (process.chastity[user]?.unlockTime) {
-			return `<t:${Math.floor(process.chastity[user]?.unlockTime / 1000)}:f>`;
+		if (getChastity(user)?.unlockTime) {
+			return `<t:${Math.floor(getChastity(user)?.unlockTime / 1000)}:f>`;
 		} else {
 			return null;
 		}

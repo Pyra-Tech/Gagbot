@@ -254,3 +254,4 @@ exports.theyll = (user, capitalise = false) => getPronouns(user, "subjectWill", 
 
 exports.pronounsMap = pronounsMap;
 exports.convertPronounsText = convertPronounsText;
+exports.remindPronouns = remindPronouns;

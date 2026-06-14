@@ -1,4 +1,4 @@
-const { mittentypes } = require("../gagfunctions");
+const { mittentypes } = require("../../gagfunctions");
 
 /********* 
  * Gets the base mittens type by ID.

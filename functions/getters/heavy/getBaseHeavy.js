@@ -1,4 +1,5 @@
-const { heavytypes } = require("../heavyfunctions");
+const { heavytypes } = require("../../heavyfunctions");
+
 
 /**************
  * Gets the base heavy type by ID

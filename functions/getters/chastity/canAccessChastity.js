@@ -1,3 +1,5 @@
+const { getChastity } = require("./getChastity");
+
 /************
  * Checks whether the keyholder has access to do things to the chastityuser. 
  * 

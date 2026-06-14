@@ -1,3 +1,5 @@
+const { remindPronouns } = require("../../pronounfunctions");
+
 /********************************************
  * Get a userID's pronoun of the necessary form.
  * 

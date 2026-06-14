@@ -1,3 +1,5 @@
+const { getCollar } = require("./getCollar");
+
 /********
  * Returns a boolean or undefined for perms supplied to a collar. 
  * 
@@ -7,14 +9,7 @@
  * ##### Returns a boolean if permission is allowed or not, or undefined if not specified.
  ********/
 function getCollarPerm(user, perm) {
-    if (process.collar == undefined) {
-		process.collar = {};
-	}
-	if (process.collar[user]) {
-		return process.collar[user][perm];
-	} else {
-		return undefined;
-	}
+    return getCollar(user)?[perm]
 }
 
 exports.getCollarPerm = getCollarPerm;

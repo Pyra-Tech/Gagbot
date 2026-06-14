@@ -1,3 +1,7 @@
+const { arousedtexts } = require("../../../vibes/aroused/aroused_texts");
+const { calcStaticVibeIntensity } = require("../../vibefunctions");
+const { getOption } = require("../config/getOption");
+
 /*********
  * Returns valid arousal texts to be used when stuttering during speech
  * 
@@ -8,7 +12,7 @@
 function getArousedTexts(user) {
 	const texts = [];
 
-	if (config.getDynamicArousal(user)) {
+	if (getOption(user, "arousalsystem") == 2) {
 		const arousal = process.arousal[user];
 		const current = arousal.arousal;
 		const change = arousal.arousal - arousal.prev;

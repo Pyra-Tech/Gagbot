@@ -1,3 +1,5 @@
+const { getChastity } = require("./getChastity");
+
 /**********
  * Gets the primary keyholder for a person's chastity belt.
  * 
@@ -6,10 +8,7 @@
  * ##### Returns a string with the user ID of the primary keyholder for the user's chastity belt.
  **********/
 function getChastityKeyholder(user) {
-    if (process.chastity == undefined) {
-		process.chastity = {};
-	}
-	return process.chastity[user]?.keyholder;
+	return getChastity(user)?.keyholder;
 }
 
 exports.getChastityKeyholder = getChastityKeyholder;

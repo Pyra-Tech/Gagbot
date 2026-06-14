@@ -1,3 +1,6 @@
+const { calcDenialCoefficient } = require("../../vibefunctions");
+const { getArousal } = require("./getArousal");
+
 /**********
  * Get a bar representing the user's current arousal over denial.
  * 

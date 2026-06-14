@@ -13,8 +13,7 @@
  *********/
 function getCorset(user) {
     if (process.corset == undefined) process.corset = {};
-	const corset = process.corset[user];
-	return corset;
+	return process.corset[user];
 }
 
 exports.getCorset = getCorset;

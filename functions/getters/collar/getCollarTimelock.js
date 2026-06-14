@@ -1,3 +1,5 @@
+const { getCollar } = require("./getCollar");
+
 /***********
  * Returns UNIX timestring of the wearer's unlock time for their collar if they are timelocked.
  * 
@@ -7,14 +9,11 @@
  * ##### Returns an integer with the unlockTime or a string with the unlock time for Discord.
  ***********/
 function getCollarTimelock(user, UNIXTimestring) {
-    if (process.collar == undefined) {
-		process.collar = {};
-	}
 	if (!UNIXTimestring) {
-		return process.collar[user]?.unlockTime;
+		return getCollar(user)?.unlockTime;
 	} else {
-		if (process.collar[user]?.unlockTime) {
-			return `<t:${Math.floor(process.collar[user]?.unlockTime / 1000)}:f>`;
+		if (getCollar(user)?.unlockTime) {
+			return `<t:${Math.floor(getCollar(user)?.unlockTime / 1000)}:f>`;
 		} else {
 			return null;
 		}

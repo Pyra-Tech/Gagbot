@@ -1,3 +1,5 @@
+const { getCollar } = require("./getCollar");
+
 /*********
  * Gets a list of users with secondary key access to the collaruser.
  * 
@@ -6,11 +8,7 @@
  * ##### Returns an array of user IDs with secondary access to this collar.
  *********/
 function getClonedCollarKey(collaruser) {
-    if (process.collar == undefined) {
-		process.collar = {};
-	}
-	let returnval = process.collar[userID]?.clonedKeyholders ?? [];
-	return returnval;
+	return getCollar(collaruser)?.clonedKeyholders ?? [];
 }
 
 exports.getClonedCollarKey = getClonedCollarKey;

@@ -1,3 +1,5 @@
+const { getMitten } = require("./getMitten");
+
 /******
  * Gets the person who put mittens on a user. This is used in one place and should be retired.
  * 
@@ -6,10 +8,7 @@
  * ##### Returns the user ID who put the mittens on the user.
  ******/
 function getMittenBinder(userID) {
-    if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	return process.mitten[userID]?.origbinder;
+	return getMitten(userID)?.origbinder;
 }
 
 exports.getMittenBinder = getMittenBinder;

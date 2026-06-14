@@ -1,7 +1,8 @@
-const { DOLLVISORS, DRONEVISORS } = require("../headwearfunctions");
-const { getCollar } = require("./getCollar");
-const { getHeadwear } = require("./getHeadwear");
+const { DRONEVISORS, DOLLVISORS } = require("../../headwearfunctions");
+const { getCollar } = require("../collar/getCollar");
+const { getHeadwear } = require("../headwear/getHeadwear");
 const { getOption } = require("./getOption");
+
 
 /**********
  * Retrieves any alternate name for the user

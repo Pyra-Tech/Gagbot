@@ -1,3 +1,5 @@
+const { getHeavy } = require("./getHeavy");
+
 /********
  * Get the person who applied heavy bondage to the user.
  * 
@@ -7,18 +9,12 @@
  * ##### Returns a user ID who put this heavy bondage on the user. 
  ********/
 function getHeavyBinder(user, type) {
-    if (process.heavy == undefined) {
-		process.heavy = {};
-	}
-	if (process.heavy[user] == undefined) {
-        process.heavy[user] = [];
-    }
-    if (process.heavy[user].length > 0) {
+    if (getHeavy(user)) {
         if (type) {
-            return process.heavy[user].find((h) => h.type === type)?.origbinder
+            return getHeavy(user, type)?.origbinder
         }
         else {
-            return process.heavy[user][0]?.origbinder
+            return getHeavy(user)?.origbinder
         }
     };
 }

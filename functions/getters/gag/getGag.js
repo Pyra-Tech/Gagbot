@@ -19,8 +19,9 @@ function getGag(userID, gagbyname) {
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
 		return foundgag;
-	} else if (process.gags[userID].length > 0) {
-		return process.gags[userID][0].gagtype;
+	} 
+    else if (process.gags[userID].length > 0) {
+		return process.gags[userID][0].gagtype; 
 	}
 	return undefined;
 }

@@ -1,3 +1,4 @@
+const { getUserVar } = require("../config/getUserVar");
 const { getBaseHeavy } = require("./getBaseHeavy");
 const { getHeavy } = require("./getHeavy");
 
@@ -18,10 +19,7 @@ function getHeavyRestrictions(user) {
         touchself: true,
         touchothers: true,
     }
-    if (process.heavy == undefined) {
-		process.heavy = {};
-	}
-    if (process.heavy[user] == undefined) {
+    if (getHeavy(user) == undefined) {
         return returnobject; // User is unbound, they can do anything. 
     }
     else {
