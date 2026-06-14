@@ -1,3 +1,5 @@
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 
 // This vibrator will only function if getUserVar(userID, "reverbEndTime") has any value

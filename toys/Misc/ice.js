@@ -1,4 +1,5 @@
-
+const { getArousal } = require("../../functions/getters/arousal/getArousal")
+const { getChastity } = require("../../functions/getters/chastity/getChastity")
 
 // Ice 
 // This reduces the arousal of the wearer by a proportion of their current arousal

@@ -1,4 +1,4 @@
-
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
 
 // Seal of the Capricious Breeze
 // This Seal randomly adds an amount of arousal between 0 and the Wearer's current value when orgasming

@@ -1,3 +1,4 @@
+const { getUserVar } = require("../functions/getters/config/getUserVar");
 const { convertPronounsText } = require("../functions/pronounfunctions");
 
 const headpatlines = [

@@ -1,4 +1,6 @@
-const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
+const { getBaseChastity } = require("../../functions/getters/chastity/getBaseChastity")
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra")
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
 
 // These values are used whenever they're unspecified on the vibe in this folder.
 // Arousal gain per intensity for this vibe type

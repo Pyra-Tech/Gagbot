@@ -1,4 +1,7 @@
-
+const { getArousal } = require("../../functions/getters/arousal/getArousal")
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 // Seal of the Enduring Ice
 // This Seal locks the user's max arousal at their current level + 5%, and decreases the growth coefficient along with increasing the decay rate. Also doubles the Orgasm Cooldown

@@ -1,3 +1,5 @@
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 
 // This plug will vibrate when the wearer speaks, setting the vibe scale HIGH for it

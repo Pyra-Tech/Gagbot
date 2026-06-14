@@ -1,5 +1,4 @@
-const { getOption } = require("../../functions/configfunctions")
-const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
 
 // These values are used whenever they're unspecified on the vibe in this folder.
 // Arousal gain per intensity for this vibe type

@@ -1,3 +1,4 @@
+const { getOption } = require("../functions/getters/config/getOption");
 
 
 const garbleText = (text, parent, intensity, msg) => {

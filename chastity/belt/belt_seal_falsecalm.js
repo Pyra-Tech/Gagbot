@@ -1,3 +1,7 @@
+const { getArousal } = require("../../functions/getters/arousal/getArousal")
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 
 // Seal of False Calm

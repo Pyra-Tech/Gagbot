@@ -1,4 +1,6 @@
-
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 // Livingwood Belt
 // This belt has a higher growth coefficient. Notably however,
@@ -25,7 +27,7 @@ exports.onEquip = (data) => {
 }
 exports.onUnequip = (data) => {
     // Check if user is wearing a Livingwood Bra otherwise Null Out Vars
-    if (!getChastityBra(data.userID)?.chastitytype != "bra_livingwood") {
+    if (getChastityBra(data.userID)?.chastitytype != "bra_livingwood") {
         setUserVar(data.userID, "livingwood_vibe", undefined);
         setUserVar(data.userID, "livingwood_chastity", undefined);
     }

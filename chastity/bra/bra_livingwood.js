@@ -1,4 +1,6 @@
-
+const { getChastity } = require("../../functions/getters/chastity/getChastity")
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 // Livingwood Bra
 // This bra has a higher growth coefficient. Notably however,
@@ -6,7 +8,6 @@
 // or every 15 minutes, until the wearer successfully orgasms. 
 //
 // This code is copied from chastity/belt/belt_livingwood.js and should be reviewed. Commented out for now.
-
 exports.growthCoefficient = (data) => { return 1 }
 exports.decayCoefficient = (data) => { return 0.1 }
 // Never Fully Clear Arousal
@@ -28,7 +29,7 @@ exports.onEquip = (data) => {
 }
 exports.onUnequip = (data) => {
     // Check if user is wearing a Livingwood Belt otherwise Null Out Vars
-    if (!getChastity(data.userID)?.chastitytype != "belt_livingwood") {
+    if (getChastity(data.userID)?.chastitytype != "belt_livingwood") {
         setUserVar(data.userID, "livingwood_vibe", undefined);
         setUserVar(data.userID, "livingwood_chastity", undefined);
     }
