@@ -1,4 +1,4 @@
-import { getChastityBra } from "./getChastityBra.js";
+const { getChastityBra } = require("./getChastityBra");
 
 /**********
  * Gets the primary keyholder for a person's chastity bra.
@@ -7,6 +7,8 @@ import { getChastityBra } from "./getChastityBra.js";
  * ---
  * ##### Returns a string with the user ID of the primary keyholder for the user's chastity bra.
  **********/
-export function getChastityBraKeyholder(user) {
+function getChastityBraKeyholder(user) {
 	return getChastityBra(user)?.keyholder;
 }
+
+exports.getChastityBraKeyholder = getChastityBraKeyholder;

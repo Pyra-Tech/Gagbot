@@ -1,4 +1,4 @@
-import { configoptions } from "../../lists/configoptions.js";
+const { configoptions } = require("../../lists/configoptions");
 
 /**********
  * Sets all options to the defaults for a user. 
@@ -7,7 +7,7 @@ import { configoptions } from "../../lists/configoptions.js";
  * ---
  * ##### *No return value*
  **********/
-export function initializeOptions(userID) {
+function initializeOptions(userID) {
     let pages = ["Me", "Arousal", "General", "Restraint Options", "Extreme", "Content"];
     pages.forEach((p) => {
         let optionspages = Object.keys(configoptions[p]);
@@ -24,3 +24,5 @@ export function initializeOptions(userID) {
     }
     process.readytosave.configs = true;
 }
+
+exports.initializeOptions = initializeOptions;

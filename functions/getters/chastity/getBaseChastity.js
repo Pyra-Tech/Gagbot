@@ -40,6 +40,8 @@
  * - onCorsetChange: (data) => Fired when the user's corset is changed
  * - calcVibeEffect: (data) => Calculates the Arousal change
  **********/
-export function getBaseChastity(chastitytype) {
+function getBaseChastity(chastitytype) {
     return process.chastitytypes[chastitytype];
 }
+
+exports.getBaseChastity = getBaseChastity;

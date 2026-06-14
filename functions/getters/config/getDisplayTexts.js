@@ -1,12 +1,12 @@
-import { calcDenialCoefficient } from "../../vibefunctions.js";
-import { getArousal } from "../arousal/getArousal.js";
-import { getArousalBar } from "../arousal/getArousalBar.js";
-import { getArousalChangeDescription } from "../arousal/getArousalChangeDescription.js";
-import { getArousalDescription } from "../arousal/getArousalDescription.js";
-import { getHeavy } from "../heavy/getHeavy.js";
-import { getToys } from "../toy/getToys.js";
-import { getOption } from "./getOption.js";
-import { getUserVar } from "./getUserVar.js";
+const { calcDenialCoefficient } = require("../../vibefunctions");
+const { getArousal } = require("../arousal/getArousal");
+const { getArousalBar } = require("../arousal/getArousalBar");
+const { getArousalChangeDescription } = require("../arousal/getArousalChangeDescription");
+const { getArousalDescription } = require("../arousal/getArousalDescription");
+const { getHeavy } = require("../heavy/getHeavy");
+const { getToys } = require("../toy/getToys");
+const { getOption } = require("./getOption");
+const { getUserVar } = require("./getUserVar");
 
 /*************
  * Get the user's additional display texts, ordered and only viewable if necessary. 
@@ -16,7 +16,7 @@ import { getUserVar } from "./getUserVar.js";
  * ---
  * ##### Returns a string to append to outfit modal with all of the additional widgets
  ************/
-export async function getDisplayTexts(userID, inspectuserID) {
+async function getDisplayTexts(userID, inspectuserID) {
     let bartext = ``;
 
     // ******************** Arousal Display
@@ -83,3 +83,5 @@ export async function getDisplayTexts(userID, inspectuserID) {
 
     return bartext.slice(1); // Cut the first linebreak for better look
 }
+
+exports.getDisplayTexts = getDisplayTexts;

@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function statsAddCounter(user, countername, amount = 1) {
+function statsAddCounter(user, countername, amount = 1) {
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[user] == undefined) { process.userstats[user] = {} }
     let newcount = (process.userstats[user][countername] ?? 0) + amount;
@@ -17,3 +17,5 @@ export function statsAddCounter(user, countername, amount = 1) {
     }
     process.readytosave.userstats = true;
 }
+
+exports.statsAddCounter = statsAddCounter

@@ -1,4 +1,4 @@
-import { getBaseHeavy } from "./getBaseHeavy.js";
+const { getBaseHeavy } = require("./getBaseHeavy");
 
 /*********
  * Get Heavy Bondage worn by the user. Returns arms -> legs -> container if multiple.
@@ -12,7 +12,7 @@ import { getBaseHeavy } from "./getBaseHeavy.js";
  * - displayname: The display name of this heavy bondage
  * - namedcontainerowner?: User ID included in container checks
  *********/
-export function getHeavy(user, type) {
+function getHeavy(user, type) {
     if (process.heavy == undefined) {
         process.heavy = {};
     }
@@ -58,3 +58,5 @@ export function getHeavy(user, type) {
     }
     return returnedval
 }
+
+exports.getHeavy = getHeavy;

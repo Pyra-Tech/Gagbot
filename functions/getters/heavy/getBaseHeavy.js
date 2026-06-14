@@ -1,4 +1,6 @@
-import { heavytypes } from "../../heavyfunctions.js";
+const { heavytypes } = require("../../heavyfunctions");
+
+
 /**************
  * Gets the base heavy type by ID
  * 
@@ -14,6 +16,8 @@ import { heavytypes } from "../../heavyfunctions.js";
  * - noother?: If true, prevents putting on others
  * - namefunction?: async (interaction, data) => Sets custom name on heavy object
  **************/
-export const getBaseHeavy = (type) => {
+const getBaseHeavy = (type) => {
     return heavytypes.find((h) => h.value === type);
 };
+
+exports.getBaseHeavy = getBaseHeavy;

@@ -1,4 +1,4 @@
-import { getCollar } from "../../getters/collar/getCollar.js";
+const { getCollar } = require("../../getters/collar/getCollar");
 
 /********
  * Adds a user as a cloned keyholder for the collar
@@ -8,7 +8,7 @@ import { getCollar } from "../../getters/collar/getCollar.js";
  * ---
  * ##### *No return value*
  ********/
-export function cloneCollarKey(collarUser, newKeyholder) {
+function cloneCollarKey(collarUser, newKeyholder) {
     let collar = getCollar(collarUser);
 	if (!collar.clonedKeyholders) {
 		collar.clonedKeyholders = [];
@@ -19,3 +19,5 @@ export function cloneCollarKey(collarUser, newKeyholder) {
 	}
 	process.readytosave.collar = true;
 };
+
+exports.cloneCollarKey = cloneCollarKey;

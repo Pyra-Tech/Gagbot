@@ -1,4 +1,4 @@
-import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
+const { getChastityBra } = require("../../getters/chastity/getChastityBra");
 
 /*******
  * Removes a cloned key from a chastity bra
@@ -8,7 +8,7 @@ import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
  * ---
  * ##### *No return value*
  *******/
-export function revokeChastityBraKey(chastityuser, newKeyholder) {
+function revokeChastityBraKey(chastityuser, newKeyholder) {
     let chastity = getChastityBra(chastityuser);
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
@@ -21,3 +21,5 @@ export function revokeChastityBraKey(chastityuser, newKeyholder) {
     }
     process.readytosave.chastity = true;
 };
+
+exports.revokeChastityBraKey = revokeChastityBraKey;

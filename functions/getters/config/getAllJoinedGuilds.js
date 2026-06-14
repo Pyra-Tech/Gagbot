@@ -5,7 +5,7 @@
  * ---
  * ##### Returns nothing
  **********/
-export async function getAllJoinedGuilds(client) {
+async function getAllJoinedGuilds(client) {
 	let allguilds = await client.guilds.fetch();
 	let guilds = [];
 	let actives = 0;
@@ -22,3 +22,5 @@ export async function getAllJoinedGuilds(client) {
 
 	console.log(`Joined to ${process.joinedguilds.length} servers; active in ${actives} servers.`);
 }
+
+exports.getAllJoinedGuilds = getAllJoinedGuilds;

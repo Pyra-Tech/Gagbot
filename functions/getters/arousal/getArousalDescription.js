@@ -1,6 +1,6 @@
-import { calcDenialCoefficient } from "../../vibefunctions.js";
-import { getOption } from "../config/getOption.js";
-import { getArousal } from "./getArousal.js";
+const { calcDenialCoefficient } = require("../../vibefunctions");
+const { getOption } = require("../config/getOption");
+const { getArousal } = require("./getArousal");
 
 // the arousal needed for an unbelted user to orgasm
 const ORGASM_LIMIT = 10;
@@ -14,7 +14,7 @@ const RESET_LIMIT = 0.1;
  * ---
  * ##### Returns a string representing their arousal
  **********/
-export function getArousalDescription(user) {
+function getArousalDescription(user) {
 	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
 	const arousal = getArousal(user);
@@ -30,3 +30,5 @@ export function getArousalDescription(user) {
 	if (arousal < ORGASM_LIMIT * 1.5) return "Very aroused";
 	return "Extremely aroused";
 }
+
+exports.getArousalDescription = getArousalDescription;

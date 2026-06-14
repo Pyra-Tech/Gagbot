@@ -1,5 +1,5 @@
-import { configoptions } from "../../../lists/configoptions.js";
-import { initializeBotOptions } from "../../other/initializeBotOptions.js";
+const { configoptions } = require("../../../lists/configoptions");
+const { initializeBotOptions } = require("../../other/initializeBotOptions");
 
 /*********
  * Gets the value of an option set for the bot
@@ -8,7 +8,7 @@ import { initializeBotOptions } from "../../other/initializeBotOptions.js";
  * ---
  * ##### Returns the exact value of that configured option. Will use default if bot has not configured it.
  *********/
-export function getBotOption(option) {
+function getBotOption(option) {
     if (process.configs == undefined) {
         process.configs = {};
     }
@@ -29,3 +29,5 @@ export function getBotOption(option) {
     }
     return process.configs.botglobal[option];
 }
+
+exports.getBotOption = getBotOption;

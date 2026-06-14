@@ -1,4 +1,4 @@
-import { getLockedHeadgear } from "../../getters/headwear/getLockedHeadgear.js";
+const { getLockedHeadgear } = require("../../getters/headwear/getLockedHeadgear");
 
 /**********
  * Removes a headwear from the user.
@@ -9,7 +9,7 @@ import { getLockedHeadgear } from "../../getters/headwear/getLockedHeadgear.js";
  * ---
  * ##### *No return value*
  **********/
-export function deleteHeadwear(userID, headwear, force = true) {
+function deleteHeadwear(userID, headwear, force = true) {
     if (process.headwear == undefined) {
         process.headwear = {};
     }
@@ -54,4 +54,5 @@ export function deleteHeadwear(userID, headwear, force = true) {
     process.readytosave.headwear = true;
 };
 
-export { deleteHeadwear as removeHeadwear };
+exports.deleteHeadwear = deleteHeadwear;
+exports.removeHeadwear = deleteHeadwear;

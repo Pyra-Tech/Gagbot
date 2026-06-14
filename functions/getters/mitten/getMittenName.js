@@ -1,4 +1,4 @@
-import { mittentypes } from "../../gagfunctions.js";
+const { mittentypes } = require("../../gagfunctions");
 
 /************
  * Gets the full mitten name of the User ID. Optionally will get the full mitten name of mittens by ID.
@@ -11,7 +11,7 @@ import { mittentypes } from "../../gagfunctions.js";
  * ---
  * ###### Note: Needs rework into separate getMittenName and getMittenNameOnUser functions
  ************/
-export function getMittenName(userID, mittenname) {
+function getMittenName(userID, mittenname) {
     if (process.mitten == undefined) {
         process.mitten = {};
     }
@@ -27,3 +27,5 @@ export function getMittenName(userID, mittenname) {
         return undefined;
     }
 }
+
+exports.getMittenName = getMittenName;

@@ -1,6 +1,6 @@
-import { arousedtexts } from "../../../vibes/aroused/aroused_texts.js";
-import { calcStaticVibeIntensity } from "../../vibefunctions.js";
-import { getOption } from "../config/getOption.js";
+const { arousedtexts } = require("../../../vibes/aroused/aroused_texts");
+const { calcStaticVibeIntensity } = require("../../vibefunctions");
+const { getOption } = require("../config/getOption");
 
 /*********
  * Returns valid arousal texts to be used when stuttering during speech
@@ -9,7 +9,7 @@ import { getOption } from "../config/getOption.js";
  * ---
  * ##### Returns an array of strings with aroused texts
  *********/
-export function getArousedTexts(user) {
+function getArousedTexts(user) {
 	const texts = [];
 
 	if (getOption(user, "arousalsystem") == 2) {
@@ -29,3 +29,5 @@ export function getArousedTexts(user) {
 
 	return texts;
 }
+
+exports.getArousedTexts = getArousedTexts

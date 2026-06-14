@@ -5,7 +5,7 @@
  * ---
  * ##### Returns the integer number of seconds remaining on the cooldown, or 0.
  ************/
-export function getServerCmdRefresh(serverID) {
+function getServerCmdRefresh(serverID) {
 	if (process.servercmdcooldown == undefined) {
 		process.servercmdcooldown = {};
 	}
@@ -15,3 +15,5 @@ export function getServerCmdRefresh(serverID) {
 	}
 	return 0;
 }
+
+exports.getServerCmdRefresh = getServerCmdRefresh;

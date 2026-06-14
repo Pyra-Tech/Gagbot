@@ -1,5 +1,5 @@
-import { configoptions } from "../../../lists/configoptions.js";
-import { initializeServerOptions } from "../../configfunctions.js";
+const { configoptions } = require("../../../lists/configoptions");
+const { initializeServerOptions } = require("../../configfunctions");
 
 
 /*********
@@ -10,7 +10,7 @@ import { initializeServerOptions } from "../../configfunctions.js";
  * ---
  * ##### Returns the exact value of that configured option. Will use default if server has not configured it.
  *********/
-export function getServerOption(serverID, option) {
+function getServerOption(serverID, option) {
     if (process.configs == undefined) {
         process.configs = {};
     }
@@ -35,3 +35,5 @@ export function getServerOption(serverID, option) {
     }
     return process.configs.servers[serverID][option];
 }
+
+exports.getServerOption = getServerOption;

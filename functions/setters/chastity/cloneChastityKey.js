@@ -1,4 +1,4 @@
-import { getChastity } from "../../getters/chastity/getChastity.js";
+const { getChastity } = require("../../getters/chastity/getChastity");
 
 /********
  * Adds a user as a cloned keyholder for the chastity belt
@@ -8,7 +8,7 @@ import { getChastity } from "../../getters/chastity/getChastity.js";
  * ---
  * ##### *No return value*
  ********/
-export function cloneChastityKey(chastityuser, newKeyholder) {
+function cloneChastityKey(chastityuser, newKeyholder) {
     let chastity = getChastity(chastityuser);
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
@@ -18,4 +18,6 @@ export function cloneChastityKey(chastityuser, newKeyholder) {
         process.readytosave = {};
     }
     process.readytosave.chastity = true;
-}; 
+};
+
+exports.cloneChastityKey = cloneChastityKey;

@@ -1,5 +1,5 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
-import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastityBra } = require("../../getters/chastity/getChastityBra");
 
 /***********
  * Changes a chastity bra on the user in place
@@ -10,7 +10,7 @@ import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
  * ---
  * ##### Returns true if successful, false if unable to change
  ***********/
-export function swapChastityBra(user, keyholder, namedchastity) {
+function swapChastityBra(user, keyholder, namedchastity) {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -26,3 +26,5 @@ export function swapChastityBra(user, keyholder, namedchastity) {
 	process.readytosave.chastitybra = true; // I will need to merge all those readytosave flags into their own functions. this is a hazard to write - NBS
 	return true;
 }
+
+exports.swapChastityBra = swapChastityBra;

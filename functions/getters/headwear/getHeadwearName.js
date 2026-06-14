@@ -1,4 +1,4 @@
-import { getBaseHeadwear } from "./getBaseHeadwear.js";
+const { getBaseHeadwear } = require("./getBaseHeadwear");
 
 /**********
  * Gets the full name of a piece of headwear
@@ -10,7 +10,7 @@ import { getBaseHeadwear } from "./getBaseHeadwear.js";
  * ---
  * #### This needs cleanup to remove the userID param as it is not used!
  **********/
-export function getHeadwearName(userID, headnname) {
+function getHeadwearName(userID, headnname) {
     if (process.headwear == undefined) {
         process.headwear = {};
     }
@@ -21,3 +21,5 @@ export function getHeadwearName(userID, headnname) {
         return undefined;
     }
 }
+
+exports.getHeadwearName = getHeadwearName;

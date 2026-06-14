@@ -1,4 +1,4 @@
-import { getCollar } from "./getCollar.js";
+const { getCollar } = require("./getCollar");
 
 /*********
  * Gets a list of users with secondary key access to the collaruser.
@@ -7,6 +7,8 @@ import { getCollar } from "./getCollar.js";
  * ---
  * ##### Returns an array of user IDs with secondary access to this collar.
  *********/
-export function getClonedCollarKey(collaruser) {
+function getClonedCollarKey(collaruser) {
 	return getCollar(collaruser)?.clonedKeyholders ?? [];
 }
+
+exports.getClonedCollarKey = getClonedCollarKey;

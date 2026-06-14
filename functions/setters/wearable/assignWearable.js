@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  **************/
-export function assignWearable(user, wearable) {
+function assignWearable(user, wearable) {
     if (process.wearable == undefined) {
 		process.wearable = {};
 	}
@@ -20,3 +20,5 @@ export function assignWearable(user, wearable) {
 	}
 	process.readytosave.wearable = true;
 };
+
+exports.assignWearable = assignWearable;

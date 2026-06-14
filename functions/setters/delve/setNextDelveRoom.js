@@ -1,5 +1,5 @@
-import { getCurrentFloor } from "../../getters/delve/getCurrentFloor.js";
-import { getDelvePlayerStats } from "../../getters/delve/getDelvePlayerStats.js";
+const { getCurrentFloor } = require("../../getters/delve/getCurrentFloor");
+const { getDelvePlayerStats } = require("../../getters/delve/getDelvePlayerStats");
 
 /*********
  * Sets the next Delve room by choice. If choice is not specified, the user is starting a new delve. This will always default to the delveentrance room.
@@ -9,7 +9,7 @@ import { getDelvePlayerStats } from "../../getters/delve/getDelvePlayerStats.js"
  * ---
  * ##### *No return value*
  *********/
-export function setNextDelveRoom(user, choice) {
+function setNextDelveRoom(user, choice) {
     if ((getCurrentFloor(user) == undefined)) {
         process.delveuserdata[user] = {
             floorarr: ["delveentrance"],
@@ -27,3 +27,5 @@ export function setNextDelveRoom(user, choice) {
         process.delveuserdata[user].floorarr.push(choice);
     }
 }
+
+exports.setNextDelveRoom = setNextDelveRoom;

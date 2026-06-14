@@ -1,4 +1,4 @@
-import { getGag } from "./getGag.js";
+const { getGag } = require("./getGag");
 
 /********
  * Gets the intensity of the first worn gag. This function isn't used at all and should be removed.
@@ -7,6 +7,8 @@ import { getGag } from "./getGag.js";
  * ---
  * ##### Returns the intensity of the first gag
  ********/
-export function getGagIntensity(userID) {
+function getGagIntensity(userID) {
     return getGag(userID)?.intensity;
 }
+
+exports.getGagIntensity = getGagIntensity;

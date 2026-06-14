@@ -1,5 +1,5 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
-import { getChastity } from "../../getters/chastity/getChastity.js";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastity } = require("../../getters/chastity/getChastity");
 
 /**********
  * Removes a chastity belt from the user.
@@ -10,7 +10,7 @@ import { getChastity } from "../../getters/chastity/getChastity.js";
  * ---
  * ##### Returns true if successful, false if failed to remove
  **********/
-export function removeChastity(user, keyholder, force = false) {
+function removeChastity(user, keyholder, force = false) {
 	if (process.chastity == undefined) {
 		process.chastity = {};
     }
@@ -38,3 +38,5 @@ export function removeChastity(user, keyholder, force = false) {
 
 	return true;
 };
+
+exports.removeChastity = removeChastity;

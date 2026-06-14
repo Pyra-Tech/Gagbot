@@ -1,6 +1,6 @@
-import { calcStaticVibeIntensity, calcFrustration } from "../../vibefunctions.js";
-import { getArousal } from "../arousal/getArousal.js";
-import { getOption } from "../config/getOption.js";
+const { calcStaticVibeIntensity, calcFrustration } = require("../../vibefunctions");
+const { getArousal } = require("../arousal/getArousal");
+const { getOption } = require("../config/getOption");
 
 // the minimum arousal required for frustration to also impact speech
 const STUTTER_LIMIT = 1;
@@ -12,10 +12,12 @@ const STUTTER_LIMIT = 1;
  * ---
  * ##### Returns a value of arousal with their added frustration
  ***********/
-export function getVibeEquivalent(user) {
+function getVibeEquivalent(user) {
 	if (getOption(user, "arousalsystem") != 2) return calcStaticVibeIntensity(user) * 2;
 
 	let intensity = getArousal(user);
 	if (intensity >= STUTTER_LIMIT) intensity += calcFrustration(user) / 20;
 	return intensity;
 }
+
+exports.getVibeEquivalent = getVibeEquivalent;

@@ -20,10 +20,11 @@
  * **Events**
  * - onUnlock: (data) => Called when the headgear is removed
  **********/
-export function getBaseHeadwear(type) {
+function getBaseHeadwear(type) {
     return process.headtypes[type];
 }
 
+exports.getBaseHeadwear = getBaseHeadwear;
 // getHeadwearBlocks expects this exact return, so we'll just make another export from it
 // I should optimize that in the future. 
-export const getHeadwearBlocks = getBaseHeadwear;
+exports.getHeadwearBlocks = getBaseHeadwear; 

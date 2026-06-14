@@ -9,7 +9,7 @@
  * ---
  * ###### Note: Needs rework to remove the first param and just use wearablename
  ************/
-export function getWearableName(userID, wearablename) {
+function getWearableName(userID, wearablename) {
     if (process.wearable == undefined) {
 		process.wearable = {};
 	}
@@ -23,3 +23,5 @@ export function getWearableName(userID, wearablename) {
 		return undefined;
 	}
 }
+
+exports.getWearableName = getWearableName;

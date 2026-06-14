@@ -22,6 +22,8 @@
  * - postLetGo: (data) => Fired after letting go and clearing arousal
  * - discard: (data) => If a fumble occurred, this is called to discard the key
  **********/
-export function getBaseToy(toytype) {
+function getBaseToy(toytype) {
     return process.toytypes[toytype];
 }
+
+exports.getBaseToy = getBaseToy;

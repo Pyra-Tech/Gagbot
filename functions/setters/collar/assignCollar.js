@@ -9,7 +9,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function assignCollar(user, keyholder, restraints, only, customcollar) {
+function assignCollar(user, keyholder, restraints, only, customcollar) {
     if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -28,3 +28,5 @@ export function assignCollar(user, keyholder, restraints, only, customcollar) {
 	}
 	process.readytosave.collar = true;
 }
+
+exports.assignCollar = assignCollar;

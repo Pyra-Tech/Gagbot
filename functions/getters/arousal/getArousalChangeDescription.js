@@ -1,5 +1,5 @@
-import { getBotOption } from "../config/getBotOption.js";
-import { getOption } from "../config/getOption.js";
+const { getBotOption } = require("../config/getBotOption");
+const { getOption } = require("../config/getOption");
 
 // the arousal needed for an unbelted user to orgasm
 const ORGASM_LIMIT = 10;
@@ -11,7 +11,7 @@ const ORGASM_LIMIT = 10;
  * ---
  * ##### Returns a string representing their arousal change
  **********/
-export function getArousalChangeDescription(user) {
+function getArousalChangeDescription(user) {
 	if (getOption(user, "arousalsystem") != 2) return null;
 
 	const arousal = process.arousal[user];
@@ -25,3 +25,5 @@ export function getArousalChangeDescription(user) {
 	if (lastChange < ORGASM_LIMIT * 5) return "and getting very hot";
 	return "and rushing to the peaks";
 }
+
+exports.getArousalChangeDescription = getArousalChangeDescription;

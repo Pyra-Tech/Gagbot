@@ -14,7 +14,7 @@ import { getOption } from "../../getters/config/getOption";
  * ---
  * ###### Needs cleanup and review on the origbinder param
  **********/
-export function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbinder) {
+function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbinder) {
     let vibe = process.toytypes[toytype];
     if (!vibe) { return "NoToy" }
     if ((getOption(user, "arousalsystem") == 0) && (vibe.isArousing())) {
@@ -64,3 +64,5 @@ export function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", 
         }
     }
 }
+
+export { assignToy };

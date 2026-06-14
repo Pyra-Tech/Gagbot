@@ -6,7 +6,7 @@
  * ---
  * ##### Returns an integer with the unlockTime or a string with the unlock time for Discord.
  ***********/
-export function getChastityBraTimelock(user, UNIXTimestring) {
+function getChastityBraTimelock(user, UNIXTimestring) {
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -20,3 +20,5 @@ export function getChastityBraTimelock(user, UNIXTimestring) {
 		}
 	}
 }
+
+exports.getChastityBraTimelock = getChastityBraTimelock;

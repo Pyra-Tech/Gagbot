@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function assignMitten(userID, mittentype, origbinder) {
+function assignMitten(userID, mittentype, origbinder) {
 	if (process.mitten == undefined) {
 		process.mitten = {};
 	}
@@ -28,3 +28,5 @@ export function assignMitten(userID, mittentype, origbinder) {
 	process.readytosave.mitten = true;
     process.readytosave.userdata = true;
 };
+
+exports.assignMitten = assignMitten;

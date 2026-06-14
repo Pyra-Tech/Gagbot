@@ -5,7 +5,7 @@
  * ---
  * ##### Returns undefined if they're not on a delve, 0 if at delve entrance, or an integer floor number
  ********/
-export function getCurrentFloor(user) {
+function getCurrentFloor(user) {
     if (process.delveuserdata == undefined) { process.delveuserdata = {} }
     if (process.delveuserdata[user]) {
         // They started a delve, return the floor
@@ -16,3 +16,5 @@ export function getCurrentFloor(user) {
         return undefined;
     }
 }
+
+exports.getCurrentFloor = getCurrentFloor;

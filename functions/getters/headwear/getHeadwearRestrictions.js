@@ -1,5 +1,5 @@
-import { getHeadwearBlocks } from "./getBaseHeadwear.js";
-import { getHeadwear } from "./getHeadwear.js";
+const { getHeadwearBlocks } = require("./getBaseHeadwear");
+const { getHeadwear } = require("./getHeadwear");
 
 /***********
  * Determine if a user is able to perform headwear blocking restrictions. 
@@ -10,7 +10,7 @@ import { getHeadwear } from "./getHeadwear.js";
  * - canEmote: The user is able to use emotes
  * - canInspect: The user is able to view details in /inspect
  ***********/
-export function getHeadwearRestrictions(userID) {
+function getHeadwearRestrictions(userID) {
     let allowedperms = { canEmote: true, canInspect: true, forcedtextemoji: false };
     let wornheadwear = getHeadwear(userID);
     for (let i = 0; i < wornheadwear.length; i++) {
@@ -27,3 +27,5 @@ export function getHeadwearRestrictions(userID) {
 
     return allowedperms;
 }
+
+exports.getHeadwearRestrictions = getHeadwearRestrictions;

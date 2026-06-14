@@ -8,7 +8,7 @@
  * ---
  * ##### *No return value*
  *******/
-export function setDelveFloorState(user, floor, prop, value) {
+function setDelveFloorState(user, floor, prop, value) {
     if (process.delveuserdata == undefined) { process.delveuserdata = {} }
     if (process.delveuserdata[user]) {
         // They started a delve, now check what floor they're on
@@ -21,3 +21,5 @@ export function setDelveFloorState(user, floor, prop, value) {
         process.readytosave.delveuserdata = true;
     }
 }
+
+exports.setDelveFloorState = setDelveFloorState;

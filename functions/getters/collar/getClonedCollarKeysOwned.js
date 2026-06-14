@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an array of held cloned collar keys in the format "0000000000000000_collar"
  ***********/
-export function getClonedCollarKeysOwned(userID) {
+function getClonedCollarKeysOwned(userID) {
     if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -19,3 +19,5 @@ export function getClonedCollarKeysOwned(userID) {
 	});
 	return ownedkeys;
 }
+
+exports.getClonedCollarKeysOwned = getClonedCollarKeysOwned;

@@ -9,7 +9,7 @@
  * ---
  * ###### Note: Needs rework into separate getCollarName and getCollarNameOnUser functions
  ************/
-export function getCollarName(userID, collarid) {
+function getCollarName(userID, collarid) {
     if (process.collar == undefined) {
         process.collar = {};
     }

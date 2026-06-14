@@ -1,7 +1,7 @@
-import { DRONEVISORS, DOLLVISORS } from "../../headwearfunctions.js";
-import { getCollar } from "../collar/getCollar.js";
-import { getHeadwear } from "../headwear/getHeadwear.js";
-import { getOption } from "./getOption.js";
+const { DRONEVISORS, DOLLVISORS } = require("../../headwearfunctions");
+const { getCollar } = require("../collar/getCollar");
+const { getHeadwear } = require("../headwear/getHeadwear");
+const { getOption } = require("./getOption");
 
 
 /**********
@@ -11,7 +11,7 @@ import { getOption } from "./getOption.js";
  * ---
  * ##### Returns a string, either modified or the user's display name
  **********/
-export function getAlternateName(user) {
+function getAlternateName(user) {
     let outname = user.displayName // We're putting a member object in here
     // Handle pet collar name
     if ((getCollar(user.id)?.collartype == "collarengraved") || (getCollar(user.id) && getCollar(user.id).additionalcollars && getCollar(user.id).additionalcollars.includes("collarengraved"))) {
@@ -68,3 +68,5 @@ export function getAlternateName(user) {
 
     return `${outname}${additionalpart}`.slice(0,32)
 }
+
+exports.getAlternateName = getAlternateName;

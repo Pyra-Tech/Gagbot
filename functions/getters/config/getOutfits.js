@@ -3,7 +3,7 @@
  * 
  * - (user id) userID - The user whose outfits to retrieve
  *******/
-export function getOutfits(userID) {
+function getOutfits(userID) {
 	if (process.outfits == undefined) {
 		process.outfits = {};
 	}
@@ -12,3 +12,5 @@ export function getOutfits(userID) {
 	}
 	return process.outfits[userID];
 }
+
+exports.getOutfits = getOutfits;

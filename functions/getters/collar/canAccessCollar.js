@@ -1,4 +1,4 @@
-import { getCollar } from "./getCollar.js";
+const { getCollar } = require("./getCollar");
 
 /************
  * Checks whether the keyholder has access to do things to the collaruser. 
@@ -13,7 +13,7 @@ import { getCollar } from "./getCollar.js";
  * - public: Is this action permitted because of public access?
  * - hascollar: Is the **collaruser** wearing a collar?
  ************/
-export function canAccessCollar(collaruser, keyholder, unlock, cloning) {
+function canAccessCollar(collaruser, keyholder, unlock, cloning) {
     // As a reference for access in timelocks:
     // 0: "Everyone Else"
     // 1: "Keyholder Only"
@@ -105,3 +105,5 @@ export function canAccessCollar(collaruser, keyholder, unlock, cloning) {
 
     return accessval;
 }
+
+exports.canAccessCollar = canAccessCollar;

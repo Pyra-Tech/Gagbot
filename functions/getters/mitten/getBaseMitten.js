@@ -1,4 +1,4 @@
-import { mittentypes } from "../../gagfunctions.js";
+const { mittentypes } = require("../../gagfunctions");
 
 /********* 
  * Gets the base mittens type by ID.
@@ -10,6 +10,8 @@ import { mittentypes } from "../../gagfunctions.js";
  * - value: The type ID of the mittens 
  * - tags?: An array of strings with tags relating to those mittens. Optional.
  **********/
-export function getBaseMitten(type) {
+function getBaseMitten(type) {
     return mittentypes.find((m) => m.value == type)
 }
+
+exports.getBaseMitten = getBaseMitten;

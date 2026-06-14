@@ -1,5 +1,5 @@
-import { configoptions } from "../../../lists/configoptions.js";
-import { getOption } from "./getOption.js";
+const { configoptions } = require("../../../lists/configoptions");
+const { getOption } = require("./getOption");
 
 
 /*********
@@ -10,7 +10,7 @@ import { getOption } from "./getOption.js";
  * ---
  * ##### Returns an array of string tags to block or prefer
  *********/
-export function getUserTags(userID, preferred = false) {
+function getUserTags(userID, preferred = false) {
     if (!userID) { return [] }
     let tags = [];
     let optionstocheck = Object.keys(configoptions.Content).map((t) => t.replace("wearabletags-", ""))
@@ -21,3 +21,5 @@ export function getUserTags(userID, preferred = false) {
     })
     return tags;
 }
+
+exports.getUserTags = getUserTags;

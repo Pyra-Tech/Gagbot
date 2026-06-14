@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an object with keys corresponding to their set value
  *********/
-export function getAllSelectedOption(option) {
+function getAllSelectedOption(option) {
     let selectedoption = {};
     if (process.configs && process.configs.users) {
         Object.keys(process.configs.users).forEach((user) => {
@@ -14,3 +14,5 @@ export function getAllSelectedOption(option) {
     }
     return selectedoption;
 }
+
+exports.getAllSelectedOption = getAllSelectedOption;

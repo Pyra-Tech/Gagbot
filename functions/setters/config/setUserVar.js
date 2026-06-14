@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function setUserVar(user, key, value) {
+function setUserVar(user, key, value) {
 	if (process.usercontext == undefined) {
 		process.usercontext = {};
 	}
@@ -20,3 +20,5 @@ export function setUserVar(user, key, value) {
 	}
 	process.readytosave.usercontext = true;
 }
+
+exports.setUserVar = setUserVar;

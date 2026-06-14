@@ -1,4 +1,4 @@
-import { configoptions } from "../../lists/configoptions.js";
+const { configoptions } = require("../../lists/configoptions");
 
 /**********
  * Sets all options to the defaults for the bot.
@@ -6,7 +6,7 @@ import { configoptions } from "../../lists/configoptions.js";
  * ---
  * ##### *No return value*
  **********/
-export function initializeBotOptions() {
+function initializeBotOptions() {
     if (process.configs == undefined) {
         process.configs = {};
     }
@@ -21,3 +21,5 @@ export function initializeBotOptions() {
     }
     process.readytosave.configs = true;
 }
+
+exports.initializeBotOptions = initializeBotOptions;

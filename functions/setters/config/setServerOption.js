@@ -7,7 +7,7 @@
  * ---
  * ##### *No return value*
  ********/
-export function setServerOption(serverID, option, choice) {
+function setServerOption(serverID, option, choice) {
 	if (process.configs == undefined) {
 		process.configs = {};
 	}
@@ -23,3 +23,5 @@ export function setServerOption(serverID, option, choice) {
 	}
 	process.readytosave.configs = true;
 }
+
+exports.setServerOption = setServerOption;

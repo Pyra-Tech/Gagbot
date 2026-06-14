@@ -9,6 +9,8 @@
  * - tags?: An array of strings with tags relating to that collar. Optional.
  * - special?: If true, shows in list for /key additionalcollar. Optional.
  **********/
-export function getBaseCollar(type) {
+function getBaseCollar(type) {
     return process.collartypes.find((c) => c.value == type)
 }
+
+exports.getBaseCollar = getBaseCollar;

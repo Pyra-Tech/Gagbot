@@ -1,4 +1,4 @@
-import { heavytypes } from "../../heavyfunctions.js";
+const { heavytypes } = require("../../heavyfunctions");
 
 /**********
  * Gets the heavy bondage full name from its item ID
@@ -7,9 +7,11 @@ import { heavytypes } from "../../heavyfunctions.js";
  * ---
  * ##### Returns a string with the heavy bondage's name
  **********/
-export function getHeavyName(type) {
+function getHeavyName(type) {
     return heavytypes.find((h) => h.value === type)?.name
 }
+
+exports.getHeavyName = getHeavyName;
 // The original function that is mostly in use for this is convertheavy. 
 // We should refactor that sometime.
-export const convertheavy = getHeavyName;
+exports.convertheavy = getHeavyName;

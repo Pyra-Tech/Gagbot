@@ -8,7 +8,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function assignGag(userID, gagtype = "ball", intensity = 5, origbinder) {
+function assignGag(userID, gagtype = "ball", intensity = 5, origbinder) {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}

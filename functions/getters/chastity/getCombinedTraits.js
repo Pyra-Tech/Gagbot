@@ -1,6 +1,6 @@
-import { getBaseChastity } from "./getBaseChastity.js";
-import { getChastity } from "./getChastity.js";
-import { getChastityBra } from "./getChastityBra.js";
+const { getBaseChastity } = require("./getBaseChastity");
+const { getChastity } = require("./getChastity");
+const { getChastityBra } = require("./getChastityBra");
 
 const NO_CHASTITY = {
 	growthCoefficient: 1,
@@ -76,7 +76,7 @@ function bounded(min, val, max) {
  * - orgasmCooldown: Multiplier for how long a wearer is immune to arousal gains after letting go.
  * - orgasmArousalLeft: Percentage of arousal that will be left on the wearer after letting go.
  ********/
-export function getCombinedTraits(user) {
+function getCombinedTraits(user) {
     // Build an object which references the combined properties
     // Any FUNCTIONS will be called from both when their respective unlock is called.
     const beltbase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype ?? "belt_silver") : undefined;
@@ -147,4 +147,6 @@ export function getCombinedTraits(user) {
         return sum;
     }
 	return returnobject;
-} 
+}
+
+exports.getCombinedTraits = getCombinedTraits;

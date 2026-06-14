@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an array of held cloned chastity belt keys in the format "0000000000000000_chastitybelt"
  ***********/
-export function getClonedChastityKeysOwned(userID) {
+function getClonedChastityKeysOwned(userID) {
     if (process.chastity == undefined) {
 		process.chastity = {};
 	}
@@ -18,4 +18,6 @@ export function getClonedChastityKeysOwned(userID) {
 		}
 	});
 	return ownedkeys;
-} 
+}
+
+exports.getClonedChastityKeysOwned = getClonedChastityKeysOwned;

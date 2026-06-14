@@ -7,6 +7,8 @@
  * ---
  * ##### Returns true if the toy is permitted to be placed
  ********/
-export function canPlaceToy(userID, placerID, toy) {
+function canPlaceToy(userID, placerID, toy) {
     return (process.toytypes && process.toytypes[toy] && process.toytypes[toy].canEquip({ userID: userID, placerID: placerID }))
 }
+
+exports.canPlaceToy = canPlaceToy;

@@ -5,7 +5,7 @@
  * ---
  * ##### Returns an array of held cloned chastity bra keys in the format "0000000000000000_chastitybra"
  ***********/
-export function getClonedChastityBraKeysOwned(userID) {
+function getClonedChastityBraKeysOwned(userID) {
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -18,4 +18,6 @@ export function getClonedChastityBraKeysOwned(userID) {
 		}
 	});
 	return ownedkeys;
-} 
+}
+
+exports.getClonedChastityBraKeysOwned = getClonedChastityBraKeysOwned;

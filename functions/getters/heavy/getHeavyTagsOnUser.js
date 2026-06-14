@@ -1,5 +1,5 @@
-import { getBaseHeavy } from "./getBaseHeavy.js";
-import { getHeavyList } from "./getHeavyList.js";
+const { getBaseHeavy } = require("./getBaseHeavy");
+const { getHeavyList } = require("./getHeavyList");
 
 /*********
  * Gets a list of heavy tags affecting a user
@@ -8,7 +8,7 @@ import { getHeavyList } from "./getHeavyList.js";
  * ---
  * ##### Returns an array of "arms", "legs", or "container"
  *********/
-export function getHeavyTagsOnUser(user) {
+function getHeavyTagsOnUser(user) {
     if (getHeavyList(user) == undefined) {
         return []; // They're not bound by anything lol
     }
@@ -22,3 +22,5 @@ export function getHeavyTagsOnUser(user) {
         return tags;
     }
 }
+
+exports.getHeavyTagsOnUser = getHeavyTagsOnUser;

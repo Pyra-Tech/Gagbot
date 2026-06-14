@@ -6,7 +6,7 @@
  * ---
  * ##### *No return value*
  **********/
-export function addLockedWearable(userID, wearable) {
+function addLockedWearable(userID, wearable) {
 	if (process.wearable == undefined) {
 		process.wearable = {};
 	}
@@ -22,3 +22,5 @@ export function addLockedWearable(userID, wearable) {
 	}
 	process.readytosave.wearable = true;
 };
+
+exports.addLockedWearable = addLockedWearable;

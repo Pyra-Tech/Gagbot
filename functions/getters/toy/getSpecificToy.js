@@ -1,4 +1,4 @@
-import { getToys } from "./getToys.js";
+const { getToys } = require("./getToys");
 
 /**********
  * Gets a specific toy that a user is wearing
@@ -11,6 +11,8 @@ import { getToys } from "./getToys.js";
  * - intensity: The intensity of the toy 1-20
  * - origbinder: The user ID who put the toy on the user
  **********/
-export function getSpecificToy(user, toytype) {
+function getSpecificToy(user, toytype) {
     return getToys(user).find((toy) => toy.type == toytype);
 }
+
+exports.getSpecificToy = getSpecificToy;

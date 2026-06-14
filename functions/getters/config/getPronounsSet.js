@@ -6,7 +6,7 @@
  * ---
  * ##### Returns a string with the user's standard pronoun representation
  *******************************************/
-export function getPronounsSet(user) {
+const getPronounsSet = (user) => {
 	if (process.pronouns == undefined) {
 		process.pronouns = {};
 	}
@@ -15,3 +15,5 @@ export function getPronounsSet(user) {
 	}
 	return `no pronouns set`;
 };
+
+exports.getPronounsSet = getPronounsSet;

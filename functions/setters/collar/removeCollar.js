@@ -5,7 +5,7 @@
  * ---
  * ##### *No return value*
  ********/
-export function removeCollar(user) {
+function removeCollar(user) {
     if (process.collar == undefined) {
 		process.collar = {};
 	}
@@ -15,3 +15,5 @@ export function removeCollar(user) {
 	}
 	process.readytosave.collar = true;
 }
+
+exports.removeCollar = removeCollar;

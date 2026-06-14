@@ -6,7 +6,7 @@
  * ---
  * ##### Returns "bot", "notbot" depending on what kind of webhook was deleted, or false if none
  ********/
-export async function deleteWebhook(interaction, channel) {
+async function deleteWebhook(interaction, channel) {
 	// First, check if we can manage webhooks. If we can't, vamos.
 	if (!channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageWebhooks)) {
 		return false;
@@ -30,3 +30,5 @@ export async function deleteWebhook(interaction, channel) {
 	}
 	return false;
 }
+
+exports.deleteWebhook = deleteWebhook;

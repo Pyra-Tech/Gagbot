@@ -1,4 +1,4 @@
-import { statsAddCounter } from "./statsAddCounter.js";
+const { statsAddCounter } = require("./statsAddCounter");
 
 /*******
  * Discards a key held by keyholderid. Cloned keys are destroyed.
@@ -9,7 +9,7 @@ import { statsAddCounter } from "./statsAddCounter.js";
  * ---
  * ##### Returns "keyholder" or "clone", depending on which key was discarded
  *******/
-export function discardKey(userid, keyholderid, device) {
+function discardKey(userid, keyholderid, device) {
     // If it isnt one of the three devices we know about, go away
     if ((device != "collar") && (device != "chastity belt") && (device != "chastity bra")) { 
         console.log(`Unknown device ${device}. Use "collar", "chastity belt" or "chastity bra"`)

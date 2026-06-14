@@ -1,4 +1,4 @@
-import { getHeavyName } from "../../getters/heavy/getHeavyName.js";
+const { getHeavyName } = require("../../getters/heavy/getHeavyName");
 
 /**************
  * Adds a heavy bondage to a user. 
@@ -10,7 +10,7 @@ import { getHeavyName } from "../../getters/heavy/getHeavyName.js";
  * ---
  * ##### *No return value*
  **************/
-export function assignHeavy(user, type, origbinder, customname) {
+function assignHeavy(user, type, origbinder, customname) {
     let namedcontainerowner;
     if ((type === "dominants_lap") || (type === "engulfing_slime")) {
         namedcontainerowner = origbinder;
@@ -58,3 +58,5 @@ export function assignHeavy(user, type, origbinder, customname) {
     process.readytosave.heavy = true;
     process.readytosave.userstats = true;
 };
+
+exports.assignHeavy = assignHeavy;

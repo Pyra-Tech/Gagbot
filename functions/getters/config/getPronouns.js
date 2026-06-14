@@ -1,4 +1,4 @@
-import { remindPronouns } from "../../pronounfunctions.js";
+const { remindPronouns } = require("../../pronounfunctions");
 
 /********************************************
  * Get a userID's pronoun of the necessary form.
@@ -15,7 +15,7 @@ import { remindPronouns } from "../../pronounfunctions.js";
  * ---
  * ##### Returns a string with the user's pronoun in the appropriate tense
  *******************************************/
-export function getPronouns(user, form, capitalize = false) {
+const getPronouns = (user, form, capitalize = false) => {
     if (process.pronouns == undefined) {
         process.pronouns = {};
     }
@@ -32,3 +32,5 @@ export function getPronouns(user, form, capitalize = false) {
     }
     return output;
 };
+
+exports.getPronouns = getPronouns;

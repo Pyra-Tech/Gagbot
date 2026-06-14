@@ -1,7 +1,7 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
-import { getChastity } from "../../getters/chastity/getChastity.js";
-import { getBaseCorset } from "../../getters/corset/getBaseCorset.js";
-import { getBreath } from "../../getters/corset/getBreath.js";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastity } = require("../../getters/chastity/getChastity");
+const { getBaseCorset } = require("../../getters/corset/getBaseCorset");
+const { getBreath } = require("../../getters/corset/getBreath");
 
 /**********
  * Adds or modifies a corset on the user.
@@ -13,7 +13,7 @@ import { getBreath } from "../../getters/corset/getBreath.js";
  * ---
  * ##### *No return value*
  **********/
-export function assignCorset(user, type, tightness, origbinder) {
+function assignCorset(user, type, tightness, origbinder) {
 	if (process.corset == undefined) process.corset = {};
 	const old = Object.assign({}, process.corset[user]);
 	const currentBreath = process.corset[user] ? getBreath(user) : null;
@@ -51,3 +51,5 @@ export function assignCorset(user, type, tightness, origbinder) {
 	process.readytosave.corset = true;
     process.readytosave.userstats = true;
 };
+
+exports.assignCorset = assignCorset;

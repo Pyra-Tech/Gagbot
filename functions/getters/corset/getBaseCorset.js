@@ -29,6 +29,8 @@
  * - onUnequip: (data) => Called immediately after removing the corset
  * - onAdjustTightness: (data) => Called when changing tightness on existing corset
  ********/
-export function getBaseCorset(corsettype) {
+function getBaseCorset(corsettype) {
 	return process.corsettypes[corsettype];
 }
+
+exports.getBaseCorset = getBaseCorset;

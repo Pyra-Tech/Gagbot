@@ -1,5 +1,5 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
-import { getChastity } from "../../getters/chastity/getChastity.js";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastity } = require("../../getters/chastity/getChastity");
 
 /***********
  * Changes a chastity belt on the user in place
@@ -10,7 +10,7 @@ import { getChastity } from "../../getters/chastity/getChastity.js";
  * ---
  * ##### Returns true if successful, false if unable to change
  ***********/
-export function swapChastity(user, keyholder, namedchastity) {
+function swapChastity(user, keyholder, namedchastity) {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
@@ -26,3 +26,5 @@ export function swapChastity(user, keyholder, namedchastity) {
 	process.readytosave.chastity = true;
 	return true;
 }
+
+exports.swapChastity = swapChastity;

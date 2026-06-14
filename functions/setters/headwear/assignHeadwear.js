@@ -1,4 +1,4 @@
-import { getBaseHeadwear } from "../../getters/headwear/getBaseHeadwear.js";
+const { getBaseHeadwear } = require("../../getters/headwear/getBaseHeadwear");
 
 /**********
  * Adds or modifies a headwear on the user.
@@ -9,7 +9,7 @@ import { getBaseHeadwear } from "../../getters/headwear/getBaseHeadwear.js";
  * ---
  * ##### *No return value*
  **********/
-export function assignHeadwear(userID, headwear, origbinder) {
+function assignHeadwear(userID, headwear, origbinder) {
     if (process.headwear == undefined) {
         process.headwear = {};
     }
@@ -36,3 +36,5 @@ export function assignHeadwear(userID, headwear, origbinder) {
     process.readytosave.headwear = true;
     process.readytosave.userstats = true;
 };
+
+exports.assignHeadwear = assignHeadwear;

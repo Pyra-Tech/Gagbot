@@ -1,4 +1,4 @@
-import { getLockedWearable } from "../../getters/wearable/getLockedWearable.js";
+const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
 
 /**********
  * Removes a clothing from the user.
@@ -8,7 +8,7 @@ import { getLockedWearable } from "../../getters/wearable/getLockedWearable.js";
  * ---
  * ##### *No return value*
  **********/
-export function deleteWearable(userID, wearable) {
+function deleteWearable(userID, wearable) {
     if (process.wearable == undefined) {
         process.wearable = {};
     }
@@ -39,4 +39,5 @@ export function deleteWearable(userID, wearable) {
     process.readytosave.wearable = true;
 };
 
-export const removeWearable = deleteWearable;
+exports.deleteWearable = deleteWearable;
+exports.removeWearable = deleteWearable;

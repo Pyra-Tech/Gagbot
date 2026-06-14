@@ -9,7 +9,7 @@
  * ---
  * ###### Note: Needs rework into separate getChastityName and getChastityNameOnUser functions
  ************/
-export function getChastityName(userID, chastityname) {
+function getChastityName(userID, chastityname) {
     if (process.chastity == undefined) {
 		process.chastity = {};
 	}
@@ -24,4 +24,6 @@ export function getChastityName(userID, chastityname) {
 	} else {
 		return undefined;
 	}
-} 
+}
+
+exports.getChastityName = getChastityName;

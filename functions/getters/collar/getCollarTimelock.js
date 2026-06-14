@@ -1,4 +1,4 @@
-import { getCollar } from "./getCollar.js";
+const { getCollar } = require("./getCollar");
 
 /***********
  * Returns UNIX timestring of the wearer's unlock time for their collar if they are timelocked.
@@ -8,7 +8,7 @@ import { getCollar } from "./getCollar.js";
  * ---
  * ##### Returns an integer with the unlockTime or a string with the unlock time for Discord.
  ***********/
-export function getCollarTimelock(user, UNIXTimestring) {
+function getCollarTimelock(user, UNIXTimestring) {
 	if (!UNIXTimestring) {
 		return getCollar(user)?.unlockTime;
 	} else {
@@ -19,3 +19,5 @@ export function getCollarTimelock(user, UNIXTimestring) {
 		}
 	}
 }
+
+exports.getCollarTimelock = getCollarTimelock;

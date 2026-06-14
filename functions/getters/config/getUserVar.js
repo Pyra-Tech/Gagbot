@@ -6,7 +6,7 @@
  * ---
  * ##### Returns the value of the key
  **********/
-export function getUserVar(user, key) {
+function getUserVar(user, key) {
 	if (process.usercontext == undefined) {
 		process.usercontext = {};
 	}
@@ -15,3 +15,5 @@ export function getUserVar(user, key) {
 	}
 	return process.usercontext[user][key];
 }
+
+exports.getUserVar = getUserVar;

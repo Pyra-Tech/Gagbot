@@ -1,5 +1,5 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity.js";
-import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastityBra } = require("../../getters/chastity/getChastityBra");
 
 /**********
  * Adds or modifies a chastity bra on the user.
@@ -11,7 +11,7 @@ import { getChastityBra } from "../../getters/chastity/getChastityBra.js";
  * ---
  * ##### Returns true if successful, false if failed to put it on
  **********/
-export function assignChastityBra(user, keyholder, namedchastity, force = false) {
+function assignChastityBra(user, keyholder, namedchastity, force = false) {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
@@ -38,3 +38,5 @@ export function assignChastityBra(user, keyholder, namedchastity, force = false)
 	process.readytosave.chastitybra = true;
 	return true;
 };
+
+exports.assignChastityBra = assignChastityBra;

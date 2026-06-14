@@ -3,7 +3,7 @@
  * 
  * - (user id) user - User ID doing the Delve
  *******/
-export function getDelvePlayerStats(user) {
+function getDelvePlayerStats(user) {
     if (process.delveuserstats == undefined) { process.delveuserstats = {} }
     if (process.delveuserstats[user] == undefined) {
         // Create a template if it does not exist. 
@@ -30,3 +30,5 @@ export function getDelvePlayerStats(user) {
     }
     return process.delveuserstats[user]
 }
+
+exports.getDelvePlayerStats = getDelvePlayerStats;

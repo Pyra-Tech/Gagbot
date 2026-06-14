@@ -1,4 +1,4 @@
-import { getChastity } from "../../getters/chastity/getChastity.js";
+const { getChastity } = require("../../getters/chastity/getChastity");
 
 /*******
  * Removes a cloned key from a chastity belt
@@ -8,7 +8,7 @@ import { getChastity } from "../../getters/chastity/getChastity.js";
  * ---
  * ##### *No return value*
  *******/
-export function revokeChastityKey(chastityuser, newKeyholder) {
+function revokeChastityKey(chastityuser, newKeyholder) {
     let chastity = getChastity(chastityuser);
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
@@ -21,3 +21,5 @@ export function revokeChastityKey(chastityuser, newKeyholder) {
     }
     process.readytosave.chastity = true;
 };
+
+exports.revokeChastityKey = revokeChastityKey;

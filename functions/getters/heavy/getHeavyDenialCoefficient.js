@@ -1,4 +1,4 @@
-import { getBaseHeavy } from "./getBaseHeavy.js";
+const { getBaseHeavy } = require("./getBaseHeavy");
 
 /*********
  * Get a Heavy Bondage's denial coefficient
@@ -7,8 +7,9 @@ import { getBaseHeavy } from "./getBaseHeavy.js";
  * ---
  * ##### Returns the number representing that heavy bondage's denial coefficient
  *********/
-export function getHeavyDenialCoefficient(type) {
+function getHeavyDenialCoefficient(type) {
     return getBaseHeavy(type)?.denialCoefficient;
 }
 
-export const heavyDenialCoefficient = getHeavyDenialCoefficient;
+exports.getHeavyDenialCoefficient = getHeavyDenialCoefficient;
+exports.heavyDenialCoefficient = getHeavyDenialCoefficient;

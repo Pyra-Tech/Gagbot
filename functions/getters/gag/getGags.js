@@ -5,9 +5,11 @@
  * ---
  * ##### Returns an array of gag objects
  *******/
-export function getGags(userID) {
+function getGags(userID) {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
 	return process.gags[userID] ?? [];
-}
+};
+
+exports.getGags = getGags;
