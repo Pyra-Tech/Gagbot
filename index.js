@@ -16,12 +16,13 @@ const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, i
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
 const { setGlobalCommands, loadWebhooks } = require('./functions/configfunctions.js');
-const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
 const { setUpChastity } = require('./functions/chastityfunctions.js');
 const { loadCollarTypes } = require('./functions/collarfunctions.js');
 const { buttonboard } = require('./contextcommands/message/Button Board.js');
 const { setUpEventFunctions } = require('./functions/eventhandling.js');
+const { getBotOption } = require('./functions/getters/config/getBotOption.js');
+const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js")
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();

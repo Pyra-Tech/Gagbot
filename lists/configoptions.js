@@ -1,4 +1,8 @@
 const { clearArousal } = require("../functions/setters/arousal/clearArousal")
+const { removeToy } = require("../functions/setters/toy/removeToy")
+const { setOption } = require("../functions/setters/config/setOption")
+const { ButtonStyle } = require("discord.js")
+
 
 /***********
  * - Configuration options which will be presented to the user when using /config

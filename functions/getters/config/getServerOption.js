@@ -1,5 +1,5 @@
 const { configoptions } = require("../../../lists/configoptions");
-const { initializeServerOptions } = require("../../configfunctions");
+const { initializeServerOptions } = require("../../other/initializeServerOptions");
 
 
 /*********

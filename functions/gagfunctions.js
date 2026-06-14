@@ -10,7 +10,6 @@ const { DOLLMAXPUNISHMENT, textGarbleDOLL, textGarbleDrone } = require(`./../fun
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
 const { emitEvent } = require("./eventhandling.js");
-const { convertPronounsText } = require("./pronounfunctions.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getOption } = require("./getters/config/getOption.js");
 const { assignGag } = require("./setters/gag/assignGag.js");
@@ -23,6 +22,7 @@ const { getCorset } = require("./getters/corset/getCorset.js");
 const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
 const { getUserVar } = require("./getters/config/getUserVar.js");
 const { getPFP } = require("./getters/config/getPFP.js");
+const { convertPronounsText } = require("./other/convertPronounsText.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];

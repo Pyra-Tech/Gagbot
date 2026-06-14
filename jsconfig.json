@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "ES6",
-        "moduleResolution": "nodenext",
-        "checkJs": false // Set true to get typescripted
+        "target": "es6",
     },
-    //"include": ["functions/*", "lists/*"],
+    "exclude": ["node_modules", "dist"],
+    "include": ["functions/*", "lists/*"],
 }
