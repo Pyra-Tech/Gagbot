@@ -4,6 +4,7 @@ const nlp = require("compromise");
 const nlpSpeech = require("compromise-speech");
 const { getBaseCorset } = require("./getters/corset/getBaseCorset");
 const { getCorset } = require("./getters/corset/getCorset");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
 nlp.extend(nlpSpeech);
 
 const TRAITS = ["name", "maxBreath", "minBreath", "breathRecovery", "gaspCoefficient", "gaspLimit", "silenceLimit", "minWords", "afterUsingBreath"];

@@ -1,5 +1,3 @@
-const { gagtypes } = require("../../gagfunctions");
-
 /************
  * Gets the full gag name by ID
  * 
@@ -10,14 +8,7 @@ const { gagtypes } = require("../../gagfunctions");
  * ###### Needs rework into getBaseGag
  ************/
 function convertGagText(type) {
-    let convertgagarr;
-    for (let i = 0; i < gagtypes.length; i++) {
-        if (convertgagarr == undefined) {
-            convertgagarr = {};
-        }
-        convertgagarr[gagtypes[i].value] = gagtypes[i].name;
-    }
-    return convertgagarr[type];
+    return process.gagtypes[type]?.choicename;
 };
 
 exports.convertGagText = convertGagText;

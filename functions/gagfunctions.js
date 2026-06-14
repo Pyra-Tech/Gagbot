@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, getAlternateName } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel } = require(`./../functions/messagefunctions.js`);
 const { corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText } = require(`./../functions/vibefunctions.js`);
 const { processHeadwearEmoji, processHeadwearTruthgas } = require("./headwearfunctions.js");
@@ -23,6 +23,7 @@ const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.j
 const { getUserVar } = require("./getters/config/getUserVar.js");
 const { getPFP } = require("./getters/config/getPFP.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
+const { getAlternateName } = require("./getters/config/getAlternateName.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
