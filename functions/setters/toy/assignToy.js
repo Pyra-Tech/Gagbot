@@ -1,5 +1,5 @@
-import { getBaseChastity } from "../../getters/chastity/getBaseChastity";
-import { getOption } from "../../getters/config/getOption";
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getOption } = require("../../getters/config/getOption");
 
 /**********
  * Adds or modifies a toy on the user.
@@ -65,4 +65,4 @@ function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbin
     }
 }
 
-export { assignToy };
+exports.assignToy = assignToy;
