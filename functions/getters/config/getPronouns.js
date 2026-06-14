@@ -1,4 +1,4 @@
-const { remindPronouns } = require("../../pronounfunctions");
+const { remindPronouns, pronounsMap } = require("../../pronounfunctions");
 
 /********************************************
  * Get a userID's pronoun of the necessary form.

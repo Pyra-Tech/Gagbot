@@ -10,10 +10,10 @@ function assignWearable(user, wearable) {
     if (process.wearable == undefined) {
 		process.wearable = {};
 	}
-	if (process.wearable[userID]) {
-		process.wearable[userID].wornwearable.push(wearable);
+	if (process.wearable[user]) {
+		process.wearable[user].wornwearable.push(wearable);
 	} else {
-		process.wearable[userID] = { wornwearable: [wearable] };
+		process.wearable[user] = { wornwearable: [wearable] };
 	}
 	if (process.readytosave == undefined) {
 		process.readytosave = {};

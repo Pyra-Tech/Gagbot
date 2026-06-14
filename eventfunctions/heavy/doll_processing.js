@@ -4,6 +4,7 @@ const { getChastityBraName } = require("../../functions/getters/chastity/getChas
 const { getChastityName } = require("../../functions/getters/chastity/getChastityName.js");
 const { getCollar } = require("../../functions/getters/collar/getCollar.js");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
+const { getOption } = require("../../functions/getters/config/getOption.js");
 const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear.js");
 const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwearName.js");
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
