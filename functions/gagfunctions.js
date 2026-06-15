@@ -437,8 +437,10 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
         }
         let texts = [];
         shocks[tone].forEach((t) => {
-            if (typeof t != "string" && t.required({ interactionuser: msg.member, targetuser: msg.member })) {
-                texts.push(t.text)
+            if (typeof t != "string") {
+                if (t.required({ interactionuser: msg.member, targetuser: msg.member })) {
+                    texts.push(t.text)
+                }
             }
             else {
                 texts.push(t)
