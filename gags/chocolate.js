@@ -1,3 +1,5 @@
+const { serUserVar } = require("../functions/setters/config/setUserVar.js")
+
 /***************************
  * Chocolate Gag for Gagbot
  * ~ Pyra - Derived from Ball Gag by DollLia
