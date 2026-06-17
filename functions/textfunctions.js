@@ -1,5 +1,6 @@
 const { getArousal } = require("./getters/arousal/getArousal.js");
 const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getCollar } = require("./getters/collar/getCollar.js");
 const { getUserTags } = require("./getters/config/getUserTags.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
