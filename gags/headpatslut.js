@@ -1,5 +1,6 @@
 const { getUserVar } = require("../functions/getters/config/getUserVar");
 const { convertPronounsText } = require("../functions/other/convertPronounsText");
+const { insertIntoAST } = require("../functions/other/insertIntoAST");
 
 const headpatlines = [
     `USER_TAG needs a headpat...`,
@@ -11,17 +12,18 @@ const headpatlines = [
 ]
 
 const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
-    if (!getUserVar(msg.author.id, "headpatslutgag")) {
-        let silenced = {"isSilenced": false, id: msg.author.id}
+    if (!getUserVar(msg.guild.id, msg.author.id, "headpatslutgag")) {
+        let silenced = {"isSilenced": false, id: msg.author.id, guildid: msg.guild.id }
         msgTree.callFunc(garble,true,["rawText","moan"],[silenced])	// Run a function on the tree.
         msgTreeMods.modified = true;
     }
 }
 
-const garble = (text, parent, silent) => {
+const garble = (text, parent, locarr, silent) => {
     if (!silent.isSilenced){
         silent.isSilenced = true
-        return convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id } })
+        insertIntoAST(parent, locarr, convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id }, serverID: silent.guildid }));
+        return ``
     }
     else {
         return ``;
@@ -30,3 +32,5 @@ const garble = (text, parent, silent) => {
 
 exports.messagebegin = messagebegin;
 exports.choicename = "Headpat Slut Gag";
+
+exports.itemdescription = `The **Headpat Slut Gag** will make you beg for headpats when speaking. When receiving a headpat, you will be able to speak freely for 5 minutes. This duration is configurable in **/config** under **General**.`

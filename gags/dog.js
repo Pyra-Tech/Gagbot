@@ -7,7 +7,7 @@
 // > Code handles changing cases so we don't need to handle 'a' and 'A' separately here.
 const highSecGagCharMap = { w: "woof", r: "ruff", b: "bark", a: "arf", y: "yip", m: "mghhh~" };
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let output = "";
 
 	// Optional feature to handle escaping italicized text.
@@ -41,3 +41,5 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "Enchanted Dog Gag";
+
+exports.itemdescription = `The **Enchanted Dog Gag** makes the wearer speak with dog sounds.`

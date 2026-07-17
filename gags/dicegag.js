@@ -26,7 +26,7 @@ const totalAlphas = (text) => {
 };
 
 // Helper function to garble a text segment.
-const garbleTextGag = (text, parent, intensity, roll, modifier) => {
+const garbleTextGag = (text, parent, locarr, intensity, roll, modifier) => {
 	let output = "";
 	let words = text.split(/\s/);
 	
@@ -93,7 +93,7 @@ const garbleTextGag = (text, parent, intensity, roll, modifier) => {
 };
 
 // Helper function to garble a text segment for silent part.
-const garbleTextSilent = (text, parent, intensity, roll) => {
+const garbleTextSilent = (text, parent, locarr, intensity, roll) => {
 	let output = "";
 	let leakedSound = 0;
 	output += "```" + "Rolled a nat " + roll + " trying to speak. Unlucky..." + "```";
@@ -129,7 +129,7 @@ const garbleTextSilent = (text, parent, intensity, roll) => {
 	return output;
 };
 
-const addNat20Msg = (text, parent) => {
+const addNat20Msg = (text, parent, locarr) => {
 	let output = "";
 	output += "```" + "Rolled a nat 20 trying to speak. Critical success" + "```";
 	output += text;
@@ -178,3 +178,5 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 
 exports.messagebegin = messagebegin;
 exports.choicename = "Dice Gag";
+
+exports.itemdescription = `The **Dice Gag** rolls a 1d20 each time you speak with a modifier. Lower numbers are more intensely garbled, while higher ones less so. A Nat 1 discards the entire text, while a Nat 20 permits it without garbling.`

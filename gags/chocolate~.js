@@ -23,7 +23,7 @@ const totalAlphas = (text) => {
 };
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//console.log("Text Seg: " + text)
 
 	let output = "";
@@ -87,9 +87,11 @@ exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Sensual Chocolate Gag";
 exports.tags = ["drug"];
 
+exports.itemdescription = `The **Sensual Chocolate Gag** functions like a regular Chocolate gag, deteriorating every 2 minutes. It will also add a little bit of arousal each time it shrinks.`
+
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
-	setUserVar(data.userID, "confectionaryDissolveTimer", undefined)
+	setUserVar(data.serverID, data.userID, "confectionaryDissolveTimer", undefined)
 }
 
 // Unit Tests

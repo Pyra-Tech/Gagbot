@@ -15,6 +15,8 @@ const { getChastity } = require("../functions/getters/chastity/getChastity.js");
 const { getBaseChastity } = require("../functions/getters/chastity/getBaseChastity.js");
 const { assignCorset } = require("../functions/setters/corset/assignCorset.js");
 const { canAccessChastity } = require("../functions/getters/chastity/canAccessChastity.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,7 +28,8 @@ module.exports = {
 	async autoComplete(interaction) {
 		try {
 			const focusedValue = interaction.options.getFocused();
-			let autocompletes = process.autocompletes.corset;
+			let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+            let autocompletes = process.autocompletes.corset;
 			let matches = didYouMean(focusedValue, autocompletes, {
 				matchPath: ["name"],
 				returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
@@ -36,24 +39,14 @@ module.exports = {
 			if (matches.length == 0) {
 				matches = autocompletes;
 			}
-			let tags = getUserTags(interaction.user.id);
-			let newsorted = [];
-			matches.forEach((f) => {
-				let tagged = false;
-				let i = getBaseCorset(f.value);
-				tags.forEach((t) => {
-					if (i.tags && Array.isArray(i.tags) && i.tags.includes(t)) {
-						tagged = true;
-					} else if (i.tags && i.tags[t]) {
-						tagged = true;
-					}
-				});
-				if (!tagged) {
-					newsorted.push(f);
-				} else {
-					newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value });
-				}
-			});
+			let hideitem = true;
+            if (getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showself") && (chosenuserid == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, chosenuserid, matches, hideitem);
 			interaction.respond(newsorted.slice(0, 25));
 		} catch (err) {
 			console.log(err);
@@ -63,25 +56,26 @@ module.exports = {
 		try {
 			let corsetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(corsetuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, corsetuser.id)?.mainconsent) {
 				await handleConsent(interaction, corsetuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)) {
+			if (!getConsent(interaction.guildId, interaction.user.id)) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			const current = getCorset(corsetuser.id);
+			const current = getCorset(interaction.guildId, corsetuser.id);
 			const tightness = interaction.options.getNumber("intensity") ?? current?.tightness ?? 5;
 			const type = interaction.options.getString("type") ?? current?.type ?? "corset_leather";
 			// Build data tree:
 			let data = {
 				textarray: "texts_corset",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: corsetuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: tightness, // corset tightness
 					c3: getBaseCorset(current?.type)?.name ?? "Leather Corset", // current corset
 					c4: getBaseCorset(type)?.name, // new corset
@@ -101,7 +95,7 @@ module.exports = {
 			}
 			let blocked = false;
 			if (type) {
-				let tags = getUserTags(corsetuser.id);
+				let tags = getUserTags(interaction.guildId, corsetuser.id);
 				let i = getBaseCorset(type);
 				tags.forEach((t) => {
 					if (i && i.tags && i.tags.includes(t) && corsetuser != interaction.user) {
@@ -114,13 +108,13 @@ module.exports = {
 			if (blocked) {
 				return;
 			}
-			if (!getHeavyBound(interaction.user.id, corsetuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, corsetuser.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;
 				if (corsetuser == interaction.user) {
 					// Doing this to self
 					data.self = true;
-					if (getChastity(corsetuser.id)) {
+					if (getChastity(interaction.guildId, corsetuser.id)) {
 						data.chastity = true;
 						interaction.reply(getText(data));
 					} else {
@@ -130,7 +124,7 @@ module.exports = {
 				} else {
 					// To others
 					data.other = true;
-					if (getChastity(corsetuser.id)) {
+					if (getChastity(interaction.guildId, corsetuser.id)) {
 						data.chastity = true;
 						interaction.reply(getText(data));
 					} else {
@@ -138,18 +132,18 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
-			} else if (getChastity(corsetuser.id)) {
+			} else if (getChastity(interaction.guildId, corsetuser.id)) {
 				data.noheavy = true;
 				data.chastity = true;
 				// The target is in a chastity belt
-				if (getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").canAccessCorset({ userID: corsetuser.id, keyholderID: interaction.user.id })) {
+				if (getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").canAccessCorset({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id })) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
-					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id });
+					const fumbleResult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").fumble({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id });
 					if (fumbleResult > 0) {
 						// User fumbles with the key due to their arousal and frustration
 						data.fumble = true;
-						if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
+						if ((getOption(interaction.guildId, corsetuser.id, "keyloss") == "enabled") && (fumbleResult > 1)) {
 							data.discard = true;
 							// if they fumble again they can lose the key
 							if (corsetuser == interaction.user) {
@@ -158,13 +152,13 @@ module.exports = {
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
+									let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
+									let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
@@ -173,13 +167,13 @@ module.exports = {
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
+									let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
+									let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
@@ -222,26 +216,26 @@ module.exports = {
 								if (type != current.type) {
 									data.newcorset = true;
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, type, tightness);
+									assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 								} else {
 									data.corset = true;
 									if (current.tightness < tightness) {
 										// Tightening the corset!
 										data.tighter = true;
 										interaction.reply(getText(data));
-										assignCorset(corsetuser.id, type, tightness);
+										assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 									} else {
 										// Loosening the corset!
 										data.looser = true;
 										interaction.reply(getText(data));
-										assignCorset(corsetuser.id, type, tightness);
+										assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 									}
 								}
 							} else {
 								// Putting ON a corset!
 								data.nocorset = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, type, tightness);
+								assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 							}
 						} else {
 							// User tries to modify another user's vibe settings
@@ -251,20 +245,20 @@ module.exports = {
 								if (type != current.type) {
 									data.newcorset = true;
 									// Now lets make sure the wearer wants that.
-									if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+									if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 										// Allowed immediately, lets go
 										interaction.reply(getText(data));
-										assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+										assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 									} else {
 										// We need to ask first.
 										let datatogeneric = Object.assign({}, data.textdata);
 										datatogeneric.c1 = "corset";
 										interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-										let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset", true).then(
+										let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset", true).then(
 											async (res) => {
 												await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 												await interaction.followUp(getText(data));
-												assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+												assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 											},
 											async (rej) => {
 												await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -272,14 +266,14 @@ module.exports = {
 										);
 									}
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, type, tightness);
+									assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 								} else {
 									data.corset = true;
 									if (current.tightness < tightness) {
 										// Tightening the corset!
 										data.tighter = true;
 										// Now lets make sure the wearer wants that.
-										if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+										if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 											// Allowed immediately, lets go
 											interaction.reply(getText(data));
 											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
@@ -288,11 +282,11 @@ module.exports = {
 											let datatogeneric = Object.assign({}, data.textdata);
 											datatogeneric.c1 = "corset";
 											interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-											let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset", true).then(
+											let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset", true).then(
 												async (res) => {
 													await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 													await interaction.followUp(getText(data));
-													assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+													assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 												},
 												async (rej) => {
 													await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -303,14 +297,14 @@ module.exports = {
 										// Loosening the corset!
 										data.looser = true;
 										interaction.reply(getText(data));
-										assignCorset(corsetuser.id, type, tightness);
+										assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 									}
 								}
 							} else {
 								// Putting ON a corset!
 								data.nocorset = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, type, tightness);
+								assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 							}
 						}
 					}
@@ -348,25 +342,25 @@ module.exports = {
 						if (type != current.type) {
 							data.newcorset = true;
 							interaction.reply(getText(data));
-							assignCorset(corsetuser.id, type, tightness);
+							assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 						} else {
 							data.corset = true;
 							if (current.tightness < tightness) {
 								// User is tightening the corset
 								data.tighten = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, type, tightness);
+								assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 							} else {
 								// Loosening the corset
 								data.loosen = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, type, tightness);
+								assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 							}
 						}
 					} else {
 						data.nocorset = true;
 						interaction.reply(getText(data));
-						assignCorset(corsetuser.id, type, tightness);
+						assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 					}
 				} else {
 					data.other = true;
@@ -376,20 +370,20 @@ module.exports = {
 						if (type != current.type) {
 							data.newcorset = true;
 							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+							if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 								// Allowed immediately, lets go
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+								assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 							} else {
 								// We need to ask first.
 								let datatogeneric = Object.assign({}, data.textdata);
 								datatogeneric.c1 = "corset";
 								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+								let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 									async (res) => {
 										await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 										await interaction.followUp(getText(data));
-										assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+										assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 									},
 									async (rej) => {
 										await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -402,20 +396,20 @@ module.exports = {
 								// Tightening
 								data.tighten = true;
 								// Now lets make sure the wearer wants that.
-								if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+								if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 									// Allowed immediately, lets go
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+									assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 								} else {
 									// We need to ask first.
 									let datatogeneric = Object.assign({}, data.textdata);
 									datatogeneric.c1 = "corset";
 									interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-									let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+									let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 										async (res) => {
 											await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 											await interaction.followUp(getText(data));
-											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+											assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 										},
 										async (rej) => {
 											await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -426,20 +420,20 @@ module.exports = {
 								// Loosening
 								data.loosen = true;
 								// Now lets make sure the wearer wants that.
-								if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+								if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 									// Allowed immediately, lets go
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+									assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 								} else {
 									// We need to ask first.
 									let datatogeneric = Object.assign({}, data.textdata);
 									datatogeneric.c1 = "corset";
 									interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-									let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+									let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 										async (res) => {
 											await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 											await interaction.followUp(getText(data));
-											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+											assignCorset(interaction.guildId, corsetuser.id, type, tightness, interaction.user.id);
 										},
 										async (rej) => {
 											await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -451,7 +445,7 @@ module.exports = {
 					} else {
 						data.nocorset = true;
 						interaction.reply(getText(data));
-						assignCorset(corsetuser.id, type, tightness);
+						assignCorset(interaction.guildId, corsetuser.id, type, tightness);
 					}
 				}
 			}
@@ -460,7 +454,7 @@ module.exports = {
 		}
 	},
 	async help(userid, page) {
-		let restrictedtext = getCorset(userid) && getChastity(userid) && !canAccessChastity(userid, userid).access ? `***You cannot change or remove your corset currently***\n` : "";
+		let restrictedtext = getCorset(interaction.guildId, userid) && getChastity(interaction.guildId, userid) && !canAccessChastity(interaction.guildId, userid, userid).access ? `***You cannot change or remove your corset currently***\n` : "";
 		let overviewtext = `## Corset
 ### Usage: /corset (user) (tightness)
 ### Remove:  /uncorset (user)

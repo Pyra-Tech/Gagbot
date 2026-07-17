@@ -1,6 +1,11 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getBaseCollar } = require("./getBaseCollar");
+const { getCollar } = require("./getCollar");
+
 /************
  * Gets the full collar name of the User ID. Optionally will get the full collar name of a collar by ID.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The User ID to get the collar name of
  * - (string) collarid - The collar ID to retrieve the collar name of
  * ##### *Note: This function should use either/or param, not both.*
@@ -9,20 +14,12 @@
  * ---
  * ###### Note: Needs rework into separate getCollarName and getCollarNameOnUser functions
  ************/
-function getCollarName(userID, collarid) {
-    if (process.collar == undefined) {
-        process.collar = {};
-    }
-    let convertcollararr = {};
-    for (let i = 0; i < process.collartypes.length; i++) {
-        convertcollararr[process.collartypes[i].value] = process.collartypes[i].name;
-    }
+function getCollarName(serverID, userID, collarid) {
+    traceFirstParam(arguments[0]);
     if (collarid) {
-        return convertcollararr[collarid];
-    } else if (process.collar[userID]?.collartype) {
-        return convertcollararr[process.collar[userID]?.collartype];
+        return getBaseCollar(collarid)?.name
     } else {
-        return undefined;
+        return getBaseCollar(getCollar(serverID, userID)?.collartype)?.name;
     }
 }
 

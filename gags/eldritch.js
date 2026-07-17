@@ -1,6 +1,6 @@
 const garble = require("garble");
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let garbled = garble(text, Math.max(intensity-5, intensity), Math.max(intensity-5, intensity * 2)).slice(0,1900) // If its a singular text, reduce to 1900 lol
 
     return garbled;
@@ -9,3 +9,5 @@ const garbleText = (text, parent, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 60;
 exports.choicename = "Eldritch Gag";
+
+exports.itemdescription = `The **Eldritch Gag** inserts a bunch of diacritics into your speech, making it increasingly difficult to read across lines. Has a unique interaction with the **Doll Visor.**`

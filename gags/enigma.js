@@ -1,6 +1,6 @@
 const lockedCharacters = "\\'\",.?~!()[]{}<>*-#";
 
-function garbleText(text, parent, intensity) {
+function garbleText(text, parent, locarr, intensity) {
 	return text
 		.split("")
 		.map((subtext, idx) => {
@@ -33,3 +33,5 @@ function garbleText(text, parent, intensity) {
 
 exports.garbleText = garbleText;
 exports.choicename = "Enigma Gag";
+
+exports.itemdescription = `The **Enigma Gag** scrambles all the letters in each word, shuffling them around within the words.`

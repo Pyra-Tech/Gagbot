@@ -1,4 +1,4 @@
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let newtextparts = text.split(" ");
 	let outtext = "";
 	let uwutexts = ["uwu", "owo", ">w<", "^w^", "nwn", "0w0", "UwU", "qwq", "TvT", ":3", ">^_^<"];
@@ -15,3 +15,5 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "UwU Gag";
+
+exports.itemdescription = `The **UwU Gag** inserts many cutesy uwu type texts into your speech randomly.`

@@ -27,7 +27,7 @@ const totalAlphas = (text) => {
 	return count;
 };
 
-const garbleText = (text, parent, intensity, msg) => {
+const garbleText = (text, parent, locarr, intensity, msg) => {
 	let output = "";
 	//splits by regex of any whitespace char so we have word arra
 	let words = text.split(/\s/);
@@ -83,7 +83,7 @@ const garbleText = (text, parent, intensity, msg) => {
 				let msgIndex = Math.floor(Math.random() * ringGagInterruptList.length);
 				// convert and add the message to interrupt
                 output = `${output.slice(0, -1)}-` // Replace the last space with a - to indicate an interrupt!
-				output += convertPronounsText(ringGagInterruptList[msgIndex], { interactionuser: msg.member });
+				output += convertPronounsText(ringGagInterruptList[msgIndex], { serverID: msg.guild.id, interactionuser: msg.member });
 				output += " ";
 			}
 			

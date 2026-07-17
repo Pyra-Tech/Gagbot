@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { collartypes } = require("./../functions/collarfunctions.js");
 const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
@@ -12,6 +11,8 @@ const { getCollar } = require("../functions/getters/collar/getCollar.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { assignCollar } = require("../functions/setters/collar/assignCollar.js");
 const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,21 +32,15 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.user.id);
-            let newsorted = [];
-            matches.forEach((f) => {
-                let tagged = false;
-                let i = getBaseCollar(f.value)
-                tags.forEach((t) => {
-                    if (i.tags && i.tags.includes(t)) { tagged = true }
-                })
-                if (!tagged) {
-                    newsorted.push(f);
-                }
-                else {
-                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
-                }
-            })
+            let hideitem = true;
+            if (getOption(interaction.guildId, interaction.user.id, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, interaction.user.id, "forbiddenitemdisplay") == "showself") && (interaction.user.id == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, interaction.user.id, matches, hideitem);
+            newsorted = newsorted.filter((c) => !getBaseCollar(c.value).specialonly)
             interaction.respond(newsorted.slice(0,25))
         }
         catch (err) {
@@ -55,38 +50,27 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			//let collarkeyholder = interaction.options.getUser("keyholder") ?? interaction.user;
 			let collarselected = interaction.options.getString("type");
-			//let freeuse = interaction.options.getBoolean("freeuse");
-
-			// Check if they have free use enabled and it's allowed
-			// If not, tell them to strongly consider what they're doing and review /config
-			//if (freeuse && getOption(interaction.user.id, "publicaccess") != "enabled") {
-			//	await interaction.reply({
-			//		content: `You have not enabled Free Use. **Please strongly consider what you are doing.**\n\nFree use access will allow ***anyone*** to utilize mittens, chastity, hoods and heavy bondage on you. **You will be unable to say no to specific restraints or specific people by design.**\n\nYou should assume that you *will* become helpless and stuck with this option, including becoming unable to take off the collar. Only enable it if you understand what you're doing. If you do, this can be adjusted in **/config**.`,
-			//		flags: MessageFlags.Ephemeral,
-			//	});
-			//	return;
-			//}
 
 			// Build data tree:
 			let data = {
 				textarray: "texts_collar",
 				textdata: {
+                    serverID: interaction.guildId,
 					interactionuser: interaction.user,
 					targetuser: interaction.options.getUser("keyholder") ? interaction.options.getUser("keyholder") : interaction.user,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-                    c2: getCollarName(interaction.user.id, getCollar(interaction.user.id)?.collartype) ?? "collar"
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+                    c2: getCollarName(interaction.guildId, interaction.user.id, getCollar(interaction.guildId, interaction.user.id)?.collartype) ?? "collar"
 				},
 			};
 
-			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
-				if (getCollar(interaction.user.id)) {
+				if (getCollar(interaction.guildId, interaction.user.id)) {
 					data.collar = true;
 					await interaction.reply(getText(data));
 					return;
@@ -96,7 +80,7 @@ module.exports = {
 					return;
 				}
 			}
-			if (getCollar(interaction.user.id)) {
+			if (getCollar(interaction.guildId, interaction.user.id)) {
 				data.noheavy = true;
 				data.alreadycollared = true;
 				await interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
@@ -107,13 +91,6 @@ module.exports = {
             process.recentinteractions[interaction.user.id] = interaction;
 
             await interaction.showModal(collarPermModal(interaction, interaction.user, false, collarselected));
-			/*if (collarkeyholder && collarkeyholder.id != undefined) {
-				//interaction.deferReply();
-				await interaction.showModal(collarPermModal(interaction, interaction.user, false, collarselected));
-			} else {
-				//interaction.deferReply();
-				await interaction.showModal(collarPermModal(interaction, interaction.user, false, collarselected));
-			}*/
 		} catch (err) {
 			console.log(err);
 		}
@@ -137,23 +114,24 @@ module.exports = {
 			let data = {
 				textarray: "texts_collar",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: await interaction.client.users.fetch(collarkeyholder), // To fetch the target user object
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: getCollarName(interaction.user.id, choice_collartype) ?? "collar",
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: getCollarName(interaction.guildId, interaction.user.id, choice_collartype) ?? "collar",
 				},
 			};
 
-			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, interaction.user.id)) {
 				data.heavy = true;
-				if (getCollar(interaction.user.id)) {
+				if (getCollar(interaction.guildId, interaction.user.id)) {
 					data.collar = true;
 					interaction.reply(getText(data));
 				} else {
 					data.nocollar = true;
 					interaction.reply(getText(data));
 				}
-			} else if (getCollar(interaction.user.id)) {
+			} else if (getCollar(interaction.guildId, interaction.user.id)) {
 				// This should never happen, because we find out they have a collar on before the modal.
 				data.noheavy = true;
 				data.alreadycollared = true;
@@ -175,11 +153,11 @@ module.exports = {
                             else {*/
                                 interaction.reply(getText(data));
                             //}
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
 						} else {
 							data.nonamedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true);
 						}
 					} else {
 						data.freeuse = true;
@@ -187,11 +165,11 @@ module.exports = {
 							// Custom named collar declared
 							data.namedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false, choice_collartype);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false, choice_collartype);
 						} else {
 							data.nonamedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false);
 						}
 					}
 				} else if (collarkeyholder != interaction.user.id) {
@@ -202,11 +180,11 @@ module.exports = {
 							// Custom named collar declared
 							data.namedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
 						} else {
 							data.nonamedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true);
 						}
 					} else {
 						data.freeuse = true;
@@ -214,11 +192,11 @@ module.exports = {
 							// Custom named collar declared
 							data.namedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false, choice_collartype);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false, choice_collartype);
 						} else {
 							data.nonamedcollar = true;
 							interaction.reply(getText(data));
-							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false);
+							assignCollar(interaction.guildId, interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, false);
 						}
 					}
 				}
@@ -228,7 +206,7 @@ module.exports = {
 		}
 	},
     async help(userid, page) {
-        let restrictedtext = (getCollar(userid) && !canAccessCollar(userid, userid, true).access) ? `***You cannot unlock your collar currently***\n` : ""
+        let restrictedtext = (getCollar(interaction.guildId, userid) && !canAccessCollar(interaction.guildId, userid, userid, true).access) ? `***You cannot unlock your collar currently***\n` : ""
         let overviewtext = `## Collar
 ### Usage: /collar (keyholder) (freeuse) (type)
 ### Remove:  /uncollar (user)

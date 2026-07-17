@@ -1,10 +1,10 @@
 const { getOption } = require("../functions/getters/config/getOption");
 
 
-const garbleText = (text, parent, intensity, msg) => {
+const garbleText = (text, parent, locarr, intensity, msg) => {
 	let newtextparts = text.split(" ");
 	let outtext = text;
-    let forbiddenwords = getOption(msg.author.id, "forbiddengagpunishwords") ?? [];
+    let forbiddenwords = getOption(msg.guild.id, msg.author.id, "forbiddengagpunishwords") ?? [];
     console.log(forbiddenwords)
     if (!Array.isArray(forbiddenwords)) { return outtext } // Just skip this gag if it's not an array.
     forbiddenwords.forEach((w) => {
@@ -29,3 +29,5 @@ exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 
 exports.choicename = "Forbidden Gag";
+
+exports.itemdescription = `The **Forbidden Gag** will censor words that are configured in **/config** under **Restraint Options**, replacing them with an equivalent length of ✦.`

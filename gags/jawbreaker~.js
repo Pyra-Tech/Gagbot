@@ -23,7 +23,7 @@ const totalAlphas = (text) => {
 };
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//console.log("Text Seg: " + text)
 
 	let output = "";
@@ -89,7 +89,7 @@ exports.tags = ["drug"];
 
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
-	setUserVar(data.userID, "confectionaryDissolveTimer", undefined)
+	setUserVar(data.serverID, data.userID, "confectionaryDissolveTimer", undefined)
 }
 
 // Unit Tests

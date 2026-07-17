@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { handleConsent, handleMajorRestraint, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
@@ -14,6 +13,8 @@ const { getMitten } = require("../functions/getters/mitten/getMitten.js");
 const { getGag } = require("../functions/getters/gag/getGag.js");
 const { assignMitten } = require("../functions/setters/mitten/assignMitten.js");
 const { getPronouns } = require("../functions/getters/config/getPronouns.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,22 +36,14 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(chosenuserid);
-            let newsorted = [];
-            matches.forEach((f) => {
-                let tagged = false;
-                let i = getBaseMitten(f.value)
-                tags.forEach((t) => {
-                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
-                    else if (i.tags && (i.tags[t])) { tagged = true }
-                })
-                if (!tagged) {
-                    newsorted.push(f);
-                }
-                else {
-                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
-                }
-            })
+            let hideitem = true;
+            if (getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showself") && (chosenuserid == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, chosenuserid, matches, hideitem);
             interaction.respond(newsorted.slice(0,25))
         }
         catch (err) {
@@ -62,12 +55,12 @@ module.exports = {
             let chosenmittens = interaction.options.getString("type");
             let targetuser = interaction.options.getUser("user") ?? interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(targetuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
 				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
@@ -75,10 +68,11 @@ module.exports = {
 			let data = {
 				textarray: "texts_mitten",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: targetuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: getMittenName(interaction.user.id, chosenmittens) ?? "Standard Mittens",
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: getMittenName(interaction.guildId, interaction.user.id, chosenmittens) ?? "Standard Mittens",
 				},
 			};
 
@@ -90,7 +84,7 @@ module.exports = {
 
             let blocked = false;
             if (chosenmittens) {
-                let tags = getUserTags(targetuser.id);
+                let tags = getUserTags(interaction.guildId, targetuser.id);
                 let i = getBaseMitten(chosenmittens)
                 tags.forEach((t) => {
                     if (i && i.tags && i.tags[t] && (targetuser != interaction.user)) {
@@ -104,10 +98,10 @@ module.exports = {
                 return;
             }
 
-			if (!getHeavyBound(interaction.user.id, targetuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, targetuser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
-			} else if (getMitten(interaction.user.id)) {
+			} else if (getMitten(interaction.guildId, interaction.user.id)) {
 				data.mitten = true;
 				interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 			} else {
@@ -115,25 +109,25 @@ module.exports = {
 				data.nomitten = true;
                 if (interaction.user.id == targetuser.id) {
                     data.self = true;
-					if (getGag(interaction.user.id)) {
+					if (getGag(interaction.guildId, interaction.user.id)) {
 						// Wearing a gag already.
 						data.gag = true;
 						interaction.reply(getText(data));
-						assignMitten(interaction.user.id, chosenmittens);
+						assignMitten(interaction.guildId, interaction.user.id, chosenmittens);
 					} else {
 						// Not wearing a gag
 						data.nogag = true;
 						interaction.reply(getText(data));
-						assignMitten(interaction.user.id, chosenmittens);
+						assignMitten(interaction.guildId, interaction.user.id, chosenmittens);
 					}
                 }
                 else {
                     data.other = true;
                     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                    await handleMajorRestraint(interaction.user, targetuser, "mitten", chosenmittens).then(async () => {
-                        await handleExtremeRestraint(interaction.user, targetuser, "mitten", chosenmittens).then(
+                    await handleMajorRestraint(interaction.guildId, interaction.user, targetuser, "mitten", chosenmittens).then(async () => {
+                        await handleExtremeRestraint(interaction.guildId, interaction.user, targetuser, "mitten", chosenmittens).then(
                             async (success) => {
-                                if (getGag(targetuser.id)) {
+                                if (getGag(interaction.guildId, targetuser.id)) {
                                     data.gag = true;
                                 }
                                 else {
@@ -141,7 +135,7 @@ module.exports = {
                                 }
                                 await interaction.followUp({ content: `Equipping ${data.textdata.c2}`, withResponse: true, flags: MessageFlags.Ephemeral });
                                 await interaction.followUp(getText(data));
-                                assignMitten(targetuser.id, chosenmittens);
+                                assignMitten(interaction.guildId, targetuser.id, chosenmittens);
                             },
                             async (reject) => {
                                 let nomessage = `${targetuser} rejected the ${data.textdata.c2}.`;
@@ -152,7 +146,7 @@ module.exports = {
                                     nomessage = `Something went wrong - Submit a bug report!`;
                                 }
                                 if (reject == "NoDM") {
-                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                                 }
                                 await interaction.followUp({ content: nomessage });
                             },
@@ -167,7 +161,7 @@ module.exports = {
                             nomessage = `Something went wrong - Submit a bug report!`;
                         }
                         if (reject == "NoDM") {
-                            nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                            nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                         }
                         if (reject == "Cooldown") {
                             nomessage = `${targetuser} has blocked major bondage restraints for now. Please try again in the future.`;
@@ -181,7 +175,7 @@ module.exports = {
 		}
 	},
     async help(userid, page) {
-        let restrictedtext = (getMitten(userid)) ? `***You cannot remove your mittens***\n` : ""
+        let restrictedtext = (getMitten(interaction.guildId, userid)) ? `***You cannot remove your mittens***\n` : ""
         let overviewtext = `## Mitten
 ### Usage: /mitten (type)
 ### Remove:  /unmitten (user)

@@ -1,4 +1,4 @@
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let newtextparts = text.split(" ");
 	let outtext = "";
 	for (let i = 0; i < newtextparts.length; i++) {
@@ -80,3 +80,5 @@ function iscatnoise(word) {
 
 exports.garbleText = garbleText;
 exports.choicename = "Bast Gag";
+
+exports.itemdescription = `The **Bast Gag** is a more advanced form of the **Cat Gag**, aimed at even more speech to turn the wearer into a cat.`

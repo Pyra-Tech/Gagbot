@@ -3,6 +3,7 @@ const { removeToy } = require("../functions/setters/toy/removeToy")
 const { setOption } = require("../functions/setters/config/setOption")
 const { ButtonStyle } = require("discord.js");
 const { markForSave } = require("../functions/other/markForSave");
+const { setPronouns } = require("../functions/setters/config/setPronouns");
 
 
 /***********
@@ -38,24 +39,24 @@ const configoptions = {
 					name: "Set Link",
 					helptext: "Link set to \n",
 					helptextnone: "*No profile link*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -71,24 +72,24 @@ const configoptions = {
 					name: "Set Link",
 					helptext: "Link set to \n",
 					helptextnone: "*No kink list link*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -104,24 +105,24 @@ const configoptions = {
 					name: "Set Title",
 					helptext: "Displaying as **",
 					helptextnone: "*No Preferred Titles Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Miss, Lady, Sir, Master`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Miss, Lady, Sir, Master`;
 			},
             textvaluedisplay: (val) => {
                 return `${val}**`;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -135,11 +136,8 @@ const configoptions = {
 				{
 					name: "She/her",
 					helptext: "Feminine Pronouns (she, her, hers, herself)",
-					select_function: (userID) => {
-                        if (process.pronouns == undefined) {
-                            process.pronouns = {};
-                        }
-                        process.pronouns[userID] = { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }
+					select_function: (serverID, userID) => {
+                        setPronouns(serverID, userID, "she/her")
                         markForSave("pronouns");
                     },
 					value: "she",
@@ -148,11 +146,8 @@ const configoptions = {
 				{
 					name: "He/him",
 					helptext: "Masculine Pronouns (he, him, his, himself)",
-					select_function: (userID) => {
-                        if (process.pronouns == undefined) {
-                            process.pronouns = {};
-                        }
-                        process.pronouns[userID] = { subject: "he", object: "him", possessive: "his", possessiveDeterminer: "his", reflexive: "himself", subjectIs: "he's", subjectWill: "he'll" }
+					select_function: (serverID, userID) => {
+                        setPronouns(serverID, userID, "he/him")
                         markForSave("pronouns");
                     },
 					value: "he",
@@ -161,11 +156,8 @@ const configoptions = {
 				{
 					name: "They/them",
 					helptext: "Nonbinary Pronouns (they, them, their, themself)",
-					select_function: (userID) => {
-                        if (process.pronouns == undefined) {
-                            process.pronouns = {};
-                        }
-                        process.pronouns[userID] = { subject: "they", object: "them", possessive: "theirs", possessiveDeterminer: "their", reflexive: "themself", subjectIs: "they're", subjectWill: "they'll" }
+					select_function: (serverID, userID) => {
+                        setPronouns(serverID, userID, "they/them")
                         markForSave("pronouns");
                     },
 					value: "they",
@@ -174,11 +166,8 @@ const configoptions = {
                 {
 					name: "It/its",
 					helptext: "Object Pronouns (it, it, its, itself)",
-					select_function: (userID) => {
-                        if (process.pronouns == undefined) {
-                            process.pronouns = {};
-                        }
-                        process.pronouns[userID] = { subject: "it", object: "it", possessive: "its", possessiveDeterminer: "its", reflexive: "itself", subjectIs: "it's", subjectWill: "it'll" }
+					select_function: (serverID, userID) => {
+                        setPronouns(serverID, userID, "it/its")
                         markForSave("pronouns");
                     },
 					value: "it",
@@ -187,12 +176,9 @@ const configoptions = {
                 {
 					name: "Not Set",
 					helptext: "Pronouns have not been set yet",
-					select_function: (userID) => {
-                        setOption(userID, "pronouns", "she");
-                        if (process.pronouns == undefined) {
-                            process.pronouns = {};
-                        }
-                        process.pronouns[userID] = { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }
+					select_function: (serverID, userID) => {
+                        setOption(serverID, userID, "pronouns", "she");
+                        setPronouns(serverID, userID, "she/her")
                         markForSave("pronouns");
                     },
 					value: "notset",
@@ -205,6 +191,31 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
 		},
+        holidayevents: {
+			name: "Holiday Events",
+			desc: "Would you want to participate in holiday events such as Locktober or No Nut November?",
+			choices: [
+				{
+					name: "Yes",
+					helptext: "Participating in holiday events",
+					select_function: (serverID, userID) => { return true },
+					value: "participate",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "No",
+					helptext: "Not interested in holiday events",
+					select_function: (serverID, userID) => { return true },
+					value: "noholidays",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "participate",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
         praiseobject: {
 			name: "Praise Object",
 			desc: "When the bot praises you, what noun should it use?",
@@ -212,42 +223,49 @@ const configoptions = {
 				{
 					name: "Follow Gender",
 					helptext: "Follow Selected Pronouns/State",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "follow",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Girl",
 					helptext: "Good **Girl!**",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "girl",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Boy",
 					helptext: "Good **Boy!**",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "boy",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Toy",
 					helptext: "Good **Toy!**",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "toy",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Pet",
+					helptext: "Good **Pet!**",
+					select_function: (serverID, userID) => { return true },
+					value: "pet",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Doll",
 					helptext: "Good **Doll.**",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "doll",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Drone",
 					helptext: "Good **Drone.**",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "drone",
 					style: ButtonStyle.Secondary,
 				},
@@ -258,85 +276,6 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
 		},
-        receiveheadpat: {
-			name: "Recieve Headpats",
-			desc: "Who is allowed to headpat you?",
-			choices: [
-				{
-					name: "Everyone",
-					helptext: "Everyone is allowed to pat you without prompts",
-					select_function: (userID) => { return true },
-					value: "everyonenoprompt",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Everyone (Prompt)",
-					helptext: "Everyone but keyholders will prompt to pat you",
-					select_function: (userID) => { return true },
-					value: "everyone",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Keyholders",
-					helptext: "Only Keyholders can pat you and without prompts",
-					select_function: (userID) => { return true },
-					value: "keyholdernoprompt",
-					style: ButtonStyle.Secondary,
-				},
-                {
-					name: "Keyholders (Prompt)",
-					helptext: "Only Keyholders can pat you with prompts",
-					select_function: (userID) => { return true },
-					value: "keyholder",
-					style: ButtonStyle.Secondary,
-				},
-                {
-					name: "Nobody",
-					helptext: "Nobody can pat you",
-					select_function: (userID) => { return true },
-					value: "nobody",
-					style: ButtonStyle.Danger,
-				},
-			],
-			menutype: "choice",
-			default: "everyonenoprompt",
-			disabled: () => {
-				return false;
-			}, // if true, button is greyed out
-		},
-        allowedheadpat: {
-			name: "Headpat Exempt Users",
-			desc: "Set users who can headpat you regardless of your setting above",
-			descmodal: "Select up to 25 users which can headpat you at all times:",
-			choices: [
-				{
-					name: "Set Users",
-					helptext: "Users set to ",
-					helptextnone: "*No Users Set*",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "None",
-					style: ButtonStyle.Primary,
-				},
-			],
-			customtext: (userID) => {
-				return `https://discord.gg/`;
-			},
-			placeholder: (userID) => {
-				return `https://discord.gg/`;
-			},
-            uservaluedisplay: (val) => {
-                return val;
-            },
-			menutype: "choice_userentry",
-			default: (userID) => {
-				return ``;
-			},
-			disabled: () => {
-				return false;
-			},
-		},
         receiveshock: {
 			name: "Recieve Shocks",
 			desc: "Who is allowed to trigger remote shocks on you?",
@@ -344,28 +283,28 @@ const configoptions = {
 				{
 					name: "Everyone",
 					helptext: "Everyone is allowed to shock you",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "everyonenoprompt",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Collar Access",
 					helptext: "Anyone with access to your collar is allowed to shock you",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "collaraccess",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Keyholders",
 					helptext: "Only Keyholders can shock you",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "keyholdernoprompt",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Nobody",
 					helptext: "Nobody can shock you",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "nobody",
 					style: ButtonStyle.Danger,
 				},
@@ -385,24 +324,24 @@ const configoptions = {
 					name: "Set Users",
 					helptext: "Users set to ",
 					helptextnone: "*No Users Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `https://discord.gg/`;
 			},
             uservaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_userentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -416,21 +355,21 @@ const configoptions = {
 				{
 					name: "Playful",
 					helptext: "Playful, teasing shock messages",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "playful",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Painful",
 					helptext: `Painful shocks intended for masochistic recipients`,
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "painful",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Both",
 					helptext: `Randomly selects the tone when shocked`,
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "both",
 					style: ButtonStyle.Secondary,
 				},
@@ -448,14 +387,14 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*No Third-Party Shocker*",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "none",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Pishock",
 					helptext: `Utilizing the Pishock API. Check menu choices for **Pishock Config**`,
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "pishock",
 					style: ButtonStyle.Secondary,
 				},
@@ -465,7 +404,7 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			}, // if true, button is greyed out
-		}
+		},
     },
     "Pishock Config": {
         pishockusername: {
@@ -477,24 +416,24 @@ const configoptions = {
 					name: "Set Username",
 					helptext: "Displaying as **",
 					helptextnone: "*No Shocker Username Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Gagbot`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Gagbot`;
 			},
             textvaluedisplay: (val) => {
                 return `${val}**`;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -510,24 +449,24 @@ const configoptions = {
 					name: "Set Name",
 					helptext: "Shocker Name is **",
 					helptextnone: "*No Shocker Name Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Gagbot`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Gagbot`;
 			},
             textvaluedisplay: (val) => {
                 return `${val}**`;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -543,24 +482,24 @@ const configoptions = {
 					name: "Set Shocker Code",
 					helptext: "Shocker Code: **",
 					helptextnone: "*No Shocker Code Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Shocker Code...`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Shocker Code...`;
 			},
             textvaluedisplay: (val) => {
                 return `${val}**`;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -576,24 +515,24 @@ const configoptions = {
 					name: "Set API Key",
 					helptext: "API Key: **",
 					helptextnone: "*No API Key Set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Shocker API Key...`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Shocker API Key...`;
 			},
             textvaluedisplay: (val) => {
                 return `${val}**`;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -607,21 +546,21 @@ const configoptions = {
 				{
 					name: "Shock",
 					helptext: "Shock when triggered",
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "0",
 					style: ButtonStyle.Secondary,
 				},
 				{
 					name: "Vibrate",
 					helptext: `Vibrate when Triggered`,
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "1",
 					style: ButtonStyle.Secondary,
 				},
                 {
 					name: "Beep",
 					helptext: `Beep when Triggered`,
-					select_function: (userID) => { return true },
+					select_function: (serverID, userID) => { return true },
 					value: "2",
 					style: ButtonStyle.Secondary,
 				},
@@ -641,9 +580,9 @@ const configoptions = {
 				{
 					name: "Off",
 					helptext: "*Arousal disabled*",
-					select_function: (userID) => {
-                        removeToy(userID, userID, undefined, true);
-                        clearArousal(userID)
+					select_function: (serverID, userID) => {
+                        removeToy(serverID, userID, userID, undefined, true);
+                        clearArousal(serverID, userID)
 					},
 					value: 0,
 					style: ButtonStyle.Danger,
@@ -652,7 +591,7 @@ const configoptions = {
 				{
 					name: "Static Arousal",
 					helptext: "Static Arousal (when vibed)",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1,
@@ -662,7 +601,7 @@ const configoptions = {
 				{
 					name: "Dynamic Arousal",
 					helptext: "Dynamic Arousal",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 2,
@@ -683,7 +622,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Fumbling is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -693,7 +632,7 @@ const configoptions = {
 				{
 					name: "Self Only",
 					helptext: "Can fumble your own keys",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "self",
@@ -703,7 +642,7 @@ const configoptions = {
 				{
 					name: "Self and Others",
 					helptext: "You and others can fumble your keys",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "everyone",
@@ -724,7 +663,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Key Loss is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -734,7 +673,7 @@ const configoptions = {
 				{
 					name: "Enabled",
 					helptext: "**Your keys can be lost**",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -755,7 +694,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Blessed Luck is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -765,7 +704,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Failed rolls add to future success chance",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -786,7 +725,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Frustration is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 0,
@@ -796,7 +735,7 @@ const configoptions = {
 				{
 					name: "0.5x",
 					helptext: "Frustration adds up to 50% over 2 months",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 0.5,
@@ -806,7 +745,7 @@ const configoptions = {
 				{
 					name: "1x",
 					helptext: "Frustration adds up to 50% over 1 month",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1,
@@ -816,7 +755,7 @@ const configoptions = {
 				{
 					name: "2x",
 					helptext: "Frustration adds up to 50% over 2 weeks",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 2,
@@ -826,7 +765,7 @@ const configoptions = {
 				{
 					name: "4x",
 					helptext: "Frustration adds up to 50% over 1 week",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 4,
@@ -836,7 +775,7 @@ const configoptions = {
 				{
 					name: "10x",
 					helptext: "Frustration adds up to 50% over 3 days",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 10,
@@ -846,7 +785,7 @@ const configoptions = {
 				{
 					name: "20x",
 					helptext: "Frustration adds up to 50% over 1.5 days",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 20,
@@ -867,7 +806,7 @@ const configoptions = {
                 {
                     name: "Only Mine",
                     helptext: "You will only be able to find keys for restraints you are the primary keyholder of",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: "self",
@@ -876,7 +815,7 @@ const configoptions = {
                 {
                     name: "Others",
                     helptext: "You will be able to find any fumbled keys. When you discover a key that isn't yours, you will return it after a short period of time.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: "others",
@@ -896,7 +835,7 @@ const configoptions = {
                 {
                     name: "Only Keyholder",
                     helptext: "Only your keyholder can discover the keys to your restraints. Others may detect a sparkle.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: "onlykh",
@@ -905,7 +844,7 @@ const configoptions = {
                 {
                     name: "Immediately",
                     helptext: "If others find your keys, they'll return them immediately.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 0,
@@ -914,7 +853,7 @@ const configoptions = {
                 {
                     name: "2 Minutes",
                     helptext: "Others can discover your keys and play with you for 2 minutes before automatically returning them.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 120000,
@@ -923,7 +862,7 @@ const configoptions = {
                 {
                     name: "5 Minutes",
                     helptext: "Others can discover your keys and play with you for 5 minutes before automatically returning them.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 300000,
@@ -932,7 +871,7 @@ const configoptions = {
                 {
                     name: "15 Minutes",
                     helptext: "Others can discover your keys and play with you for 15 minutes before automatically returning them.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 900000,
@@ -941,7 +880,7 @@ const configoptions = {
                 {
                     name: "30 Minutes",
                     helptext: "Others can discover your keys and play with you for 30 minutes before automatically returning them.",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 1800000,
@@ -961,7 +900,7 @@ const configoptions = {
 				{
 					name: "Very Little",
 					helptext: "*33% of base*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 0.33,
@@ -971,7 +910,7 @@ const configoptions = {
 				{
 					name: "Less",
 					helptext: "*66% of base*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 0.66,
@@ -981,7 +920,7 @@ const configoptions = {
 				{
 					name: "Normal",
 					helptext: "100% of base",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1.0,
@@ -991,7 +930,7 @@ const configoptions = {
 				{
 					name: "More",
 					helptext: "133% of base",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1.33,
@@ -1001,7 +940,7 @@ const configoptions = {
 				{
 					name: "Much More",
 					helptext: "166% of base",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1.66,
@@ -1011,7 +950,7 @@ const configoptions = {
 				{
 					name: "Too Much...",
 					helptext: "200% of base",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 2.0,
@@ -1032,7 +971,7 @@ const configoptions = {
 				{
 					name: "Bar",
 					helptext: "Displays as a bar representing arousal % of orgasm threshold",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
                         return false;
 					},
 					value: "bar",
@@ -1041,7 +980,7 @@ const configoptions = {
                 {
 					name: "Description",
 					helptext: "Displays as a roleplay flavor text",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
                         return false;
 					},
 					value: "desc",
@@ -1050,7 +989,7 @@ const configoptions = {
                 {
 					name: "Numbers",
 					helptext: "Displays exact Arousal and Orgasm Threshold numbers",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
                         return false;
 					},
 					value: "numbers",
@@ -1072,7 +1011,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Key giving is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1082,7 +1021,7 @@ const configoptions = {
 				{
 					name: "Prompt",
 					helptext: "You will be prompted for key transfers",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "prompt",
@@ -1092,7 +1031,7 @@ const configoptions = {
 				{
 					name: "Automatic",
 					helptext: "⚠️ **You will accept keygiving requests automatically**",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "auto",
@@ -1113,7 +1052,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Key cloning is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1123,7 +1062,7 @@ const configoptions = {
 				{
 					name: "Prompt",
 					helptext: "You will be prompted for key clones",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "prompt",
@@ -1133,7 +1072,7 @@ const configoptions = {
 				{
 					name: "Automatic",
 					helptext: "⚠️ **You will accept key cloning requests automatically**",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "auto",
@@ -1154,7 +1093,7 @@ const configoptions = {
                 {
 					name: "No",
 					helptext: "*Non-collar Keyholder major bondage will be rejected automatically*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1164,7 +1103,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Others can offer to bind you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1185,7 +1124,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Public Access is disabled*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1195,7 +1134,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "**⚠️ You can select public access options on collars and timelocks!**",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1216,7 +1155,7 @@ const configoptions = {
 				{
 					name: "Everyone",
 					helptext: "Prompt for anyone to remove non-keyed bondage",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "all",
@@ -1226,7 +1165,7 @@ const configoptions = {
 				{
 					name: "Everyone except Binder",
 					helptext: "Prompt for anyone besides who put something on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "all_binder",
@@ -1236,7 +1175,7 @@ const configoptions = {
 				{
 					name: "Everyone except Binder and Keyholder(s)",
 					helptext: "Prompt for anyone besides who put something on you or keyholders",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "all_binder_and_keyholder",
@@ -1246,7 +1185,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "Automatically allow bondage to be removed",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "accept",
@@ -1260,6 +1199,44 @@ const configoptions = {
 				return false;
 			},
 		},
+        forbiddenitemdisplay: {
+            name: "Forbidden Items On You",
+			desc: "How should items you've marked as 'None' on the Content tab be shown when selecting restraints?",
+			choices: [
+				{
+					name: "Show to Everyone",
+					helptext: "Show the options to everyone with 🛇🛇🛇 indicators. The items will be blocked unless you are equipping them.",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "showeveryone",
+					style: ButtonStyle.Primary,
+				},
+				{
+					name: "Show to Me",
+					helptext: "Show the options only to yourself with 🛇🛇🛇 indicators. The items will be allowed from you.",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "showself",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Hide",
+					helptext: "The items will be hidden from the list when searching",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "hide",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "showeveryone",
+			disabled: () => {
+				return false;
+			},
+        },
         recordmessages: {
 			name: "Record Messages",
 			desc: "When modifying messages, can the bot temporarily record the original message contents?",
@@ -1267,7 +1244,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Editing messages will use the edited contents*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1277,7 +1254,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Editing Bot messages will use original contents",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1298,7 +1275,7 @@ const configoptions = {
                 {
                     name: "10 minutes",
                     helptext: "Only a short while...",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 600000,
@@ -1307,7 +1284,7 @@ const configoptions = {
                 {
                     name: "30 minutes",
                     helptext: "A little while!",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 1800000,
@@ -1316,7 +1293,7 @@ const configoptions = {
                 {
                     name: "60 minutes",
                     helptext: "A while!",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 3600000,
@@ -1325,7 +1302,7 @@ const configoptions = {
                 {
                     name: "3 hours",
                     helptext: "A *while!*",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 10800000,
@@ -1334,7 +1311,7 @@ const configoptions = {
                 {
                     name: "24 hours",
                     helptext: "A decent time",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 86400000,
@@ -1343,12 +1320,77 @@ const configoptions = {
                 {
                     name: "72 hours",
                     helptext: "A long time",
-                    select_function: (userID) => {
+                    select_function: (serverID, userID) => {
                         return false;
                     },
                     value: 259200000,
                     style: ButtonStyle.Danger
                 },
+            ],
+            menutype: "choice",
+			default: 600000,
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
+        gagbotheldkeyaction: {
+            name: "Gagbot Actions on Held Keys",
+            desc: "If your keys are found in Gagbot's possession, how frequently is Gagbot allowed to do things to you? Actions will only be performed while you are active.",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Gagbot will not perform any actions on you while holding your keys*",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: "disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "2.5-5 Minutes",
+                    helptext: "Actions every 2.5-5 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 300000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "5-10 Minutes",
+                    helptext: "Actions every 5-10 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "15-30 Minutes",
+                    helptext: "Actions every 15-30 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 1800000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "30-60 Minutes",
+                    helptext: "Actions every 30-60 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 3600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "1-2 Hours",
+                    helptext: "Actions every 1-2 hours",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 7200000,
+                    style: ButtonStyle.Secondary
+                }
             ],
             menutype: "choice",
 			default: 600000,
@@ -1363,7 +1405,7 @@ const configoptions = {
 				{
 					name: "Revoke",
 					helptext: "*Revoking helptext that'll never be used lol*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1378,6 +1420,317 @@ const configoptions = {
 			},
 		},
 	},
+    Touch: {
+        receiveheadpat: {
+			name: "Recieve Headpats",
+			desc: "Who is allowed to headpat you?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to pat you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to pat you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can pat you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can pat you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can pat you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedheadpat: {
+			name: "Headpat Exempt Users",
+			desc: "Set users who can headpat you regardless of your setting above",
+			descmodal: "Select up to 25 users which can headpat you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receivenom: {
+			name: "Recieve Noms",
+			desc: "Who is allowed to nom on you (playfully)?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to nom you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to nom you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can nom you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can nom you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can nom you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowednom: {
+			name: "Nom Exempt Users",
+			desc: "Set users who can nom on you regardless of your setting above",
+			descmodal: "Select up to 25 users which can nom on you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receivehug: {
+			name: "Recieve Hugs",
+			desc: "Who is allowed to give you a hug?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to hug you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to hug you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can hug you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can hug you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can hug you :(",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedhug: {
+			name: "Hug Exempt Users",
+			desc: "Set users who can hug you regardless of your setting above",
+			descmodal: "Select up to 25 users which can hug you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receiveorgasmcontrol: {
+			name: "Orgasm Control",
+			desc: "When wearing the Orgasm Control Module, who is allowed to trigger /letgo on you?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to force an orgasm you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Collar Access",
+					helptext: "Anyone with access to your collar is allowed to force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "collaraccess",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "collaraccess",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedorgasmcontrol: {
+			name: "Orgasm Control Exempt Users",
+			desc: "Set users who can always trigger an orgasm on you regardless of the setting above",
+			descmodal: "Select up to 25 users which can /letgo you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+    },
 	"Restraint Options": {
 		dollvisorname: {
 			name: "Doll Visor Name",
@@ -1388,25 +1741,31 @@ const configoptions = {
 					name: "Set Name",
 					helptext: "Doll Visor name is set to ",
 					helptextnone: "*Doll Visor name has not been set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `DOLL-${userID.slice(-4)}`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `DOLL-${userID.slice(-4)}`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
-				return `DOLL-${userID.slice(-4)}`;
+			default: (serverID, userID) => {
+                if (typeof userID != "string") {
+                    console.log(`Error setting doll text for user ID ${userID}`)
+                    return `Unknown DOLL`
+                }
+                else {
+                    return `DOLL-${userID.slice(-4)}`;
+                }
 			},
 			disabled: () => {
 				return false;
@@ -1438,7 +1797,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Doll Visor will not affect pronouns*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1448,7 +1807,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "You will use it/its pronouns while wearing a visor",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1469,7 +1828,7 @@ const configoptions = {
 				{
 					name: "No",
 					helptext: "*Doll Visor will not punish the wearer*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "disabled",
@@ -1479,7 +1838,7 @@ const configoptions = {
 				{
 					name: "Warn",
 					helptext: "Doll Visor will warn on violations, but not punish",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "warning",
@@ -1489,7 +1848,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Doll Visor will punish the wearer. This can apply mittens and heavy!",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1510,7 +1869,7 @@ const configoptions = {
 				{
 					name: "1 Violation",
 					helptext: "Every violation is a punishment",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1,
@@ -1520,7 +1879,7 @@ const configoptions = {
 				{
 					name: "2 Violations",
 					helptext: "Every 2 violations",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 2,
@@ -1530,7 +1889,7 @@ const configoptions = {
 				{
 					name: "3 Violations",
 					helptext: "Every 3 violations",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 3,
@@ -1540,7 +1899,7 @@ const configoptions = {
 				{
 					name: "4 Violations",
 					helptext: "Every 4 violations",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 4,
@@ -1550,7 +1909,7 @@ const configoptions = {
 				{
 					name: "5 Violations",
 					helptext: "Every 5 violations",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 5,
@@ -1573,24 +1932,24 @@ const configoptions = {
 					name: "Set Forbidden Words",
 					helptext: "Forbidden words set to: ",
 					helptextnone: "*No forbidden words*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `person,/h+u+m+a+n+/`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `person,/h+u+m+a+n+/,grin`;
 			},
             textvaluedisplay: (val) => {
                 return (val ? val.join(", ") : "**None Set**")
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -1606,24 +1965,24 @@ const configoptions = {
 					name: "Set Name",
 					helptext: "⬡-Drone Visor name is set to ",
 					helptextnone: "*⬡-Drone Visor name has not been set*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `${userID.slice(-4)}`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `${userID.slice(-4)}`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return `${userID.slice(-4)}`;
 			},
 			disabled: () => {
@@ -1639,24 +1998,24 @@ const configoptions = {
 					name: "Set Name",
 					helptext: "Engraved Collar Name set to: ",
 					helptextnone: "*No Engraved Collar Name*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Your name...`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Your name...`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -1672,24 +2031,24 @@ const configoptions = {
 					name: "Set Name",
 					helptext: "Deferential subject set to: ",
 					helptextnone: "*No Deferential Name*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `Your deferential name...`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `Your deferential name...`;
 			},
             textvaluedisplay: (val) => {
                 return val;
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -1705,24 +2064,24 @@ const configoptions = {
 					name: "Set Forbidden Words",
 					helptext: "Forbidden words set to: ",
 					helptextnone: "*No forbidden words*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "None",
 					style: ButtonStyle.Primary,
 				},
 			],
-			customtext: (userID) => {
+			customtext: (serverID, userID) => {
 				return `person,/h+u+m+a+n+/`;
 			},
-			placeholder: (userID) => {
+			placeholder: (serverID, userID) => {
 				return `person,/h+u+m+a+n+/,grin`;
 			},
             textvaluedisplay: (val) => {
                 return (val ? val.join(", ") : "**None Set**")
             },
 			menutype: "choice_textentry",
-			default: (userID) => {
+			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
@@ -1736,7 +2095,7 @@ const configoptions = {
 				{
 					name: "0.5x",
 					helptext: "Effects are half as long",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 0.5,
@@ -1746,7 +2105,7 @@ const configoptions = {
 				{
 					name: "1x",
 					helptext: "Effects are standard length",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 1,
@@ -1756,7 +2115,7 @@ const configoptions = {
 				{
 					name: "2x",
 					helptext: "Effects are twice as long",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 2,
@@ -1766,7 +2125,7 @@ const configoptions = {
                 {
 					name: "3x",
 					helptext: "Effects are thrice as long",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: 3,
@@ -1780,6 +2139,7 @@ const configoptions = {
 				return false;
 			},
 		},
+
 	},
     Content: {
         "wearabletags-latex": {
@@ -1789,7 +2149,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1798,7 +2158,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1807,7 +2167,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -1827,7 +2187,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1836,7 +2196,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1845,7 +2205,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -1865,7 +2225,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1874,7 +2234,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1883,7 +2243,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -1903,7 +2263,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1912,7 +2272,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1921,7 +2281,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -1941,7 +2301,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1950,7 +2310,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1959,7 +2319,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -1979,7 +2339,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -1988,7 +2348,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -1997,7 +2357,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2017,7 +2377,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2026,7 +2386,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2035,7 +2395,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2055,7 +2415,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2064,7 +2424,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2073,7 +2433,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2093,7 +2453,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2102,7 +2462,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2111,7 +2471,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2131,7 +2491,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2140,7 +2500,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2149,7 +2509,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2169,7 +2529,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2178,7 +2538,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2187,7 +2547,7 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2207,7 +2567,7 @@ const configoptions = {
 				{
 					name: "None",
 					helptext: "*Others will not be able to put items of this tag on you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "none",
@@ -2216,7 +2576,7 @@ const configoptions = {
 				{
 					name: "Yes",
 					helptext: "Items of this tag can be added to you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "enabled",
@@ -2225,7 +2585,83 @@ const configoptions = {
                 {
 					name: "Preferred",
 					helptext: "Items of this tag will have priority in random effects on you",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-autonomy": {
+            name: "Autonomy",
+            desc: "Restraints which modify or directly control the wearer's motor functions to perform involuntary actions or seize up",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-cyber": {
+            name: "Cyber",
+            desc: "Items with a distinctly cybernetic or sci-fi theme",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (serverID, userID) => {
 						return false;
 					},
 					value: "preferred",
@@ -2432,6 +2868,54 @@ const configoptions = {
 				return false;
 			},
 		},
+        "extreme-heavy-wardrobe_device": {
+			name: "Heavy - Wardrobe Device",
+			desc: "Changes you into a themed outfit. Can include other extreme restraints.",
+			prompttext: `Wardrobe Devices can change you into a a random outfit, which may include other extreme restraints such as the Polite Sub gag. The resulting outfit does not adjust to anything worn and cannot be influenced once tossed in.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Costumer Mimics are disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
         "extreme-mask-dollmaker_visor": {
 			name: "Mask - Dollmaker's Visor",
 			desc: "Forces DOLL-#### syntax, it/its pronouns and Doll Protocol.",
@@ -2480,7 +2964,7 @@ const configoptions = {
 				return false;
 			},
 		},
-        "extreme-mask-gagharness": {
+        /*"extreme-mask-gagharness": {
 			name: "Mask - Lockable Gag Harness",
 			desc: "Prevents removing the associated gag and is locked to the person who puts it on.",
 			prompttext: `The Lockable Gag Harness will prevent removing the specific gag it's associated with until the keyholder removes it. This key cannot be transferred by any means, and the gag can only be adjusted while it is worn.`,
@@ -2527,7 +3011,7 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			},
-		},
+		},*/
         "extreme-collar-collarheadpatvuln": {
 			name: "Collar - Headpat Vulnerability",
 			desc: "Sets to Free Use when headpatted",
@@ -2816,6 +3300,54 @@ const configoptions = {
 				return false;
 			},
 		},
+        "extreme-gag-silent": {
+			name: "Gag - Silent Panel Gag",
+			desc: "Fully prevents communication, with dots in place of speech",
+			prompttext: `Silent Panel Gag is nearly completely muting. Your speech will become mostly dots.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Silent Panel Gag is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
 		"extreme-gag-clockmaker": {
 			name: "Gag - Clockmaker's Gag",
 			desc: "Limits communication to regular intervals",
@@ -2920,6 +3452,54 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Headpat Slut Gag is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
+        "extreme-tag-lockableheadwear": {
+			name: "Tag - Lockable Headwear",
+			desc: "Headwear that is locked with only the keyholder able to remove",
+			prompttext: `Lockable headwear can ONLY be removed by the person who holds the key, which is the person who puts it on you. Be aware that this may prevent you from changing gags or seeing or other effects until this headwear is removed by that person.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Lockable masks are disabled*",
 					select_function: (interaction, serverID) => {
 						return false;
 					},
@@ -3202,7 +3782,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Bot will not respond to messages*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Disabled",
@@ -3211,7 +3791,7 @@ const configoptions = {
 				{
 					name: "Enabled",
 					helptext: "✔️ Bot responds to messages",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Enabled",
@@ -3231,7 +3811,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Bot will not allow new setups except from you*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Disabled",
@@ -3240,7 +3820,7 @@ const configoptions = {
 				{
 					name: "Enabled",
 					helptext: "⚠️ Bot will allow new setups if added to server",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Enabled",
@@ -3334,7 +3914,7 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Users will not be able to find keys*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Disabled",
@@ -3343,7 +3923,7 @@ const configoptions = {
 				{
 					name: "Enabled",
 					helptext: "✔️ Users can find keys",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Enabled",
@@ -3363,15 +3943,18 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Users will not be able to fumble their keys*",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
                         // Purge all fumbled keys
 						let processvars = ["collar", "chastity", "chastitybra"];
                         processvars.forEach((pv) => {
                             if (process[pv] == undefined) { process[pv] = {} }
-                            Object.entries(process[pv]).forEach((en) => {
-                                if (en[1]?.fumbled) {
-                                    delete en[1].fumbled;
-                                }
+                            Object.keys(process[pv]).forEach((server) => {
+                                if (process[pv][server] == undefined) { process[pv][server] = {} }
+                                Object.entries(process[pv][server]).forEach((en) => {
+                                    if (en[1]?.fumbled) {
+                                        delete en[1].fumbled;
+                                    }
+                                })
                             })
                         })
 					}, // We will need to have this update commands
@@ -3381,7 +3964,7 @@ const configoptions = {
 				{
 					name: "Enabled",
 					helptext: "✔️ Users can fumble keys",
-					select_function: (userID) => {
+					select_function: (serverID, userID) => {
 						return false;
 					}, // We will need to have this update commands
 					value: "Enabled",

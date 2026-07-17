@@ -23,7 +23,7 @@ const totalAlphas = (text) => {
 };
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//console.log("Text Seg: " + text)
 
 	let output = "";
@@ -86,9 +86,11 @@ exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Gummy Gag";
 
+exports.itemdescription = `The **Gummy Gag** functions like a regular ball gag, but will shrink every 5 minutes, lowering in intensity until it hits 0 and the gag is removed.`
+
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
-	setUserVar(data.userID, "confectionaryDissolveTimer", undefined)
+	setUserVar(data.serverID, data.userID, "confectionaryDissolveTimer", undefined)
 }
 
 // Unit Tests

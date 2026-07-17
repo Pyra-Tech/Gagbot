@@ -47,7 +47,7 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 };
 
 // Replace the first rawText field with a silenttitle, then purge all others.
-const impoliteSub = (text, parent, silent) => {
+const impoliteSub = (text, parent, locarr, silent) => {
 	if(!silent.isSilenced){
 		silent.isSilenced = true;
 		return affirmations[Math.floor(Math.random() * affirmations.length)];
@@ -59,3 +59,5 @@ const impoliteSub = (text, parent, silent) => {
 //exports.garbleText = garbleText;
 exports.messagebegin = messagebegin;
 exports.choicename = "Sorry Gag";
+
+exports.itemdescription = `The **Sorry Gag** will forbid any kind of apologies. The following phrases will result in the entire message being discarded and replaced with a self affirmation.\n\n**Apology phrases:**\n${apologies.join(", ")}`

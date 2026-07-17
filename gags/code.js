@@ -147,7 +147,7 @@ const codingConstruct = (lang) => {
 	return readtext;
 };
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let lang = determineLang(intensity);
 	let newtextparts = text.split(" ");
 	let outtext = "";
@@ -176,3 +176,5 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "Code Gag";
+
+exports.itemdescription = `The **Code Gag** inserts your speech into pseudo code blocks of various languages.`

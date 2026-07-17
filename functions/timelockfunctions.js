@@ -1,5 +1,4 @@
 const { messageSendChannel } = require("./messagefunctions.js");
-const fs = require("fs");
 const { getTextGeneric } = require("./textfunctions.js");
 const { removeChastity } = require("./setters/chastity/removeChastity.js");
 const { removeChastityBra } = require("./setters/chastity/removeChastityBra.js");
@@ -13,13 +12,22 @@ const { transferCollarKey } = require("./setters/collar/transferCollarKey.js");
 const { transferChastityKey } = require("./setters/chastity/transferChastityKey.js");
 const { transferChastityBraKey } = require("./setters/chastity/transferChastityBraKey.js");
 const { markForSave } = require("./other/markForSave.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
+const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
+const { rollGagbotKeyAction } = require("./timebased/rollGagbotKeyAction.js");
+const { deleteHeldKeyTimers } = require("./setters/config/deleteHeldKeyTimers.js");
 
 // returns whether the locking was successful
-function timelockChastity(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+function timelockChastity(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+    traceFirstParam(arguments[0]);
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.chastity == undefined) process.chastity = {};
-	const chastity = process.chastity[wearer];
+    if (process.chastity[serverID] == undefined) process.chastity[serverID] = {};
+	const chastity = getChastity(serverID, wearer);
 	chastity.keyholder = keyholder;
 	if (!chastity) return false;
 	if (chastity.keyholder == wearer) {
@@ -31,38 +39,41 @@ function timelockChastity(client, wearer, keyholder, unlockTime, access, keyhold
 	chastity.unlockTime = unlockTime;
 	chastity.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
-	}, unlockTime - now);
+	/*setTimeout(() => {
+		unlockTimelockChastity(serverID, client, wearer);
+	}, unlockTime - now);*/
     markForSave("chastity");
 	return true;
 }
 
 // returns whether the unlocking was successful
-function unlockTimelockChastity(client, wearer, skipWrite = false) {
+function unlockTimelockChastity(serverID, client, wearer, skipWrite = false) {
+    traceFirstParam(arguments[0]);
 	if (process.chastity == undefined) process.chastity = {};
-	const chastity = process.chastity[wearer];
+    if (process.chastity[serverID] == undefined) process.chastity[serverID] = {};
+	const chastity = getChastity(serverID, wearer);
 	if (!chastity || !chastity.unlockTime) return false;
 	chastity.keyholder = chastity.keyholderAfter;
 	chastity.keyholderAfter = null;
 	chastity.unlockTime = null;
 	chastity.access = null;
-	sendTimelockChastityUnlockMessage(client, wearer, chastity.keyholder);
-	if (!chastity.keyholder) removeChastity(wearer, undefined, true);
+	sendTimelockChastityUnlockMessage(serverID, client, wearer, chastity.keyholder);
+	if (!chastity.keyholder) removeChastity(serverID, wearer, undefined, true);
 	else if (!skipWrite) {
 		markForSave("chastity");
 	}
 	return true;
 }
 
-async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
-	if (process.recentmessages && process.recentmessages[wearer]) {
+async function sendTimelockChastityUnlockMessage(serverID, client, wearer, keyholder) {
+    traceFirstParam(arguments[0]);
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -71,11 +82,13 @@ async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
 }
 
 // returns whether the locking was successful
-function timelockChastityBra(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+function timelockChastityBra(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+    traceFirstParam(arguments[0]);
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.chastitybra == undefined) process.chastitybra = {};
-	const chastitybra = process.chastitybra[wearer];
+    if (process.chastitybra[serverID] == undefined) process.chastitybra[serverID] = {};
+	const chastitybra = getChastityBra(serverID, wearer)
 	chastitybra.keyholder = keyholder;
 	if (!chastitybra) return false;
 	if (chastitybra.keyholder == wearer) {
@@ -87,38 +100,41 @@ function timelockChastityBra(client, wearer, keyholder, unlockTime, access, keyh
 	chastitybra.unlockTime = unlockTime;
 	chastitybra.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
-	}, unlockTime - now);
+	/*setTimeout(() => {
+		unlockTimelockChastityBra(serverID, client, wearer);
+	}, unlockTime - now);*/
 	markForSave("chastitybra");
 	return true;
 }
 
 // returns whether the unlocking was successful
-function unlockTimelockChastityBra(client, wearer, skipWrite = false) {
+function unlockTimelockChastityBra(serverID, client, wearer, skipWrite = false) {
+    traceFirstParam(arguments[0]);
 	if (process.chastitybra == undefined) process.chastitybra = {};
-	const chastitybra = process.chastitybra[wearer];
+    if (process.chastitybra[serverID] == undefined) process.chastitybra[serverID] = {};
+	const chastitybra = getChastityBra(serverID, wearer)
 	if (!chastitybra || !chastitybra.unlockTime) return false;
 	chastitybra.keyholder = chastitybra.keyholderAfter;
 	chastitybra.keyholderAfter = null;
 	chastitybra.unlockTime = null;
 	chastitybra.access = null;
-	sendTimelockChastityBraUnlockMessage(client, wearer, chastitybra.keyholder);
-	if (!chastitybra.keyholder) removeChastityBra(wearer, undefined, true);
+	sendTimelockChastityBraUnlockMessage(serverID, client, wearer, chastitybra.keyholder);
+	if (!chastitybra.keyholder) removeChastityBra(serverID, wearer, undefined, true);
 	else if (!skipWrite) {
 		markForSave("chastitybra");
 	}
 	return true;
 }
 
-async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
-	if (process.recentmessages && process.recentmessages[wearer]) {
+async function sendTimelockChastityBraUnlockMessage(serverID, client, wearer, keyholder) {
+    traceFirstParam(arguments[0]);
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -127,11 +143,13 @@ async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
 }
 
 // returns whether the locking was successful
-function timelockCollar(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+function timelockCollar(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
+    traceFirstParam(arguments[0]);
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.collar == undefined) process.collar = {};
-	const collar = process.collar[wearer];
+    if (process.collar[serverID] == undefined) process.collar[serverID] = {};
+	const collar = getCollar(serverID, wearer);
 	collar.keyholder = keyholder;
 	if (!collar) return false;
 	if (collar.keyholder == wearer) {
@@ -143,38 +161,41 @@ function timelockCollar(client, wearer, keyholder, unlockTime, access, keyholder
 	collar.unlockTime = unlockTime;
 	collar.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
-	}, unlockTime - now);
+	/*setTimeout(() => {
+		unlockTimelockCollar(serverID, client, wearer);
+	}, unlockTime - now);*/
 	markForSave("collar");
 	return true;
 }
 
 // returns whether the unlocking was successful
-function unlockTimelockCollar(client, wearer, skipWrite = false) {
+function unlockTimelockCollar(serverID, client, wearer, skipWrite = false) {
+    traceFirstParam(arguments[0]);
 	if (process.collar == undefined) process.collar = {};
-	const collar = process.collar[wearer];
+    if (process.collar[serverID] == undefined) process.collar[serverID] = {};
+	const collar = getCollar(serverID, wearer);
 	if (!collar || !collar.unlockTime) return false;
 	collar.keyholder = collar.keyholderAfter;
 	collar.keyholderAfter = null;
 	collar.unlockTime = null;
 	collar.access = null;
-	sendTimelockCollarUnlockMessage(client, wearer, collar.keyholder);
-	if (!collar.keyholder) removeCollar(wearer);
+	sendTimelockCollarUnlockMessage(serverID, client, wearer, collar.keyholder);
+	if (!collar.keyholder) removeCollar(serverID, wearer);
 	else if (!skipWrite) {
 		markForSave("collar");
 	}
 	return true;
 }
 
-async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
-	if (process.recentmessages && process.recentmessages[wearer]) {
+async function sendTimelockCollarUnlockMessage(serverID, client, wearer, keyholder) {
+    traceFirstParam(arguments[0]);
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -183,65 +204,96 @@ async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
 }
 
 function checkGagbotKeys() {
-    getCollarKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "collar");
+    Object.keys(process.collar).forEach((server) => {
+        getCollarKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "collar");
+        })
     })
-    getChastityKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "chastity");
+    
+    Object.keys(process.chastity).forEach((server) => {
+        getChastityKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "chastity");
+        })
     })
-    getChastityBraKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "chastitybra");
+    
+    Object.keys(process.chastitybra).forEach((server) => {
+        getChastityBraKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "chastitybra");
+        })
     })
+    
     if (process.heldkeytimers) {
         Object.keys(process.heldkeytimers).forEach((k) => {
+            rollGagbotKeyAction(...k.split("_"));
             gagbotHeldKeyTime(...k.split("_"));
         })
     }
 }
 
-function gagbotHeldKeyTime(wearerid, type) {
+function gagbotHeldKeyTime(serverID, wearerid, type) {
+    traceFirstParam(arguments[0]);
     if (process.heldkeytimers == undefined) { process.heldkeytimers = {} }
-    if (!process.recentmessages[wearerid]) { return }
-    if (!process.heldkeytimers[`${wearerid}_${type}`]) {
+    if (!getRecentChannel(serverID, wearerid).valid) { return }
+    if (!process.heldkeytimers[`${serverID}_${wearerid}_${type}`]) {
         let data = {
+            serverID: serverID,
             interactionuser: process.client.user,
             targetuser: { id: wearerid },
         }
-        messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[wearerid])
-        let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(wearerid, "gagbotholdtimer")); // 40-100% of the time
-        process.heldkeytimers[`${wearerid}_${type}`] = {
+        messageSendChannel(getTextGeneric("given_key", data), getRecentChannel(serverID, wearerid).channelid)
+        let addedtime = generateTimeForGagbotKey(serverID, wearerid); // 40-100% of the time
+        process.heldkeytimers[`${serverID}_${wearerid}_${type}`] = {
             releasetime: Date.now() + addedtime
         }
         markForSave("heldkeytimers");
     }
     else {
-        if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder != process.client.user.id) { // Key somehow returned to the wearer, or the device was removed
-            delete process.heldkeytimers[`${wearerid}_${type}`]
+        if ((process[type] && process[type][serverID] && process[type][serverID][wearerid] && (process[type][serverID][wearerid].keyholder != process.client.user.id)) || (process[type][serverID][wearerid] == undefined)) { // Key somehow returned to the wearer, or the device was removed
+            deleteHeldKeyTimers(serverID, wearerid, type);
             return;
         }
-        if (process.heldkeytimers[`${wearerid}_${type}`].releasetime < Date.now()) {
+        if (process.heldkeytimers[`${serverID}_${wearerid}_${type}`].releasetime < Date.now()) {
             let data = {
+                serverID: serverID,
                 interactionuser: process.client.user,
                 targetuser: { id: wearerid },
             }
-            messageSendChannel(getTextGeneric(`return_key_${type}`, data), process.recentmessages[wearerid]) // process.recentmessages will *always* exist. 
-            if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder == process.client.user.id) {
+            if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder == process.client.user.id) {
+                messageSendChannel(getTextGeneric(`return_key_${type}`, data), getRecentChannel(serverID, wearerid).channelid)
                 if (type == "collar") { 
-                    transferCollarKey(wearerid, wearerid) 
+                    transferCollarKey(serverID, wearerid, wearerid) 
                     markForSave("collar");
                 }
                 if (type == "chastity") { 
-                    transferChastityKey(wearerid, wearerid) 
+                    transferChastityKey(serverID, wearerid, wearerid) 
                     markForSave("chastity");
                 }
                 if (type == "chastitybra") { 
-                    transferChastityBraKey(wearerid, wearerid) 
+                    transferChastityBraKey(serverID, wearerid, wearerid) 
                     markForSave("chastitybra");
                 }
             }
-            delete process.heldkeytimers[`${wearerid}_${type}`]
+            delete process.heldkeytimers[`${serverID}_${wearerid}_${type}`]
+            markForSave("heldkeytimers");
         }
     }
+}
+
+/**********
+ * Generates a random time for Gagbot to hold a key, based on the users gagbotholdtimer option.
+ * This is a random time between 40% and 100% and shouldn't prefer the 40% like the old approach did.
+ * 
+ * - (server id) serverID - The server this is running on
+ * - (wearer id) wearer - The user id of the person wearing the locked device
+ * ---
+ * ##### Return the time in milliseconds that Gagbot should hold onto the key.
+ **********/
+function generateTimeForGagbotKey(serverID, wearerid){
+	traceFirstParam(arguments[0]);
+	let maxTime = getOption(serverID, wearerid, "gagbotholdtimer");
+	let randomFactor = Math.random() * 0.6 + 0.4; // Random factor between 0.4 and 1. Does not prefer 0.4 like the old approach did.
+	let addedtime = Math.floor(maxTime * randomFactor);
+	return addedtime;
 }
 
 exports.timelockChastity = timelockChastity;

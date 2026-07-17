@@ -3,8 +3,13 @@ const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getCollar } = require("./getters/collar/getCollar.js");
 const { getUserTags } = require("./getters/config/getUserTags.js");
+const { getGag } = require("./getters/gag/getGag.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { getHeavyList } = require("./getters/heavy/getHeavyList.js");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
+const { getWearable } = require("./getters/wearable/getWearable.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 
 const texts_chastity = {
@@ -22,7 +27,7 @@ const texts_chastity = {
                     key_other: [`You are already locked in a chastity belt and TARGET_TAG has the key!`,
                         {
                             only: (t) => {
-                                return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+                                return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
                             },
                             text: `You are already wearing a chastity seal with access keyed to TARGET_TAG!`,
                         },
@@ -30,7 +35,7 @@ const texts_chastity = {
                     key_self: [`You are already locked in a chastity belt and you're holding the key!`,
                         {
                             only: (t) => {
-                                return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+                                return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
                             },
                             text: `You are already wearing a chastity seal keyed to you!`,
                         },
@@ -42,19 +47,19 @@ const texts_chastity = {
                     `USER_TAG whispers a sweet goodbye as USER_THEY wrapUSER_S a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
                     {
                         required: (t) => {
-                            return getArousal(t.interactionuser.id) > 10;
+                            return getArousal(t.serverID, t.interactionuser.id) > 10;
                         },
                         text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still USER_HAVE the key, but at least it's something...`,
                     },
                     {
                         required: (t) => {
-                            return getArousal(t.interactionuser.id) > 20;
+                            return getArousal(t.serverID, t.interactionuser.id) > 20;
                         },
                         text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
                     },
                     {
                         only: (t) => {
-                            return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+                            return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
                         },
                         text: `USER_TAG presses a VAR_C2 against USER_THEIR skin, feeling it activate and seal USER_THEM away until USER_THEY choose to remove it!`,
                     },
@@ -74,13 +79,13 @@ const texts_chastity = {
                     `USER_TAG whispers a sweet goodbye as USER_THEY wrapUSER_S a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
                     {
                         required: (t) => {
-                            return getArousal(t.interactionuser.id) > 10;
+                            return getArousal(t.serverID, t.interactionuser.id) > 10;
                         },
                         text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still USER_HAVE the key, but at least it's something...`,
                     },
                     {
                         required: (t) => {
-                            return getArousal(t.interactionuser.id) > 20;
+                            return getArousal(t.serverID, t.interactionuser.id) > 20;
                         },
                         text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
                     },
@@ -554,162 +559,272 @@ const texts_gag = {
 		nomitten: {
 			self: {
 				gag: {
-					changetightness: [
-						`USER_TAG adjusts USER_THEIR VAR_C3, undoing the straps before pulling them VAR_C2 around USER_THEIR head again.`,
-                        `USER_TAG flexes USER_THEIR jaw holding the VAR_C3 in place, carefully adjusting the straps VAR_C2 around USER_THEIR head. It sits more comfortably now!`,
-                        `USER_TAG undoes the straps on USER_THEIR VAR_C3, holding the gag carefully between USER_THEIR teeth as USER_THEY adjust it and pull the straps VAR_C2 around USER_THEIR head.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over USER_THEIR mouth again.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
-						},
+                    canaccess: {
+                        changetightness: [
+                            `USER_TAG adjusts USER_THEIR VAR_C3, undoing the straps before pulling them VAR_C2 around USER_THEIR head again.`,
+                            `USER_TAG flexes USER_THEIR jaw holding the VAR_C3 in place, carefully adjusting the straps VAR_C2 around USER_THEIR head. It sits more comfortably now!`,
+                            `USER_TAG undoes the straps on USER_THEIR VAR_C3, holding the gag carefully between USER_THEIR teeth as USER_THEY adjust it and pull the straps VAR_C2 around USER_THEIR head.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over USER_THEIR mouth again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+                            },
 
-						//`USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
-					],
-					newgag: [
-						`USER_TAG sucks in what breath USER_THEY can, before adding a VAR_C3 over top of USER_THEIR VAR_C4, pulling the straps VAR_C2 before buckling.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before pressing a strip of tape VAR_C2 over USER_THEIR mouth in a loose VAR_C3.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before wrapping tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
-						},
-					],
+                            //`USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
+                        ],
+                        newgag: [
+                            `USER_TAG sucks in what breath USER_THEY can, before adding a VAR_C3 over top of USER_THEIR VAR_C4, pulling the straps VAR_C2 before buckling.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before pressing a strip of tape VAR_C2 over USER_THEIR mouth in a loose VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before wrapping tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before placing a VAR_C3 VAR_C2 over top of USER_THEIR gags, making it that much harder to breathe!`,
+                            },
+                        ],
+                    },
+                    noaccess: {
+                        changetightness: [
+                            `USER_TAG tries to claw at the VAR_C3 around USER_THEIR mouth to adjust it, but can't reach it because of USER_THEIR facewear!`
+                        ],
+                        newgag: [
+                            `USER_TAG holds a VAR_C3 up to USER_THEIR mouth, but USER_THEIR facewear fully prevents adding it. USER_THEIR_CAP words will remain... less garbled.`
+                        ],
+                    }
 				},
-				nogag: [
-					`USER_TAG picks up a VAR_C3, takes a deep breath, and then pushes it between USER_THEIR teeth and pulling the straps VAR_C2 behind USER_THEIR head.`,
-					{
-						only: (t) => {
-							return t.c2.includes("loosely") && t.c3.includes("Tape");
-						},
-						text: `USER_TAG picks up a roll of tape, takes a deep breath, and then presses a strip VAR_C2 over USER_THEIR mouth and smoothing it down across USER_THEIR cheeks.`,
-					},
-					{
-						only: (t) => {
-							return t.c2.includes("tightly") && t.c3.includes("Tape");
-						},
-						text: `USER_TAG picks up a roll of tape, takes a deep breath, and then begins to wrap it VAR_C2 around USER_THEIR head and under USER_THEIR hair in a wraparound VAR_C3.`,
-					},
-				],
+				nogag: {
+                    canaccess: [
+                        `USER_TAG picks up a VAR_C3, takes a deep breath, and then pushes it between USER_THEIR teeth and pulling the straps VAR_C2 behind USER_THEIR head.`,
+                        {
+                            only: (t) => {
+                                return t.c2.includes("loosely") && t.c3.includes("Tape");
+                            },
+                            text: `USER_TAG picks up a roll of tape, takes a deep breath, and then presses a strip VAR_C2 over USER_THEIR mouth and smoothing it down across USER_THEIR cheeks.`,
+                        },
+                        {
+                            only: (t) => {
+                                return t.c2.includes("tightly") && t.c3.includes("Tape");
+                            },
+                            text: `USER_TAG picks up a roll of tape, takes a deep breath, and then begins to wrap it VAR_C2 around USER_THEIR head and under USER_THEIR hair in a wraparound VAR_C3.`,
+                        },
+                        {
+                            only: (t) => {
+                                return t.c3.includes("OTN");
+                            },
+                            text: `USER_TAG picks up a VAR_C3, positioning it over USER_THEIR lips before pulling it VAR_C2 behind USER_THEIR head and then securing it firmly.`,
+                        },
+                    ],
+                    noaccess: [
+                        `USER_TAG picks up a VAR_C3 but struggles to put it on past USER_THEIR facewear. USER_THEY_CAP will just have to remain ungagged!`
+                    ]
+                },
 			},
 			other: {
 				gag: {
-					changetightness: [
-						`USER_TAG adjusts TARGET_TAG's VAR_C3, undoing the straps before pulling them VAR_C2 around TARGET_THEIR head again.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over TARGET_THEIR mouth again.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
-						},
-						//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
-					],
-					newgag: [
-						`USER_TAG places a VAR_C3 against TARGET_TAG's mouth over top of TARGET_THEIR VAR_C4. The buckles are pulled VAR_C2 around TARGET_THEIR head before they are buckled again.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
-						},
-					],
-				},
+                    canaccess: {
+                        changetightness: [
+                            `USER_TAG adjusts TARGET_TAG's VAR_C3, undoing the straps before pulling them VAR_C2 around TARGET_THEIR head again.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over TARGET_THEIR mouth again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+                            },
+                            //`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
+                        ],
+                        newgag: [
+                            `USER_TAG places a VAR_C3 against TARGET_TAG's mouth over top of TARGET_THEIR VAR_C4. The buckles are pulled VAR_C2 around TARGET_THEIR head before they are buckled again.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secureUSER_S the straps VAR_C2 behind TARGET_THEIR head.`,
+                            },
+                        ],
+                    },
+                    noaccess: {
+                        changetightness: [
+                            `USER_TAG runs USER_THEIR fingers over TARGET_TAG's face, teasing TARGET_THEM with the thoughts of adjusting TARGET_THEIR VAR_C3. Alas, TARGET_THEIR facewear is in the way. Oh well!`
+                        ],
+                        newgag: [
+                            `USER_TAG boops a VAR_C3 into TARGET_TAG's face, but since TARGET_THEY TARGET_ISARE wearing some facewear covering TARGET_THEIR mouth, it's quite hard to reach TARGET_THEIR lips!`
+                        ]
+                    }
+                },
 				nogag: {
-					gentle: [
-						`USER_TAG uses a finger to gently pry open TARGET_TAG's lips before inserting a VAR_C3 between TARGET_THEIR teeth, secured VAR_C2 behind TARGET_THEIR head. A muted meep follows soon after from TARGET_THEM!`,
-                        `USER_TAG uses a fingernail to gently tickle TARGET_TAG's chin before carefully inserting a VAR_C3 between TARGET_THEIR teeth, pulling the straps VAR_C2 behind TARGET_THEIR head.`,
-                        `USER_TAG uses USER_THEIR thumb and gently rubs TARGET_TAG's cheek before pushing the VAR_C3 into TARGET_THEIR mouth. The straps are then slowly pulled VAR_C2 behind TARGET_THEIR head.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth, sealing it shut.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
-						},
-					],
-					forceful: [
-						`USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
-						`USER_TAG holds up a VAR_C3, pressing it against TARGET_TAG's lips with ever increasing force until they part, taking away TARGET_THEIR ability to speak coherently! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled under TARGET_THEIR hair!`,
-                        `USER_TAG takes a VAR_C3 and pries TARGET_TAG's lips apart to put it into TARGET_THEIR mouth. TARGET_THEY_CAP barely has time to react as the straps are pulled VAR_C2 behind TARGET_THEIR head!`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 sealing them with strips of tape.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
-						},
-					],
-					requesting: [
-						`USER_TAG taps TARGET_TAG's lips, silently suggesting to say "ahh" before pushing a VAR_C3 VAR_C2 between TARGET_THEIR lips!`,
-                        `USER_TAG wraps an arm around TARGET_TAG, with a finger brushing the back of TARGET_THEIR cheek as a VAR_C3 is proffered to TARGET_THEM. USER_THEY_CAP waitUSER_S for TARGET_THEM to bite it before pulling the straps VAR_C2 behind TARGET_THEIR head.`,
-                        `USER_TAG holds up a VAR_C3, grinning as TARGET_TAG eyes it with a hint of desire as TARGET_THEY openTARGET_S TARGET_THEIR mouth and bites it! USER_THEY_CAP then pulls the straps VAR_C2 behind TARGET_THEIR head and buckles them!`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 sealing them with strips of tape.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
-						},
-					],
+                    canaccess: {
+                        gentle: [
+                            `USER_TAG uses a finger to gently pry open TARGET_TAG's lips before inserting a VAR_C3 between TARGET_THEIR teeth, secured VAR_C2 behind TARGET_THEIR head. A muted meep follows soon after from TARGET_THEM!`,
+                            `USER_TAG uses a fingernail to gently tickle TARGET_TAG's chin before carefully inserting a VAR_C3 between TARGET_THEIR teeth, pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                            `USER_TAG uses USER_THEIR thumb and gently rubs TARGET_TAG's cheek before pushing the VAR_C3 into TARGET_THEIR mouth. The straps are then slowly pulled VAR_C2 behind TARGET_THEIR head.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth, sealing it shut.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG holds up a VAR_C3, gently massaging TARGET_TAG's lips before placing it VAR_C2 over them, securing the straps behind TARGET_THEIR head.`,
+                            },
+                        ],
+                        forceful: [
+                            `USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
+                            `USER_TAG holds up a VAR_C3, pressing it against TARGET_TAG's lips with ever increasing force until they part, taking away TARGET_THEIR ability to speak coherently! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled under TARGET_THEIR hair!`,
+                            `USER_TAG takes a VAR_C3 and pries TARGET_TAG's lips apart to put it into TARGET_THEIR mouth. TARGET_THEY_CAP barely has time to react as the straps are pulled VAR_C2 behind TARGET_THEIR head!`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 sealing them with strips of tape.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG uses a hand to cover TARGET_TAG's lips and silence TARGET_THEIR protest *forcefully* before covering them with a VAR_C3 and pulling the straps VAR_C2 behind TARGET_THEIR head!`,
+                            },
+                        ],
+                        requesting: [
+                            `USER_TAG taps TARGET_TAG's lips, silently suggesting to say "ahh" before pushing a VAR_C3 VAR_C2 between TARGET_THEIR lips!`,
+                            `USER_TAG wraps an arm around TARGET_TAG, with a finger brushing the back of TARGET_THEIR cheek as a VAR_C3 is proffered to TARGET_THEM. USER_THEY_CAP waitUSER_S for TARGET_THEM to bite it before pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                            `USER_TAG holds up a VAR_C3, grinning as TARGET_TAG eyes it with a hint of desire as TARGET_THEY openTARGET_S TARGET_THEIR mouth and bites it! USER_THEY_CAP then pulls the straps VAR_C2 behind TARGET_THEIR head and buckles them!`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 sealing them with strips of tape.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG gives TARGET_TAG a moment to finish speaking before gently placing a VAR_C3 over TARGET_THEIR lips, securing the straps of the gag VAR_C2 behind TARGET_THEIR head!`,
+                            },
+                        ],
+                    },
+                    noaccess: [
+                        `USER_TAG holds a VAR_C3 up to TARGET_TAG's pretty lips. But since TARGET_THEY TARGET_ISARE wearing something over them, USER_THEY USER_ISARE unable to put the gag on TARGET_THEM. TARGET_THEIR_CAP speech remains unbound!`
+                    ]
 				},
 			},
 		},
 	},
 	gagreflect: {
+        heavy: {
+            other: {
+                gag: [
+                    `TARGET_TAG tries TARGET_THEIR best to place a gag on USER_TAG. Unfortunately, being bound in restraints makes it incredibly hard even before trying to place a gag on an agile bot. It decides that TARGET_THEY TARGET_ISARE already gagged enough though.`
+                ],
+                nogag: [
+                    `TARGET_TAG tries TARGET_THEIR best to place a gag on USER_TAG. Unfortunately, being bound in restraints makes it incredibly hard even before trying to place a gag on an agile bot. It laughs at TARGET_THEM in response and leaves TARGET_THEM ungagged.`
+                ]
+            }
+        },
 		noheavy: {
 			nomitten: {
 				other: {
 					gag: {
-						changetightness: [
+                        canaccess: {
+                            changetightness: [
 							`TARGET_TAG is cheeky and tries to gag USER_TAG, but USER_TAG gets the upper hand and adjusts the tightness on the VAR_C4 that TARGET_THEY TARGET_ISARE wearing, pulling the straps VAR_C2.`,
 							//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
-						],
-						newgag: [`USER_TAG looks at TARGET_TAG flatly as it instead takes the VAR_C3 and puts it on TARGET_THEM over top of the VAR_C4.`],
+                            ],
+                            newgag: [`USER_TAG looks at TARGET_TAG flatly as it instead takes the VAR_C3 and puts it on TARGET_THEM over top of the VAR_C4.`],
+                        },
+                        noaccess: [
+                            `USER_TAG looks at TARGET_TAG sternly as TARGET_THEY go to gag USER_THEM. USER_THEY_CAP considerUSER_S putting the gag on TARGET_THEM instead, but there is a muzzle in the way. TARGET_THEY_CAP TARGET_ISARE spared USER_THEIR wrath.`
+                        ]
 					},
 					nogag: {
-						gentle: [`USER_TAG grabs the VAR_C3 and then uses a robotic arm to gently caress TARGET_TAG's cheek, before putting it on TARGET_THEM, pulling the straps VAR_C2 and buckling them.`],
-						forceful: [`TARGET_TAG tries to gag USER_TAG, but USER_TAG's deft agility allows it to wrestle the gag out of TARGET_THEIR hands before shoving it into TARGET_THEIR mouth instead.`],
-						requesting: [`TARGET_TAG presents a gag to USER_TAG. It is somewhat unamused and points at TARGET_THEM to wear it instead. TARGET_THEY_CAP feelTARGET_S compelled to obey the order.`],
+                        canaccess: {
+                            gentle: [`USER_TAG grabs the VAR_C3 and then uses a robotic arm to gently caress TARGET_TAG's cheek, before putting it on TARGET_THEM, pulling the straps VAR_C2 and buckling them.`],
+						    forceful: [`TARGET_TAG tries to gag USER_TAG, but USER_TAG's deft agility allows it to wrestle the gag out of TARGET_THEIR hands before shoving it into TARGET_THEIR mouth instead.`],
+						    requesting: [`TARGET_TAG presents a gag to USER_TAG. It is somewhat unamused and points at TARGET_THEM to wear it instead. TARGET_THEY_CAP feelTARGET_S compelled to obey the order.`],
+                        },
+						noaccess: [
+                            `USER_TAG looks at TARGET_TAG sternly as TARGET_THEY go to gag USER_THEM. USER_THEY_CAP considerUSER_S putting the gag on TARGET_THEM instead, but there is a muzzle in the way. TARGET_THEY_CAP TARGET_ISARE spared USER_THEIR wrath.`
+                        ]
 					},
 				},
 			},
@@ -943,6 +1058,12 @@ const texts_heavy = {
                     },
                     {
                         only: (t) => {
+                            return t.c2.includes("Wardrobe Device");
+                        },
+                        text: `USER_TAG steps into a VAR_C2, the lights inside lighting up brilliantly as the door shuts behind USER_THEM, sealing USER_THEM inside until it changes USER_THEM into a new outfit!`,
+                    },
+                    {
+                        only: (t) => {
                             return t.c2.includes("Hands-off Blouse");
                         },
                         text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
@@ -965,6 +1086,12 @@ const texts_heavy = {
 					    },
 					    text: `USER_TAG wanders around for a while, then decides to flop into a VAR_C2 trap!`,
 					},
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Lockdown Virus");
+                        },
+                        text: `USER_TAG taps a few too many pop-ups on USER_THEIR tablet and suddenly finds USER_THEIR joints seizing up! USER_THEIR_CAP OS Daemon processes are locked up from a rogue virus USER_THEY 'accidentally' allowed!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG pulls out a VAR_C2 and wraps it over USER_THEIR legs! USER_THEY_CAP will be quite unable to move now!`,
@@ -1003,6 +1130,9 @@ const texts_heavy = {
                         },
                         text: `USER_TAG walks towards the VAR_C2! It envelops USER_THEM in a neverending cascade of cuddles!`,
                     },
+                ],
+                furniture: [
+                    `USER_TAG pulls up a VAR_C2, planting USER_THEIR body comfortably on it!`
                 ]
             },
             nocanwear: {
@@ -1014,6 +1144,9 @@ const texts_heavy = {
                 ],
                 container: [
                     `USER_TAG tries to step into a VAR_C3, but since USER_THEY USER_ISARE already in a VAR_C4, USER_THEY would need some kind of spacial magic!`
+                ],
+                furniture: [
+                    `USER_TAG walks up to a VAR_C3, but cannot maneuver USER_THEIR bound body into it!`
                 ]
             }
         },
@@ -1160,6 +1293,12 @@ const texts_heavy = {
                     },
                     {
                         only: (t) => {
+                            return t.c3.includes("Wardrobe Device");
+                        },
+                        text: `USER_TAG gently pushes TARGET_TAG into a big box with blinking lights and a sign on it that says "VAR_C3!" It quickly shuts the door behind TARGET_THEM and a screen on the outside reads "Occupied!"`,
+                    },
+                    {
+                        only: (t) => {
                             return t.c3.includes("Hands-off Blouse");
                         },
                         text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
@@ -1182,6 +1321,12 @@ const texts_heavy = {
 					    },
 					    text: `USER_TAG pushes TARGET_TAG from behind as TARGET_THEY TARGET_ISARE looking away, causing TARGET_THEM to fall into a VAR_C3 trap!`,
 					},
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Lockdown Virus");
+                        },
+                        text: `USER_TAG uses a tablet to upload a malicious zero-day code to TARGET_TAG! TARGET_THEIR_CAP joints seize up instantly as the Daemon takes hold of TARGET_THEIR OS!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG grabs TARGET_TAG's legs and wraps a VAR_C3 over them, pulling the restraint tightly around and securing it.`,
@@ -1234,12 +1379,6 @@ const texts_heavy = {
                     },
                     {
                         only: (t) => {
-                            return t.c3.includes("Lockdown Virus");
-                        },
-                        text: `USER_TAG uses a tablet to upload a malicious zero-day code to TARGET_TAG! TARGET_THEIR_CAP joints seize up instantly as the Daemon takes hold of TARGET_THEIR OS!`,
-                    },
-                    {
-                        only: (t) => {
                             return t.c3.includes("Binding Circle");
                         },
                         text: `USER_TAG inscribes an intricate set of runes and circles on the floor near TARGET_TAG, creating a VAR_C3 that traps TARGET_THEM inside!`,
@@ -1250,6 +1389,9 @@ const texts_heavy = {
                         },
                         text: `USER_TAG pulls TARGET_TAG into the VAR_C2! It welcomes TARGET_THEM as one of its own!`,
                     },
+                ],
+                furniture: [
+                    `USER_TAG guides TARGET_TAG over to a VAR_C3, before offering TARGET_THEM to make TARGET_THEMSELF comfortable!`
                 ]
             },
             nocanwear: {
@@ -1261,6 +1403,9 @@ const texts_heavy = {
                 ],
                 container: [
                     `USER_TAG tries to toss TARGET_TAG into a VAR_C3, but TARGET_THEY are already trapped in a VAR_C4!`
+                ],
+                furniture: [
+                    `USER_TAG tries to guide TARGET_TAG to a VAR_C3, but fails to direct TARGET_THEM appropriately because of USER_THEIR bound body.`
                 ]
             }
         },
@@ -1286,6 +1431,9 @@ const texts_heavy = {
                             },
                             text: `USER_TAG grins as TARGET_TAG attempts to pull it into TARGET_THEIR lap. Obviously TARGET_THEY wantTARGET_S to be in someone's lap, so it gently pulls TARGET_THEM into its own instead with a gentle headpat. A happy sound can be heard from TARGET_THEM!`
                         }
+                    ],
+                    furniture: [
+                        `TARGET_TAG tries to offer USER_TAG a nice comfy place to relax. But USER_THEY USER_ISARE too nice and direct TARGET_THEM to the VAR_C2 instead!`
                     ]
                 },
                 nocanwear: {
@@ -1370,25 +1518,25 @@ const texts_key = {
             keyholder: [
                 {
                     required: (t) => {
-                        return getArousal(t.interactionuser.id) < 20;
+                        return getArousal(t.serverID, t.interactionuser.id) < 20;
                     },
                     text: `USER_TAG looks one last time at USER_THEIR key to USER_THEIR VAR_C1 and tosses it without a second thought.`,
                 },
                 {
                     required: (t) => {
-                        return !getHeadwearRestrictions(t.interactionuser.id).canInspect;
+                        return !getHeadwearRestrictions(t.serverID, t.interactionuser.id).canInspect;
                     },
                     text: `USER_TAG is unable to see, so USER_THEY decideUSER_S to toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
                 },
                 {
                     required: (t) => {
-                        return getArousal(t.interactionuser.id) > 10;
+                        return getArousal(t.serverID, t.interactionuser.id) > 10;
                     },
                     text: `USER_TAG shudders slightly as USER_THEY stareUSER_S at USER_THEIR VAR_C1 key before flinging it off into the void!`,
                 },
                 {
                     required: (t) => {
-                        return getArousal(t.interactionuser.id) > 20;
+                        return getArousal(t.serverID, t.interactionuser.id) > 20;
                     },
                     text: `Desperate to stay helpless and horny, USER_TAG throws USER_THEIR VAR_C1 key off into the distance!`,
                 },
@@ -1402,7 +1550,7 @@ const texts_key = {
                 `USER_TAG smirks at TARGET_TAG before tossing TARGET_THEIR VAR_C1 key off into the nether.`,
                 {
                     required: (t) => {
-                        return !getHeadwearRestrictions(t.targetuser.id).canInspect;
+                        return !getHeadwearRestrictions(t.serverID, t.targetuser.id).canInspect;
                     },
                     text: `USER_TAG taunts TARGET_TAG with TARGET_THEIR key for a moment, dangling it in front of TARGET_THEIR eyes before flinging it away.`,
                 }
@@ -1412,23 +1560,52 @@ const texts_key = {
             ]
         }
     },
+    returnkey: {
+        other: [
+            `USER_TAG decides to return the key for TARGET_TAG's VAR_C1 early. TARGET_THEY_CAP lookTARGET_S at USER_THEM gratefully!`
+        ]
+    },
     additionalcollar: {
         self: {
             add: [
                 `USER_TAG pulls out a VAR_C1 and uses a bit of magic to transcribe its effects into USER_THEIR VAR_C2!`,
                 `USER_TAG casts a small spell on USER_THEIR VAR_C2 and clones the effects of a VAR_C1 onto it!`,
+                {
+                    only: (t) => {
+                        return (t.c1.includes("Collar Bell"))
+                    },
+                    text: `USER_TAG clips a little VAR_C1 onto USER_THEIR VAR_C2. It gives a little jingle as USER_THEY moveUSER_S!`
+                }
             ],
             remove: [
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on USER_THEIR VAR_C2.`,
+                {
+                    only: (t) => {
+                        return (t.c1.includes("Collar Bell"))
+                    },
+                    text: `USER_TAG unhooks the little VAR_C1 on USER_THEIR VAR_C2 and puts it away!`
+                }
             ]
         },
         other: {
             add: [
                 `USER_TAG pulls out a VAR_C1 and uses a bit of magic to transcribe its effects into TARGET_TAG's VAR_C2!`,
                 `USER_TAG casts a small spell on TARGET_TAG's VAR_C2 and clones the effects of a VAR_C1 onto it!`,
+                {
+                    only: (t) => {
+                        return (t.c1.includes("Collar Bell"))
+                    },
+                    text: `USER_TAG clips a little VAR_C1 onto TARGET_TAG's VAR_C2. It gives a little jingle as TARGET_THEY moveTARGET_S!`
+                }
             ],
             remove: [
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on TARGET_TAG's VAR_C2.`,
+                {
+                    only: (t) => {
+                        return (t.c1.includes("Collar Bell"))
+                    },
+                    text: `USER_TAG unhooks the little VAR_C1 on TARGET_TAG's VAR_C2 and puts it away!`
+                }
             ]
         }
     }
@@ -1443,6 +1620,12 @@ const texts_letgo = {
 		`USER_TAG twitches USER_THEIR hips and thighs, finally! USER_THEY_CAP layUSER_S down, basking in the afterglow!`,
 		`Like a dam bursting, USER_TAG thrashes out as USER_THEY finally reachUSER_ES the top!`,
 	],
+    orgasmcontrolled: [
+        `USER_TAG's Orgasm Control Module senses USER_THEIR attempts and deadens the stimulation at the very last moment!`,
+        `USER_TAG squirms and softly screams as USER_THEIR sensations down there go numb right before climax!`,
+        `USER_TAG thrusts USER_THEIR hips, trying to quickly finish before... the Orgasm Control Module softened the stimulation *again*.`,
+        `USER_TAG pouts as USER_THEY forgetUSER_S that USER_THEY USER_DOESNT get to choose when USER_THEY can orgasm anymore.`
+    ],
 	chastity: [
 		`USER_TAG squirms, trying to adjust the belt so USER_THEY can feel ***something***, but USER_THEY just can't get over the edge!`,
 		`USER_TAG holds USER_THEIR breath, feverishly stroking the smooth belt USER_THEY USER_ISARE wearing, but USER_THEY just can't let go!`,
@@ -1452,33 +1635,33 @@ const texts_letgo = {
 		{
 			required: (t) => {
 				let blacklistTypes = ["livingwood", "seal"]
-				return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
+				return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
 			},
 			text: `USER_TAG tries to get over the edge but is denied by USER_THEIR steel prison!`,
 		},
 		{
 			required: (t) => {
 				let blacklistTypes = ["livingwood", "seal"]
-				return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
+				return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
 			},
 			text: `USER_TAG tries to rub the cold steel of USER_THEIR chastity belt, but USER_THEY can't feel anything!`,
 		},
 		{
 			required: (t) => {
 				let blacklistTypes = ["seal"]
-				return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
+				return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true;
 			},
 			text: `USER_TAG frantically *claws* at USER_THEIR chastity belt, but it offers no sensation!`,
 		},
 		{
 			required: (t) => {
-				return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("livingwood");
+				return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("livingwood");
 			},
 			text: `USER_TAG struggles fruitlessly to get over the edge, aggitating USER_THEIR livingwood chastity and causing its tendrils to squirm more insistently~!`,
 		},
 		{
 			required: (t) => {
-				return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+				return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 			},
 			text: `USER_TAG struggles fruitlessly to get over the edge, but the magics in the seal applied to USER_THEM prevent USER_THEM from touching USER_THEMSELF~!`,
 		}
@@ -1544,7 +1727,7 @@ const texts_struggle = {
 		},
 		{
 			required: (t) => {
-				let blacklistTypes = ["One Bar Prison", "Pet Cage", "Dancer"]				
+				let blacklistTypes = ["One Bar Prison", "Pet Cage", "Dancer"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
@@ -1558,14 +1741,14 @@ const texts_struggle = {
 		},
 		{
 			required: (t) => {
-				let blacklistTypes = ["Doll Processing", "Mimic","Sticky Glue"]
+				let blacklistTypes = ["Doll Processing", "Mimic","Sticky Glue", "Wardrobe Device"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
 		},
 		{
 			required: (t) => {
-				let blacklistTypes = ["Doll Processing", "Mimic"]
+				let blacklistTypes = ["Doll Processing", "Mimic", "Wardrobe Device"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
@@ -1709,7 +1892,13 @@ const texts_struggle = {
 				return t.c1.includes("Sticky Glue");
 		    },
 		    text: `USER_TAG squirms helplessly like a cute mouse in USER_THEIR VAR_C1 trap!`,
-		}
+		},
+        {
+            only: (t) => {
+                return t.c1.includes("Lockdown Virus");
+            },
+            text: `USER_TAG tries to move USER_THEIR body, but the VAR_C1 continues causing USER_THEIR movement processes to hang! USER_THEY_CAP should update USER_THEIR firewalls!`,
+        },
 	],
 	gag: {
 		heavy: [`Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`, `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`, `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`],
@@ -1782,19 +1971,19 @@ const texts_struggle = {
 				{
 					required: (t) => {
 						let blacklistTypes = ["livingwood", "seal"]
-						return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
+						return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
 					},
 					text: `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
 				},
 				{
 					required: (t) => {
-						getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal")
+						getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal")
 					},
 					text: `USER_TAG tries to touch the VAR_C4, but the magic in the seal repels USER_THEIR fingers!`,
 				},
 				{
 					required: (t) => {
-						return getChastity(t.interactionuser.id)?.timestamp + 7200000 < Date.now();
+						return getChastity(t.serverID, t.interactionuser.id)?.timestamp + 7200000 < Date.now();
 					},
 					text: `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`,
 				},
@@ -1814,21 +2003,21 @@ const texts_struggle = {
 				{
 					required: (t) => {
 						let blacklistTypes = ["livingwood", "seal"]
-						return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
+						return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
 					},
 				text: `USER_TAG caresses the smooth metal of USER_THEIR VAR_C4, but the lock holds it snugly to USER_THEIR hips!`,
 				},
 				{
 					required: (t) => {
 						let blacklistTypes = ["seal"]
-						return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
+						return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
 					},
 				text: `USER_TAG squeezes USER_THEIR thumb under the waistband of USER_THEIR VAR_C4, but can accomplish little more than shift it a bit.`,
 				},
 				{
 					required: (t) => {
 						let blacklistTypes = ["seal"]
-						return getChastity(t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
+						return getChastity(t.serverID, t.interactionuser.id)?.chastitytype ? !blacklistTypes.some(blacklistTypes => getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes(blacklistTypes)) : true
 					},
 				text: `USER_TAG tries to get a couple of fingers under USER_THEIR VAR_C4, but it's quite challenging to do so. USER_THEY_CAP should use the key!`,
 				},
@@ -1860,7 +2049,7 @@ const texts_struggle = {
                 `USER_TAG runs USER_THEIR hands over the VAR_C6 on USER_THEIR chest, whining softly as USER_THEY struggles to get any sensation on USER_THEIR breasts~.`,
 				{
 					required: (t) => {
-						return !getChastityBra(t.interactionuser.id)?.chastitytype.includes("livingwood");
+						return !getChastityBra(t.serverID, t.interactionuser.id)?.chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
 				}
@@ -1900,13 +2089,13 @@ const texts_struggle = {
 			// Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
 			nofingers: [{
                 required: (t) => {
-                    return !getUserTags(t.interactionuser.id).includes("pet");
+                    return !getUserTags(t.serverID, t.interactionuser.id).includes("pet");
                 },
                 text: `USER_TAG prods at USER_THEIR collar. Such a good pet. Yes. That is USER_THEM! 💜` },
                 `USER_TAG twists USER_THEIR head, trying to get some kind of grip on USER_THEIR VAR_C5 to pull it off, but... no dice.`, 
                 {
                 required: (t) => {
-                    return !getUserTags(t.interactionuser.id).includes("pet");
+                    return !getUserTags(t.serverID, t.interactionuser.id).includes("pet");
                 },
                 text: `Using USER_THEIR wrists, USER_TAG tries to fidget with USER_THEIR VAR_C5. USER_THEIR_CAP elbows projected out looks adorable, almost pet-like!`}],
 			// In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
@@ -1950,20 +2139,20 @@ const texts_struggle = {
 		`USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
+				return !(getGag(t.serverID, t.interactionuser.id) && Math.random() > 0.75);
 			},
 			text: `USER_TAG clears USER_THEIR throat and then begins to speak: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A single lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.`,
 		},
 		`USER_TAG's mind is fantasizing about the cute characters in that last anime USER_THEY watched. Everyone should ask USER_THEM about it!`,
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
+				return !(getGag(t.serverID, t.interactionuser.id) && Math.random() > 0.75);
 			},
 			text: `USER_TAG's voice echoes through the halls as USER_THEY monologueUSER_S: ***Tell me, for whom do you fight...***`,
 		},
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
+				return !(getGag(t.serverID, t.interactionuser.id) && Math.random() > 0.75);
 			},
 			text: `USER_TAG pauses for a second, then begins to speak in a sultry tone: Hello Ladies~. Look at your outfit, now back to me, now back to your outfit, now back to me. Sadly, your outfit can't be mine~. But if you jumped into a Mimic instead of using the /wear command, it could look close to mine! Look down, back up, where are you? In my RP Thread! What's in your hand, back at me. I have it, it's the keys to your Collar and Belt! Look again, the keys are now vibes! Look down again, Back up. Where are you? Strapped in Display Stand! Now Cum for me~. Anything is possible when you dress using a Mimic and not by yourself! I'm on a (wooden) horse!`,
 		},
@@ -1982,7 +2171,7 @@ const texts_struggle = {
 		`USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
 		{
             required: (t) => {
-                return !getUserTags(t.interactionuser.id).includes("pet");
+                return !getUserTags(t.serverID, t.interactionuser.id).includes("pet");
             },
             text: `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`
         },
@@ -1991,14 +2180,14 @@ const texts_struggle = {
 		// 2 hours in chastity
 		{
 			required: (t) => {
-				return !isNaN(getChastity(t.interactionuser.id)?.timestamp) && getChastity(t.interactionuser.id)?.timestamp + 7200000 < Date.now();
+				return !isNaN(getChastity(t.serverID, t.interactionuser.id)?.timestamp) && getChastity(t.serverID, t.interactionuser.id)?.timestamp + 7200000 < Date.now();
 			},
 			text: `USER_TAG absentmindedly fidgets, thinking about the last time USER_THEY could let go...`,
 		},
 		// 24 hours in chastity
 		{
 			required: (t) => {
-				return !isNaN(getChastity(t.interactionuser.id)?.timestamp) && getChastity(t.interactionuser.id)?.timestamp + 86400000 < Date.now();
+				return !isNaN(getChastity(t.serverID, t.interactionuser.id)?.timestamp) && getChastity(t.serverID, t.interactionuser.id)?.timestamp + 86400000 < Date.now();
 			},
 			text: `USER_TAG barely remembers what it's like to not be in chastity...`,
 		},
@@ -2013,7 +2202,7 @@ const texts_struggle = {
         `Spinning around with a dramatic flourish, USER_TAG puts a hand to USER_THEIR face and yells "Persona!" as a ghostly image of a persona appears in front of USER_THEM!`,
         {
 			required: (t) => {
-				return (!getHeavy(t.interactionuser.id)) || (getHeavy(t.interactionuser.id) && !getHeavy(t.interactionuser.id).type.includes("rmbinder"))
+				return (!getHeavy(t.serverID, t.interactionuser.id)) || (getHeavy(t.serverID, t.interactionuser.id) && !getHeavy(t.serverID, t.interactionuser.id).type.includes("rmbinder"))
 			},
 			text: `USER_TAG pokes an armbinder, imagining what it would be like to have USER_THEIR arms pulled so tightly behind USER_THEM with it...`,
 		},
@@ -2028,7 +2217,7 @@ const texts_struggle = {
         `USER_TAG wonders about the implications on if a tree falls in a forest with nobody around to hear it, would it make a sound?`,
         {
             required: (t) => {
-                return !getUserTags(t.interactionuser.id).includes("latex");
+                return !getUserTags(t.serverID, t.interactionuser.id).includes("latex");
             },
             text: `USER_TAG considers what it would be like to live on a planet full of latex and bondage. There's a certain story out there about that fantasy...`
         },
@@ -2036,7 +2225,7 @@ const texts_struggle = {
         `USER_TAG wants to be the very best! Like no one ever was! To catch them is USER_THEIR great quest - to train them is USER_THEIR call!`,
         {
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id]);
+				return !getGag(t.serverID, t.interactionuser.id);
 			},
 			text: `USER_TAG produces a deck of cards and pulls one out with a dramatic flourish, holding it up while shouting, "It's time to d-d-d-d-d-duel!`,
 		},
@@ -2061,7 +2250,9 @@ const texts_struggle = {
 	],
 };
 
+//region _touch
 const texts_touch = {
+    //region touch - headpat
     headpat: {
         self: {
             hit: {
@@ -2135,7 +2326,13 @@ const texts_touch = {
                 doublecrit: {
                     noboundmiss: [
                         `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`,
-                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`
+                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`,
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places USER_THEIR hand on TARGET_TAG's head! Shockingly, USER_THEY manage to find the secret reset switch, instantly disabling the bot for a moment. It recovers just a minute later before falling over a *second* time with stars in its eyes. After another cycle, it finally manages to stand up again and curtsies to USER_THEM, giving a pleasurable sound not unlike a 'thank you!' Well, as best can be understood through its gag anyway.`
+                        },
                     ]
                 },
                 crit: {
@@ -2148,7 +2345,31 @@ const texts_touch = {
                         `A different sound is heard as USER_TAG places USER_THEIR hand on TARGET_TAG. The headpat leaves TARGET_THEM in a bubbly glee!`,
                         `USER_TAG disappears for a brief moment and then appears behind TARGET_TAG, giving TARGET_THEM a stealthy critical pat before TARGET_THEY spotTARGET_S USER_THEM!`,
                         `USER_TAG limit breaks and casts a super-pat on TARGET_TAG! TARGET_THEY_CAP TARGET_ISARE left stunned from the sensation!`,
-                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY meltTARGET_S under the gentlest, bestest of pats!`
+                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY meltTARGET_S under the gentlest, bestest of pats!`,
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG runs USER_THEIR finger along TARGET_TAG's cheek, showering the bot with praise as the bot's synthetic porcelain skin almost appears to grow pink for a moment!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG's head. It's eyes go blank unexpectedly and a chime of falling notes can be heard from it's vocal processors as it goes unresponsive for a moment. Before USER_THEY can register what happened, the bot returns to life again!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG pats TARGET_TAG in just the right way, causing it to utter a synthetic, but genuine sound of pleasure - whatever a robot would sound like, anyway!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places USER_THEIR hand on TARGET_TAG's head. Its eyes glow brightly and it smiles while it's vocal processors utter a sound of sheer delight!`
+                        },
                     ]
                 },
                 nocrit: {
@@ -2169,23 +2390,23 @@ const texts_touch = {
                         {
                             // If both parties like pet play...
                             required: (t) => {
-                                return !(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet"));
+                                return !(getUserTags(t.serverID, t.interactionuser.id).includes("pet") && getUserTags(t.serverID, t.targetuser.id).includes("pet"));
                             },
                             text: `USER_TAG imagines USER_THEY USER_ISARE petting a pet as USER_THEY placeUSER_S USER_THEIR hand on TARGET_TAG's head.`
                         },
                         {
                             // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
                             required: (t) => {
-                                return (!(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet")) &&
-                                        (getCollar(t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.targetuser.id)?.clonedKeyholders && getCollar(t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                                return (!(getUserTags(t.serverID, t.interactionuser.id).includes("pet") && getUserTags(t.serverID, t.targetuser.id).includes("pet")) &&
+                                        (getCollar(t.serverID, t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders && getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
                             },
                             text: `USER_TAG runs USER_THEIR hand over USER_THEIR beautiful and loyal pet's head! TARGET_TAG shines in delight!`
                         },
                         {
                             // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
                             required: (t) => {
-                                return (!(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet")) &&
-                                        (getCollar(t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.targetuser.id)?.clonedKeyholders && getCollar(t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                                return (!(getUserTags(t.serverID, t.interactionuser.id).includes("pet") && getUserTags(t.serverID, t.targetuser.id).includes("pet")) &&
+                                        (getCollar(t.serverID, t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders && getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
                             },
                             text: `USER_TAG plays with TARGET_TAG's ears as USER_THEY patUSER_S USER_THEIR bestest pet! TARGET_THEY_CAP TARGET_ISARE such a good TARGET_PRAISEOBJECT! Yes TARGET_THEY TARGET_ISARE!`
                         },
@@ -2198,15 +2419,89 @@ const texts_touch = {
                         `USER_TAG brushes the hair out of TARGET_TAG's face as USER_THEY runUSER_S USER_THEIR hand over TARGET_THEIR head with a cute little headpat!`,
                         {
                             required: (t) => {
-                                return (getArousal(t.targetuser.id) > 50)
+                                return (getArousal(t.serverID, t.targetuser.id) > 50)
                             },
                             text: `USER_TAG runs USER_THEIR hand over TARGET_TAG's hair. The heat radiating from TARGET_THEIR breath is enough to cook an egg with!`
                         },
                         {
                             required: (t) => {
-                                return (getArousal(t.targetuser.id) > 100)
+                                return (getArousal(t.serverID, t.targetuser.id) > 100)
                             },
                             text: `USER_TAG runs USER_THEIR hand over TARGET_TAG's hair. TARGET_THEIR_CAP eyes are a bit glazed over from how horny TARGET_THEY feelTARGET_S right now...`
+                        },
+
+                        // If they target gagbot, these lines are available. They will each be tripled to ensure they're likely chosen!
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG, rewarding the bot for a job well done! It is a good bot, tying up all the silly subbies!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG, rewarding the bot for a job well done! It is a good bot, tying up all the silly subbies!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG reaches over to pat TARGET_TAG and... it allows USER_THEM! Such a good bot! Maybe it will reward USER_THEM with some extra special bondage!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG reaches over to pat TARGET_TAG and... it allows USER_THEM! Such a good bot! Maybe it will reward USER_THEM with some extra special bondage!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to reach up and place USER_THEIR hand on the tall TARGET_TAG. A mechanical *giggle* can be heard from it as it kneels down to allow USER_THEM to ruffle its hair!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to reach up and place USER_THEIR hand on the tall TARGET_TAG. A mechanical *giggle* can be heard from it as it kneels down to allow USER_THEM to ruffle its hair!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `TARGET_TAG has been behaving so well lately, so USER_TAG goes to deliver an amazing headpat to the bestest bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `TARGET_TAG has been behaving so well lately, so USER_TAG goes to deliver an amazing headpat to the bestest bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG meeps a request to TARGET_TAG to kneel. It complies and USER_THEY placeUSER_S USER_THEIR hands in the bot's hair, ruffling it and playing with the head harness affixed to it! It is a good bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG meeps a request to TARGET_TAG to kneel. It complies and USER_THEY placeUSER_S USER_THEIR hands in the bot's hair, ruffling it and playing with the head harness affixed to it! It is a good bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG recognizes that even mechanical robots need a break sometimes, so USER_THEY decideUSER_S to pat TARGET_TAG! It's cooling fans can be heard spinning up to a slightly higher speed after the headpat!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG recognizes that even mechanical robots need a break sometimes, so USER_THEY decideUSER_S to pat TARGET_TAG! It's cooling fans can be heard spinning up to a slightly higher speed after the headpat!`
                         },
                     ]
                 }
@@ -2247,14 +2542,177 @@ const texts_touch = {
                         `It's not for lack of trying, but for some reason, USER_TAG fumbles while trying to give TARGET_TAG a headpat and misses TARGET_THEM!`,
                         `USER_TAG may need to check USER_THEIR calculations because the headpat missed TARGET_TAG entirely.`,
                         `Despite not being blindfolded or USER_THEIR legs bound or anything, USER_TAG still manages to miss TARGET_TAG. TARGET_THEY_CAP must be built different.`,
-                        `The accuracy check is 95% - a 1 in 20 chance to miss - and *still* USER_TAG manages to miss TARGET_TAG when trying to place USER_THEIR hand on TARGET_THEIR head.`
+                        `The accuracy check is 95% - a 1 in 20 chance to miss - and *still* USER_TAG manages to miss TARGET_TAG when trying to place USER_THEIR hand on TARGET_THEIR head.`,
+
+                        // Gagbot dodges
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to place USER_THEIR hand on TARGET_TAG's head, but it dodges to the side and a taunting giggle can be heard from it, along with it's fiery amethyst eyes almost... smiling!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG almost manages to place USER_THEIR hands on TARGET_TAG before it twists around in a flourish to pull away from the hands. It has *not* granted USER_THEM permission yet! USER_THEY_CAP should grovel and beg for the opportunity.`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to headpat TARGET_TAG but it slinks away from the hand, staring sharply at USER_THEM to *kneel* to it instead.`
+                        },
                     ]
                 }
             }
         }
+    },
+    //region touch - nom
+    nom: {
+        self: {
+            masked: [
+                {
+                    required: (t) => {
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG tries to nibble on USER_THEMSELF, but only succeeds in rubbing USER_THEIR mask on USER_THEIR arm. How *cute!*`,
+                },
+                {
+                    required: (t) => {
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG absentmindedly massages USER_THEIR masked lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
+                },
+                `USER_TAG clicks USER_THEIR teeth, trying desperately to nom but can't bite past the mask USER_THEY USER_ISARE wearing!`,
+                `If only USER_TAG remembered that nibbing past masks is a challenging prospect in the best of times...`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR mask. Who ever was going to be the target?`,
+            ],
+            gagged: [
+                {
+                    required: (t) => {
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG paws USER_THEIR wrist against USER_THEIR gag, trying to bite somewhere, but the gag does a good job stopping that!`,
+                },
+                {
+                    required: (t) => {
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG absentmindedly massages USER_THEIR gagged lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
+                },
+                {
+                    required: (t) => {
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG decides to act very preciously, and runs USER_THEIR fingers on USER_THEIR face. Oh if only USER_THEY could nom...`
+                },
+                `USER_TAG wants to nibble, USER_THEY wantUSER_S to *bite!* But the gag in USER_THEIR mouth said no. Oh well. At least it looks good on USER_THEM!`,
+                `USER_TAG giggles as USER_THEY aimUSER_S to nibble on USER_THEMSELF, but the gag does a fine job preventing USER_THEIR teeth from ever coming together on USER_THEIR finger!`,
+                `USER_TAG rubs USER_THEIR shoulder against USER_THEIR chin, trying to get a little bit of leverage to nibble. Sadly, no luck there. No nibbling today...`
+            ],
+            heavy: [
+                `USER_TAG wants to nibble on USER_THEIR arm, but alas, USER_THEIR bondage makes it nearly impossible to connect USER_THEIR mouth with its destination.`,
+                `Trying to place USER_THEIR wrist on USER_THEIR mouth to nom on it is a challenging prospect when wearing such heavy bondage. USER_THEY_CAP should consider fixing that.`,
+                `It won't be for lack of trying, USER_THEY supposeUSER_S, but USER_TAG is unable to reach USER_THEIR arms when bound like so. USER_THEY_CAP will have to remain unbitten!`
+            ],
+            free: [
+                `USER_TAG nibbles on USER_THEIR arm, a cute little smile escaping from USER_THEIR lips as USER_THEY happily and silently nomUSER_S away!`,
+                `USER_TAG sinks USER_THEIR teeth into USER_THEIR forearm, humming to USER_THEMSELF as USER_THEY absentmindedly nibbleUSER_S and nibbleUSER_S.`,
+                `USER_TAG blissfully chews on USER_THEIR finger, unburdened by any other thoughts! Nom nom nom!`,
+                `USER_TAG places USER_THEIR teeth on USER_THEIR fingers and just rests them there. Nom.`,
+                `USER_TAG doesn't want to nom on anyone but USER_THEMSELF apparently as USER_THEY nibbleUSER_S gently on USER_THEIR arm!`
+            ]
+        },
+        other: {
+            masked: [
+                `USER_TAG rubs USER_THEIR face on TARGET_TAG's arm very cutely. USER_THEY_CAP wantUSER_S to nibble, but sadly, USER_THEIR mask stops USER_THEM.`,
+                `USER_TAG tries to nibble on TARGET_TAG, but TARGET_THEY TARGET_ISARE saved by the protective headgear that USER_THEY USER_ISARE wearing!`,
+                `USER_TAG goes to nibble on TARGET_TAG, but is sadly stopped and reminded of how futile that would be. USER_THEY_CAP needUSER_S to get rid of the mask first!`,
+                `USER_TAG nuzzles USER_THEIR face into TARGET_TAG's chest since USER_THEY can't nibble due to the mask USER_THEY USER_ISARE wearing. Oh well.`,
+                `USER_TAG thinks TARGET_TAG looks very nommable! USER_THEY_CAP goes to nibble and... aw, USER_THEY USER_ISARE stopped by the mask!`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR mask. Who ever was going to be the target?`,
+            ],
+            gagged: [
+                `USER_TAG rubs USER_THEIR gagged lips against TARGET_TAG's skin. It's absolutely adorable. Good thing USER_THEY USER_ISARE gagged so TARGET_THEY TARGET_ISARE safe!`,
+                `USER_TAG baps USER_THEIR mouth into TARGET_TAG clumsily. USER_THEY_CAP wantUSER_S to nibble, but alas, USER_THEIR gag had other plans. Oh well.`,
+                `USER_TAG imagines what it would be like to gently sink USER_THEIR teeth into TARGET_TAG's arm. It's a fantasy for after USER_THEY get out of USER_THEIR gag, probably!`,
+                {
+                    required: (t) => {
+                        return (getHeadwearRestrictions(t.serverID, t.interactionuser.id).canEmote);
+                    },
+                    text: `USER_TAG twists USER_THEIR face into such a cute and adorable look as USER_THEY pleadUSER_S TARGET_TAG to ungag USER_THEM. Why? To *nom.*`
+                },
+                `USER_TAG lays USER_THEIR head gently against TARGET_TAG. It would be so nice to nom. USER_THEY_CAP chewUSER_S on USER_THEIR gag in deep thought.`,
+                `USER_TAG smugly stares at TARGET_TAG. TARGET_THEY_CAP TARGET_ISARE lucky afterall. USER_THEY_CAP can't nom! But one day, USER_THEY will nom!`,
+                `USER_TAG sighs as USER_THEY goUSER_ES to nom on TARGET_TAG, but is stopped by USER_THEIR gags. USER_THEY_CAP must nom!`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR gag! Who ever was going to be the target?`,
+            ],
+            heavy: [
+                `USER_TAG noms on TARGET_TAG, but somehow encounters a GLITCH that USER_THEY should report!`
+            ],
+            free: [
+                `USER_TAG nibbles on TARGET_TAG's arm. Nibble nibble nibble!`,
+                `USER_TAG noms on TARGET_TAG's forearm oh so gently. Nom!`,
+                `USER_TAG brushes USER_THEIR lips along TARGET_TAG's skin before sinking USER_THEIR teeth. Not too hard, mind you. Just a little bit. Just enough to nibble!`,
+                `USER_TAG chews on TARGET_TAG's wrist, trying to get attention!`,
+                `USER_TAG eyes USER_THEIR target - TARGET_TAG! With a deft motion USER_THEY dartUSER_S forward to *nom!* TARGET_THEY_CAP is nibbled!`,
+                `Nibbling is a favorite passtime of USER_TAG, so USER_THEY decideUSER_S to nibble on TARGET_TAG.`,
+                `USER_TAG giggles as USER_THEY quickly moveUSER_S to nibble on TARGET_TAG!`,
+                `USER_TAG must nibble, so USER_THEY nomUSER_S on TARGET_TAG! Nom nom!`,
+                `USER_TAG gently noms on TARGET_TAG's arm. It's a cute little bite. Nom!~`,
+                {
+                    // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
+                    required: (t) => {
+                        return (!(getUserTags(t.serverID, t.interactionuser.id).includes("pet") && getUserTags(t.serverID, t.targetuser.id).includes("pet")) &&
+                                (getCollar(t.serverID, t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders && getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                    },
+                    text: `USER_TAG decides to nom on USER_THEIR keyholder. Such a bratty pet!`
+                },
+            ]
+        }
+    },
+    // region touch - hug
+    hug: {
+        self: {
+            heavy: [
+                {
+                    // If wearing a straitjacket, the user should get some unique self hugging text!
+                    only: (t) => {
+                        return (getHeavyList(t.serverID, t.interactionuser.id).find((h) => h.type.includes("straitjacket")))
+                    },
+                    text: `USER_TAG goes to hug USER_THEMSELF and is happy to realize USER_THEY USER_ISARE already hugging USER_THEMSELF! Yay!`
+                },
+                `USER_TAG wiggles in USER_THEIR bondage, trying to hug USER_THEMSELF but sadly USER_THEY cannot...`,
+                `USER_TAG wants to be hugged but fails at trying to hug USER_THEMSELF. If only someone could hug USER_THEM...`,
+                `USER_TAG wriggles, trying to squirm out of USER_THEIR bondage so USER_THEY can hug USER_THEMSELF. It isn't working.`,
+            ],
+            free: [
+                `USER_TAG wraps USER_THEIR arms around USER_THEMSELF in a gleeful hug. Hehe!`,
+                `USER_TAG giggles as USER_THEY plant USER_THEIR arms around USER_THEMSELF in a cute little hug!`,
+                `USER_TAG clutches USER_THEIR arms to USER_THEIR chest and laughs! Eeeeee!~`
+            ]
+        },
+        other: {
+            heavy: [
+                `USER_TAG goes to hug TARGET_TAG, but without arms USER_THEY can do little more than lay USER_THEIR body against TARGET_THEM!`,
+                `USER_TAG tries to hug TARGET_TAG, but can't quite wrap USER_THEIR arms around TARGET_THEM. The sentiment is there though.`,
+                `USER_TAG brushes up against TARGET_TAG and nuzzles TARGET_THEM since USER_THEIR arms are bound so tightly.`
+            ],
+            free: [
+                `USER_TAG gives TARGET_TAG a big hug!`,
+                `USER_TAG wraps USER_THEIR arms around TARGET_TAG and gives TARGET_THEM a hug!`,
+                `USER_TAG gingerly wraps USER_THEIR arms around TARGET_TAG in a soft embrace!`,
+                `USER_TAG clutches TARGET_TAG around TARGET_THEIR waist, pulling TARGET_THEM closely for a warm hug!`,
+                `USER_TAG giggles as USER_THEY cheerily wrapUSER_S USER_THEIR arms around TARGET_TAG with a soft and sweet hug!`,
+                `USER_TAG grabs TARGET_TAG and pulls TARGET_THEM into a tight hug, not letting go for a bit!`,
+                `USER_TAG pinches TARGET_TAG's sleeve cutely before tugging TARGET_THEM into a hug!`
+            ]
+        }
     }
 }
 
+// region _toy
 const texts_toy = {
     heavy: {
         self: {
@@ -2277,7 +2735,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off...`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on USER_THEIR head...`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -2291,7 +2755,7 @@ const texts_toy = {
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR chastity belt prevents USER_THEM from putting the toy inside anyway.`,
 					{
 						only: (t) => {
-							return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 						},
 						text: `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but the seal on USER_THEM would prevent USER_THEM putting the toy inside anyway~.`,
 					},
@@ -2300,7 +2764,7 @@ const texts_toy = {
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR chastity belt prevents USER_THEM from putting the toy inside anyway.`,
 					{
 						only: (t) => {
-							return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 						},
 						text: `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but the seal on USER_THEM would prevent USER_THEM putting the toy inside anyway~.`,
 					},
@@ -2314,7 +2778,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off... (this is a bug, please report)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on USER_THEIR head... (this is a bug, please report)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to add it! (This is a bug, report)`
@@ -2341,7 +2811,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto TARGET_TAG to cool TARGET_THEM off...`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on TARGET_TAG's head...`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -2436,7 +2912,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, moaning in delight at the sensations!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2476,7 +2958,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to place some ice but... can't? (this is a bug, please report)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head - but some dimensional imp steals it away! (this is a bug, please report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to adjust USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2502,7 +2990,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                        },
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting USER_THEIR VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -2548,7 +3042,7 @@ const texts_toy = {
                                 `USER_TAG puts the key in USER_THEIR belt, unlocking it and adding a VAR_C2, turned up to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
                                 {
                                     only: (t) => {
-                                        return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+                                        return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
                                     },
                                     text: `USER_TAG disables the magics of USER_THEIR seal, allowing USER_THEM to add a VAR_C2, turned up to VAR_C3! USER_THEY_CAP then reactivateUSER_S the seal, denying USER_THEMSELF access once more.`,
                                 },
@@ -2572,7 +3066,7 @@ const texts_toy = {
                                 `USER_TAG puts the key in USER_THEIR belt, unlocking it and adding a VAR_C2 with a width of VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
                                 {
                                     only: (t) => {
-                                        return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+                                        return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
                                     },
                                     text: `USER_TAG disables the magics of USER_THEIR seal, allowing USER_THEM to add a VAR_C2 with a width of VAR_C3! USER_THEY_CAP then reactivateUSER_S the seal, denying USER_THEMSELF access once more.`,
                                 },
@@ -2589,7 +3083,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2618,7 +3118,7 @@ const texts_toy = {
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to add a VAR_C2.`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG tries as USER_THEY might, but is unable to bypass the magics of USER_THEIR seal to add a VAR_C2.`,
 							},
@@ -2635,7 +3135,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG takes a piece of ice to apply to USER_THEMSELF, but can't? (This is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, but a magical demon stops them (this is a bug, report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to add a VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2661,7 +3167,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                        },
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting on a VAR_C2 at VAR_C3 power! (This is a bug, report!)`
@@ -2738,7 +3250,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2778,7 +3296,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG grabs a new piece of ice to put on TARGET_TAG, but can't because of unforeseen magic. (this is a bug, report)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, but a hot dog truck distracted both of them. (this is a bug, report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to adjust TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2804,7 +3328,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                        },
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting TARGET_TAG's VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -2879,7 +3409,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2919,7 +3455,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to place a piece of ice on TARGET_TAG, but can't! (this is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head... but some unseen force stops USER_THEM. (this is a bug report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to add a VAR_C2 to TARGET_TAG, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2945,7 +3487,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                        },
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG at VAR_C3! (This is a bug, report!)`
@@ -2966,7 +3514,7 @@ const texts_unchastity = {
 				chastity: [`USER_TAG shifts in USER_THEIR VAR_C1, trying to squirm out of USER_THEIR chastity belt, but USER_THEIR metal prison holds firmly to USER_THEIR body!`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG shifts in USER_THEIR VAR_C1, trying to detatch USER_THEIR seal, but paper tag remains stubbornly attached to USER_THEIR body!`,
 							},
@@ -2994,7 +3542,7 @@ const texts_unchastity = {
 					nokey: [`USER_TAG runs USER_THEIR fingers uselessly on the metal of USER_THEIR chastity belt, but USER_THEY can't unlock it without the key!`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG reaches USER_THEIR fingers uselessly towards USER_THEIR seal, but USER_THEIR fingers can't bypass the magic protections!`,
 							},
@@ -3151,7 +3699,7 @@ const texts_uncorset = {
 				`Since USER_THEY USER_DOESNT have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR VAR_C2, but USER_THEIR chastity belt is in the way.`,
 				{
 					only: (t) => {
-						return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+						return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 					},
 					text: `Since USER_THEY USER_DOESNT have arms free, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR VAR_C2, but USER_THEIR seal prevents USER_THEM from removing it.`,
 				},
@@ -3182,7 +3730,7 @@ const texts_uncorset = {
 					nokey: [`USER_TAG tugs at USER_THEIR chastity belt to try to remove USER_THEIR VAR_C2, but the locking mechanism holds firm!`,
 						{
 							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 							},
 							text: `USER_TAG franticaly attempts to bypass the magic of USER_THEIR chastity seal to try to remove USER_THEIR VAR_C2, but the magics deny them access!`,
 						},
@@ -3245,9 +3793,25 @@ const texts_ungag = {
 			self: {
 				gag: {
                     failed: [
-                        `USER_TAG tugs at USER_THEIR VAR_C2, but the straps on head harness hold it firmly to USER_THEIR head. USER_THEY_CAP twiddleUSER_S with the little locks on it.`,
-                        `It's not for lack of trying, but the straps circling USER_TAG's vision remind USER_THEM of the futility in trying to remove USER_THEIR locked gag.`,
-                        `USER_TAG paws at the head harness on USER_THEIR head, clearly forgetting that USER_THEY USER_ISARE meant to be gagged until USER_THEIR head harness is unlocked.`
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG tugs at USER_THEIR VAR_C2, but the straps on head harness hold it firmly to USER_THEIR head. USER_THEY_CAP twiddleUSER_S with the little locks on it.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `It's not for lack of trying, but the straps circling USER_TAG's vision remind USER_THEM of the futility in trying to remove USER_THEIR locked gag.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG paws at the head harness on USER_THEIR head, clearly forgetting that USER_THEY USER_ISARE meant to be gagged until USER_THEIR head harness is unlocked.`
+                        },
+                        `USER_TAG paws at USER_THEIR facewear, helplessly unable to touch or remove the gags firmly garbling USER_THEIR words. Silence is *golden.*`
                     ],
 					single: [
                         `USER_TAG has taken USER_THEIR VAR_C2 out!`, 
@@ -3271,8 +3835,19 @@ const texts_ungag = {
 			other: {
 				gag: {
                     failed: [
-                        `USER_TAG tugs at the VAR_C2 on TARGET_TAG's face, but fails miserably in removing the head harness holding the gag securely in TARGET_THEIR mouth.`,
-                        `Despite USER_TAG's best efforts, TARGET_TAG's speech remains stolen from TARGET_THEM. A shame. Maybe someone should unlock the harness on TARGET_THEM!`
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG tugs at the VAR_C2 on TARGET_TAG's face, but fails miserably in removing the head harness holding the gag securely in TARGET_THEIR mouth.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `Despite USER_TAG's best efforts, TARGET_TAG's speech remains stolen from TARGET_THEM. A shame. Maybe someone should unlock the harness on TARGET_THEM!`
+                        },
+                        `USER_TAG dances USER_THEIR fingers over TARGET_TAG's impenetrable facewear, the gags underneath completely safe from any nefarious removal. TARGET_THEIR_CAP speech remains safely sealed away.`
                     ],
 					single: [
                         `USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, 
@@ -3730,6 +4305,12 @@ const texts_unheavy = {
                 },
                 {
                     only: (t) => {
+                        return t.c2.includes("Wardrobe Device");
+                    },
+                    text: `USER_TAG pushes the "Emergency Stop" button on the VAR_C2. It doesn't stop, but it does open a door for USER_THEM to fish TARGET_TAG out of the cruel dressing box!`,
+                },
+                {
+                    only: (t) => {
                         return t.c2.includes("Sticky Glue");
                     },
                     text: `USER_TAG produces some acetone and pours it over the VAR_C2 trapping TARGET_TAG. Slowly, TARGET_THEY TARGET_ISARE able to pull TARGET_THEIR limbs free!`,
@@ -3862,7 +4443,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice on USER_THEIR crotch... but can't grip it without hands!`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to put a VAR_C2 on TARGET_TAG's head, but fumbles and drops the tool!`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to take off USER_THEIR VAR_C2, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -3876,7 +4463,7 @@ const texts_untoy = {
                     `USER_TAG bucks USER_THEIR hips to remove USER_THEIR VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR chastity belt prevents USER_THEM from getting to it.`,
 						{
 							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 							},
 							text: `USER_TAG bucks USER_THEIR hips to remove USER_THEIR VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR seal traps it inside USER_THEM.`,
 						},
@@ -3893,7 +4480,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG attempts to remove the VAR_C2 but... something stops USER_THEM? (this is a bug!)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove USER_THEIR VAR_C2 from USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -3920,7 +4513,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice on TARGET_TAG's crotch... but can't grip it without hands!`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to remove the VAR_C2 from TARGET_TAG's head but fails to get a good grip on it.`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove the VAR_C2 on TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -3945,7 +4544,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to remove the VAR_C2 but a hot dog truck stops USER_THEM. (this is a bug, report!)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove a VAR_C2 from TARGET_TAG, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -3973,6 +4578,12 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
+                                {
+                                    only: (t) => {
+                                        return (t.c2 == "Clover Clamps")
+                                    },
+                                    text: `USER_TAG puts the key in USER_THEIR bra, unlocking it for just a moment before gently pinching the VAR_C2, gasping in hazy delight as the blood rushes back to USER_THEIR nipples! After a brief moment of repose, USER_THEY lockUSER_S USER_THEIR bra back up!`
+                                },
                                 `USER_TAG puts the key in USER_THEIR bra, unlocking it and removing USER_THEIR VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
@@ -4023,7 +4634,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly removes the VAR_C2 from atop USER_THEIR head.`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -4052,7 +4669,7 @@ const texts_untoy = {
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to remove USER_THEIR VAR_C2.`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG tries as USER_THEY might, but is unable to breach the protections of USER_THEIR seal to remove USER_THEIR VAR_C2.`,
 							},
@@ -4061,7 +4678,7 @@ const texts_untoy = {
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to remove USER_THEIR VAR_C2.`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG tries as USER_THEY might, but is unable to breach the protections of USER_THEIR seal to remove USER_THEIR VAR_C2.`,
 							},
@@ -4075,7 +4692,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to remove the ice but can't?! (This is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG attempts to displace the VAR_C2, but some magic said no. (This is a bug, report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to remove USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -4084,7 +4707,13 @@ const texts_untoy = {
                 },
                 noblocker: {
                     "Nipple Vibrator": [
-                        `USER_TAG removes the teasing VAR_C2 from USER_THEIR breasts. The sensation continues to haunt USER_THEM as USER_THEY putUSER_S them away.`
+                        `USER_TAG removes the teasing VAR_C2 from USER_THEIR breasts. The sensation continues to haunt USER_THEM as USER_THEY putUSER_S them away.`,
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Clover Clamps")
+                            },
+                            text: `USER_TAG carefully reaches up and unclasps the VAR_C2 from USER_THEIR nipples, letting out a moan mixed with delight and adrenaline as the blood rushes back to them!`
+                        },
                     ],
                     "Vibrator": [
                         `USER_TAG gently removes the VAR_C2 from inside USER_THEM and puts it away. `
@@ -4101,7 +4730,13 @@ const texts_untoy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly removes the VAR_C2 from atop USER_THEIR head.`,
+                        },
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from USER_THEM! (This is a bug, report)`
@@ -4131,6 +4766,12 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
+                                {
+                                    only: (t) => {
+                                        return (t.c2 == "Clover Clamps")
+                                    },
+                                    text: `USER_TAG puts the key into TARGET_TAG's bra, unlocking it and carefully pinching the VAR_C2 to slip them off, giggling as TARGET_TAG meeps from the sensations of the blood rushing back to USER_THEIR nipples! While distracted, USER_THEY lockUSER_S the bra back onto TARGET_THEM.`
+                                },
                                 `USER_TAG puts the key in TARGET_TAG's bra, unlocking it and removing the VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S TARGET_THEM back up.`
                             ]
                         },
@@ -4181,7 +4822,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG finally removes the amazing feeling VAR_C2 from TARGET_TAG's head.`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -4221,7 +4868,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to remove the ice from TARGET_TAG... but can't access it somehow. (this is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG tries to remove the VAR_C2 from TARGET_TAG but somehow can't touch it. (report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to remove TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -4230,6 +4883,12 @@ const texts_untoy = {
                 },
                 noblocker: {
                     "Nipple Vibrator": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Clover Clamps")
+                            },
+                            text: `USER_TAG runs USER_THEIR fingers over TARGET_TAG's breasts, removing the VAR_C2 carefully with a smile as TARGET_THEIR face twists in a variety of pleasurable sensations!`
+                        },
                         `USER_TAG removes the teasing VAR_C2 from TARGET_TAG's breasts. The sensation continues to haunt TARGET_THEM as USER_THEY putUSER_S them away.`
                     ],
                     "Vibrator": [
@@ -4247,7 +4906,13 @@ const texts_untoy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG finally removes the amazing feeling VAR_C2 from TARGET_TAG's head.`,
+                        },
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from TARGET_TAG! (This is a bug, report)`
@@ -4272,7 +4937,7 @@ const texts_unvibe = {
 					`USER_TAG tries to knock USER_THEIR VAR_C2 off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG tries to knock USER_THEIR VAR_C2 off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity seal of course!`,
 							},
@@ -4281,7 +4946,7 @@ const texts_unvibe = {
 					`USER_TAG tries to knock USER_THEIR vibrators off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`,
 							{
 								only: (t) => {
-									return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 								},
 								text: `USER_TAG tries to knock USER_THEIR vibrators off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity seal of course!`,
 							},
@@ -4313,7 +4978,7 @@ const texts_unvibe = {
 						`USER_TAG claws feverishly at USER_THEIR belt, the agonizing vibrators offering USER_THEM no reprieve from their sweet sensation!`,
 						{
 							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 							},
 							text: `USER_TAG claws feverishly at USER_THEIR seal but fail to bypass it, the agonizing vibrators offering USER_THEM no reprieve from their sweet sensation!`,
 						},
@@ -4660,7 +5325,7 @@ const texts_vibe = {
 						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG disables the magic in USER_THEIR seal, removing it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then replaceUSER_S and reactivateUSER_S the seal.`,
 								},
@@ -4671,7 +5336,7 @@ const texts_vibe = {
 					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`,
 						{
 							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 							},
 							text: `USER_TAG tries to slip past USER_THEIR seal to play with a vibe, but the seal's magics deny USER_THEM access!`,
 						},
@@ -4689,7 +5354,7 @@ const texts_vibe = {
 						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG disables the magic in USER_THEIR seal, removing it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then replaceUSER_S and reactivateUSER_S the seal.`,
 								},
@@ -4700,7 +5365,7 @@ const texts_vibe = {
 					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`,
 						{
 							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 							},
 							text: `USER_TAG tries to slip past USER_THEIR seal to play with a vibe, but the seal's magics deny USER_THEM access!`,
 						},
@@ -4903,13 +5568,13 @@ const texts_wear = {
 				},
 				{
 					only: (t) => {
-						return t.c2.includes("Kissmark") && getWearable(t.interactionuser.id).filter((f) => f.includes("lipstick")).length > 0;
+						return t.c2.includes("Kissmark") && getWearable(t.serverID, t.interactionuser.id).filter((f) => f.includes("lipstick")).length > 0;
 					},
 					text: `USER_TAG kisses TARGET_TAG, leaving a VAR_C2 on TARGET_THEIR cheek!`,
 				},
 				{
 					only: (t) => {
-						return t.c2.includes("Kissmark") && getWearable(t.interactionuser.id).filter((f) => f.includes("lipstick")).length == 0;
+						return t.c2.includes("Kissmark") && getWearable(t.serverID, t.interactionuser.id).filter((f) => f.includes("lipstick")).length == 0;
 					},
 					text: `USER_TAG applies some lipstick to USER_THEIR lips, and then kisses TARGET_TAG, leaving a VAR_C2 on TARGET_THEIR cheek! USER_THEY_CAP then removeUSER_S the lipstick.`,
 				},
@@ -5027,7 +5692,7 @@ const texts_timelock = {
 				chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock's magic wards away USER_THEIR hands but others may be able to do things to USER_THEM...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away USER_THEIR hands but others may still be able to do things to USER_THEM...`,
 								},
@@ -5050,7 +5715,7 @@ const texts_timelock = {
 			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
 								},
@@ -5060,7 +5725,7 @@ const texts_timelock = {
 			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away all but TARGET_TAG's hands until the changes fade away...`,
 								},
@@ -5071,7 +5736,7 @@ const texts_timelock = {
 			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
 								},
@@ -5080,7 +5745,7 @@ const texts_timelock = {
 			khother: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
 								},
@@ -5089,7 +5754,7 @@ const texts_timelock = {
 			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
 								{
 									only: (t) => {
-										return getChastity(t.interactionuser.id)?.chastitytype && getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+										return getChastity(t.serverID, t.interactionuser.id)?.chastitytype && getChastity(t.serverID, t.interactionuser.id)?.chastitytype.includes("seal");
 									},
 									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
 								},
@@ -5098,6 +5763,240 @@ const texts_timelock = {
 		},
 	},
 };
+
+const texts_dressprotocol = {
+    "costumer_mimic": {
+        // Setup stage, auto advance to stage 1. Further setup stages can be defined by going into negative numbers.
+        stage0: [
+            `The VAR_C1's tentacles toss and turn USER_TAG all around as USER_THEY struggleUSER_S! The teeth of the mimic hold the chest firmly closed while those tentacles run over every single part of USER_THEIR body, deciding *precisely* what USER_THEY should wear today!`
+        ],
+        // Remove all clothing stage. Advance to stage 2 if everything is consumed! 
+        stage1: {
+            nom: {
+                multiple: [
+                    `The VAR_C1 tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C2 that USER_THEY USER_WERE wearing!`,
+                    `The VAR_C1's tentacles rip off the VAR_C2 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+                    `The VAR_C1's tentacles snake out to swipe across the VAR_C2 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using a gentle substance to remove some items on USER_THEM!`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using magical removers to remove some permanent items on USER_THEM!`
+                    },
+                ],
+                single: [
+                    `The VAR_C1's tentacles gently swipe over the sole VAR_C2 on USER_TAG's body, removing it swiftly despite USER_THEIR struggles!`,
+                    `Already nearly naked, the VAR_C1's tentacles remove the VAR_C2 on USER_TAG's body, devouring it hungrily!`
+                ]
+            },
+            endstage: [
+                `Satisfied with a freshly naked USER_TAG, the VAR_C1 continues to toss USER_THEM around inside while collecting the outfit pieces it requires to dress USER_THEM!`,
+                `Now that the VAR_C1 has finished removing USER_THEIR outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+                `With a satisfied hum, the VAR_C1 finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`
+            ]
+        },
+        // Dress the user up now, while removing offending clothing if necessary!
+        stage2: {
+            nom: {
+                multiple: [
+                    `The VAR_C1 tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C2 that USER_THEY USER_WERE wearing!`,
+                    `The VAR_C1's tentacles rip off the VAR_C2 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+                    `The VAR_C1's tentacles snake out to swipe across the VAR_C2 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using a gentle substance to remove some items on USER_THEM!`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using magical removers to remove some permanent items on USER_THEM!`
+                    },
+                ],
+                single: [
+                    `The VAR_C1's tentacles gently swipe over the sole VAR_C2 on USER_TAG's body, removing it swiftly despite USER_THEIR struggles!`,
+                    `Already nearly naked, the VAR_C1's tentacles remove the VAR_C2 on USER_TAG's body, devouring it hungrily!`
+                ]
+            },
+            equip: {
+                wearable: { add: [`The VAR_C1 pulls out a VAR_C2 from its internal storage and begins to dress USER_TAG in it!`, `The VAR_C1 produces a VAR_C2 from within itself and slips it onto USER_TAG!`, `The VAR_C1's tentacles fish out a VAR_C2 from its storage and begins to dress USER_TAG in it!`] },
+				mitten: { replace: [`The VAR_C1 removes the mittens from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The VAR_C1 grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C2 on USER_THEM and secures them tightly.`] },
+				chastity: { 
+					replace: [
+						`The VAR_C1 rips off the chastity belt that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1 rips off the chastity that USER_TAG is wearing, storing it away before applying a magic VAR_C2 in its place.`,
+						},
+					], 
+					add: [
+						`The VAR_C1 locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1 presses a VAR_C2 onto USER_TAG, activating it and sealing away USER_THEIR chastity.`,
+						},
+					] 
+				},
+				chastitybra: { replace: [`The VAR_C1 picks the locking mechanism on USER_TAG's chastity bra, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The VAR_C1 wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
+				collar: { replace: [`The VAR_C1 forces USER_TAG to lean forward as it removes USER_THEIR collar, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the VAR_C1 moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
+				mask: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
+				gag: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and secures it into USER_TAG's mouth.`] },
+				toy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and applies it to USER_TAG.`] },
+				heavy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and securely binds USER_TAG with it.`] },
+				unknown: { add: [`The VAR_C1 tries to dress USER_TAG in a VAR_C2... but it seems to be missing from its storage. Perhaps it ran out of space?`] },
+            },
+            endstage: [
+                `Finished with the outfit, the VAR_C1 tosses USER_TAG around a bit more inside, having it's last bit of fun before its ready to spit USER_THEM out!`,
+                `The VAR_C1 lets out another satisfied hum - USER_TAG's outfit looks so amazing now! It tosses USER_THEM around a bit more inside for now.`
+            ]
+        },
+        stage3: [
+            `The VAR_C1 finally spits USER_TAG out - the tentacles giving USER_THEM one final fleeting tease as it returns to a dormant state. USER_THEIR_CAP breath shudders as USER_THEY findUSER_S USER_THEMSELF haunted by the feelings...`
+        ]
+    },
+    "wardrobe_device": {
+        // Setup stage, auto advance to stage 1. Further setup stages can be defined by going into negative numbers.
+        stage0: [
+            `The VAR_C1 engages the door locks and a pair of mechanical arms grab USER_TAG's ankles and pull them into a neutral standing position to keep USER_THEM firmly in place. The outfit display on the screen reads: **VAR_C4**. The mechanical arms whir as they set to work preparing the outfit!`
+        ],
+        // Remove all clothing stage. Advance to stage 2 if everything is consumed! 
+        stage1: {
+            nom: {
+                multiple: [
+                    `The VAR_C1's mechanical arms remove the VAR_C2 from USER_TAG, hiding the remains of the items within a crevice in the floor.`,
+                    `The VAR_C1's uncaring mechanical arms remove the VAR_C2 that USER_TAG was wearing. The items are promptly discarded.`,
+                    `A mechanical arm swipes across the VAR_C2 on USER_TAG, deftly removing them from USER_THEM! The items are tossed into a chute labelled "Incinerator."`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's mechanical arms gently remove the VAR_C2 from USER_TAG. The selected outfit does not allow for these things.`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1 uses a process to carefully remove the VAR_C2 from USER_TAG, with advanced nanites carefully dissolving the items without harming USER_THEM.`
+                    },
+                ],
+                single: [
+                    `The VAR_C1 uses a single mechanical arm to carefully remove the VAR_C2 remaining on USER_TAG's body. It disposes of the remains of the item immediately. `,
+                    `Nearly eligible, the VAR_C1 removes the sole VAR_C2 on USER_TAG, placing it to the side, despite USER_THEIR squirming.`
+                ]
+            },
+            endstage: [
+                `The interior screen on the VAR_C1 beeps as it detects no further items to remove from USER_TAG and proceeds to arrange the outfit pieces to place on USER_THEM.`,
+                `A dull scanning light flashes over USER_TAG's body as the VAR_C1 detects no further foreign items to remove. Additional arms summon the various outfit pieces to place on USER_THEM.`,
+            ]
+        },
+        // Dress the user up now, while removing offending clothing if necessary!
+        stage2: {
+            nom: {
+                multiple: [
+                    `The VAR_C1's mechanical arms remove the VAR_C2 from USER_TAG, hiding the remains of the items within a crevice in the floor.`,
+                    `The VAR_C1's uncaring mechanical arms remove the VAR_C2 that USER_TAG was wearing. The items are promptly discarded.`,
+                    `A mechanical arm swipes across the VAR_C2 on USER_TAG, deftly removing them from USER_THEM! The items are tossed into a chute labelled "Incinerator."`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's mechanical arms gently remove the VAR_C2 from USER_TAG. The selected outfit does not allow for these things.`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1 uses a process to carefully remove the VAR_C2 from USER_TAG, with advanced nanites carefully dissolving the items without harming USER_THEM.`
+                    },
+                ],
+                single: [
+                    `The VAR_C1 uses a single mechanical arm to carefully remove the VAR_C2 remaining on USER_TAG's body. It disposes of the remains of the item immediately. `,
+                    `Nearly eligible, the VAR_C1 removes the sole VAR_C2 on USER_TAG, placing it to the side, despite USER_THEIR squirming.`
+                ]
+            },
+            equip: {
+                wearable: { 
+                    add: [
+                        `A mechanical arm pulls out a VAR_C2 and places it on USER_TAG with surgical precision.`, 
+                        `The VAR_C1 spins the platform to manipulate USER_TAG's body in the right way to place the VAR_C2 on USER_THEM.`, 
+                        `USER_TAG is squirming, but that does not even slow down the mechanical arms from placing a VAR_C2 on the bound frame.`
+                    ] 
+                },
+				mitten: { 
+                    replace: [
+                        `The VAR_C1 uses a pair of mechanical arms to grab USER_TAG's wrists and with a laser cutter, carves off the existing mittens before installing a new pair of VAR_C2 on USER_THEM.`
+                    ], 
+                    add: [
+                        `The VAR_C1 pulls USER_TAG's wrists forward and puts a pair of VAR_C2 on USER_THEM, securing them with a tiny little padlock on each.`
+                    ] 
+                },
+				chastity: { 
+					replace: [
+						`A mechanical arm equipped with a high powered cast-saw cuts the waistband of USER_TAG's chastity belt before replacing it with a VAR_C2. The remains are pulled away with magnets and tossed into the incinerator.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1's platform shifts slightly to allow a mechanical arm to pull the waistband of a VAR_C2 around USER_TAG and click it shut. It is then secured with a lock and the keys placed into a lockbox for later retrieval.`,
+						},
+					], 
+					add: [
+						`The VAR_C1 locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1 presses a VAR_C2 onto USER_TAG, activating it and sealing away USER_THEIR chastity.`,
+						},
+					] 
+				},
+				chastitybra: { 
+                    replace: [
+                        `The mechanical arms attack at the armor affixed to USER_TAG's chest. It puts up a good fight, but even it yields as it is pried apart and off of USER_THEIR breasts. The freedom does not last as a VAR_C2 replaces the former chastity bra.`
+                    ], 
+                    add: [
+                        `The VAR_C1's mechanical arms wrap a brand new VAR_C2 around USER_TAG's chest, clicking it shut with a lock before placing the key into a lockbox. USER_THEIR_CAP chest is quite protected now!`
+                    ] 
+                },
+				collar: { 
+                    replace: [
+                        `The VAR_C1's mechanical arms produce a lockpicking set and quickly work at picking the collar lock around USER_TAG's throat before throwing it off to the side and placing a VAR_C2 in its place.`
+                    ], 
+                    add: [
+                        `USER_TAG is tilted forward as a mechanical arm pulls USER_THEIR hair up and another wraps a VAR_C2 around USER_THEIR throat with swift efficacy.`
+                    ] 
+                },
+				mask: { add: [`A mechanical arm produces a VAR_C2 and quickly wraps it around USER_TAG's head, uncaring as to USER_THEIR facial movements or anything of the sort.`] },
+				gag: { add: [`The VAR_C1 produces a VAR_C2 and holds it in front of USER_TAG, giving USER_THEM just a brief moment to voluntarily open USER_THEIR mouth before shoving it on USER_THEM, regardless if USER_THEY did or not.`] },
+				toy: { add: [`The VAR_C1 uses a mechanical arm to place a VAR_C2 on USER_TAG.`] },
+				heavy: { add: [`The VAR_C1's mechanical arms place USER_TAG into a strict VAR_C2, immobilizing USER_THEIR body!`] },
+				unknown: { add: [`The VAR_C1 tries to dress USER_TAG in a VAR_C2. Red lights show a massive "Error" on the screen as it does not know what item this is.`] },
+            },
+            endstage: [
+                `The outfit name, **VAR_C4**, now reads in green text as the mechanical arms conceal themselves into the walls of the VAR_C1 that USER_TAG is in.`,
+            ]
+        },
+        stage3: [
+            `The VAR_C1 finally releases it's hold on USER_TAG's ankles before gently pushing USER_THEM out of the box, ready to show the world USER_THEIR new outfit!`
+        ]
+    },
+}
 
 const texts_eventfunctions = {
 	heavy: {
@@ -5331,10 +6230,11 @@ const textarrays = {
 	texts_wear: texts_wear,
 	texts_timelock: texts_timelock,
 	texts_eventfunctions: texts_eventfunctions,
+    texts_dressprotocol: texts_dressprotocol
 };
 
 // Get generic text and spit out a pronoun respecting version YAY
-const getTextGeneric = (type, data_in) => {
+function getTextGeneric(type, data_in) {
 	let generics = {
 		unbind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
 		unbind_decline: ["TARGET_TAG has declined your help with USER_THEIR VAR_C1."],
@@ -5480,12 +6380,12 @@ const getTextGeneric = (type, data_in) => {
         ],
         remotecontrolshock_self_playful: [
             `USER_TAG presses a button and gasps in delight as USER_THEIR collar gives a telltale sound and an adrenaline inducing shock!`,
-            `USER_TAG twists USER_THEIR body at the sensation as USER_THEY pressUSER_S the button on USER_THEIR shock collar!`,
+            `USER_TAG twists USER_THEIR body at the sensation as USER_THEY pressUSER_ES the button on USER_THEIR shock collar!`,
             {
                 required: (t) => {
-                    !process.gags[t.interactionuser.id]
+                    !getGag(t.serverID, t.interactionuser.id)
                 },
-                text: `USER_TAG bites USER_THEIR lip `
+                text: `USER_TAG bites USER_THEIR lip as the shock sends a thrilling sensation through USER_THEIR body!`
             }
         ],
         remotecontrolshock_self_painful: [
@@ -5517,6 +6417,27 @@ const getTextGeneric = (type, data_in) => {
                 text: `USER_TAG, the sadist USER_THEY USER_ISARE, presses the shiny red button a few times! TARGET_TAG writhes under the torrent of shocks!`,
             },
         ],
+        "bellcollar_1": [
+            `USER_TAG's bell makes a tiny little jingle as USER_THEY moveUSER_S around the channel!`,
+            `It's barely perceptible, but USER_TAG's collar makes a faint jingle!`,
+            `USER_TAG's bell makes a very small little jingle! How cute!`,
+            `'Jingle!' goes USER_TAG's little bell!`,
+            `It can juuuuust barely be heard, but USER_TAG moves a little bit and jingles USER_THEIR collar!`,
+            `-# Jingle\nUSER_TAG isn't very stealthy, but USER_THEY tried.`,
+            `USER_TAG looks at something and a little movement of USER_THEIR neck jingles USER_THEIR collar!`,
+            `-# Jinglejinglejingle!\nUSER_TAG tries to move around the channel sneakily. USER_THEY_CAP USER_ISARE totally invisible!`
+        ],
+        "bellcollar_2": [
+            `Doubtless finding something bigger, USER_TAG's bell makes a slightly louder jangle!`,
+            `USER_TAG's collar makes a jangle as USER_THEY moveUSER_S suddenly!`,
+            `USER_TAG moves USER_THEIR neck to look at something, causing a slightly louder jangle!`,
+        ],
+        "bellcollar_3": [
+            `Darting off around the channel, USER_TAG's bell makes a lot of noise as USER_THEY chaseUSER_S something!`,
+            `A cacophony of jingles and jangles follows USER_TAG's tracks as USER_THEY zoomUSER_S around the channel!`,
+            `USER_TAG clearly failed stealth class because USER_THEIR collar jingles and jangles *loudly!*`,
+            `Jinglejinglejanglejinglejangle! USER_TAG moves around the channel with the grace of... something.`,
+        ]
 	};
     if (Array.isArray(generics[type])) {
         // Within the array, we want to handle the following cases:
@@ -5581,13 +6502,16 @@ to get the particular array of texts for that condition.
 
 THE PROPERTY ORDER IS IMPORTANT TO ENSURE THE TEXT RETRIEVAL WORKS AS INTENDED.
 -------------------------------------*/
-const getText = (data) => {
+function getText(data) {
 	try {
 		let textarray = data.textarray;
 		let data_in = data.textdata;
+        if (data_in.serverID == undefined) {
+            data_in.serverID = data.serverID;
+        }
 		let props = [];
 		for (k in data) {
-			if (k != "textarray" && k != "textdata") {
+			if (k != "textarray" && k != "textdata" && k != "serverID") {
 				props.push(k); // Should create the same order.
 			}
 		}

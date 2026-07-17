@@ -22,7 +22,13 @@ const { loadCollarTypes } = require('./functions/collarfunctions.js');
 const { buttonboard } = require('./contextcommands/message/Button Board.js');
 const { setUpEventFunctions } = require('./functions/eventhandling.js');
 const { getBotOption } = require('./functions/getters/config/getBotOption.js');
-const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js")
+const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js");
+const { logConsole } = require('./functions/logfunctions.js');
+const { markForSave } = require('./functions/other/markForSave.js');
+const { processdatatoload } = require(`./lists/processdatatoload.js`);
+const { addBellCollarReact } = require('./functions/setters/collar/addBellCollarReact.js');
+const { setRecentChannel } = require(`./functions/setters/config/setRecentChannel.js`);
+const { setProcessVariable } = require('./functions/setters/config/setProcessVariable.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -77,33 +83,6 @@ if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
 
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
-
-let processdatatoload = [
-    { textname: "gaggedusers.txt", processvar: "gags", default: {} },
-    { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
-    { textname: "chastityusers.txt", processvar: "chastity", default: {} },
-    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
-    { textname: "toyusers.txt", processvar: "toys", default: {} },
-    { textname: "collarusers.txt", processvar: "collar", default: {} },
-    { textname: "heavyusers.txt", processvar: "heavy", default: {} },
-    { textname: "pronounsusers.txt", processvar: "pronouns", default: {} },
-    { textname: "usersdata.txt", processvar: "usercontext", default: {} },
-    { textname: "consentusers.txt", processvar: "consented", default: {} },
-    { textname: "corsetusers.txt", processvar: "corset", default: {} },
-    { textname: "arousal.txt", processvar: "arousal", default: {} },
-    { textname: "headwearusers.txt", processvar: "headwear", default: {} },
-    { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}},
-    { textname: "outfits.txt", processvar: "outfits", default: {}},
-    { textname: "dollusers.txt", processvar: "dolls", default: {}},
-    { textname: "wearables.txt", processvar: "wearable", default: {}},
-    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}},
-    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}},
-    { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}},
-    { textname: "userstats.txt", processvar: "userstats", default: {}},
-    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}},
-    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}},
-]
 
 processdatatoload.forEach((s) => {
     try {
@@ -225,11 +204,17 @@ var gagged = {}
 
 const client = new discord.Client({
     intents: [
+        // Used to exist in servers, at all
         discord.GatewayIntentBits.Guilds,
+        // Used to detect message info from servers
         discord.GatewayIntentBits.GuildMessages,
+        // PRIVILEGED INTENT - Used to see contents of messages sent
         discord.GatewayIntentBits.MessageContent,
-        discord.GatewayIntentBits.GuildMembers
-    ]
+        // Used to receive interactions
+        discord.GatewayIntentBits.GuildMessageReactions,
+    ],
+    // Partials specify if we can receive data on older stuff
+    partials: [discord.Partials.Message, discord.Partials.Reaction, discord.Partials.User] 
 })
 
 client.on("clientReady", async () => {
@@ -241,6 +226,7 @@ client.on("clientReady", async () => {
     if (process.recentmessages == undefined) { process.recentmessages = {} }
     try {
         await client.application.fetch();
+        await client.guilds.fetch();
         console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
         console.log(`Executable Functions: [${Array.from(commands.keys()).join(", ")}]`);
         console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);
@@ -262,6 +248,7 @@ client.on("clientReady", async () => {
         generateListTexts();
 
         scavengeUsers(client);
+        removeOldMessages(); 
         setInterval(() => {
             try {
                 scavengeUsers(client);
@@ -302,10 +289,10 @@ client.on("messageCreate", async (msg) => {
             if ((getBotOption("bot-allowkeyfinding") == "Enabled")) {
                 handleKeyFinding(msg);
             }
-            process.recentmessages[msg.author.id] = msg.channel.id;
+            setRecentChannel(msg.guild.id, msg.author.id, msg.channel.id, "message");
             modifymessage(msg, thread ? msg.channelId : null);
         }
-        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
+        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first()) || (message.flags && message.flags.has(discord.MessageFlags.HasSnapshot)) || (message.flags && message.flags.has(discord.MessageFlags.IsCrosspost))) { return }
     }
     catch (err) {
         console.log(err);
@@ -316,26 +303,21 @@ client.on('interactionCreate', async (interaction) => {
     try {
         // Handle general interactions from a user
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.user.id) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
-            process.recentmessages[interaction.user.id] = interaction.channelId;
+            setRecentChannel(interaction.guildId, interaction.user.id, interaction.channelId, "interaction");
         }
         // Handle User targeted actions from context menu
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 2)) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
-            process.recentmessages[interaction.targetId] = interaction.channelId;
+            setRecentChannel(interaction.guildId, interaction.targetId, interaction.channelId, "interaction");
         }
         // Handle Message targeted headpats
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 3)) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
             let channel = await interaction.client.channels.fetch(interaction.channelId)
             if (channel) {
                 let message = await channel.messages.fetch(interaction.targetId)
                 if (message) {
-                    process.recentmessages[message.author.id] = interaction.channelId;
+                    setRecentChannel(interaction.guildId, message.author.id, interaction.channelId, "interaction");
                 }
             }
-            
-            //process.recentmessages[interaction.targetId] = interaction.channelId;
         }
         if (interaction.isUserContextMenuCommand()) {
             usercontextcommands.get(`${interaction.commandName}`)?.execute(interaction)
@@ -363,7 +345,6 @@ client.on('interactionCreate', async (interaction) => {
                     }
                 }
             }
-            console.log(interactioncommand);
             modalHandlers.get(`${interactioncommand}.js`)?.modalexecute(interaction);
             return;
         }
@@ -451,6 +432,24 @@ client.on('interactionCreate', async (interaction) => {
     catch (err) {
         console.log(err);
     }
+})
+
+client.on(`messageReactionAdd`, async (react, user, details) => {
+    if (user.bot) { return } // We dont care about bot reacts. 
+
+    // If the react is a partial from an uncached message, try to get the full picture
+    if (react.partial) {
+        try {
+            await react.fetch();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    if (!process.webhook[react.message.channelId]) { return } // We only wanna handle messages in webhooks we know about.
+
+    addBellCollarReact(react, user, details);
 })
 
 client.on(`guildDelete`, async (guild) => {

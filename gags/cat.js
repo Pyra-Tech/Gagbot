@@ -1,7 +1,7 @@
 const { processWords } = require("./../functions/gag_utilities.js");
 // import { processWords } from "./gag_utilities.js";
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//replace m+vocal for meow and n+vocal for ny if word is 3+ letters long, and add nya if end word
 	//+replace p+vocal+r for purrrr and grrrrr
 	//+add random nya at end of sentences with 75% chance
@@ -52,4 +52,4 @@ const garbleText = (text, parent, intensity) => {
 exports.garbleText = garbleText;
 exports.choicename = "Cat Gag";
 
-// export const choicename = "Cat Gag";
+exports.itemdescription = `The **Cat Gag** makes you speak with cat faces and 'nya's occasionally.`

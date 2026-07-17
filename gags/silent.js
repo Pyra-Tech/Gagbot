@@ -3,7 +3,7 @@
  * ~ Punyo
  ***************************/
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let output = "";
 	let leakedSound = 0;
 
@@ -42,3 +42,5 @@ const garbleText = (text, parent, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 12;
 exports.choicename = "Silent Panel Gag";
+
+exports.itemdescription = `The **Silent Panel Gag** renders your speech completely mute, replacing it with dots and other intelligible text.`

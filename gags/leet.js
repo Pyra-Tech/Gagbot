@@ -7,7 +7,7 @@
 const { leetGagCharMaps } = require("./leet/leetCharMap.js");
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let output = "";
 	let itr = 0;
 	for (const char of text) {
@@ -31,6 +31,8 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "L337 Gag";
+
+exports.itemdescription = `The **L337 Gag** will transform your speech to match the cringy hacker aesthetic of the early 2000s!`
 
 // Unit Tests
 

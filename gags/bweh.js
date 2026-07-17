@@ -4,7 +4,7 @@
 const FLATBWEH = 0.15;
 const MODBWEH = 0.05;
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let sentenceregex = /[^\n.?!;:]+([\n.?!;:]|$)/g; // Find all sentences!
 	// Honestly, I may just need to have Doll check this, I'm not confident in the results...
 	// > DOLL-14: Regex has been checked.
@@ -109,6 +109,8 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "Bweh Gag";
+
+exports.itemdescription = `The **Bweh Gag** will replace words randomly with "Bweh!"`
 
 /****************************************
  * Unit Tests

@@ -5,10 +5,10 @@ const { getChastityBra } = require("../../functions/getters/chastity/getChastity
 // Chastity Belt of Eternal Edging
 // The Denial Coefficient output of this belt will always be set to 1% higher than the wearer's current arousal. 
 exports.denialCoefficient = (data) => { 
-    let braval = getBaseChastity(getChastityBra(data.userID)?.chastitytype)?.denialCoefficient() ?? 0;
-    let outnum = Math.round((getArousal(data.userID) / 10 * 1.01) * 10) / 10;
+    let braval = getBaseChastity(getChastityBra(data.serverID, data.userID)?.chastitytype)?.denialCoefficient() ?? 0;
+    let outnum = Math.round((getArousal(data.serverID, data.userID) / 10 * 1.01) * 10) / 10;
     outnum = outnum - braval;
-    if (Math.round(outnum * 10) == Math.round(getArousal(data.userID))) {
+    if (Math.round(outnum * 10) == Math.round(getArousal(data.serverID, data.userID))) {
         outnum += 0.1;
     }
     return Math.max(outnum, 1.0)
@@ -21,3 +21,5 @@ exports.name = "Chastity Belt of Eternal Edging"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Chastity Belt of Eternal Edging** will constantly adjust itself such that your denial is always 0.5% higher than your arousal. You will never successfully **/letgo** while wearing this.`

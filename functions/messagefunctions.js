@@ -95,7 +95,10 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
             }
             let attachments = [];
             attachs.forEach((f) => {
-                attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }));
+                let attachmentt = new AttachmentBuilder(`./downloaded/${f.name}`)
+                attachmentt.setName(f.name);
+                attachmentt.setSpoiler(f.spoiler);
+                attachments.push(attachmentt);
             });
 
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
@@ -128,6 +131,18 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
 // Please god don't send to an invalid place I can't take it anymore
 const messageSendChannel = async (str, channel, components = []) => {
 	try {
+        // If we passed the whole getRecentChannel object, then grab that I guess
+        if (channel && channel.channelid && channel.valid) {
+            channel = channel.channelid;
+        }
+        if (channel == undefined) { 
+            throw new Error;
+            return;
+        }
+        if (channel === "0") {
+            console.log(`No channel ID sent to messageSendChannel function!`)
+            return;
+        }
 		let channeltosendto = await process.client.channels.fetch(channel);
 		if (channeltosendto) {
 			if (channeltosendto.isSendable() && !channeltosendto.archived && !channeltosendto.locked) {
@@ -206,15 +221,18 @@ const splitMessage = (text, inputRegex = null) => {
 	return output;
 };
 
+// Im MOSTLY sure this function can be retired now.
 function runMessageEvents(data) {
 	// Gags
 	if (process.gags) {
-		Object.keys(process.gags).forEach((userid) => {
-			getGags(userid).forEach((g) => {
-				if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
-					process.msgfunctions.gags[g.gagtype](userid, data);
-				}
-			});
+		Object.keys(process.gags).forEach((serverid) => {
+            Object.keys(process.gags[serverid]).forEach((userid) => {
+                getGags(serverid, userid).forEach((g) => {
+                    if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
+                        process.msgfunctions.gags[g.gagtype](userid, data);
+                    }
+                });
+            })
 		});
 	}
 	// Headwear
@@ -286,5 +304,3 @@ exports.loadEmoji = loadEmoji;
 exports.splitMessage = splitMessage;
 
 exports.messageSendChannel = messageSendChannel;
-
-exports.runMessageEvents = runMessageEvents;

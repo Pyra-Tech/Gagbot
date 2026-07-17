@@ -1,7 +1,7 @@
 // Featherlight belts are intended to provide a small amount of 
 // stimulation to the wearer at ALL times, whether vibed or not.
 // They're also hard to let go in. 
-exports.denialCoefficient = (data) => { return 15 }
+exports.denialCoefficient = (data) => { return 35 }
 
 exports.minVibe = (data) => { return 2 }
 
@@ -14,4 +14,6 @@ exports.vibelevel = (data) => { return 1 };
 exports.name = "Featherlight Belt"
 
 // Tags
-exports.tags = ["chastity"]
+exports.tags = ["chastity", "metal"]
+
+exports.itemdescription = `The **Featherlight Belt** has an exceptionally high denial coefficient as well as a moderate built-in vibrator.`

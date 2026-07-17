@@ -1,8 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const { removeHeavy } = require("./setters/heavy/removeHeavy");
 
-const heavytypes = [
+/*const heavytypes = [
 	// Armbinders
 	{ name: "Ancient Armbinder", value: "armbinder_ancient", tags: ["metal"], denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Latex Armbinder", value: "armbinder_latex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
@@ -149,9 +150,6 @@ const heavytypes = [
     { name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Dolly", value: "dolly", tags: ["metal"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
-    { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined",], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Capture Sphere", value: "capture_sphere", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Love Sphere", value: "capture_sphere_love", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Great Sphere", value: "capture_sphere_great", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
@@ -185,6 +183,40 @@ const heavytypes = [
 	{ name: "Duffel Bag", value: "duffel_bag", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
     { name: "Magic Binding Circle", value: "bindingcircle", tags: ["magic"], denialCoefficient: 1, heavytags: ["container"] },
     { name: "Cuddle Puddle", value: "cuddlepuddle", denialCoefficient: 0.5, heavytags: ["container"] }, // Yes, cuddlepuddle makes it EASIER
+
+    // Dress Protocols (heavy bondage that equips other heavy bondage)
+    { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+	//{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] }, 
+    { name: "Wardrobe Device", value: "wardrobe_device", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+
+    // Heavy Bondage that is NOT binding, such as chairs. 
+    // These can be added as a heavy, but will NOT impede the wearer in any way. 
+    { name: "Royal Chair", value: "furniture_chair_royal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Leather Couch", value: "furniture_couch_leather", tags: ["leather"], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Latex Couch", value: "furniture_couch_latex", tags: ["latex"], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Couch", value: "furniture_couch", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Bed with Silk Sheets", value: "furniture_bed_silk", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Bed", value: "furniture_bed", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfortable Blanket Throw", value: "furniture_blanket", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Footstool", value: "furniture_footstool", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Rocking Chair", value: "furniture_chair_rocking", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Royal Seneschal's Throne", value: "furniture_throne_seneschal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Royal Princess's Throne", value: "furniture_throne_princess", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Seat of the Queen", value: "furniture_throne_queen", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Seat of the King", value: "furniture_throne_king", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Moonlit Altar", value: "furniture_altar_moonlit", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Suncrested Seat", value: "furniture_throne_sun", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Wooden Chair", value: "furniture_chair_wooden", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Metal Chair", value: "furniture_chair_metal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Computer Chair", value: "furniture_chair_computer", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Table", value: "furniture_table", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Cloud", value: "furniture_cloud_comfy", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Beanbag Chair", value: "furniture_chair_beanbag", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Pony Stable", value: "furniture_ponystable", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Unicycle", value: "furniture_unicycle", tags: [], denialCoefficient: 1, heavytags: [] }, // but why tho
+    { name: "Hover Chair", value: "furniture_chair_hover", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Crane Arm", value: "furniture_crane_arm", tags: [], denialCoefficient: 1, heavytags: [] }, // Is this really... non-restrictive?
 
 	// Heavy Restraints with unique name functions
 	{
@@ -238,18 +270,35 @@ const heavytypes = [
 			}
 		},
 	},
-];
+];*/
+
+
 
 /**************
  * Discord API Requires an array of objects in form:
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
 const loadHeavyTypes = () => {
-	process.heavytypes = heavytypes.map((item) => {
-		return { name: item.name, value: item.value };
-	});
+    // Grab all the command files from the commands directory
+    let heavyautocompletes = [];
+    let heavytypes = {};
+    const commandsPath = path.join(__dirname, "..", "heavy");
+    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+
+    // Push the gag name over to the choice array.
+    for (const file of commandFiles) {
+        const heavy = require(`${commandsPath}/${file}`);
+        heavytypes[file.replace(".js", "")] = heavy;
+        heavytypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        // Adjust item description with how this will bind the user. 
+        heavytypes[file.replace(".js", "")].itemdescription = `### ${heavy.name}\n${heavy.heavytags.includes("arms") ? "- Binds Arms 💪\n" : ""}${heavy.heavytags.includes("legs") ? "- Binds Legs 🦵\n" : ""}${heavy.heavytags.includes("legs") ? "- Container 📦\n" : ""}-# Tags: ${heavy.tags ? `${heavy.tags.join(", ")}\n` : ""}\n${heavy.itemdescription ? heavy.itemdescription : ""}`
+        heavytypes[file.replace(".js", "")].removeItem = function (data) { removeHeavy(data.serverID, data.userID, this.value) }
+
+        if (!heavy.hidden) { heavyautocompletes.push({ name: heavy.name, value: file.replace(".js", "") }) };
+    }
+
+    process.autocompletes.heavy = heavyautocompletes;
+	process.heavytypes = heavytypes;
 };
 
 exports.loadHeavyTypes = loadHeavyTypes;
-exports.heavytypes = heavytypes;
-exports.commandsheavy = heavytypes;

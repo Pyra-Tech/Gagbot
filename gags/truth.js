@@ -1,7 +1,7 @@
 const nlp = require("compromise");
 
 // This is called after parsing the message tree, just after the emoji. 
-const pregarble = (text, parent, intensity, msg) => {
+const pregarble = (text, parent, locarr, intensity, msg) => {
     let outtext = text;
 
     // Set up sentence array. 
@@ -36,3 +36,5 @@ const pregarble = (text, parent, intensity, msg) => {
 
 exports.pregarble = pregarble;
 exports.choicename = "Gag of Truths";
+
+exports.itemdescription = `The **Gag of Truths** will invert your speech, making 'not \\_\\_\\_' into '\\_\\_\\_' and vice versa, with random chance depending on intensity.`

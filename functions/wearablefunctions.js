@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { getLockedWearable } = require("./getters/wearable/getLockedWearable");
+const { removeWearable } = require("./setters/wearable/removeWearable");
 
 let wearabletypes = [
 	// Aesthetic Body Parts
@@ -10,7 +10,7 @@ let wearabletypes = [
 	{ name: "Fox Tails", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Twin", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Cat Tails", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Twin"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Tail Belt", value: "tailbelt", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Wings", value: "wings", category: "Body Part", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Wings", value: "wings", category: "Body Part", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal", "Cybernetic"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Horns", value: "horns", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline", "Cybernetic"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Horned Headband", value: "hornheadband", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Vine Hair", value: "hair_vine", category: "Body Part", colorable: true, uniqueColors: ["Flowery", "Verdant"] , forbiddenColors: ["Black", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
@@ -28,7 +28,9 @@ let wearabletypes = [
     { name: "Ponytail", value: "hair_ponytail", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
     { name: "Twintails", value: "hair_twintails", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
     { name: "French-braid", value: "hair_frenchbraid", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
-
+    { name: "Exosuit", value: "wearable_exosuit", category: "Body Part", colorable: true, },
+    { name: "Cybernetic Arms", value: "wearablearms_cybernetic", category: "Body Part", colorable: true, },
+    { name: "Cybernetic Legs", value: "wearablearms_cybernetic", category: "Body Part", colorable: true, },
 
 	// Hats
 	{ name: "Stylish Hat", value: "stylish_hat", category: "Hat", colorable: true },
@@ -382,6 +384,10 @@ const tagstoadd = [
     { match: `makeupblush`, tag: "makeup" },
 	{ match: `piercing`, tag: "piercing" },
 	{ match: `piercing`, tag: "metal" },
+    { match: `cybernetic`, tag: "cyber" },
+    { match: `cyber`, tag: "cyber" },
+    { match: `android`, tag: "cyber" },
+    { match: `robot`, tag: "cyber" },
 ]
 
 /**************
@@ -433,6 +439,11 @@ const loadWearables = async () => {
 	}
     // Add the full wearables list to the process vars. 
     process.wearabletypes = Array.from(wearablestoadd);
+    process.wearabletypes.forEach((w) => {
+        // Add a remover function that can be called on the item itself!
+        w.removeItem = function (data) { removeWearable(data.serverID, data.userID, this.value) }
+    })
+
     // Add to autocompletes. 
     if (process.autocompletes == undefined) { process.autocompletes = {} }
 	process.autocompletes.wearables = Array.from(outmap.values());

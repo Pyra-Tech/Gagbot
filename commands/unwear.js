@@ -8,6 +8,7 @@ const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js")
 const { deleteWearable } = require("../functions/setters/wearable/removeWearable.js");
 const { getWearableName } = require("../functions/getters/wearable/getWearableName.js");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getBaseWearable } = require("../functions/getters/wearable/getBaseWearable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,8 +22,8 @@ module.exports = {
 		if (focusedValue == "") {
             try {
                 // User hasn't entered anything, lets give them a suggested set of 10
-                let itemsworn = getWearable(chosenuserid);
-                let itemslocked = getLockedWearable(chosenuserid);
+                let itemsworn = getWearable(interaction.guildId, chosenuserid);
+                let itemslocked = getLockedWearable(interaction.guildId, chosenuserid);
 
                 // Remove anything we're already wearing from the list
                 let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
@@ -34,8 +35,8 @@ module.exports = {
             }
 		} else {
 			try {
-				let itemsworn = getWearable(chosenuserid);
-				let itemslocked = getLockedWearable(chosenuserid);
+				let itemsworn = getWearable(interaction.guildId, chosenuserid);
+				let itemslocked = getLockedWearable(interaction.guildId, chosenuserid);
 
 				// Remove anything we're already wearing from the list
 				let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
@@ -52,21 +53,22 @@ module.exports = {
 			let wearableuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			let wearablechoice = interaction.options.getString("type");
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(wearableuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, wearableuser.id)?.mainconsent) {
 				await handleConsent(interaction, wearableuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
 				textarray: "texts_unwear",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: wearableuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: getWearableName(wearableuser.id, wearablechoice),
 				},
 			};
@@ -77,7 +79,7 @@ module.exports = {
 				return;
 			}
 
-			if (!getHeavyBound(interaction.user.id, wearableuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, wearableuser.id)) {
 				// target is in heavy bondage
 				data.heavy = true;
 				if (wearableuser.id == interaction.user.id) {
@@ -86,7 +88,7 @@ module.exports = {
 					if (wearablechoice) {
 						// We're targetting a specific wearable piece.
 						data.single = true;
-						if (getWearable(wearableuser.id).includes(wearablechoice)) {
+						if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 							// Wearing the headgear already
 							data.worn = true;
 							interaction.reply(getText(data));
@@ -98,7 +100,7 @@ module.exports = {
 					} else {
 						// We're removing ALL wearable
 						data.multiple = true;
-						if (getWearable(wearableuser.id).length > 0) {
+						if (getWearable(interaction.guildId, wearableuser.id).length > 0) {
 							// Wearing something
 							data.worn = true;
 							interaction.reply(getText(data));
@@ -114,7 +116,7 @@ module.exports = {
 					if (wearablechoice) {
 						// We're targetting a specific wearable piece.
 						data.single = true;
-						if (getWearable(wearableuser.id).includes(wearablechoice)) {
+						if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 							// Wearing the headgear already
 							data.worn = true;
 							interaction.reply(getText(data));
@@ -126,7 +128,7 @@ module.exports = {
 					} else {
 						// We're removing ALL wearable
 						data.multiple = true;
-						if (getWearable(wearableuser.id).length > 0) {
+						if (getWearable(interaction.guildId, wearableuser.id).length > 0) {
 							// Wearing something
 							data.worn = true;
 							interaction.reply(getText(data));
@@ -146,11 +148,11 @@ module.exports = {
 					if (wearablechoice) {
 						// Targetting one specific headgear
 						data.single = true;
-						if (getWearable(wearableuser.id).includes(wearablechoice)) {
+						if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 							// Wearing the headgear already, Ephemeral
 							data.worn = true;
 							interaction.reply(getText(data));
-							deleteWearable(wearableuser.id, wearablechoice);
+							deleteWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						} else {
 							// Not wearing it!
 							data.noworn = true;
@@ -159,11 +161,11 @@ module.exports = {
 					} else {
 						// Targetting all headgear
 						data.multiple = true;
-						if (getWearable(wearableuser.id).length > 0) {
+						if (getWearable(interaction.guildId, wearableuser.id).length > 0) {
 							// Wearing the headgear already, Ephemeral
 							data.worn = true;
 							interaction.reply(getText(data));
-							deleteWearable(wearableuser.id, wearablechoice);
+							deleteWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						} else {
 							// Not wearing it!
 							data.noworn = true;
@@ -176,11 +178,11 @@ module.exports = {
 					if (wearablechoice) {
 						// Targetting one specific headgear
 						data.single = true;
-						if (getWearable(wearableuser.id).includes(wearablechoice)) {
+						if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 							// Wearing the headgear already, Ephemeral
 							data.worn = true;
 							interaction.reply(getText(data));
-							deleteWearable(wearableuser.id, wearablechoice);
+							deleteWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						} else {
 							// Not wearing it!
 							data.noworn = true;
@@ -189,11 +191,11 @@ module.exports = {
 					} else {
 						// Targetting all headgear
 						data.multiple = true;
-						if (getWearable(wearableuser.id).length > 0) {
+						if (getWearable(interaction.guildId, wearableuser.id).length > 0) {
 							// Wearing the headgear already, Ephemeral
 							data.worn = true;
 							interaction.reply(getText(data));
-							deleteWearable(wearableuser.id, wearablechoice);
+							deleteWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						} else {
 							// Not wearing it!
 							data.noworn = true;

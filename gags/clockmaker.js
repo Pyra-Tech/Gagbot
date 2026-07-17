@@ -16,7 +16,7 @@ function messagebegin (msg, msgTree, msgTreeMods, intensity) {
 }
 
 // Replace the first rawText field with a silenttitle, then purge all others.
-const outOfTime = (text, parent, silent) => {
+const outOfTime = (text, parent, locarr, silent) => {
 	if(!silent.isSilenced){
 		silent.isSilenced = true;
 		return `\n${outOfTimeMessages[Math.floor(Math.random() * outOfTimeMessages.length)]}`;
@@ -33,3 +33,5 @@ exports.breathRecovery = (_user, intensity) => {
 	return 0;
 };
 exports.choicename = "Clockmaker's Gag";
+
+exports.itemdescription = `The Clockmaker's Gag only permits speaking for a short period of time on a cylical period. When speaking otherwise, the message is replaced with an 'Out of Time' message and a counter to the next window to speak.`
