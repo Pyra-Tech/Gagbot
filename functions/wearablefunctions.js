@@ -36,6 +36,7 @@ let wearabletypes = [
 	{ name: "Stylish Hat", value: "stylish_hat", category: "Hat", colorable: true },
 	{ name: "Top Hat", value: "top_hat", category: "Hat", colorable: true },
 	{ name: "Fedora", value: "fedora", category: "Hat", colorable: true },
+    { name: "Ushanka", value: "ushanka", category: "Hat", colorable: true },
 	{ name: "Cowboy Hat", value: "cowboy_hat", category: "Hat", colorable: true },
 	{ name: "Fascinator", value: "fascinator", category: "Hat", colorable: true },
 	{ name: "Witch Hat", value: "witchhat_normal", category: "Hat", colorable: true, uniqueColors: ["Flowery", "Ridiculously Big", "Starry"] },
@@ -173,6 +174,9 @@ let wearabletypes = [
 	{ name: "Button-up Blouse", value: "buttonup_blouse", colorable: true, category: "Upper Body", uniqueColors: ["Witchy", "Latex"] },
 	{ name: "Comfortable Jacket", value: "jacket_comfortable", colorable: true, category: "Upper Body", uniqueColors: ["Leather", "Bomber", "Double-breasted"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "T-shirt", value: "tshirt", colorable: true, category: "Upper Body", uniqueColors: ["Goth Metal", "Plain", "Black", "Alternative", "Grey", "Simple", "Striped"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Bra", value: "top_brawearable", colorable: true, category: "Upper Body", uniqueColors: ["Seashell"] },
+    { name: "Latex Bra", value: "top_bralatexwearable", colorable: true, category: "Upper Body" },
+    { name: "Pasties", value: "top_pastieswearable", colorable: true, category: "Upper Body", uniqueColors: ["Seashell"] },
 
 	// Lower Body
 	{ name: "Pleated Skirt", value: "pleated_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Starry", "Shadow"] },

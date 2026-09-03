@@ -31,6 +31,7 @@ const { getPronouns } = require("./getters/config/getPronouns.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 const { getProcessVariable } = require("./getters/config/getProcessVariable.js");
 const { getArousalGenerationFromToys } = require("./getters/arousal/getArousalGenerationFromToys.js");
+const { emitEvent } = require("./eventhandling.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -550,6 +551,20 @@ function updateArousalValues() {
                 if (process.arousal[server][user] == undefined) { process.arousal[server][user] = { arousal: 0, prev: 0, timestamp: now } }
             }
         }
+        for (const server in process.toys) {
+            for (const user in process.toys[server]) {
+                if (process.arousal == undefined) { process.arousal = {} }
+                if (process.arousal[server] == undefined) { process.arousal[server] = {} };
+                if (process.arousal[server][user] == undefined) { process.arousal[server][user] = { arousal: 0, prev: 0, timestamp: now } }
+            }
+        }
+        for (const server in process.gags) {
+            for (const user in process.gags[server]) {
+                if (process.arousal == undefined) { process.arousal = {} }
+                if (process.arousal[server] == undefined) { process.arousal[server] = {} };
+                if (process.arousal[server][user] == undefined) { process.arousal[server][user] = { arousal: 0, prev: 0, timestamp: now } }
+            }
+        }
 		for (const server in process.arousal) {
             for (const user in process.arousal[server]) {
                 const arousal = process.arousal[server][user];
@@ -568,7 +583,7 @@ function updateArousalValues() {
                 let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
                 let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
                 // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
-                if (getHeadwear(server, user).includes("gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
+                if (getHeadwear(server, user)?.some((h) => h.type == "gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
                 const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
                 // set the values to the new ones
                 arousal.timestamp = now;
@@ -591,11 +606,11 @@ function updateSharedBreath() {
         let minadjustment = 0.1 * (getBotOption("bot-timetickrate") / 60000)
         for (const serverID in process.headwear) {
             for (const user in process.headwear[serverID]) {
-                if (getProcessVariable(serverID, user, "headwear").sharedbreathhose && !processed.includes(getProcessVariable(serverID, user, "headwear").sharedbreathhose) && !processed.includes(user)) {
+                if (getProcessVariable(serverID, user, "headwear").find((h) => h.type === "gasmasklinked")?.sharedbreathhose && !processed.includes(getProcessVariable(serverID, user, "headwear").find((h) => h.type === "gasmasklinked")?.sharedbreathhose) && !processed.includes(user)) {
                     //console.log(`Adjusting horniness for ${user} to ${process.headwear[user].sharedbreathhose}`)
                     // If both people are wearing the linked gasmask AND have each other designated to share breath...
-                    if (getHeadwear(serverID, user).includes("gasmasklinked") && getHeadwear(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose).includes("gasmasklinked") && 
-                        (user == getProcessVariable(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, "headwear").sharedbreathhose)) {  
+                    if (getHeadwear(serverID, user)?.some((h) => h.type == "gasmasklinked") && getHeadwear(serverID, getHeadwear(serverID, user)?.find((h) => h.type == "gasmasklinked")?.sharedbreathhose)?.some((h) => h.type == "gasmasklinked") && 
+                        (user == getHeadwear(serverID, getHeadwear(serverID, user)?.find((h) => h.type == "gasmasklinked")?.sharedbreathhose))) {  
                         let personA = getArousal(serverID, user)
                         let personB = getArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose)
                         let diff = personA - personB;
@@ -604,13 +619,13 @@ function updateSharedBreath() {
                             // Person B is hornier, so person A should gain, person B should lose. 
                             addArousal(serverID, user, delta);
                             addArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, -delta)
-                            console.log(`${getProcessVariable(serverID, user, "headwear").sharedbreathhose} sharing ${delta} arousal to ${user}`)
+                            //console.log(`${getProcessVariable(serverID, user, "headwear").sharedbreathhose} sharing ${delta} arousal to ${user}`)
                         }
                         else {
                             // Person A is hornier, so person B should gain, person A should lose. 
                             addArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, delta);
                             addArousal(serverID, user, -delta)
-                            console.log(`${user} sharing ${delta} arousal to ${getProcessVariable(serverID, user, "headwear").sharedbreathhose}`)
+                            //console.log(`${user} sharing ${delta} arousal to ${getProcessVariable(serverID, user, "headwear").sharedbreathhose}`)
                         }
                         processed.push(user)
                         processed.push(getProcessVariable(serverID, user, "headwear").sharedbreathhose)
@@ -634,7 +649,7 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 	const noDecay = (arousal ?? 0) + growth;
 	// then reduce it based on decay
     // Decay based on decay coefficient times the average of (arousal + prev), 2% of the total, or 0.05, whichever is the highest. 
-	let decay = tickScale * bounded(traits.minDecay ?? -999999, (traits.timescale ?? 1) * Math.max(decayCoefficient * Math.max(((arousal ?? 0) + prev) / 2, 0.1), 0.05), traits.maxDecay ?? 999999);
+	let decay = tickScale * bounded(traits.minDecay ?? -999999, (traits.timescale ?? 1) * Math.max(decayCoefficient * Math.max(((arousal ?? 0) + prev) / 2, 0.1), 0.005), traits.maxDecay ?? 999999);
     
     // If arousal + growth is higher than 1000, remove an additional 5% per minute, scaling +1% per 50 up to a +50% per minute tax. 
     // 1000 is *far* beyond the original intended reasonable maxima of the system, so making a tax here makes sense. 
@@ -692,6 +707,7 @@ function tryOrgasm(serverID, user, forced = false) {
 			markForSave("chastity");
 		}
 		traits.onOrgasm({ serverID: serverID, userID: user, prevArousal: arousal });
+        emitEvent("onOrgasm", user, serverID, { arousal: arousal, denialCoefficient: denialCoefficient });
 		return true;
 	}
 

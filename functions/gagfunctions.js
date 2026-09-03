@@ -56,6 +56,7 @@ const setUpGags = () => {
 		const gag = require(`./../gags/${file}`);
         gagtypes[file.replace(".js", "")] = gag;
         gagtypes[file.replace(".js", "")].value = gagtypes[file.replace(".js", "")];
+        if (!gagtypes[file.replace(".js", "")].locktypes) { gagtypes[file.replace(".js", "")].locktypes = ["small"] }
         gagtypes[file.replace(".js", "")].removeItem = function (data) { removeGag(data.serverID, data.userID, this.value, data.forceremove) }
         if (!gag.hidden) { gagautocompletes.push({ name: gag.choicename, value: file.replace(".js", "") }) };
 	}
@@ -94,6 +95,7 @@ function loadMittenTypes() {
         const mitten = require(`${commandsPath}/${file}`);
         mittentypes[file.replace(".js", "")] = mitten;
         mittentypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        if (!mittentypes[file.replace(".js", "")].locktypes) { mittentypes[file.replace(".js", "")].locktypes = ["small", "large"] }
         mittentypes[file.replace(".js", "")].removeItem = function (data) { removeMitten(data.serverID, data.userID) }
         if (!mitten.hidden) { mittenautocompletes.push({ name: mitten.name, value: file.replace(".js", "") }) };
     }
@@ -125,7 +127,7 @@ function punishDoll(serverID, userID, amount) {
 		console.log(process.dolls[serverID][userID]);
 		// Compute punishments by dividing violations by punishThresh.
 		let punishThresh = getOption(serverID, userID, "dollpunishthresh");
-        if (getHeadwear(serverID, userID).find((headwear) => headwear === "dollmaker_visor")) {
+        if (getHeadwear(serverID, userID)?.find((headwear) => headwear.type === "dollmaker_visor")) {
             punishThresh = 2; // Forced to 2 if dollmakers visor
         }
 		let punishments = Math.floor(doll.violations / punishThresh);

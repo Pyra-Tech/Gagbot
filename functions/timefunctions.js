@@ -2,7 +2,7 @@
 let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
-const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar, gagbotHeldKeyTime, checkGagbotKeys } = require(`./timelockfunctions.js`);
+const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar, checkGagbotKeys } = require(`./timelockfunctions.js`);
 const { updateArousalValues } = require("./vibefunctions.js");
 const { updateSharedBreath } = require("./vibefunctions.js");
 const { messageSendChannel } = require("./messagefunctions.js");
@@ -22,6 +22,9 @@ const { markForSave } = require("./other/markForSave.js");
 const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
 const { setUserVar } = require("./setters/config/setUserVar.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
+const { processdatatoload } = require("../lists/processdatatoload.js");
+const { removeLock } = require("./setters/lock/removeLock.js");
+const { getCorset } = require("./getters/corset/getCorset.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -33,22 +36,76 @@ const parseTime = (text) => {
 			return m ? parseInt(m[1], 10) : 0;
 		};
 
+        let negative = (text.charAt(0) == "-")
+        let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
 		let days = num(/(\d+)\s*d(?:ay|ays)?/);
 		let hours = num(/(\d+)\s*h(?:our|rs?)?/);
 		let minutes = num(/(\d+)\s*m(?:in|ins?)?/);
+        let seconds = num(/(\d+)\s*s(?:econd|econds?)?/);
 
 		// Create date output
 		let dateout = new Date();
-		// add days
-		dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
-		// add hours
-		dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
-		// add minutes
-		dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
+        // add weeks
+        if (negative) {
+            // add weeks
+            dateout.setTime(dateout.getTime() - weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() - days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() - hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() - minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() - seconds * 1000);
+        }
+		else {
+            // add weeks
+            dateout.setTime(dateout.getTime() + weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() + seconds * 1000);
+        }
 
 		return dateout;
 	} catch (err) {
 		return new Date();
+	}
+};
+
+// Takes input string, outputs a number in milliseconds.
+const parseMS = (text) => {
+	try {
+		let t = text.toLowerCase();
+
+		let num = (regex) => {
+			const m = t.match(regex);
+			return m ? parseInt(m[1], 10) : 0;
+		};
+
+        let negative = (text.charAt(0) == "-")
+        let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
+		let days = num(/(\d+)\s*d(?:ay|ays)?/) ?? 0;
+		let hours = num(/(\d+)\s*h(?:our|rs?)?/) ?? 0;
+		let minutes = num(/(\d+)\s*m(?:in|ins?)?/) ?? 0;
+        let seconds = num(/(\d+)\s*s(?:econd|econds?)?/) ?? 0;
+
+        let returnedval = 0;
+
+        if (negative) {
+            returnedval = (-1 * ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000)))
+        }
+        else {
+            returnedval = ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000))
+        }
+
+        return returnedval;
+	} catch (err) {
+		return 0; 
 	}
 };
 
@@ -143,114 +200,18 @@ const saveFiles = () => {
 			let processvar;
 			// Honestly, this could probably just be a similar thing like the processdatatoload at the beginning of index.js
 			// but meh. This allows for potential configuration later.
-			switch (k) {
-				case "wearable":
-					filepath = `${process.GagbotSavedFileDirectory}/wearables.txt`;
-					processvar = "wearable";
-					break;
-				case "gags":
-					filepath = `${process.GagbotSavedFileDirectory}/gaggedusers.txt`;
-					processvar = "gags";
-					break;
-				case "mitten":
-					filepath = `${process.GagbotSavedFileDirectory}/mittenedusers.txt`;
-					processvar = "mitten";
-					break;
-				case "chastity":
-					filepath = `${process.GagbotSavedFileDirectory}/chastityusers.txt`;
-					processvar = "chastity";
-					break;
-				case "chastitybra":
-					filepath = `${process.GagbotSavedFileDirectory}/chastitybrausers.txt`;
-					processvar = "chastitybra";
-					break;
-				case "arousal":
-					filepath = `${process.GagbotSavedFileDirectory}/arousal.txt`;
-					processvar = "arousal";
-					break;
-				case "toys":
-					filepath = `${process.GagbotSavedFileDirectory}/toyusers.txt`;
-					processvar = "toys";
-					break;
-				case "collar":
-					filepath = `${process.GagbotSavedFileDirectory}/collarusers.txt`;
-					processvar = "collar";
-					break;
-				case "heavy":
-					filepath = `${process.GagbotSavedFileDirectory}/heavyusers.txt`;
-					processvar = "heavy";
-					break;
-				case "pronouns":
-					filepath = `${process.GagbotSavedFileDirectory}/pronounsusers.txt`;
-					processvar = "pronouns";
-					break;
-				case "usercontext":
-					filepath = `${process.GagbotSavedFileDirectory}/usersdata.txt`;
-					processvar = "usercontext";
-					break;
-				case "consented":
-					filepath = `${process.GagbotSavedFileDirectory}/consentusers.txt`;
-					processvar = "consented";
-					break;
-				case "corset":
-					filepath = `${process.GagbotSavedFileDirectory}/corsetusers.txt`;
-					processvar = "corset";
-					break;
-				case "headwear":
-					filepath = `${process.GagbotSavedFileDirectory}/headwearusers.txt`;
-					processvar = "headwear";
-					break;
-				case "discardedKeys":
-					filepath = `${process.GagbotSavedFileDirectory}/discardedkeys.txt`;
-					processvar = "discardedKeys";
-					break;
-				case "configs":
-					filepath = `${process.GagbotSavedFileDirectory}/configs.txt`;
-					processvar = "configs";
-					break;
-				case "outfits":
-					filepath = `${process.GagbotSavedFileDirectory}/outfits.txt`;
-					processvar = "outfits";
-					break;
-				case "dolls":
-					filepath = `${process.GagbotSavedFileDirectory}/dollusers.txt`;
-					processvar = "dolls";
-					break;
-				case "webhooks":
-					filepath = `${process.GagbotSavedFileDirectory}/webhooks.txt`;
-					processvar = "webhookstoload";
-					break;
-                case "recordedmessages":
-					filepath = `${process.GagbotSavedFileDirectory}/recordedmessages.txt`;
-					processvar = "recordedmessages";
-					break;
-                case "recentmessages":
-					filepath = `${process.GagbotSavedFileDirectory}/recentmessages.txt`;
-					processvar = "recentmessages";
-					break;
-                case "delveuserdata":
-					filepath = `${process.GagbotSavedFileDirectory}/delveuserdata.txt`;
-					processvar = "delveuserdata";
-					break;
-                case "userstats":
-					filepath = `${process.GagbotSavedFileDirectory}/userstats.txt`;
-					processvar = "userstats";
-					break;
-                case "memberavatars":
-					filepath = `${process.GagbotSavedFileDirectory}/memberavatars.txt`;
-					processvar = "memberavatars";
-					break;
-                case "heldkeytimers":
-					filepath = `${process.GagbotSavedFileDirectory}/heldkeytimers.txt`;
-					processvar = "heldkeytimers";
-					break;
-				default:
-					console.log(`Unknown save variable: ${k}`);
-			}
+            let pvsaves = processdatatoload.find((pv) => pv.rts == k);
+            if (pvsaves) {
+                filepath = `${process.GagbotSavedFileDirectory}/${pvsaves.textname}`;
+				processvar = pvsaves.processvar;
+            }
 			if (filepath && processvar) {
 				fs.writeFileSync(filepath, JSON.stringify(process[processvar]));
 				console.log(`${(new Date()).toLocaleTimeString()}: Successfully Saved file ${filepath}`);
 			}
+            else {
+                console.log(`Unknown save variable: ${k}`)
+            }
 		});
 		process.readytosave = {};
 	} catch (err) {
@@ -303,31 +264,126 @@ function processTimedEvents() {
 
 function processUnlockTimes(client) {
 	let now = Date.now();
+
+    if (process.gags) {
+		Object.keys(process.gags).forEach((serverid) => {
+			Object.keys(process.gags[serverid]).forEach((userid) => {
+                getGags(serverid, userid).forEach((g) => {
+                    if (g.lock && g.lock.unlocktime && (g.lock.unlocktime < now)) {
+                        removeLock(g.lock.uuid, { id: userid })
+                    }
+                });
+		    });
+        });
+	}
+	// Headwear
+	if (process.headwear) {
+		Object.keys(process.headwear).forEach((serverid) => {
+            Object.keys(process.headwear[serverid]).forEach((userid) => {
+                getHeadwear(serverid, userid).forEach((h) => {
+                    if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
+                        removeLock(h.lock.uuid, { id: userid })
+                    }
+                });
+            });
+		});
+	}
+	// Mittens
+	if (process.mitten) {
+		Object.keys(process.mitten).forEach((serverid) => {
+            Object.keys(process.mitten[serverid]).forEach((userid) => {
+                if (getMitten(serverid, userid)) {
+                    if (getMitten(serverid, userid).lock && getMitten(serverid, userid).lock.unlocktime && (getMitten(serverid, userid).lock.unlocktime < now)) {
+                        removeLock(getMitten(serverid, userid).lock.uuid, { id: userid })
+                    }
+                }
+            });
+		});
+	}
+	// Heavy Bondage
+	if (process.heavy) {
+		Object.keys(process.heavy).forEach((serverid) => {
+            Object.keys(process.heavy[serverid]).forEach((userid) => {
+                if (getHeavyList(serverid, userid).length > 0) {
+                    getHeavyList(serverid, userid).forEach((h) => {
+                        if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
+                            removeLock(h.lock.uuid, { id: userid })
+                        }
+                    })
+                }
+            });
+        });
+	}
+    // Chastity Belts
 	if (process.chastity) {
-		Object.keys(process.chastity).forEach((server) => {
-			Object.keys(process.chastity[server]).forEach((person) => {
-                if (process.chastity[server][person]?.unlockTime < now) {
-                    unlockTimelockChastity(server, client, person);
+		Object.keys(process.chastity).forEach((serverid) => {
+            Object.keys(process.chastity[serverid]).forEach((userid) => {
+                if (getChastity(serverid, userid)) {
+                    if (getChastity(serverid, userid).lock && getChastity(serverid, userid).lock.unlocktime && (getChastity(serverid, userid).lock.unlocktime < now)) {
+                        removeLock(getChastity(serverid, userid).lock.uuid, { id: userid })
+                    }
                 }
-            })
-		});
+            });
+        });
 	}
+    // Chastity Bras
 	if (process.chastitybra) {
-		Object.keys(process.chastitybra).forEach((server) => {
-			Object.keys(process.chastitybra[server]).forEach((person) => {
-                if (process.chastitybra[server][person]?.unlockTime < now) {
-                    unlockTimelockChastityBra(server, client, person);
+		Object.keys(process.chastitybra).forEach((serverid) => {
+            Object.keys(process.chastitybra[serverid]).forEach((userid) => {
+                if (getChastityBra(serverid, userid)) {
+                    if (getChastityBra(serverid, userid).lock && getChastityBra(serverid, userid).lock.unlocktime && (getChastityBra(serverid, userid).lock.unlocktime < now)) {
+                        removeLock(getChastityBra(serverid, userid).lock.uuid, { id: userid })
+                    }
                 }
-            })
-		});
+            });
+        });
 	}
-	if (process.collar) {
-		Object.keys(process.collar).forEach((server) => {
-            Object.keys(process.collar[server]).forEach((person) => {
-                if (process.collar[server][person]?.unlockTime < now) {
-                    unlockTimelockCollar(server, client, person);
+	// Wearables
+	/*if (process.wearable) {
+		Object.keys(process.wearable).forEach((serverid) => {
+            Object.keys(process.wearable[serverid]).forEach((userid) => {
+                getWearable(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].tick) {
+                        process.eventfunctions.wearable[h].tick(serverid, userid);
+                    }
+                });
+            });
+        });
+	}*/
+    // Toys
+    if (process.toys) {
+		Object.keys(process.toys).forEach((serverid) => {
+            Object.keys(process.toys[serverid]).forEach((userid) => {
+                getToys(serverid, userid).forEach((h) => {
+                    if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
+                        removeLock(h.lock.uuid, { id: userid })
+                    }
+                });
+            });
+        });
+	}
+    // Collars
+    if (process.collar) {
+		Object.keys(process.collar).forEach((serverid) => {
+            Object.keys(process.collar[serverid]).forEach((userid) => {
+                if (getCollar(serverid, userid)) {
+                    if (getCollar(serverid, userid).lock && getCollar(serverid, userid).lock.unlocktime && (getCollar(serverid, userid).lock.unlocktime < now)) {
+                        removeLock(getCollar(serverid, userid).lock.uuid, { id: userid })
+                    }
                 }
-            })
+            });
+        });
+	}
+    // Corset
+	if (process.corset) {
+		Object.keys(process.corset).forEach((serverid) => {
+            Object.keys(process.corset[serverid]).forEach((userid) => {
+                if (getCorset(serverid, userid)) {
+                    if (getCorset(serverid, userid).lock && getCorset(serverid, userid).lock.unlocktime && (getCorset(serverid, userid).lock.unlocktime < now)) {
+                        removeLock(getCorset(serverid, userid).lock.uuid, { id: userid })
+                    }
+                }
+            });
 		});
 	}
 }
@@ -343,6 +399,11 @@ function runTickEvents() {
                         if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].tick) {
                             process.eventfunctions.gags[g.gagtype].tick(serverid, userid);
                         }
+                        if (g.lock) {
+                            if (process.eventfunctions.locks && process.eventfunctions.locks[g.lock.locktype] && process.eventfunctions.locks[g.lock.locktype].tick) {
+                                process.eventfunctions.locks[g.lock.locktype].tick(g.lock.uuid);
+                            }
+                        }
                     });
                 }
                 catch (err) {
@@ -356,8 +417,13 @@ function runTickEvents() {
 		Object.keys(process.headwear).forEach((serverid) => {
             Object.keys(process.headwear[serverid]).forEach((userid) => {
                 getHeadwear(serverid, userid).forEach((h) => {
-                    if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].tick) {
-                        process.eventfunctions.headwear[h].tick(serverid, userid);
+                    if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h.type].tick) {
+                        process.eventfunctions.headwear[h.type].tick(serverid, userid);
+                    }
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
                     }
                 });
             });
@@ -370,6 +436,12 @@ function runTickEvents() {
                 if (getMitten(serverid, userid)) {
                     if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname] && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick) {
                         process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick(serverid, userid);
+                    }
+                    let h = getMitten(serverid, userid);
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
                     }
                 }
             });
@@ -384,6 +456,11 @@ function runTickEvents() {
                         if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].tick) {
                             process.eventfunctions.heavy[h.type].tick(serverid, userid);
                         }
+                        if (h.lock) {
+                            if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                                process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                            }
+                        }
                     })
                 }
             });
@@ -397,6 +474,12 @@ function runTickEvents() {
                     if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype] && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick) {
                         process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick(serverid, userid);
                     }
+                    let h = getChastity(serverid, userid);
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
+                    }
                 }
             });
         });
@@ -408,6 +491,12 @@ function runTickEvents() {
                 if (getChastityBra(serverid, userid)) {
                     if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick) {
                         process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick(serverid, userid);
+                    }
+                    let h = getChastityBra(serverid, userid);
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
                     }
                 }
             });
@@ -433,6 +522,11 @@ function runTickEvents() {
                     if (process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].tick) {
                         process.eventfunctions.toys[h.type].tick(serverid, userid);
                     }
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
+                    }
                 });
             });
         });
@@ -452,9 +546,33 @@ function runTickEvents() {
                             }
                         })
                     }
+                    let h = getCollar(serverid, userid);
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
+                    }
                 }
             });
         });
+	}
+    // Mittens
+	if (process.corset) {
+		Object.keys(process.corset).forEach((serverid) => {
+            Object.keys(process.corset[serverid]).forEach((userid) => {
+                if (getCorset(serverid, userid)) {
+                    if (process.eventfunctions.corset && process.eventfunctions.corset[getCorset(serverid, userid).type] && process.eventfunctions.corset[getCorset(serverid, userid).type].tick) {
+                        process.eventfunctions.corset[getCorset(serverid, userid).type].tick(serverid, userid);
+                    }
+                    let h = getCorset(serverid, userid);
+                    if (h.lock) {
+                        if (process.eventfunctions.locks && process.eventfunctions.locks[h.lock.locktype] && process.eventfunctions.locks[h.lock.locktype].tick) {
+                            process.eventfunctions.locks[h.lock.locktype].tick(h.lock.uuid);
+                        }
+                    }
+                }
+            });
+		});
 	}
 }
 
@@ -592,7 +710,19 @@ async function removeOldMessages() {
     })
 }
 
+// Cull any awaiting lock older than a day. 
+async function removeOldLockAwaiting() {
+    Object.keys(process.awaitinglock).forEach((k) => {
+        if ((process.awaitinglock && process.awaitinglock[k] && ((process.awaitinglock[k].awaitingcreated + 86400000) < Date.now())) || !process.awaitinglock[k]?.awaitingcreated) {
+            console.log(`Deleting awaiting lock with ID ${k}`)
+            delete process.awaitinglock[k];
+            markForSave("awaitinglock")
+        } 
+    })
+}
+
 exports.parseTime = parseTime;
+exports.parseMS = parseMS;
 exports.parseDuration = parseDuration;
 exports.calculateTimeout = calculateTimeout;
 exports.getTimestringForZip = getTimestringForZip;
@@ -604,3 +734,4 @@ exports.scavengeUsers = scavengeUsers;
 exports.processUnlockTimes = processUnlockTimes;
 exports.processTimedEvents = processTimedEvents;
 exports.removeOldMessages = removeOldMessages;
+exports.removeOldLockAwaiting = removeOldLockAwaiting;

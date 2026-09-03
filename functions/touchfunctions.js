@@ -17,6 +17,8 @@ const { getClonedCollarKey } = require("./getters/collar/getClonedCollarKey");
 const { canAccessCollar } = require("./getters/collar/canAccessCollar");
 const { statsAddCounter } = require("./setters/config/statsAddCounter");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
+const { getHeavyList } = require("./getters/heavy/getHeavyList");
+const { getBaseLock } = require("./getters/lock/getBaseLock");
 
 /****************
  * Rolls a Pat based on the user's bondage and the target's bondage. If hit is false, then boundmiss will note the reason, if it is due to the user being bound. 
@@ -125,75 +127,6 @@ function rollPatChance(serverID, user, target) {
     return returnedobject;
 }
 
-// This should definitely be refactored. 
-function doHeadpatFunctions(headpatter, recipient, returnedobject) {
-	// Gags
-	if (process.gags) {
-        getGags(recipient).forEach((g) => {
-            if (process.headpatfunctions.gags && process.headpatfunctions.gags[g.gagtype]) {
-                process.headpatfunctions.gags[g.gagtype](recipient, headpatter, returnedobject);
-            }
-        });
-	}
-	// Headwear
-	if (process.headwear) {
-        getHeadwear(recipient).forEach((h) => {
-            if (process.headpatfunctions.headwear && process.headpatfunctions.headwear[h]) {
-                process.headpatfunctions.headwear[h](recipient, headpatter, returnedobject);
-            }
-        });
-	}
-	// Mittens
-	if (process.mitten) {
-        if (getMitten(recipient)) {
-            if (process.headpatfunctions.mitten && process.headpatfunctions.mitten[getMitten(recipient).mittenname]) {
-                process.headpatfunctions.mitten[getMitten(recipient).mittenname](recipient, headpatter, returnedobject);
-            }
-        }
-	}
-	// Heavy Bondage
-	if (process.heavy) {
-        if (getHeavy(recipient)) {
-            process.heavy[recipient].forEach((heavy) => {
-                if (process.headpatfunctions.heavy && process.headpatfunctions.heavy[heavy.type]) {
-                    process.headpatfunctions.heavy[heavy.type](recipient, headpatter, returnedobject);
-                }
-            })
-        }
-	}
-	// Wearables
-	if (process.wearable) {
-        getWearable(recipient).forEach((h) => {
-            if (process.headpatfunctions.wearable && process.headpatfunctions.wearable[h]) {
-                process.headpatfunctions.wearable[h](recipient, headpatter, returnedobject);
-            }
-        });
-	}
-    // Toys
-    if (process.toys) {
-        getToys(recipient).forEach((h) => {
-            if (process.headpatfunctions.toys && process.headpatfunctions.toys[h.type]) {
-                process.headpatfunctions.toys[h.type](recipient, headpatter, returnedobject);
-            }
-        });
-	}
-    // Collars
-    if (process.collar) {
-        if (getCollar(recipient)) {
-            if (process.headpatfunctions.collar && process.headpatfunctions.collar[getCollar(recipient).collartype]) {
-                process.headpatfunctions.collar[getCollar(recipient).collartype](recipient, headpatter, returnedobject);
-            }
-            if (getCollar(recipient).additionalcollars) {
-                getCollar(recipient).additionalcollars.forEach((ac) => {
-                    if (process.headpatfunctions.collar && process.headpatfunctions.collar[ac]) {
-                        process.headpatfunctions.collar[ac](recipient, headpatter, returnedobject);
-                    }
-                })
-            }
-        }
-	}
-}
-
 /********
  * Attempt to shock the target user ID, if they have configurations set.
  * 
@@ -280,12 +213,13 @@ async function handleTouchEvent(serverID, user, target, type, noprompt = false) 
         
         let iskeyholder = false;
         
-        if (getCollar(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getChastity(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getChastityBra(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getClonedChastityKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
-        if (getClonedChastityBraKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
-        if (getClonedCollarKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
+        if (getCollar(serverID, target.id)?.lock?.locktype && getBaseLock(getCollar(serverID, target.id)?.lock?.locktype).canAccessLock({ uuid: getCollar(serverID, target.id)?.lock.uuid, userID: user.id })) { iskeyholder = true }
+        if (getChastity(serverID, target.id)?.lock?.locktype && getBaseLock(getChastity(serverID, target.id)?.lock?.locktype).canAccessLock({ uuid: getChastity(serverID, target.id)?.lock.uuid, userID: user.id })) { iskeyholder = true }
+        if (getChastityBra(serverID, target.id)?.lock?.locktype && getBaseLock(getChastityBra(serverID, target.id)?.lock?.locktype).canAccessLock({ uuid: getChastityBra(serverID, target.id)?.lock.uuid, userID: user.id })) { iskeyholder = true }
+        if (getGags(serverID, target.id) && getGags(serverID, target.id).some((g) => (g?.lock && getBaseLock(g?.lock?.locktype).canAccessLock({ uuid: g.lock.uuid, userID: user.id })))) { iskeyholder = true }
+        if (getHeavyList(serverID, target.id) && getHeavyList(serverID, target.id).some((g) => (g?.lock && getBaseLock(g?.lock?.locktype).canAccessLock({ uuid: g.lock.uuid, userID: user.id })))) { iskeyholder = true }
+        if (getToys(serverID, target.id) && getToys(serverID, target.id).some((g) => (g?.lock && getBaseLock(g?.lock?.locktype).canAccessLock({ uuid: g.lock.uuid, userID: user.id })))) { iskeyholder = true }
+        if (getHeadwear(serverID, target.id) && getHeadwear(serverID, target.id).some((g) => (g?.lock && getBaseLock(g?.lock?.locktype).canAccessLock({ uuid: g.lock.uuid, userID: user.id })))) { iskeyholder = true }
 
         if (hasOption === "everyonenoprompt") {
             // Nothing needs to be done here.
@@ -357,6 +291,9 @@ async function handleTouchEvent(serverID, user, target, type, noprompt = false) 
 				break;
             case "shock":
                 touchtext = `${user} would like to shock you.`
+				break;
+            case "shock":
+                touchtext = `${user} would like to boop you.`
 				break;
 			default:
 				console.log(`Could not find a touch by that type.`);

@@ -11,8 +11,9 @@ const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { setUpCorsets } = require('./functions/corsetfunctions.js');
+const { setUpLocks } = require('./functions/lockfunctions.js');
 const { assignMemeImages, generateListTexts } = require('./functions/interactivefunctions.js');
-const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers, removeOldMessages } = require('./functions/timefunctions.js');
+const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers, removeOldMessages, removeOldLockAwaiting } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
 const { setGlobalCommands, loadWebhooks } = require('./functions/configfunctions.js');
@@ -29,6 +30,8 @@ const { processdatatoload } = require(`./lists/processdatatoload.js`);
 const { addBellCollarReact } = require('./functions/setters/collar/addBellCollarReact.js');
 const { setRecentChannel } = require(`./functions/setters/config/setRecentChannel.js`);
 const { setProcessVariable } = require('./functions/setters/config/setProcessVariable.js');
+const { getLockAwaiting } = require('./functions/getters/lock/getLockAwaiting.js');
+const { getRestraintByUUID } = require('./functions/getters/lock/getRestraintByUUID.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -78,6 +81,8 @@ process.on('uncaughtExceptionMonitor', (err,origin) => {
 // Assign nsfwflag to true. /debug process.nsfwflag = false to forcibly set nsfw commands to sfw. Not recommended, Discord API says this is not allowed.
 process.nsfwflag = true
 
+process.awaitinglockinteractions = {};
+
 // If they never changed from the default in .env.md, use base directory. 
 if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.env.GAGBOTFILEDIRECTORY = "." }
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
@@ -109,6 +114,7 @@ assignMemeImages();
 setUpToys();
 setUpChastity();
 setUpCorsets();
+setUpLocks();
 
 // Build the Overview
 process.helpmodals = {
@@ -249,6 +255,7 @@ client.on("clientReady", async () => {
 
         scavengeUsers(client);
         removeOldMessages(); 
+        removeOldLockAwaiting();
         setInterval(() => {
             try {
                 scavengeUsers(client);
@@ -256,6 +263,7 @@ client.on("clientReady", async () => {
             catch (err) { console.log(err) }
             try {
                 removeOldMessages();
+                removeOldLockAwaiting();
             }
             catch (err) { console.log(err) }
         }, 3600000);
@@ -336,6 +344,26 @@ client.on('interactionCreate', async (interaction) => {
             if (interactioncommand == "webhookedit") {
                 interactioncommand = "Edit Message"
             }
+            else if (interactioncommand == "lockconfig") {
+                let lockfromuuid = getLockAwaiting(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.locktype]
+                configfunc.lockinteractionmodalresponse(interaction); 
+            }
+            else if (interactioncommand == "lockspecial") {
+                let lockfromuuid = getRestraintByUUID(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.restraint.lock.locktype]
+                configfunc.unlockSpecialmodalresponse(interaction); 
+            }
             else if (interactioncommand == "modalevent") {
                 if (process.eventfunctions) {
                     let eventfunctionset = interaction.customId.split("_")[1].split("|")[0]
@@ -389,6 +417,26 @@ client.on('interactionCreate', async (interaction) => {
                 if (process.eventfunctions[eventfunctionset] && process.eventfunctions[eventfunctionset][filecommand] && process.eventfunctions[eventfunctionset][filecommand].extraconfigresponse) {
                     process.eventfunctions[eventfunctionset][filecommand].extraconfigresponse(interaction);
                 }
+            }
+            else if (interaction.customId.startsWith("lockconfig_")) {
+                let lockfromuuid = getLockAwaiting(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.locktype]
+                configfunc.lockinteractionresponse(interaction); 
+            }
+            else if (interaction.customId.startsWith("lockspecial_")) {
+                let lockfromuuid = getRestraintByUUID(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.restraint.lock.locktype]
+                configfunc.unlockSpecialresponse(interaction); 
             }
             else if (interaction.customId.startsWith("buttonboard")) {
                 buttonboard(interaction); // The button board reply function is in contextcommands/message/Button Board.js

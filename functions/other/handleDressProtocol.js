@@ -257,7 +257,7 @@ function handleDressProtocol(serverID, userID, dp) {
                         isworn = (getHeavyList(serverID, userID)?.find((h) => h.type == dp.items[i]));
                         break;
                     case "mask":
-                        isworn = (getHeadwear(serverID, userID)?.includes(dp.items[i]));
+                        isworn = (getHeadwear(serverID, userID)?.find((h) => h.type == dp.items[i]));
                         break;
                     // assignToy needs a force param to be accurately handled in an outfit. As such this is disabled for now. 
                     /*
@@ -296,7 +296,7 @@ function handleDressProtocol(serverID, userID, dp) {
                             let perms = {};
                             if (existingcollar) { 
                                 didswap = true 
-                                perms = { chastity: existingcollar?.chastity, heavy: existingcollar?.heavy, mitten: existingcollar?.mitten, mask: existingcollar?.mask }
+                                perms = { chastity: existingcollar?.chastity, heavy: existingcollar?.heavy, mitten: existingcollar?.mitten, mask: existingcollar?.mask, locks: existingcollar?.locks }
                             }
                             assignCollar(serverID, userID, existingcollar?.keyholder ?? dp.keyholder ?? userID, perms, existingcollar?.keyholder_only ?? true, dp.items[i]);
                             equippeditem = true;

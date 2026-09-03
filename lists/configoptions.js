@@ -1199,6 +1199,35 @@ const configoptions = {
 				return false;
 			},
 		},
+        swaplocks: {
+			name: "Others Swapping Locks",
+			desc: "Should others be allowed to swap a lock on your restraints?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Others will not be able to swap locks on restraints of yours they have lock access to*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "**⚠️ Others can swap your locks for other locks!**",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "disabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
         forbiddenitemdisplay: {
             name: "Forbidden Items On You",
 			desc: "How should items you've marked as 'None' on the Content tab be shown when selecting restraints?",
@@ -1398,9 +1427,29 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
         },
+        removerecentmessages: {
+			name: "Remove Recent Messages",
+			desc: "Purge all messages you've sent in bot memory. Note, this will invalidate original contents in Edit Messages for messages you've sent in the last 24 hours.",
+			choices: [
+				{
+					name: "Purge",
+					helptext: "*Revoking helptext that'll never be used lol*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice_removemessages",
+			default: "disabled",
+			disabled: () => {
+				return false;
+			},
+		},
 		revokeconsent: {
 			name: "Revoke Consent",
-			desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",
+			desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future. This will remove all your settings and the bot will forget about you. You should hide this select menu afterwards.",
 			choices: [
 				{
 					name: "Revoke",

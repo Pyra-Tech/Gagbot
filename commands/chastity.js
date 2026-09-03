@@ -21,7 +21,7 @@ const { getOption } = require("../functions/getters/config/getOption.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("chastity")
-		.setDescription("Put yourself in chastity, locking /toy settings")
+		.setDescription("Put someone in chastity, locking /toy settings")
         //.addUserOption((opt) => opt.setName("keyholder").setDescription("Keyholder (leave blank to lock yourself)"))
         .addUserOption((opt) => opt.setName("user").setDescription("Who to put a chastity device on?"))
 		.addStringOption((opt) => opt.setName("braorbelt").setDescription("Chastity belt or bra?").setChoices({ name: "Chastity Belt", value: "chastitybelt" }, { name: "Chastity Bra", value: "chastitybra" }))
@@ -84,13 +84,13 @@ module.exports = {
 				},
 			};
             if (braorbelt == "chastitybelt") {
-                if (bondagetype && !getChastityName(interaction.guildId, interaction.user.id, bondagetype)) {
-                    bondagetype = undefined; // Just delete it, we got something invalid lol
+                if ((bondagetype && !getChastityName(interaction.guildId, interaction.user.id, bondagetype)) || (!bondagetype) || (bondagetype == null)) {
+                    bondagetype = "belt_silver"; // Just delete it, we got something invalid lol
                 }
             }
 			else {
-                if (bondagetype && !getChastityBraName(interaction.guildId, interaction.user.id, bondagetype)) {
-                    bondagetype = undefined; // Just delete it, we got something invalid lol
+                if ((bondagetype && !getChastityBraName(interaction.guildId, interaction.user.id, bondagetype)) || (!bondagetype) || (bondagetype == null)) {
+                    bondagetype = "bra_silver"; // Just delete it, we got something invalid lol
                 }
             }
 

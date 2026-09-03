@@ -47,16 +47,36 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
         let blocks = [];
         let tags = getUserTags(serverID, userID);
         let goodtags = getUserTags(serverID, userID, true)
+        let whilemax = 10000; // Try up to 10k times, even though we should never exceed that. 
         for (let i = 0; i < outfitlength; i++) {
+            let whileattempts = 0;
             let randomchoice = Math.floor(Math.random() * 9); // PLZ BE RANDOM
             let arr;
             let choice;
+            console.log(`${i}, ${randomchoice}`);
             if (randomchoice == 0) {
                 // Gag
-                arr = Object.keys(process.gagtypes)
-                choice = arr[Math.floor(arr.length * Math.random())];
+                arr = Object.entries(process.gagtypes).filter((f) => {
+                    let goodtoreturn = true;
+                    tags.forEach((t) => {
+                        if (f.tags && f.tags.includes(t)) {
+                            goodtoreturn = false;
+                        }
+                    })
+                    if (f.hidden) { goodtoreturn = false }
+                    return goodtoreturn;
+                })
+                arr.forEach((w) => {
+                    goodtags.forEach((t) => {
+                        if (w.tags && w.tags.includes(t)) {
+                            arr.push(w) // double the chance to get a thing of that tag
+                        }
+                    })
+                })
+                arr = arr.map((a) => a[0]);
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice)) {
+                while (outfitpieceschosen.includes(choice) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice);
@@ -64,13 +84,14 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
             }
             else if ((randomchoice == 1) && !blocks.includes("mitten")) {
                 // Mitten
-                arr = process.mittentypes.entries().filter((f) => {
+                arr = Object.entries(process.mittentypes).filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((w) => {
@@ -82,7 +103,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice.value)) {
+                while (outfitpieceschosen.includes(choice.value) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice.value);
@@ -90,13 +112,14 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 outfitpieces.push(choice.value)
             } 
             else if ((randomchoice == 2) && !blocks.includes("collar")) {
-                arr = process.collartypes.entries().filter((f) => {
+                arr = Object.entries(process.collartypes).filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((w) => {
@@ -108,7 +131,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice.value)) {
+                while (outfitpieceschosen.includes(choice.value) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice.value);
@@ -125,6 +149,7 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((f) => {
@@ -137,7 +162,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice[0])) {
+                while (outfitpieceschosen.includes(choice[0]) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice[0]);
@@ -154,6 +180,7 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((f) => {
@@ -166,7 +193,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice[0])) {
+                while (outfitpieceschosen.includes(choice[0]) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice[0]);
@@ -175,14 +203,14 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
             }
             else if ((randomchoice == 5) && !blocks.includes("heavy")) {
                 // This one has to go to the end, so it is pushed to the heavyend option.
-                arr = [...process.heavytypes]
-                arr = arr.filter((f) => {
+                arr = Object.entries(process.heavytypes).filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((w) => {
@@ -194,7 +222,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice.name)) {
+                while (outfitpieceschosen.includes(choice.name) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice.name);
@@ -202,14 +231,14 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 heavyend = choice.value;
             }
             else if ((randomchoice == 5) && !blocks.includes("headwear")) {
-                arr = [...process.headtypes]
-                arr = arr.filter((f) => {
+                arr = Object.entries(process.headtypes).filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {
                             goodtoreturn = false;
                         }
                     })
+                    if (f.hidden) { goodtoreturn = false }
                     return goodtoreturn;
                 })
                 arr.forEach((w) => {
@@ -221,7 +250,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice.name)) {
+                while (outfitpieceschosen.includes(choice.name) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice.name);
@@ -239,6 +269,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                     })
                     return goodtoreturn;
                 })
+                // Filter any hidden items
+                arr = arr.filter((f) => !f.hidden);
                 arr.forEach((w) => {
                     goodtags.forEach((t) => {
                         if (w.tags && Object.keys(w.tags).includes(t)) {
@@ -248,7 +280,8 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
                 })
                 choice = arr[Math.floor(arr.length * Math.random())];
                 // unique choices only.
-                while (outfitpieceschosen.includes(choice.name)) {
+                while (outfitpieceschosen.includes(choice.name) && (whileattempts < whilemax)) {
+                    whileattempts++;
                     choice = arr[Math.floor(arr.length * Math.random())];
                 }
                 outfitpieceschosen.push(choice.name);
@@ -256,6 +289,18 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
             }
         }
         if (heavyend) { outfitpieces.push(heavyend) }
+
+        // Remove any undefined entries because while loop timed out. 
+        for (let i = 0; i < outfitpieces.length; i++) {
+            if (outfitpieces[i] == undefined) {
+                outfitpieces.splice(i, 1);
+                i = i - 1;
+            }
+        }
+        if (outfitpieces.length < 5) {
+            console.log(`OUTFIT PIECES WAS LESS THAN 5! TRY AGAIN!`);
+            return; // Just start over if the length is 0. Try again. 
+        }
 
         heavy.dressprotocol = {
             dressprotocolname: heavy.displayname,
